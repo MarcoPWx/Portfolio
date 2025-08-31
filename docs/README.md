@@ -8,7 +8,6 @@ This GitHub Pages site serves as the central documentation hub for all NatureQue
 - **DevMentor**: AI development assistant (200+ docs)
 - **QuizMentor**: Adaptive learning platform (70+ docs)
 - **Harvest.ai**: Content intelligence (15+ docs)
-- **Omni.ai**: VS Code AI assistant (10+ docs)
 
 ## 🚀 Quick Links
 
@@ -28,7 +27,6 @@ portfolio/docs/
 ├── _devmentor/             # DevMentor documentation
 ├── _quizmentor/            # QuizMentor documentation
 ├── _harvest/               # Harvest.ai documentation
-├── _omni/                  # Omni.ai documentation
 └── scripts/
     └── aggregate-docs.sh   # Documentation aggregation script
 ```
@@ -80,7 +78,6 @@ Add new documentation files to the appropriate collection:
 - DevMentor: `_devmentor/`
 - QuizMentor: `_quizmentor/`
 - Harvest.ai: `_harvest/`
-- Omni.ai: `_omni/`
 
 Include front matter:
 ```yaml
@@ -127,7 +124,6 @@ navigation:
 | **DevMentor** | 200+ | Infrastructure, Kubernetes, AI, Services, Testing |
 | **QuizMentor** | 70+ | Mobile, Testing, Gamification, Deployment |
 | **Harvest.ai** | 15+ | Architecture, Strategy, Competition |
-| **Omni.ai** | 10+ | Ecosystem, VS Code, Integration |
 
 ## 🔍 Search
 
