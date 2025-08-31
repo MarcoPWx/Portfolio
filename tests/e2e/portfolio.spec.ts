@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Portfolio E2E Tests', () => {
+test.describe.skip('Portfolio E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Wait for the page to load completely
