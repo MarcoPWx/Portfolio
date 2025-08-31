@@ -7,7 +7,6 @@ A beautiful portfolio website showcasing the NatureQuest product ecosystem, insp
 - **QuizMentor** - Adaptive Learning Platform
 - **DevMentor** - AI Development Assistant  
 - **Harvest** - Smart Time Tracking
-- **Omni** - Universal AI for VS Code
 
 ## 🚀 Quick Start
 
