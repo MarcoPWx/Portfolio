@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARK PATTERNS IMPLEMENTATION RUNBOOK</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">DARK_PATTERNS_IMPLEMENTATION_RUNBOOK.md</span>
+</div>
+
+<h1>DARK PATTERNS IMPLEMENTATION RUNBOOK</h1>
+
+
+<h1 id="dark-patterns--gamification-implementation-runbook">Dark Patterns &amp; Gamification Implementation Runbook</h1>
+
+<h2 id="-executive-summary">🎯 Executive Summary</h2>
+
+<p>This runbook provides a complete implementation guide for monetization through psychological mechanics, gamification, and strategic UX patterns. Expected outcomes: 5-7% conversion rate, 40%+ DAU, $3.50 ARPU.</p>
+
+<hr />
+
+<h2 id="-table-of-contents">📋 Table of Contents</h2>
+
+<ol>
+  <li><a href="#prerequisites--setup">Prerequisites &amp; Setup</a></li>
+  <li><a href="#phase-1-core-infrastructure-week-1-2">Phase 1: Core Infrastructure</a></li>
+  <li><a href="#phase-2-frustration-mechanics-week-3-4">Phase 2: Frustration Mechanics</a></li>
+  <li><a href="#phase-3-engagement-systems-week-5-6">Phase 3: Engagement Systems</a></li>
+  <li><a href="#phase-4-monetization-pipeline-week-7-8">Phase 4: Monetization Pipeline</a></li>
+  <li><a href="#phase-5-optimization--testing-week-9-10">Phase 5: Optimization &amp; Testing</a></li>
+  <li><a href="#launch-checklist">Launch Checklist</a></li>
+  <li><a href="#monitoring--kpis">Monitoring &amp; KPIs</a></li>
+</ol>
+
+<hr />
+
+<h2 id="prerequisites--setup">Prerequisites &amp; Setup</h2>
+
+<h3 id="required-services">Required Services</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Core Services</span>
+- Supabase/Firebase <span class="o">(</span>Database + Auth<span class="o">)</span>
+- RevenueCat <span class="o">(</span>Subscription management<span class="o">)</span>
+- Google AdMob <span class="o">(</span>Ad monetization<span class="o">)</span>
+- OneSignal/Firebase <span class="o">(</span>Push notifications<span class="o">)</span>
+- Mixpanel/Amplitude <span class="o">(</span>Analytics<span class="o">)</span>
+- Sentry <span class="o">(</span>Error tracking<span class="o">)</span>
+
+<span class="c"># Development Tools</span>
+- React Native 0.72+
+- Expo SDK 49+
+- TypeScript 5.0+
+- Zustand <span class="o">(</span>State management<span class="o">)</span>
+- React Navigation 6+
+</code></pre></div></div>
+
+<h3 id="environment-setup">Environment Setup</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Install dependencies</span>
+npm <span class="nb">install </span>zustand @react-native-async-storage/async-storage
+npm <span class="nb">install </span>react-native-purchases react-native-google-mobile-ads
+npm <span class="nb">install </span>expo-notifications expo-haptics
+npm <span class="nb">install </span>react-native-reanimated
+
+<span class="c"># 2. Configure environment variables</span>
+<span class="nb">cp</span> .env.example .env
+<span class="c"># Add your API keys:</span>
+<span class="c"># EXPO_PUBLIC_SUPABASE_URL=</span>
+<span class="c"># EXPO_PUBLIC_SUPABASE_ANON_KEY=</span>
+<span class="c"># EXPO_PUBLIC_REVENUECAT_IOS=</span>
+<span class="c"># EXPO_PUBLIC_REVENUECAT_ANDROID=</span>
+<span class="c"># EXPO_PUBLIC_ADMOB_REWARDED_IOS=</span>
+<span class="c"># EXPO_PUBLIC_ADMOB_INTERSTITIAL_IOS=</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-1-core-infrastructure-week-1-2">Phase 1: Core Infrastructure (Week 1-2)</h2>
+
+<h3 id="11-database-schema">1.1 Database Schema</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Users table with psychological profiling</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">profiles</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">username</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">email</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  
+  <span class="c1">-- Engagement metrics</span>
+  <span class="k">level</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">total_xp</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">current_streak</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">longest_streak</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">last_active_date</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  
+  <span class="c1">-- Monetization state</span>
+  <span class="n">hearts</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">unlimited_hearts</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">,</span>
+  <span class="n">streak_freezes</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="n">is_premium</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">,</span>
+  <span class="n">subscription_tier</span> <span class="nb">TEXT</span> <span class="k">DEFAULT</span> <span class="s1">'free'</span><span class="p">,</span>
+  <span class="n">trial_end_date</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  
+  <span class="c1">-- Behavioral tracking</span>
+  <span class="n">frustration_score</span> <span class="nb">FLOAT</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">engagement_score</span> <span class="nb">FLOAT</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">churn_risk_score</span> <span class="nb">FLOAT</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">ltv_prediction</span> <span class="nb">FLOAT</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Session tracking for behavior analysis</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">sessions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">started_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">ended_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  
+  <span class="c1">-- Engagement metrics</span>
+  <span class="n">questions_answered</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">correct_answers</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">hearts_lost</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">ads_watched</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  
+  <span class="c1">-- Frustration events</span>
+  <span class="n">rage_quits</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">paywall_views</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">upgrade_prompts_shown</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  
+  <span class="c1">-- Conversion tracking</span>
+  <span class="n">converted_to_trial</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">,</span>
+  <span class="n">converted_to_paid</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">,</span>
+  <span class="n">revenue_generated</span> <span class="nb">FLOAT</span> <span class="k">DEFAULT</span> <span class="mi">0</span>
+<span class="p">);</span>
+
+<span class="c1">-- A/B test variants</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">experiments</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">experiment_name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">variant</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">enrolled_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">converted</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="12-state-management-setup">1.2 State Management Setup</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// store/heartsStore.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">create</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">zustand</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">persist</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">zustand/middleware</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">AsyncStorage</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@react-native-async-storage/async-storage</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kr">interface</span> <span class="nx">HeartsState</span> <span class="p">{</span>
+  <span class="nl">hearts</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">maxHearts</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">lastRegenerationTime</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">isUnlimited</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
+  
+  <span class="nl">loseHeart</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">boolean</span><span class="p">;</span>
+  <span class="nl">addHeart</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">regenerateHearts</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">refillHearts</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">setUnlimited</span><span class="p">:</span> <span class="p">(</span><span class="nx">unlimited</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">canPlayQuiz</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">boolean</span><span class="p">;</span>
+  <span class="nl">getTimeUntilNextHeart</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="kr">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">HEART_REGEN_TIME</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">;</span> <span class="c1">// 30 minutes (painful)</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">useHeartsStore</span> <span class="o">=</span> <span class="nx">create</span><span class="o">&lt;</span><span class="nx">HeartsState</span><span class="o">&gt;</span><span class="p">()(</span>
+  <span class="nx">persist</span><span class="p">(</span>
+    <span class="p">(</span><span class="kd">set</span><span class="p">,</span> <span class="kd">get</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+      <span class="na">hearts</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="na">maxHearts</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="na">lastRegenerationTime</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+      <span class="na">isUnlimited</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      
+      <span class="na">loseHeart</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="kd">get</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">isUnlimited</span><span class="p">)</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">hearts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">set</span><span class="p">({</span> 
+            <span class="na">hearts</span><span class="p">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">hearts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="na">lastRegenerationTime</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+          <span class="p">});</span>
+          
+          <span class="c1">// Trigger paywall at certain thresholds</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">hearts</span> <span class="o">===</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">triggerPaywallPrompt</span><span class="p">(</span><span class="dl">'</span><span class="s1">low_hearts</span><span class="dl">'</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">hearts</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">triggerPaywallPrompt</span><span class="p">(</span><span class="dl">'</span><span class="s1">no_hearts</span><span class="dl">'</span><span class="p">);</span>
+          <span class="p">}</span>
+          
+          <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">},</span>
+      
+      <span class="c1">// ... rest of implementation</span>
+    <span class="p">}),</span>
+    <span class="p">{</span>
+      <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">hearts-storage</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">storage</span><span class="p">:</span> <span class="nx">createJSONStorage</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">AsyncStorage</span><span class="p">),</span>
+    <span class="p">}</span>
+  <span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="13-analytics-setup">1.3 Analytics Setup</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/analytics.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Mixpanel</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">mixpanel-react-native</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">AnalyticsService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">mixpanel</span><span class="p">:</span> <span class="nx">Mixpanel</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">sessionStartTime</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">frustrationEvents</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">initialize</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">mixpanel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mixpanel</span><span class="p">(</span><span class="dl">"</span><span class="s2">YOUR_PROJECT_TOKEN</span><span class="dl">"</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">mixpanel</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">startSession</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="nx">startSession</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sessionStartTime</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">frustrationEvents</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">session_started</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">time_of_day</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getHours</span><span class="p">(),</span>
+      <span class="na">day_of_week</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getDay</span><span class="p">(),</span>
+      <span class="na">user_level</span><span class="p">:</span> <span class="nx">getUserLevel</span><span class="p">(),</span>
+      <span class="na">is_premium</span><span class="p">:</span> <span class="nx">isPremium</span><span class="p">(),</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="nx">trackFrustrationEvent</span><span class="p">(</span><span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">frustrationEvents</span><span class="o">++</span><span class="p">;</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">frustration_event</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="kd">type</span><span class="p">,</span>
+      <span class="na">frustration_count</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">frustrationEvents</span><span class="p">,</span>
+      <span class="na">session_duration</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">sessionStartTime</span><span class="p">,</span>
+      <span class="p">...</span><span class="nx">context</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Trigger paywall at optimal frustration</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">frustrationEvents</span> <span class="o">===</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">showOptimalPaywall</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="nx">trackMonetizationEvent</span><span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="s2">`monetization_</span><span class="p">${</span><span class="nx">event</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="p">...</span><span class="nx">data</span><span class="p">,</span>
+      <span class="na">user_state</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserState</span><span class="p">(),</span>
+      <span class="na">optimal_price</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateOptimalPrice</span><span class="p">(),</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-2-frustration-mechanics-week-3-4">Phase 2: Frustration Mechanics (Week 3-4)</h2>
+
+<h3 id="21-hearts-system-implementation">2.1 Hearts System Implementation</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// components/HeartsDisplay.tsx</span>
+<span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">View</span><span class="p">,</span> <span class="nx">Text</span><span class="p">,</span> <span class="nx">TouchableOpacity</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-native</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Animated</span><span class="p">,</span> <span class="p">{</span> 
+  <span class="nx">useSharedValue</span><span class="p">,</span> 
+  <span class="nx">withSpring</span><span class="p">,</span> 
+  <span class="nx">withRepeat</span><span class="p">,</span>
+  <span class="nx">withTiming</span> 
+<span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-native-reanimated</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">HeartsDisplay</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">hearts</span><span class="p">,</span> <span class="nx">maxHearts</span><span class="p">,</span> <span class="nx">getTimeUntilNextHeart</span><span class="p">,</span> <span class="nx">isUnlimited</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useHeartsStore</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">pulseAnimation</span> <span class="o">=</span> <span class="nx">useSharedValue</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Pulse animation when low on hearts</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">hearts</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">isUnlimited</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">pulseAnimation</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">withRepeat</span><span class="p">(</span>
+        <span class="nx">withSpring</span><span class="p">(</span><span class="mf">1.2</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="kc">true</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">hearts</span><span class="p">]);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isUnlimited</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">premiumHearts</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">infinitySymbol</span><span class="p">}</span><span class="o">&gt;</span><span class="err">♾️</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">premiumText</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Unlimited</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">container</span><span class="p">}</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Animated</span><span class="p">.</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{{</span> <span class="na">transform</span><span class="p">:</span> <span class="p">[{</span> <span class="na">scale</span><span class="p">:</span> <span class="nx">pulseAnimation</span> <span class="p">}]</span> <span class="p">}}</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="nb">Array</span><span class="p">(</span><span class="nx">maxHearts</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nx">map</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">index</span><span class="p">}</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">heart</span><span class="p">}</span><span class="o">&gt;</span>
+            <span class="p">{</span><span class="nx">index</span> <span class="o">&lt;</span> <span class="nx">hearts</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">❤️</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">🤍</span><span class="dl">'</span><span class="p">}</span>
+          <span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="p">))}</span>
+      <span class="o">&lt;</span><span class="sr">/Animated.View</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="nx">hearts</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">depletedContainer</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">regeneratingText</span><span class="p">}</span><span class="o">&gt;</span>
+            <span class="nx">Regenerating</span> <span class="k">in</span> <span class="p">{</span><span class="nx">formatTime</span><span class="p">(</span><span class="nx">getTimeUntilNextHeart</span><span class="p">())}</span>
+          <span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">TouchableOpacity</span> 
+            <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">watchAdButton</span><span class="p">}</span>
+            <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">showRewardedAd</span><span class="p">()}</span>
+          <span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="nx">Watch</span> <span class="nx">Ad</span> <span class="k">for</span> <span class="err">❤️</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/TouchableOpacity</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">TouchableOpacity</span> 
+            <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">premiumButton</span><span class="p">}</span>
+            <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">navigateToPaywall</span><span class="p">(</span><span class="dl">'</span><span class="s1">hearts_depleted</span><span class="dl">'</span><span class="p">)}</span>
+          <span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="nx">Get</span> <span class="nx">Unlimited</span> <span class="nx">Hearts</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/TouchableOpacity</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      <span class="p">)}</span>
+    <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="22-streak-system-with-fomo">2.2 Streak System with FOMO</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/streakService.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">StreakService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">notificationService</span><span class="p">:</span> <span class="nx">NotificationService</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">checkStreakStatus</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">hoursUntilMidnight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getHoursUntilMidnight</span><span class="p">();</span>
+    
+    <span class="c1">// Progressive urgency based on time remaining</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">hoursUntilMidnight</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">completedToday</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendStreakDangerNotification</span><span class="p">(</span><span class="nx">user</span><span class="p">,</span> <span class="nx">hoursUntilMidnight</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Check if streak was lost</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">wasStreakLost</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleStreakLoss</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">currentStreak</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">current_streak</span><span class="p">,</span>
+      <span class="na">inDanger</span><span class="p">:</span> <span class="nx">hoursUntilMidnight</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">completedToday</span><span class="p">,</span>
+      <span class="na">hoursRemaining</span><span class="p">:</span> <span class="nx">hoursUntilMidnight</span><span class="p">,</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">handleStreakLoss</span><span class="p">(</span><span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Show emotional manipulation</span>
+    <span class="k">await</span> <span class="nx">showModal</span><span class="p">({</span>
+      <span class="na">title</span><span class="p">:</span> <span class="s2">`💔 You lost your </span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">current_streak</span><span class="p">}</span><span class="s2"> day streak!`</span><span class="p">,</span>
+      <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">All that progress... gone. But there's still hope!</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">buttons</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Start Over 😢</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">action</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">resetStreak</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Restore with Premium 🔥</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">action</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">offerStreakRestore</span><span class="p">(</span><span class="nx">user</span><span class="p">),</span>
+          <span class="na">style</span><span class="p">:</span> <span class="dl">'</span><span class="s1">premium</span><span class="dl">'</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Track for win-back campaign</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">streak_lost</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">streak_length</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">current_streak</span><span class="p">,</span>
+      <span class="na">user_level</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span>
+      <span class="na">ltv</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">lifetime_value</span><span class="p">,</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">sendStreakDangerNotification</span><span class="p">(</span><span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">,</span> <span class="nx">hoursLeft</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">messages</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">4</span><span class="p">:</span> <span class="s2">`⚠️ Your </span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">current_streak</span><span class="p">}</span><span class="s2"> day streak ends in 4 hours!`</span><span class="p">,</span>
+      <span class="mi">3</span><span class="p">:</span> <span class="s2">`🔥 Only 3 hours left to save your streak!`</span><span class="p">,</span>
+      <span class="mi">2</span><span class="p">:</span> <span class="s2">`🚨 URGENT: 2 hours until you lose everything!`</span><span class="p">,</span>
+      <span class="mi">1</span><span class="p">:</span> <span class="s2">`💔 Last chance! Your streak dies in 1 hour!`</span><span class="p">,</span>
+    <span class="p">};</span>
+    
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">notificationService</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+      <span class="na">title</span><span class="p">:</span> <span class="nx">messages</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">hoursLeft</span><span class="p">)],</span>
+      <span class="na">body</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Complete a quiz now to keep it alive!</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span> 
+        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">streak_danger</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">streak_value</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">current_streak</span><span class="p">,</span>
+        <span class="na">urgency</span><span class="p">:</span> <span class="dl">'</span><span class="s1">critical</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="23-category-locking--artificial-scarcity">2.3 Category Locking &amp; Artificial Scarcity</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/categoryService.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">CategoryService</span> <span class="p">{</span>
+  <span class="nx">getCategoriesForUser</span><span class="p">(</span><span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">categories</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getAllCategories</span><span class="p">();</span>
+    
+    <span class="k">return</span> <span class="nx">categories</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">category</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">isLocked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">isCategoryLocked</span><span class="p">(</span><span class="nx">category</span><span class="p">,</span> <span class="nx">user</span><span class="p">);</span>
+      
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="p">...</span><span class="nx">category</span><span class="p">,</span>
+        <span class="nx">isLocked</span><span class="p">,</span>
+        <span class="na">unlockRequirement</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUnlockRequirement</span><span class="p">(</span><span class="nx">category</span><span class="p">,</span> <span class="nx">user</span><span class="p">),</span>
+        <span class="na">teaserContent</span><span class="p">:</span> <span class="nx">isLocked</span> <span class="p">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">getTeaserContent</span><span class="p">(</span><span class="nx">category</span><span class="p">)</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="na">premiumOnly</span><span class="p">:</span> <span class="nx">category</span><span class="p">.</span><span class="nx">is_premium</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">is_premium</span><span class="p">,</span>
+      <span class="p">};</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">isCategoryLocked</span><span class="p">(</span><span class="nx">category</span><span class="p">:</span> <span class="nx">Category</span><span class="p">,</span> <span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
+    <span class="c1">// Free users see most categories locked</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">is_premium</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Only 30% of content available for free</span>
+      <span class="k">return</span> <span class="nx">category</span><span class="p">.</span><span class="nx">tier</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="nx">category</span><span class="p">.</span><span class="nx">is_premium</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Premium users still have some progression</span>
+    <span class="k">return</span> <span class="nx">category</span><span class="p">.</span><span class="nx">required_level</span> <span class="o">&gt;</span> <span class="nx">user</span><span class="p">.</span><span class="nx">level</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">getTeaserContent</span><span class="p">(</span><span class="nx">category</span><span class="p">:</span> <span class="nx">Category</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Show just enough to create desire</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">preview</span><span class="p">:</span> <span class="nx">category</span><span class="p">.</span><span class="nx">questions</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">q</span> <span class="o">=&gt;</span> <span class="p">({</span>
+        <span class="na">question</span><span class="p">:</span> <span class="nx">q</span><span class="p">.</span><span class="nx">question</span><span class="p">,</span>
+        <span class="na">options</span><span class="p">:</span> <span class="nx">q</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">map</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="dl">'</span><span class="s1">???</span><span class="dl">'</span><span class="p">),</span> <span class="c1">// Hide answers</span>
+      <span class="p">})),</span>
+      <span class="na">totalQuestions</span><span class="p">:</span> <span class="nx">category</span><span class="p">.</span><span class="nx">questions</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="na">exclusiveContent</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Unlock to access all questions!</span><span class="dl">"</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-3-engagement-systems-week-5-6">Phase 3: Engagement Systems (Week 5-6)</h2>
+
+<h3 id="31-notification-strategy">3.1 Notification Strategy</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/notificationScheduler.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">NotificationScheduler</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">scheduleUserNotifications</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">schedule</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generatePersonalizedSchedule</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">notification</span> <span class="k">of</span> <span class="nx">schedule</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">scheduleNotification</span><span class="p">(</span><span class="nx">notification</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">generatePersonalizedSchedule</span><span class="p">(</span><span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">baseSchedule</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">morning_motivation</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">lunch_nudge</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">competition_update</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">streak_reminder</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">last_chance</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">];</span>
+    
+    <span class="c1">// Adjust based on user behavior</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">churn_risk_score</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">baseSchedule</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+        <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">win_back_offer</span><span class="dl">'</span> <span class="p">}</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">streak</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">baseSchedule</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+        <span class="p">{</span> <span class="na">hour</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="na">minute</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">template</span><span class="p">:</span> <span class="dl">'</span><span class="s1">streak_danger_final</span><span class="dl">'</span> <span class="p">}</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">baseSchedule</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">slot</span> <span class="o">=&gt;</span> <span class="p">({</span>
+      <span class="p">...</span><span class="nx">slot</span><span class="p">,</span>
+      <span class="na">message</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateMessage</span><span class="p">(</span><span class="nx">slot</span><span class="p">.</span><span class="nx">template</span><span class="p">,</span> <span class="nx">user</span><span class="p">),</span>
+      <span class="na">data</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getNotificationData</span><span class="p">(</span><span class="nx">slot</span><span class="p">.</span><span class="nx">template</span><span class="p">,</span> <span class="nx">user</span><span class="p">),</span>
+    <span class="p">}));</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">generateMessage</span><span class="p">(</span><span class="nx">template</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">templates</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">morning_motivation</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">`Good morning </span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">! Ready to beat yesterday's score?`</span><span class="p">,</span>
+        <span class="s2">`Rise and shine! Your daily challenge awaits 🌟`</span><span class="p">,</span>
+        <span class="s2">`</span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">, 5 friends already completed their quiz today!`</span><span class="p">,</span>
+      <span class="p">],</span>
+      <span class="na">streak_reminder</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">`🔥 Your </span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">streak</span><span class="p">}</span><span class="s2">-day streak needs attention!`</span><span class="p">,</span>
+        <span class="s2">`⚠️ Don't lose your </span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">streak</span><span class="p">}</span><span class="s2"> day streak!`</span><span class="p">,</span>
+        <span class="s2">`Quick! Save your streak before midnight!`</span><span class="p">,</span>
+      <span class="p">],</span>
+      <span class="na">competition_update</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">`</span><span class="p">${</span><span class="nx">getRandomFriend</span><span class="p">()}</span><span class="s2"> just passed you on the leaderboard!`</span><span class="p">,</span>
+        <span class="s2">`You're 50 XP behind </span><span class="p">${</span><span class="nx">getRandomFriend</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
+        <span class="s2">`</span><span class="p">${</span><span class="nx">getRandomFriend</span><span class="p">()}</span><span class="s2"> is crushing it today. Can you keep up?`</span><span class="p">,</span>
+      <span class="p">],</span>
+    <span class="p">};</span>
+    
+    <span class="k">return</span> <span class="nx">templates</span><span class="p">[</span><span class="nx">template</span><span class="p">][</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nx">templates</span><span class="p">[</span><span class="nx">template</span><span class="p">].</span><span class="nx">length</span><span class="p">)];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="32-variable-reward-system">3.2 Variable Reward System</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/rewardService.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">RewardService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">REWARD_TABLES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">standard</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xp</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">10</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xp</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">20</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">coins</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">5</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">heart</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">powerup</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">legendary</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}},</span>
+    <span class="p">],</span>
+    <span class="na">premium</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xp</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">20</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">xp</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">30</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">coins</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">10</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">powerup</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}},</span>
+      <span class="p">{</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="na">reward</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">legendary</span><span class="dl">'</span><span class="p">,</span> <span class="na">amount</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}},</span>
+    <span class="p">],</span>
+  <span class="p">};</span>
+  
+  <span class="nx">calculateReward</span><span class="p">(</span><span class="nx">performance</span><span class="p">:</span> <span class="nx">Performance</span><span class="p">,</span> <span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">table</span> <span class="o">=</span> <span class="nx">user</span><span class="p">.</span><span class="nx">is_premium</span> <span class="p">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">REWARD_TABLES</span><span class="p">.</span><span class="nx">premium</span> <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">REWARD_TABLES</span><span class="p">.</span><span class="nx">standard</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">roll</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+    
+    <span class="kd">let</span> <span class="nx">cumulative</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">entry</span> <span class="k">of</span> <span class="nx">table</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">cumulative</span> <span class="o">+=</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">weight</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">roll</span> <span class="o">&lt;=</span> <span class="nx">cumulative</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">reward</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">entry</span><span class="p">.</span><span class="nx">reward</span> <span class="p">};</span>
+        
+        <span class="c1">// Apply multipliers</span>
+        <span class="nx">reward</span><span class="p">.</span><span class="nx">amount</span> <span class="o">*=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMultiplier</span><span class="p">(</span><span class="nx">performance</span><span class="p">,</span> <span class="nx">user</span><span class="p">);</span>
+        
+        <span class="c1">// Near-miss mechanic for free users</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">is_premium</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">isNearMiss</span><span class="p">(</span><span class="nx">roll</span><span class="p">,</span> <span class="nx">cumulative</span><span class="p">,</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">weight</span><span class="p">))</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">showNearMissMessage</span><span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">reward</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="nx">reward</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">isNearMiss</span><span class="p">(</span><span class="nx">roll</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">threshold</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">weight</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
+    <span class="c1">// Within 2% of a better reward</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">threshold</span> <span class="o">-</span> <span class="nx">roll</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="nx">weight</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">showNearMissMessage</span><span class="p">(</span><span class="nx">missedReward</span><span class="p">:</span> <span class="nx">Reward</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">showToast</span><span class="p">(</span><span class="s2">`So close to </span><span class="p">${</span><span class="nx">missedReward</span><span class="p">.</span><span class="kd">type</span><span class="p">}</span><span class="s2">! Premium users get 2x chances!`</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="33-social-pressure--leaderboards">3.3 Social Pressure &amp; Leaderboards</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/leaderboardService.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">LeaderboardService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getLeaderboard</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">leaderboard</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">fetchLeaderboard</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">league</span><span class="p">);</span>
+    
+    <span class="c1">// Add fake activity for engagement</span>
+    <span class="kd">const</span> <span class="nx">enhanced</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">enhanceWithFakeActivity</span><span class="p">(</span><span class="nx">leaderboard</span><span class="p">);</span>
+    
+    <span class="c1">// Mark free vs premium users</span>
+    <span class="k">return</span> <span class="nx">enhanced</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">entry</span> <span class="o">=&gt;</span> <span class="p">({</span>
+      <span class="p">...</span><span class="nx">entry</span><span class="p">,</span>
+      <span class="na">isPremium</span><span class="p">:</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">subscription_tier</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">free</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">badge</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserBadge</span><span class="p">(</span><span class="nx">entry</span><span class="p">),</span>
+      <span class="na">isCurrentUser</span><span class="p">:</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">userId</span><span class="p">,</span>
+      <span class="na">recentActivity</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateRecentActivity</span><span class="p">(</span><span class="nx">entry</span><span class="p">),</span>
+    <span class="p">}));</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">enhanceWithFakeActivity</span><span class="p">(</span><span class="nx">leaderboard</span><span class="p">:</span> <span class="nx">LeaderboardEntry</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="c1">// Add 2-3 fake "active" users if real activity is low</span>
+    <span class="kd">const</span> <span class="nx">activeCount</span> <span class="o">=</span> <span class="nx">leaderboard</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">last_active</span> <span class="o">&lt;</span> <span class="mi">300000</span><span class="p">).</span><span class="nx">length</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">activeCount</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">fakeUsers</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Sarah K.</span><span class="dl">'</span><span class="p">,</span> <span class="na">xp</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">500</span><span class="p">,</span> <span class="na">last_active</span><span class="p">:</span> <span class="mi">60000</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Mike T.</span><span class="dl">'</span><span class="p">,</span> <span class="na">xp</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">400</span><span class="p">,</span> <span class="na">last_active</span><span class="p">:</span> <span class="mi">120000</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Emma L.</span><span class="dl">'</span><span class="p">,</span> <span class="na">xp</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">300</span><span class="p">,</span> <span class="na">last_active</span><span class="p">:</span> <span class="mi">180000</span> <span class="p">},</span>
+      <span class="p">];</span>
+      
+      <span class="nx">leaderboard</span><span class="p">.</span><span class="nx">push</span><span class="p">(...</span><span class="nx">fakeUsers</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="o">-</span> <span class="nx">activeCount</span><span class="p">));</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">leaderboard</span><span class="p">.</span><span class="nx">sort</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">xp</span> <span class="o">-</span> <span class="nx">a</span><span class="p">.</span><span class="nx">xp</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">getUserBadge</span><span class="p">(</span><span class="nx">entry</span><span class="p">:</span> <span class="nx">LeaderboardEntry</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">subscription_tier</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">free</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">'</span><span class="s1">🆓</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Subtle shaming</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">subscription_tier</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">lifetime</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">'</span><span class="s1">👑</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">'</span><span class="s1">⭐</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-4-monetization-pipeline-week-7-8">Phase 4: Monetization Pipeline (Week 7-8)</h2>
+
+<h3 id="41-dynamic-pricing-engine">4.1 Dynamic Pricing Engine</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/pricingEngine.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">PricingEngine</span> <span class="p">{</span>
+  <span class="nx">calculateOptimalPrice</span><span class="p">(</span><span class="nx">user</span><span class="p">:</span> <span class="nx">User</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">basePrice</span> <span class="o">=</span> <span class="mf">9.99</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+    
+    <span class="c1">// User value scoring</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">level</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">1.2</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">streak</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">1.3</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">sessions</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">1.1</span><span class="p">;</span>
+    
+    <span class="c1">// Context-based adjustments</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">streak_loss</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">0.5</span><span class="p">;</span> <span class="c1">// 50% off for emotional moment</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">hearts_depleted</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">0.7</span><span class="p">;</span> <span class="c1">// 30% off for frustration</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">achievement</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">0.8</span><span class="p">;</span> <span class="c1">// 20% off for celebration</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Time-based urgency</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">isWeekend</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">0.9</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">isEndOfMonth</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">0.85</span><span class="p">;</span>
+    
+    <span class="c1">// A/B test variants</span>
+    <span class="kd">const</span> <span class="nx">variant</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserVariant</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">variant</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">aggressive</span><span class="dl">'</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">0.6</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">variant</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">premium</span><span class="dl">'</span><span class="p">)</span> <span class="nx">multiplier</span> <span class="o">*=</span> <span class="mf">1.5</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">price</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">basePrice</span> <span class="o">*</span> <span class="nx">multiplier</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="na">originalPrice</span><span class="p">:</span> <span class="nx">basePrice</span><span class="p">,</span>
+      <span class="na">discount</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">multiplier</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+      <span class="na">urgency</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateUrgency</span><span class="p">(</span><span class="nx">context</span><span class="p">),</span>
+      <span class="na">message</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPricingMessage</span><span class="p">(</span><span class="nx">multiplier</span><span class="p">,</span> <span class="nx">context</span><span class="p">),</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">calculateUrgency</span><span class="p">(</span><span class="nx">context</span><span class="p">:</span> <span class="nx">Context</span><span class="p">):</span> <span class="nx">UrgencyLevel</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">streak_loss</span><span class="dl">'</span><span class="p">)</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">critical</span><span class="dl">'</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">trial_ending</span><span class="dl">'</span><span class="p">)</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">high</span><span class="dl">'</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">sessionCount</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="k">return</span> <span class="dl">'</span><span class="s1">medium</span><span class="dl">'</span><span class="p">;</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">low</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">getPricingMessage</span><span class="p">(</span><span class="nx">multiplier</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">multiplier</span> <span class="o">&lt;</span> <span class="mf">0.6</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">"</span><span class="s2">🔥 LOWEST PRICE EVER - Today only!</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">streak_loss</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">"</span><span class="s2">💔 Special recovery offer - Don't miss out!</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">multiplier</span> <span class="o">&lt;</span> <span class="mf">0.8</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">"</span><span class="s2">⏰ Limited time offer expires soon!</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="dl">"</span><span class="s2">Join thousands of premium learners!</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="42-paywall-optimization">4.2 Paywall Optimization</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// screens/PaywallScreen.tsx</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">PaywallScreen</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">route</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">source</span><span class="p">,</span> <span class="nx">context</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">route</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">countdown</span><span class="p">,</span> <span class="nx">setCountdown</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">600</span><span class="p">);</span> <span class="c1">// 10 min timer</span>
+  <span class="kd">const</span> <span class="nx">pricing</span> <span class="o">=</span> <span class="nx">usePricing</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Track paywall view</span>
+    <span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">paywall_viewed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">source</span><span class="p">,</span>
+      <span class="na">price</span><span class="p">:</span> <span class="nx">pricing</span><span class="p">.</span><span class="nx">price</span><span class="p">,</span>
+      <span class="na">variant</span><span class="p">:</span> <span class="nx">pricing</span><span class="p">.</span><span class="nx">variant</span><span class="p">,</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Start countdown for urgency</span>
+    <span class="kd">const</span> <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">setCountdown</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">prev</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">handleOfferExpired</span><span class="p">();</span>
+          <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">prev</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">});</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+  
+  <span class="kd">const</span> <span class="nx">handleDismiss</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Confirmshaming</span>
+    <span class="nx">Alert</span><span class="p">.</span><span class="nx">alert</span><span class="p">(</span>
+      <span class="dl">"</span><span class="s2">😢 Are you sure?</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">You'll miss out on unlimited learning and exclusive features. This special offer won't last!</span><span class="dl">"</span><span class="p">,</span>
+      <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Stay &amp; Save</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">style</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cancel</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">onPress</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">paywall_dismiss_cancelled</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Leave</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">style</span><span class="p">:</span> <span class="dl">'</span><span class="s1">destructive</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">onPress</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">paywall_dismissed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">time_on_page</span><span class="p">:</span> <span class="mi">600</span> <span class="o">-</span> <span class="nx">countdown</span> <span class="p">});</span>
+            <span class="nx">navigation</span><span class="p">.</span><span class="nx">goBack</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">);</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">ScrollView</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">container</span><span class="p">}</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* Urgency Banner */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">urgencyBanner</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">urgencyText</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="err">🔥</span> <span class="nx">Offer</span> <span class="nx">expires</span> <span class="k">in</span> <span class="p">{</span><span class="nx">formatTime</span><span class="p">(</span><span class="nx">countdown</span><span class="p">)}</span>
+        <span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Social Proof */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">socialProof</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="nx">Join</span> <span class="mi">50</span><span class="p">,</span><span class="mi">000</span><span class="o">+</span> <span class="nx">premium</span> <span class="nx">learners</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">testimonials</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">TestimonialCard</span> 
+            <span class="nx">text</span><span class="o">=</span><span class="dl">"</span><span class="s2">Changed my life!</span><span class="dl">"</span>
+            <span class="nx">author</span><span class="o">=</span><span class="dl">"</span><span class="s2">Sarah K.</span><span class="dl">"</span>
+            <span class="nx">rating</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="p">}</span>
+          <span class="sr">/</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">TestimonialCard</span> 
+            <span class="nx">text</span><span class="o">=</span><span class="dl">"</span><span class="s2">Worth every penny!</span><span class="dl">"</span>
+            <span class="nx">author</span><span class="o">=</span><span class="dl">"</span><span class="s2">Mike T.</span><span class="dl">"</span>
+            <span class="nx">rating</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="p">}</span>
+          <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Benefits with Loss Framing */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">benefits</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">BenefitRow</span> 
+          <span class="nx">icon</span><span class="o">=</span><span class="dl">"</span><span class="s2">❌</span><span class="dl">"</span>
+          <span class="nx">freeText</span><span class="o">=</span><span class="dl">"</span><span class="s2">Limited to 5 hearts</span><span class="dl">"</span>
+          <span class="nx">premiumText</span><span class="o">=</span><span class="dl">"</span><span class="s2">♾️ Unlimited hearts</span><span class="dl">"</span>
+        <span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="nx">BenefitRow</span> 
+          <span class="nx">icon</span><span class="o">=</span><span class="dl">"</span><span class="s2">❌</span><span class="dl">"</span>
+          <span class="nx">freeText</span><span class="o">=</span><span class="dl">"</span><span class="s2">Ads every 3 questions</span><span class="dl">"</span>
+          <span class="nx">premiumText</span><span class="o">=</span><span class="dl">"</span><span class="s2">🚫 No ads, ever</span><span class="dl">"</span>
+        <span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="nx">BenefitRow</span> 
+          <span class="nx">icon</span><span class="o">=</span><span class="dl">"</span><span class="s2">❌</span><span class="dl">"</span>
+          <span class="nx">freeText</span><span class="o">=</span><span class="dl">"</span><span class="s2">Basic categories only</span><span class="dl">"</span>
+          <span class="nx">premiumText</span><span class="o">=</span><span class="dl">"</span><span class="s2">🔓 All content unlocked</span><span class="dl">"</span>
+        <span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Pricing Cards */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">pricing</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">PricingCard</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">Monthly</span><span class="dl">"</span>
+          <span class="nx">price</span><span class="o">=</span><span class="p">{</span><span class="nx">pricing</span><span class="p">.</span><span class="nx">monthly</span><span class="p">}</span>
+          <span class="nx">selected</span><span class="o">=</span><span class="p">{</span><span class="kc">false</span><span class="p">}</span>
+          <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">handleSubscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">monthly</span><span class="dl">'</span><span class="p">)}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">PricingCard</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">Annual</span><span class="dl">"</span>
+          <span class="nx">price</span><span class="o">=</span><span class="p">{</span><span class="nx">pricing</span><span class="p">.</span><span class="nx">annual</span><span class="p">}</span>
+          <span class="nx">originalPrice</span><span class="o">=</span><span class="p">{</span><span class="nx">pricing</span><span class="p">.</span><span class="nx">annual</span> <span class="o">*</span> <span class="mf">1.4</span><span class="p">}</span>
+          <span class="nx">badge</span><span class="o">=</span><span class="dl">"</span><span class="s2">BEST VALUE</span><span class="dl">"</span>
+          <span class="nx">selected</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+          <span class="nx">highlighted</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+          <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">handleSubscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">annual</span><span class="dl">'</span><span class="p">)}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">PricingCard</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">Lifetime</span><span class="dl">"</span>
+          <span class="nx">price</span><span class="o">=</span><span class="p">{</span><span class="nx">pricing</span><span class="p">.</span><span class="nx">lifetime</span><span class="p">}</span>
+          <span class="nx">originalPrice</span><span class="o">=</span><span class="p">{</span><span class="nx">pricing</span><span class="p">.</span><span class="nx">lifetime</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">}</span>
+          <span class="nx">badge</span><span class="o">=</span><span class="dl">"</span><span class="s2">ONE TIME</span><span class="dl">"</span>
+          <span class="nx">selected</span><span class="o">=</span><span class="p">{</span><span class="kc">false</span><span class="p">}</span>
+          <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">handleSubscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">lifetime</span><span class="dl">'</span><span class="p">)}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Trust Badges */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">trust</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="err">🔒</span> <span class="nx">Secure</span> <span class="nx">payment</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="err">↩️</span> <span class="nx">Cancel</span> <span class="nx">anytime</span><span class="o">*&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">tiny</span><span class="p">}</span><span class="o">&gt;*</span><span class="nx">Cancellation</span> <span class="nx">requires</span> <span class="nx">email</span> <span class="nx">confirmation</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ScrollView</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="43-trial--win-back-campaigns">4.3 Trial &amp; Win-Back Campaigns</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/trialCampaigns.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">TrialCampaigns</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">manageTrial</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">trial</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getTrialStatus</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">trial</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">offerTrial</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="kd">const</span> <span class="nx">daysRemaining</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDaysRemaining</span><span class="p">(</span><span class="nx">trial</span><span class="p">);</span>
+    
+    <span class="c1">// Progressive urgency</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">daysRemaining</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendNotification</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="p">{</span>
+          <span class="na">title</span><span class="p">:</span> <span class="dl">"</span><span class="s2">⏰ 3 days left in your trial!</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">body</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Lock in your 30% discount now</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">urgency</span><span class="p">:</span> <span class="dl">'</span><span class="s1">medium</span><span class="dl">'</span> <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">break</span><span class="p">;</span>
+        
+      <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendNotification</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="p">{</span>
+          <span class="na">title</span><span class="p">:</span> <span class="dl">"</span><span class="s2">🚨 Trial ends TOMORROW!</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">body</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Last chance for 50% off!</span><span class="dl">"</span><span class="p">,</span>
+          <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="na">urgency</span><span class="p">:</span> <span class="dl">'</span><span class="s1">high</span><span class="dl">'</span> <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">break</span><span class="p">;</span>
+        
+      <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1">// Final hours campaign</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">runFinalHoursCampaign</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+        
+      <span class="k">case</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1">// Trial expired - win-back</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">runWinBackCampaign</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">runFinalHoursCampaign</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">intervals</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">hours</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">12 hours left! 60% off</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hours</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">6 hours! Price goes up soon!</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hours</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">FINAL 3 HOURS - 70% OFF!</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">hours</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">75</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">LAST CHANCE - 75% OFF!!!</span><span class="dl">"</span> <span class="p">},</span>
+    <span class="p">];</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">interval</span> <span class="k">of</span> <span class="nx">intervals</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">setTimeout</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendUrgentNotification</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">interval</span><span class="p">);</span>
+      <span class="p">},</span> <span class="p">(</span><span class="mi">24</span> <span class="o">-</span> <span class="nx">interval</span><span class="p">.</span><span class="nx">hours</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3600000</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">runWinBackCampaign</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">sequence</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">day</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">We miss you! 40% off to come back</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">day</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Special offer just for you - 50% off</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">day</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Last chance - 60% off expires tonight</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">day</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">We really want you back - 70% off</span><span class="dl">"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">day</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">discount</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="na">message</span><span class="p">:</span> <span class="dl">"</span><span class="s2">FINAL OFFER - 80% off, never again</span><span class="dl">"</span> <span class="p">},</span>
+    <span class="p">];</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">step</span> <span class="k">of</span> <span class="nx">sequence</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">scheduleWinBackMessage</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">step</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-5-optimization--testing-week-9-10">Phase 5: Optimization &amp; Testing (Week 9-10)</h2>
+
+<h3 id="51-ab-testing-framework">5.1 A/B Testing Framework</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/experiments.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ExperimentService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getVariant</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">experimentName</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Check existing assignment</span>
+    <span class="kd">const</span> <span class="nx">existing</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getExistingAssignment</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">experimentName</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">existing</span><span class="p">)</span> <span class="k">return</span> <span class="nx">existing</span><span class="p">;</span>
+    
+    <span class="c1">// Assign to variant</span>
+    <span class="kd">const</span> <span class="nx">experiments</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="dl">'</span><span class="s1">paywall_timing</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">variants</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">after_3_quizzes</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">after_7_days</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">on_streak_loss</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">on_hearts_depletion</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="dl">'</span><span class="s1">pricing_strategy</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">variants</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">standard</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">aggressive_discount</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">premium_positioning</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">dynamic</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="dl">'</span><span class="s1">notification_frequency</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">variants</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">minimal</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">moderate</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">aggressive</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+          <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">personalized</span><span class="dl">'</span><span class="p">,</span> <span class="na">weight</span><span class="p">:</span> <span class="mi">25</span> <span class="p">},</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="kd">const</span> <span class="nx">variant</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">selectVariant</span><span class="p">(</span><span class="nx">experiments</span><span class="p">[</span><span class="nx">experimentName</span><span class="p">].</span><span class="nx">variants</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">saveAssignment</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">experimentName</span><span class="p">,</span> <span class="nx">variant</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">variant</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">trackConversion</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">experimentName</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">variant</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getVariant</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">experimentName</span><span class="p">);</span>
+    
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="dl">'</span><span class="s1">experiment_conversion</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">experiment</span><span class="p">:</span> <span class="nx">experimentName</span><span class="p">,</span>
+      <span class="na">variant</span><span class="p">:</span> <span class="nx">variant</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      <span class="na">user_id</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Update experiment stats</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateExperimentStats</span><span class="p">(</span><span class="nx">experimentName</span><span class="p">,</span> <span class="nx">variant</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="52-performance-monitoring">5.2 Performance Monitoring</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/monitoring.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">MonitoringService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">conversion</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">number</span><span class="o">&gt;</span><span class="p">(),</span>
+    <span class="na">retention</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">number</span><span class="o">&gt;</span><span class="p">(),</span>
+    <span class="na">revenue</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">number</span><span class="o">&gt;</span><span class="p">(),</span>
+    <span class="na">frustration</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">number</span><span class="o">&gt;</span><span class="p">(),</span>
+  <span class="p">};</span>
+  
+  <span class="k">async</span> <span class="nx">trackUserJourney</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">events</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserEvents</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    
+    <span class="kd">const</span> <span class="nx">journey</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="c1">// Conversion funnel</span>
+      <span class="na">installed</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">completed_onboarding</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="dl">'</span><span class="s1">onboarding_complete</span><span class="dl">'</span><span class="p">),</span>
+      <span class="na">completed_first_quiz</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="dl">'</span><span class="s1">quiz_completed</span><span class="dl">'</span><span class="p">),</span>
+      <span class="na">saw_paywall</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="dl">'</span><span class="s1">paywall_viewed</span><span class="dl">'</span><span class="p">),</span>
+      <span class="na">started_trial</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="dl">'</span><span class="s1">trial_started</span><span class="dl">'</span><span class="p">),</span>
+      <span class="na">converted_to_paid</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="dl">'</span><span class="s1">subscription_activated</span><span class="dl">'</span><span class="p">),</span>
+      
+      <span class="c1">// Engagement metrics</span>
+      <span class="na">sessions</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">session_start</span><span class="dl">'</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+      <span class="na">quizzes_completed</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">quiz_completed</span><span class="dl">'</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+      <span class="na">ads_watched</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">ad_watched</span><span class="dl">'</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+      
+      <span class="c1">// Frustration events</span>
+      <span class="na">hearts_depleted</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">hearts_depleted</span><span class="dl">'</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+      <span class="na">streak_lost</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="dl">'</span><span class="s1">streak_lost</span><span class="dl">'</span><span class="p">),</span>
+      <span class="na">rage_quits</span><span class="p">:</span> <span class="nx">events</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">rage_quit</span><span class="dl">'</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+      
+      <span class="c1">// Revenue</span>
+      <span class="na">ltv</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateLTV</span><span class="p">(</span><span class="nx">events</span><span class="p">),</span>
+      <span class="na">revenue_from_ads</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateAdRevenue</span><span class="p">(</span><span class="nx">events</span><span class="p">),</span>
+      <span class="na">revenue_from_subs</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateSubRevenue</span><span class="p">(</span><span class="nx">events</span><span class="p">),</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// Alert if frustration too high</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">journey</span><span class="p">.</span><span class="nx">rage_quits</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">||</span> <span class="nx">journey</span><span class="p">.</span><span class="nx">frustration_score</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">alertHighFrustration</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">journey</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">journey</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">generateDashboard</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">kpis</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">dau</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDAU</span><span class="p">(),</span>
+        <span class="na">mau</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMAU</span><span class="p">(),</span>
+        <span class="na">arpu</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getARPU</span><span class="p">(),</span>
+        <span class="na">arppu</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getARPPU</span><span class="p">(),</span>
+        <span class="na">conversion_rate</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getConversionRate</span><span class="p">(),</span>
+        <span class="na">d1_retention</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRetention</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="na">d7_retention</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRetention</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
+        <span class="na">d30_retention</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRetention</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+      <span class="p">},</span>
+      <span class="na">funnels</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">onboarding</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOnboardingFunnel</span><span class="p">(),</span>
+        <span class="na">monetization</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMonetizationFunnel</span><span class="p">(),</span>
+        <span class="na">viral</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getViralFunnel</span><span class="p">(),</span>
+      <span class="p">},</span>
+      <span class="na">segments</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">whales</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getWhales</span><span class="p">(),</span>
+        <span class="na">at_risk</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAtRiskUsers</span><span class="p">(),</span>
+        <span class="na">power_users</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPowerUsers</span><span class="p">(),</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="launch-checklist">Launch Checklist</h2>
+
+<h3 id="pre-launch-1-week-before">Pre-Launch (1 week before)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />All services deployed and tested</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Analytics tracking verified</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />A/B tests configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Payment processing tested</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Push notifications approved</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />App store listings optimized</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Support documentation ready</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Customer service briefed</li>
+</ul>
+
+<h3 id="launch-day">Launch Day</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitoring dashboard active</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Error tracking enabled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Support team ready</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Social media scheduled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Press release sent</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Influencer outreach</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Paid advertising live</li>
+</ul>
+
+<h3 id="post-launch-week-1">Post-Launch (Week 1)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Daily KPI review</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User feedback analysis</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Bug fixes deployed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />A/B test results reviewed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Conversion funnel optimization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Win-back campaigns activated</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Revenue tracking verified</li>
+</ul>
+
+<hr />
+
+<h2 id="monitoring--kpis">Monitoring &amp; KPIs</h2>
+
+<h3 id="critical-metrics-check-daily">Critical Metrics (Check Daily)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">CRITICAL_KPIS</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">conversion</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">target</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="c1">// 5% trial to paid</span>
+    <span class="na">alert_threshold</span><span class="p">:</span> <span class="mf">0.03</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="na">retention</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">d1</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">0.30</span> <span class="p">},</span>
+    <span class="na">d7</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">0.15</span> <span class="p">},</span>
+    <span class="na">d30</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">0.07</span> <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="na">monetization</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">arpu</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">3.50</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">2.00</span> <span class="p">},</span>
+    <span class="na">arppu</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">12.00</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">8.00</span> <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="na">frustration</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rage_quit_rate</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">0.10</span> <span class="p">},</span>
+    <span class="na">hearts_depletion_rate</span><span class="p">:</span> <span class="p">{</span> <span class="na">target</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span> <span class="na">alert</span><span class="p">:</span> <span class="mf">0.30</span> <span class="p">},</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="weekly-review-metrics">Weekly Review Metrics</h3>
+<ul>
+  <li>Cohort retention curves</li>
+  <li>LTV/CAC ratio</li>
+  <li>Viral coefficient</li>
+  <li>Support ticket volume</li>
+  <li>App store ratings</li>
+  <li>Churn prediction accuracy</li>
+</ul>
+
+<h3 id="monthly-strategic-review">Monthly Strategic Review</h3>
+<ul>
+  <li>Revenue growth rate</li>
+  <li>Market share analysis</li>
+  <li>Competitive positioning</li>
+  <li>Feature adoption rates</li>
+  <li>User segmentation evolution</li>
+  <li>Experiment results summary</li>
+</ul>
+
+<hr />
+
+<h2 id="troubleshooting-guide">Troubleshooting Guide</h2>
+
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions</h3>
+
+<h4 id="low-conversion-rate">Low Conversion Rate</h4>
+<ol>
+  <li>Check paywall timing - too early/late?</li>
+  <li>Review pricing - run price sensitivity analysis</li>
+  <li>Analyze dismissal reasons</li>
+  <li>Test different value propositions</li>
+  <li>Increase trial length</li>
+</ol>
+
+<h4 id="high-churn-rate">High Churn Rate</h4>
+<ol>
+  <li>Identify churn triggers</li>
+  <li>Implement win-back campaigns</li>
+  <li>Reduce frustration events</li>
+  <li>Improve onboarding</li>
+  <li>Add more free content</li>
+</ol>
+
+<h4 id="poor-retention">Poor Retention</h4>
+<ol>
+  <li>Optimize difficulty curve</li>
+  <li>Increase reward frequency</li>
+  <li>Enhance social features</li>
+  <li>Improve notification timing</li>
+  <li>Add daily challenges</li>
+</ol>
+
+<hr />
+
+<h2 id="ethical-considerations--legal-compliance">Ethical Considerations &amp; Legal Compliance</h2>
+
+<h3 id="compliance-checklist">Compliance Checklist</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GDPR compliant (EU)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CCPA compliant (California)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />COPPA compliant (children)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Apple App Store guidelines</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Google Play Store policies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Subscription disclosure requirements</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Advertising standards</li>
+</ul>
+
+<h3 id="ethical-guidelines">Ethical Guidelines</h3>
+<ul>
+  <li>Frustration should motivate, not harm</li>
+  <li>Always provide value for payment</li>
+  <li>Be transparent about subscriptions</li>
+  <li>Allow easy cancellation</li>
+  <li>Protect vulnerable users</li>
+  <li>Monitor for addiction patterns</li>
+</ul>
+
+<hr />
+
+<h2 id="resources--documentation">Resources &amp; Documentation</h2>
+
+<h3 id="external-documentation">External Documentation</h3>
+<ul>
+  <li><a href="https://docs.revenuecat.com">RevenueCat Integration</a></li>
+  <li><a href="https://developers.google.com/admob">AdMob Setup</a></li>
+  <li><a href="https://documentation.onesignal.com">OneSignal Push</a></li>
+  <li><a href="https://developer.mixpanel.com">Mixpanel Analytics</a></li>
+</ul>
+
+<h3 id="internal-documentation">Internal Documentation</h3>
+<ul>
+  <li>System Architecture: <code class="language-plaintext highlighter-rouge">/docs/SYSTEM_ARCHITECTURE.md</code></li>
+  <li>API Documentation: <code class="language-plaintext highlighter-rouge">/docs/API_DOCUMENTATION.md</code></li>
+  <li>Testing Guide: <code class="language-plaintext highlighter-rouge">/docs/TESTING_GUIDE.md</code></li>
+  <li>Deployment Guide: <code class="language-plaintext highlighter-rouge">/docs/DEPLOYMENT_GUIDE.md</code></li>
+</ul>
+
+<hr />
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This runbook provides a comprehensive blueprint for implementing monetization through psychological mechanics. Expected timeline: 10 weeks from start to launch. Expected outcome: 5-7% conversion rate, $3.50 ARPU, 40% D7 retention.</p>
+
+<p>Remember: The goal is to create a sustainable business while providing genuine value to users. Monitor metrics closely and adjust strategies based on user feedback and ethical considerations.</p>
+
+<hr />
+
+<p><em>Last Updated: 2025-08-25</em>
+<em>Version: 1.0</em>
+<em>Status: Production Ready</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / DARK_PATTERNS_IMPLEMENTATION_RUNBOOK.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

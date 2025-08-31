@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBSERVABILITY LEARNING GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/monitoring/OBSERVABILITY_LEARNING_GUIDE.md</span>
+</div>
+
+<h1>OBSERVABILITY LEARNING GUIDE</h1>
+
+
+<h1 id="-devmentor-observability-learning-guide">🎓 DevMentor Observability Learning Guide</h1>
+
+<h2 id="-current-system-status">📊 Current System Status</h2>
+
+<h3 id="-running-services">✅ Running Services</h3>
+<ul>
+  <li><strong>Monitoring Service</strong> (Port 3006) - Central monitoring hub</li>
+  <li><strong>PostgreSQL</strong> (Port 5432) - Database</li>
+  <li><strong>Redis</strong> (Port 6379) - Cache &amp; messaging</li>
+  <li><strong>Prometheus</strong> (Port 9090) - Metrics collection</li>
+  <li><strong>Grafana</strong> (Port 3007) - Visualization dashboards</li>
+  <li><strong>Jaeger</strong> (Port 16686) - Distributed tracing</li>
+  <li><strong>Loki</strong> (Port 3100) - Log aggregation</li>
+  <li><strong>AlertManager</strong> (Port 9093) - Alert management</li>
+  <li><strong>cAdvisor</strong> (Port 8080) - Container metrics</li>
+  <li><strong>Node Exporter</strong> (Port 9100) - System metrics</li>
+</ul>
+
+<h3 id="-not-running-services">❌ Not Running Services</h3>
+<ul>
+  <li><strong>Frontend</strong> (devmentor-ui) - Main UI application</li>
+  <li><strong>Auth Service</strong> - Authentication microservice</li>
+  <li><strong>Memory Service</strong> - Context memory service</li>
+  <li><strong>AI Gateway</strong> - AI integration service</li>
+  <li><strong>Project Service</strong> - Project management service</li>
+  <li><strong>Kiali</strong> - Service mesh observability (restarting)</li>
+</ul>
+
+<h2 id="-quick-start-guide">🚀 Quick Start Guide</h2>
+
+<h3 id="step-1-start-missing-core-services">Step 1: Start Missing Core Services</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start all core application services</span>
+docker-compose up <span class="nt">-d</span>
+
+<span class="c"># Or start specific services</span>
+docker-compose up <span class="nt">-d</span> frontend auth-service memory-service ai-gateway project-service
+</code></pre></div></div>
+
+<h3 id="step-2-verify-all-services-are-running">Step 2: Verify All Services Are Running</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check service health</span>
+curl http://localhost:3006/api/services | jq <span class="nb">.</span>
+
+<span class="c"># Check container status</span>
+docker ps <span class="nt">--format</span> <span class="s2">"table {{.Names}}</span><span class="se">\t</span><span class="s2">{{.Status}}</span><span class="se">\t</span><span class="s2">{{.Ports}}"</span>
+</code></pre></div></div>
+
+<h2 id="-learning-path-by-tool">🎯 Learning Path by Tool</h2>
+
+<h3 id="1--prometheus-metrics---httplocalhost9090">1. 📈 Prometheus (Metrics) - http://localhost:9090</h3>
+
+<h4 id="what-youll-learn">What You’ll Learn:</h4>
+<ul>
+  <li>How to query time-series metrics</li>
+  <li>Understanding metric types (counters, gauges, histograms)</li>
+  <li>Writing PromQL queries</li>
+  <li>Service discovery mechanisms</li>
+</ul>
+
+<h4 id="beginner-exercises">Beginner Exercises:</h4>
+<ol>
+  <li><strong>Explore Available Metrics</strong>
+    <ul>
+      <li>Go to http://localhost:9090</li>
+      <li>Click “Graph” → Type <code class="language-plaintext highlighter-rouge">up</code> → Execute</li>
+      <li>This shows which services are up (1) or down (0)</li>
+    </ul>
+  </li>
+  <li><strong>Container Memory Usage</strong>
+    <pre><code class="language-promql">container_memory_usage_bytes{name=~"devmentor.*"}
+</code></pre>
+    <ul>
+      <li>Shows memory usage for all DevMentor containers</li>
+    </ul>
+  </li>
+  <li><strong>HTTP Request Rate</strong>
+    <pre><code class="language-promql">rate(http_requests_total[5m])
+</code></pre>
+    <ul>
+      <li>Shows requests per second over 5 minutes</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="intermediate-exercises">Intermediate Exercises:</h4>
+<ol>
+  <li><strong>CPU Usage by Container</strong>
+    <pre><code class="language-promql">sum(rate(container_cpu_usage_seconds_total{name=~"devmentor.*"}[5m])) by (name) * 100
+</code></pre>
+  </li>
+  <li><strong>Memory Usage Percentage</strong>
+    <pre><code class="language-promql">(container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100
+</code></pre>
+  </li>
+  <li><strong>Alert Query Example</strong>
+    <pre><code class="language-promql">up{job="monitoring-service"} == 0
+</code></pre>
+    <ul>
+      <li>Returns 1 if monitoring service is down</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="2--grafana-visualization---httplocalhost3007">2. 📊 Grafana (Visualization) - http://localhost:3007</h3>
+
+<p><strong>Login:</strong> admin / devmentor123</p>
+
+<h4 id="what-youll-learn-1">What You’ll Learn:</h4>
+<ul>
+  <li>Creating dashboards</li>
+  <li>Setting up alerts</li>
+  <li>Data source configuration</li>
+  <li>Panel types and visualizations</li>
+</ul>
+
+<h4 id="getting-started">Getting Started:</h4>
+<ol>
+  <li><strong>Import Pre-built Dashboard</strong>
+    <ul>
+      <li>Go to Dashboards → Import</li>
+      <li>Enter ID: <code class="language-plaintext highlighter-rouge">1860</code> (Node Exporter Full)</li>
+      <li>Select Prometheus data source</li>
+      <li>Click Import</li>
+    </ul>
+  </li>
+  <li><strong>Create Your First Dashboard</strong>
+    <ul>
+      <li>Click “+” → “Dashboard”</li>
+      <li>Add Panel → Select Prometheus</li>
+      <li>Query: <code class="language-plaintext highlighter-rouge">up{job=~".*service.*"}</code></li>
+      <li>Visualization: Stat</li>
+      <li>Title: “Service Health”</li>
+    </ul>
+  </li>
+  <li><strong>Set Up an Alert</strong>
+    <ul>
+      <li>Edit any panel → Alert tab</li>
+      <li>Create alert rule for when value &lt; 1</li>
+      <li>Configure notification channel</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="dashboard-ideas">Dashboard Ideas:</h4>
+<ul>
+  <li><strong>Service Health Overview</strong>: Status of all microservices</li>
+  <li><strong>Performance Metrics</strong>: Response times, throughput</li>
+  <li><strong>Resource Usage</strong>: CPU, memory, disk, network</li>
+  <li><strong>Business Metrics</strong>: User activity, API usage</li>
+</ul>
+
+<h3 id="3--loki-logs---via-grafana">3. 📝 Loki (Logs) - via Grafana</h3>
+
+<h4 id="what-youll-learn-2">What You’ll Learn:</h4>
+<ul>
+  <li>Log aggregation patterns</li>
+  <li>LogQL query language</li>
+  <li>Log correlation with metrics</li>
+  <li>Structured logging benefits</li>
+</ul>
+
+<h4 id="exercises">Exercises:</h4>
+<ol>
+  <li><strong>View All Logs</strong>
+    <ul>
+      <li>In Grafana, go to Explore</li>
+      <li>Select Loki data source</li>
+      <li>Query: <code class="language-plaintext highlighter-rouge">{container_name=~"devmentor.*"}</code></li>
+    </ul>
+  </li>
+  <li><strong>Filter by Log Level</strong>
+    <pre><code class="language-logql">{container_name="devmentor-monitoring-service-1"} |= "ERROR"
+</code></pre>
+  </li>
+  <li><strong>Parse JSON Logs</strong>
+    <pre><code class="language-logql">{container_name=~"devmentor.*"} | json | level="error"
+</code></pre>
+  </li>
+  <li><strong>Count Errors Over Time</strong>
+    <pre><code class="language-logql">sum(rate({container_name=~"devmentor.*"} |= "error" [5m]))
+</code></pre>
+  </li>
+</ol>
+
+<h3 id="4--jaeger-tracing---httplocalhost16686">4. 🔍 Jaeger (Tracing) - http://localhost:16686</h3>
+
+<h4 id="what-youll-learn-3">What You’ll Learn:</h4>
+<ul>
+  <li>Distributed tracing concepts</li>
+  <li>Span and trace relationships</li>
+  <li>Performance bottleneck identification</li>
+  <li>Service dependency mapping</li>
+</ul>
+
+<h4 id="how-to-generate-traces">How to Generate Traces:</h4>
+<ol>
+  <li><strong>Enable Tracing in Services</strong>
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add to your service code</span>
+<span class="kd">const</span> <span class="nx">tracer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jaeger-client</span><span class="dl">'</span><span class="p">).</span><span class="nx">initTracer</span><span class="p">({</span>
+  <span class="na">serviceName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">frontend</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">sampler</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">const</span><span class="dl">'</span><span class="p">,</span> <span class="na">param</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span>
+  <span class="na">reporter</span><span class="p">:</span> <span class="p">{</span> <span class="na">agentHost</span><span class="p">:</span> <span class="dl">'</span><span class="s1">localhost</span><span class="dl">'</span><span class="p">,</span> <span class="na">agentPort</span><span class="p">:</span> <span class="mi">6831</span> <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>View Traces</strong>
+    <ul>
+      <li>Go to http://localhost:16686</li>
+      <li>Select service from dropdown</li>
+      <li>Click “Find Traces”</li>
+      <li>Click on any trace to see details</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="trace-analysis">Trace Analysis:</h4>
+<ul>
+  <li><strong>Latency Breakdown</strong>: See time spent in each service</li>
+  <li><strong>Error Detection</strong>: Red spans indicate errors</li>
+  <li><strong>Dependency Graph</strong>: Service → System Architecture</li>
+</ul>
+
+<h3 id="5-️-monitoring-service-api---httplocalhost3006">5. 🎚️ Monitoring Service API - http://localhost:3006</h3>
+
+<h4 id="available-endpoints">Available Endpoints:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Health Check</span>
+curl http://localhost:3006/health
+
+<span class="c"># Service Status</span>
+curl http://localhost:3006/api/services | jq <span class="nb">.</span>
+
+<span class="c"># System Metrics</span>
+curl http://localhost:3006/api/metrics | jq <span class="nb">.</span>
+
+<span class="c"># Incidents</span>
+curl http://localhost:3006/api/incidents | jq <span class="nb">.</span>
+
+<span class="c"># Prometheus Metrics (Unified)</span>
+curl http://localhost:3006/api/observability/metrics?query<span class="o">=</span>up | jq <span class="nb">.</span>
+
+<span class="c"># Loki Logs (Unified)</span>
+curl http://localhost:3006/api/observability/logs?query<span class="o">={</span><span class="nv">container_name</span><span class="o">=</span><span class="se">\"</span>devmentor-frontend<span class="se">\"</span><span class="o">}</span> | jq <span class="nb">.</span>
+
+<span class="c"># Jaeger Traces (Unified)</span>
+curl http://localhost:3006/api/observability/traces?service<span class="o">=</span>frontend | jq <span class="nb">.</span>
+</code></pre></div></div>
+
+<h2 id="️-architecture-understanding">🏗️ Architecture Understanding</h2>
+
+<h3 id="service-communication-flow">Service Communication Flow:</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User Request → Frontend (3001)
+     ↓
+Auth Service (3002) → Redis (6379)
+     ↓                    ↓
+AI Gateway (3004)    PostgreSQL (5432)
+     ↓
+Project Service (3005)
+     ↓
+Memory Service (3003)
+
+All services → Monitoring Service (3006)
+            → Prometheus (9090)
+            → Loki (3100)
+            → Jaeger (16686)
+</code></pre></div></div>
+
+<h2 id="-learning-projects">📚 Learning Projects</h2>
+
+<h3 id="project-1-build-a-service-health-dashboard">Project 1: Build a Service Health Dashboard</h3>
+<ol>
+  <li>Create a Grafana dashboard showing all service statuses</li>
+  <li>Add CPU and memory usage for each service</li>
+  <li>Set up alerts for when services go down</li>
+  <li>Add log panels showing recent errors</li>
+</ol>
+
+<h3 id="project-2-trace-a-user-journey">Project 2: Trace a User Journey</h3>
+<ol>
+  <li>Add tracing to the frontend</li>
+  <li>Follow a request through all services</li>
+  <li>Identify the slowest service</li>
+  <li>Optimize based on findings</li>
+</ol>
+
+<h3 id="project-3-create-slo-dashboard">Project 3: Create SLO Dashboard</h3>
+<ol>
+  <li>Define SLIs (Service Level Indicators)
+    <ul>
+      <li>Availability: <code class="language-plaintext highlighter-rouge">avg(up{job=~".*service"})</code></li>
+      <li>Latency: P95 response time</li>
+      <li>Error rate: Errors per minute</li>
+    </ul>
+  </li>
+  <li>Set SLOs (Service Level Objectives)
+    <ul>
+      <li>99.9% availability</li>
+      <li>P95 latency &lt; 200ms</li>
+      <li>Error rate &lt; 1%</li>
+    </ul>
+  </li>
+  <li>Create dashboard tracking SLO compliance</li>
+</ol>
+
+<h3 id="project-4-implement-chaos-engineering">Project 4: Implement Chaos Engineering</h3>
+<ol>
+  <li>Use monitoring to establish baseline</li>
+  <li>Introduce controlled failures</li>
+  <li>Observe system behavior</li>
+  <li>Improve resilience based on findings</li>
+</ol>
+
+<h2 id="-troubleshooting-common-issues">🔧 Troubleshooting Common Issues</h2>
+
+<h3 id="frontend-not-running">Frontend Not Running</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if frontend image exists</span>
+docker images | <span class="nb">grep </span>devmentor-ui
+
+<span class="c"># Build if missing</span>
+<span class="nb">cd </span>devmentor-ui
+docker build <span class="nt">-t</span> devmentor-frontend <span class="nb">.</span>
+<span class="nb">cd</span> ..
+
+<span class="c"># Start frontend</span>
+docker-compose up <span class="nt">-d</span> frontend
+</code></pre></div></div>
+
+<h3 id="service-cant-connect">Service Can’t Connect</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check network</span>
+docker network <span class="nb">ls</span> | <span class="nb">grep </span>devmentor
+
+<span class="c"># Recreate if needed</span>
+docker network create devmentor-network
+
+<span class="c"># Restart services</span>
+docker-compose restart
+</code></pre></div></div>
+
+<h3 id="kiali-keeps-restarting">Kiali Keeps Restarting</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+docker logs devmentor-kiali
+
+<span class="c"># Fix signing key if needed</span>
+docker-compose <span class="nt">-f</span> docker-compose.observability.yml up <span class="nt">-d</span> kiali
+</code></pre></div></div>
+
+<h2 id="-advanced-topics-to-explore">📖 Advanced Topics to Explore</h2>
+
+<h3 id="1-service-mesh-integration">1. <strong>Service Mesh Integration</strong></h3>
+<ul>
+  <li>Add Istio for advanced traffic management</li>
+  <li>Use Kiali for service mesh visualization</li>
+  <li>Implement circuit breakers and retries</li>
+</ul>
+
+<h3 id="2-machine-learning-for-observability">2. <strong>Machine Learning for Observability</strong></h3>
+<ul>
+  <li>Anomaly detection in metrics</li>
+  <li>Log pattern recognition</li>
+  <li>Predictive alerting</li>
+</ul>
+
+<h3 id="3-cost-optimization">3. <strong>Cost Optimization</strong></h3>
+<ul>
+  <li>Monitor resource usage patterns</li>
+  <li>Identify over-provisioned services</li>
+  <li>Implement auto-scaling based on metrics</li>
+</ul>
+
+<h3 id="4-security-observability">4. <strong>Security Observability</strong></h3>
+<ul>
+  <li>Track authentication failures</li>
+  <li>Monitor for suspicious patterns</li>
+  <li>Audit log analysis</li>
+</ul>
+
+<h2 id="-daily-practice-routine">🎯 Daily Practice Routine</h2>
+
+<h3 id="morning-15-mins">Morning (15 mins)</h3>
+<ol>
+  <li>Check Grafana dashboards for overnight issues</li>
+  <li>Review any triggered alerts</li>
+  <li>Check service health status</li>
+</ol>
+
+<h3 id="afternoon-30-mins">Afternoon (30 mins)</h3>
+<ol>
+  <li>Write one new PromQL query</li>
+  <li>Add one new panel to a dashboard</li>
+  <li>Investigate one interesting trace</li>
+</ol>
+
+<h3 id="evening-15-mins">Evening (15 mins)</h3>
+<ol>
+  <li>Review the day’s incidents</li>
+  <li>Document any learnings</li>
+  <li>Plan tomorrow’s monitoring improvements</li>
+</ol>
+
+<h2 id="-next-steps">🚀 Next Steps</h2>
+
+<ol>
+  <li><strong>Start the missing services</strong> using docker-compose</li>
+  <li><strong>Access Grafana</strong> and explore the dashboards</li>
+  <li><strong>Generate some traffic</strong> to see real metrics</li>
+  <li><strong>Create your first custom dashboard</strong></li>
+  <li><strong>Set up your first alert</strong></li>
+  <li><strong>Investigate a trace</strong> in Jaeger</li>
+  <li><strong>Query logs</strong> in Loki</li>
+</ol>
+
+<h2 id="-quick-help">📞 Quick Help</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check all services status</span>
+curl http://localhost:3006/api/services | jq <span class="s1">'.[] | select(.status != "healthy")'</span>
+
+<span class="c"># View recent errors</span>
+docker logs devmentor-monitoring-service-1 <span class="nt">--tail</span> 50 | <span class="nb">grep </span>ERROR
+
+<span class="c"># Restart everything</span>
+docker-compose restart
+docker-compose <span class="nt">-f</span> docker-compose.observability.yml restart
+
+<span class="c"># Emergency shutdown</span>
+docker-compose down
+docker-compose <span class="nt">-f</span> docker-compose.observability.yml down
+</code></pre></div></div>
+
+<h2 id="-educational-resources">🎓 Educational Resources</h2>
+
+<h3 id="concepts-to-master">Concepts to Master:</h3>
+<ol>
+  <li><strong>RED Method</strong>: Rate, Errors, Duration</li>
+  <li><strong>USE Method</strong>: Utilization, Saturation, Errors</li>
+  <li><strong>Four Golden Signals</strong>: Latency, Traffic, Errors, Saturation</li>
+  <li><strong>SRE Principles</strong>: SLIs, SLOs, SLAs, Error Budgets</li>
+  <li><strong>Observability Pillars</strong>: Metrics, Logs, Traces</li>
+</ol>
+
+<h3 id="recommended-learning-path">Recommended Learning Path:</h3>
+<ol>
+  <li>Week 1: Master Prometheus queries</li>
+  <li>Week 2: Build comprehensive Grafana dashboards</li>
+  <li>Week 3: Implement distributed tracing</li>
+  <li>Week 4: Set up alerting and incident response</li>
+  <li>Week 5: Optimize based on observations</li>
+  <li>Week 6: Implement chaos engineering</li>
+</ol>
+
+<p>Remember: Observability is not just about tools, but about understanding your system’s behavior and continuously improving it based on data-driven insights!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/monitoring/OBSERVABILITY_LEARNING_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

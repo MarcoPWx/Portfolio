@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI ENGINE HOSTING GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">AI_ENGINE_HOSTING_GUIDE.md</span>
+</div>
+
+<h1>AI ENGINE HOSTING GUIDE</h1>
+
+
+<h1 id="ai-engine-hosting-guide-for-quizmentor">AI Engine Hosting Guide for QuizMentor</h1>
+
+<h2 id="-overview">🎯 Overview</h2>
+
+<p>You have 3 main approaches for hosting AI capabilities:</p>
+<ol>
+  <li><strong>API-Based</strong> (OpenAI, Anthropic, Google) - Easiest, no hosting needed</li>
+  <li><strong>Serverless</strong> (Replicate, Modal, Banana) - Good for open-source models</li>
+  <li><strong>Self-Hosted</strong> (RunPod, Vast.ai, own GPU) - Most control, best for scale</li>
+</ol>
+
+<h2 id="-quick-decision-matrix">📊 Quick Decision Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Solution</th>
+      <th>Cost</th>
+      <th>Setup Time</th>
+      <th>Best For</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenAI API</td>
+      <td>$0.002-0.02/1K tokens</td>
+      <td>5 min</td>
+      <td>Quick start, high quality</td>
+    </tr>
+    <tr>
+      <td>Anthropic Claude</td>
+      <td>$0.008-0.024/1K tokens</td>
+      <td>5 min</td>
+      <td>Complex reasoning</td>
+    </tr>
+    <tr>
+      <td>Google Gemini</td>
+      <td>$0.0005-0.002/1K tokens</td>
+      <td>10 min</td>
+      <td>Cost-effective</td>
+    </tr>
+    <tr>
+      <td>Replicate</td>
+      <td>$0.0002-0.02/sec</td>
+      <td>15 min</td>
+      <td>Open-source models</td>
+    </tr>
+    <tr>
+      <td>Modal</td>
+      <td>$0.0001/sec GPU</td>
+      <td>30 min</td>
+      <td>Custom Python code</td>
+    </tr>
+    <tr>
+      <td>RunPod</td>
+      <td>$0.2-2/hour</td>
+      <td>1 hour</td>
+      <td>Dedicated GPUs</td>
+    </tr>
+    <tr>
+      <td>Self-hosted</td>
+      <td>$500-5000/month</td>
+      <td>Days</td>
+      <td>Full control</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="1️⃣-option-1-api-based-recommended-to-start">1️⃣ Option 1: API-Based (Recommended to Start)</h2>
+
+<h3 id="openai-integration">OpenAI Integration</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/ai/openai.ts</span>
+<span class="k">import</span> <span class="nx">OpenAI</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">openai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OPENAI_API_KEY</span><span class="o">!</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">validateQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">completions</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-4-turbo</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">system</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">content</span><span class="p">:</span> <span class="s2">`You are an educational expert. Analyze this question and return:
+        1. Bloom's Taxonomy level (1-6)
+        2. Cognitive complexity (0-1)
+        3. Quality score (0-1)
+        4. Suggestions for improvement
+        Return as JSON.`</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">content</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">question</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="na">response_format</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">json_object</span><span class="dl">'</span> <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="o">!</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">generateAdaptiveQuestions</span><span class="p">(</span>
+  <span class="nx">topic</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+  <span class="nx">difficulty</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">count</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">completions</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-4-turbo</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">system</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">content</span><span class="p">:</span> <span class="s2">`Generate </span><span class="p">${</span><span class="nx">count</span><span class="p">}</span><span class="s2"> quiz questions about </span><span class="p">${</span><span class="nx">topic</span><span class="p">}</span><span class="s2"> at difficulty level </span><span class="p">${</span><span class="nx">difficulty</span><span class="p">}</span><span class="s2">/5.
+        Include multiple choice and short answer questions.
+        Return as JSON array with: text, type, options, correctAnswer, explanation.`</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="na">response_format</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">json_object</span><span class="dl">'</span> <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="o">!</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="anthropic-claude-integration">Anthropic Claude Integration</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/ai/anthropic.ts</span>
+<span class="k">import</span> <span class="nx">Anthropic</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@anthropic-ai/sdk</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">anthropic</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Anthropic</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ANTHROPIC_API_KEY</span><span class="o">!</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">analyzeLearningSession</span><span class="p">(</span><span class="nx">sessionData</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">anthropic</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">claude-3-opus-20240229</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">max_tokens</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">content</span><span class="p">:</span> <span class="s2">`Analyze this learning session and provide:
+      1. Performance insights
+      2. Knowledge gaps identified
+      3. Recommended next topics
+      4. Personalized study plan
+      
+      Session data: </span><span class="p">${</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">sessionData</span><span class="p">)}</span><span class="s2">`</span>
+    <span class="p">}]</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="cost-optimization-with-caching">Cost Optimization with Caching</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/ai/validate/route.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">validateQuestion</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/ai/openai</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">redis</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/redis</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// If using Upstash</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">question</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  
+  <span class="c1">// Create cache key from question</span>
+  <span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="s2">`ai:validate:</span><span class="p">${</span><span class="nx">Buffer</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">question</span><span class="p">)).</span><span class="nx">toString</span><span class="p">(</span><span class="dl">'</span><span class="s1">base64</span><span class="dl">'</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+  
+  <span class="c1">// Check cache first</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">redis</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="p">...</span><span class="nx">cached</span><span class="p">,</span> <span class="na">fromCache</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Call AI API</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">validateQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+  
+  <span class="c1">// Cache for 24 hours</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">redis</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">86400</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2️⃣-option-2-serverless-model-hosting">2️⃣ Option 2: Serverless Model Hosting</h2>
+
+<h3 id="replicate-easy-open-source-models">Replicate (Easy Open-Source Models)</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/ai/replicate.ts</span>
+<span class="k">import</span> <span class="nx">Replicate</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">replicate</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">replicate</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Replicate</span><span class="p">({</span>
+  <span class="na">auth</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REPLICATE_API_TOKEN</span><span class="o">!</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Use Llama 2 for question generation</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">generateWithLlama</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">replicate</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span>
+    <span class="dl">"</span><span class="s2">meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">{</span>
+      <span class="na">input</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">prompt</span><span class="p">,</span>
+        <span class="na">max_new_tokens</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="na">temperature</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nx">output</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Use BERT for question classification</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">classifyWithBERT</span><span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">replicate</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span>
+    <span class="dl">"</span><span class="s2">daanelson/bert-base-uncased:latest</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">{</span>
+      <span class="na">input</span><span class="p">:</span> <span class="p">{</span> <span class="nx">text</span> <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nx">output</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="modal-python-based-more-flexible">Modal (Python-Based, More Flexible)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># modal_app.py - Deploy Python AI code
+</span><span class="kn">import</span> <span class="nn">modal</span>
+
+<span class="n">stub</span> <span class="o">=</span> <span class="n">modal</span><span class="p">.</span><span class="n">Stub</span><span class="p">(</span><span class="s">"quizmentor-ai"</span><span class="p">)</span>
+
+<span class="c1"># Define the container image
+</span><span class="n">image</span> <span class="o">=</span> <span class="n">modal</span><span class="p">.</span><span class="n">Image</span><span class="p">.</span><span class="n">debian_slim</span><span class="p">().</span><span class="n">pip_install</span><span class="p">(</span>
+    <span class="s">"transformers"</span><span class="p">,</span>
+    <span class="s">"torch"</span><span class="p">,</span>
+    <span class="s">"sentence-transformers"</span><span class="p">,</span>
+    <span class="s">"scikit-learn"</span>
+<span class="p">)</span>
+
+<span class="o">@</span><span class="n">stub</span><span class="p">.</span><span class="n">function</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="s">"T4"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">analyze_learning_pattern</span><span class="p">(</span><span class="n">user_responses</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+    
+    <span class="c1"># Load model
+</span>    <span class="n">classifier</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s">"text-classification"</span><span class="p">,</span> 
+                         <span class="n">model</span><span class="o">=</span><span class="s">"bert-base-uncased"</span><span class="p">)</span>
+    
+    <span class="c1"># Analyze patterns
+</span>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">user_responses</span><span class="p">:</span>
+        <span class="n">analysis</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s">'text'</span><span class="p">])</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s">'question_id'</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span>
+            <span class="s">'difficulty_match'</span><span class="p">:</span> <span class="n">calculate_difficulty</span><span class="p">(</span><span class="n">analysis</span><span class="p">),</span>
+            <span class="s">'cognitive_level'</span><span class="p">:</span> <span class="n">determine_bloom_level</span><span class="p">(</span><span class="n">analysis</span><span class="p">)</span>
+        <span class="p">})</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="o">@</span><span class="n">stub</span><span class="p">.</span><span class="n">function</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="s">"T4"</span><span class="p">,</span> <span class="n">keep_warm</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generate_adaptive_question</span><span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">difficulty</span><span class="p">,</span> <span class="n">previous_responses</span><span class="p">):</span>
+    <span class="c1"># Your ML logic here
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<p>Call from Next.js:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/ai/modal.ts</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">callModalFunction</span><span class="p">(</span><span class="nx">functionName</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">`https://your-modal-app.modal.run/</span><span class="p">${</span><span class="nx">functionName</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">:</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MODAL_TOKEN</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3️⃣-option-3-self-hosted-models">3️⃣ Option 3: Self-Hosted Models</h2>
+
+<h3 id="runpod-gpu-cloud">RunPod (GPU Cloud)</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># runpod-deployment.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">quizmentor-ai</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">containers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">ai-server</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">runpod/pytorch:2.0.1-py3.10-cuda11.8.0-devel</span>
+    <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8000</span>
+    <span class="na">resources</span><span class="pi">:</span>
+      <span class="na">limits</span><span class="pi">:</span>
+        <span class="na">nvidia.com/gpu</span><span class="pi">:</span> <span class="m">1</span>  <span class="c1"># Request 1 GPU</span>
+    <span class="na">env</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MODEL_NAME</span>
+      <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">meta-llama/Llama-2-13b-chat-hf"</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ai_server.py - Run on RunPod
+</span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">AutoTokenizer</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+<span class="c1"># Load model once
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+    <span class="s">"meta-llama/Llama-2-13b-chat-hf"</span><span class="p">,</span>
+    <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="n">float16</span><span class="p">,</span>
+    <span class="n">device_map</span><span class="o">=</span><span class="s">"auto"</span>
+<span class="p">)</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s">"meta-llama/Llama-2-13b-chat-hf"</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"/generate"</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s">"pt"</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"response"</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"/validate-question"</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="c1"># Your validation logic
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="ollama-local-development">Ollama (Local Development)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Ollama locally</span>
+curl <span class="nt">-fsSL</span> https://ollama.ai/install.sh | sh
+
+<span class="c"># Pull models</span>
+ollama pull llama2
+ollama pull mistral
+ollama pull phi
+</code></pre></div></div>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/ai/ollama.ts - For local development</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">callOllama</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:11434/api/generate</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">llama2</span><span class="dl">'</span><span class="p">,</span>
+      <span class="nx">prompt</span><span class="p">,</span>
+      <span class="na">stream</span><span class="p">:</span> <span class="kc">false</span>
+    <span class="p">})</span>
+  <span class="p">});</span>
+  
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4️⃣-hybrid-approach-recommended">4️⃣ Hybrid Approach (Recommended)</h2>
+
+<p>Combine multiple services for optimal cost/performance:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/ai/hybrid.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">validateQuestion</span> <span class="k">as</span> <span class="nx">validateOpenAI</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./openai</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">generateWithLlama</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./replicate</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">callOllama</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./ollama</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AIService</span> <span class="p">{</span>
+  <span class="c1">// Use OpenAI for complex reasoning</span>
+  <span class="k">async</span> <span class="nx">validateQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Use local Ollama for development</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateWithOllama</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// Use OpenAI in production</span>
+    <span class="k">return</span> <span class="nx">validateOpenAI</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Use Replicate for bulk generation (cheaper)</span>
+  <span class="k">async</span> <span class="nx">generateQuestions</span><span class="p">(</span><span class="nx">topic</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">count</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">prompt</span> <span class="o">=</span> <span class="s2">`Generate </span><span class="p">${</span><span class="nx">count</span><span class="p">}</span><span class="s2"> quiz questions about </span><span class="p">${</span><span class="nx">topic</span><span class="p">}</span><span class="s2">...`</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">generateWithLlama</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Use cached embeddings for similarity search</span>
+  <span class="k">async</span> <span class="nx">findSimilarQuestions</span><span class="p">(</span><span class="nx">question</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Use vector DB (Supabase pgvector or Pinecone)</span>
+    <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getEmbedding</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">searchVectorDB</span><span class="p">(</span><span class="nx">embedding</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">getEmbedding</span><span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Use OpenAI embeddings API (cheap and good)</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">embeddings</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+      <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text-embedding-3-small</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">input</span><span class="p">:</span> <span class="nx">text</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">embedding</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5️⃣-edge-functions-vercel-ai-sdk">5️⃣ Edge Functions (Vercel AI SDK)</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/ai/stream/route.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">OpenAIStream</span><span class="p">,</span> <span class="nx">StreamingTextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ai</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">openai</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/ai/openai</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">runtime</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">edge</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Run on edge for lower latency</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">prompt</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">completions</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-3.5-turbo</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">stream</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+  <span class="p">});</span>
+  
+  <span class="kd">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">OpenAIStream</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">StreamingTextResponse</span><span class="p">(</span><span class="nx">stream</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-cost-optimization-strategies">💰 Cost Optimization Strategies</h2>
+
+<h3 id="1-smart-model-selection">1. Smart Model Selection</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">selectModel</span><span class="p">(</span><span class="nx">task</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">complexity</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">task</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">simple_classification</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">gpt-3.5-turbo</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Cheap and fast</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">task</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">complex_reasoning</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="nx">complexity</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">gpt-4-turbo</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// High quality when needed</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">task</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">bulk_generation</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">'</span><span class="s1">llama-2-13b</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Open source via Replicate</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">gpt-3.5-turbo</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Default</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-implement-caching-layers">2. Implement Caching Layers</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Cache at multiple levels</span>
+<span class="kd">const</span> <span class="nx">cache</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">memory</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Map</span><span class="p">(),</span> <span class="c1">// In-memory cache</span>
+  <span class="na">redis</span><span class="p">:</span> <span class="nx">redis</span><span class="p">,</span>      <span class="c1">// Redis cache</span>
+  <span class="na">database</span><span class="p">:</span> <span class="nx">supabase</span> <span class="c1">// Long-term cache</span>
+<span class="p">};</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getCachedOrGenerate</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">generator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Check memory first (fastest)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">cache</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Check Redis (fast)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">cache</span><span class="p">.</span><span class="nx">redis</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">cache</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">cached</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Generate new</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">generator</span><span class="p">();</span>
+  
+  <span class="c1">// Cache everywhere</span>
+  <span class="nx">cache</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">cache</span><span class="p">.</span><span class="nx">redis</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-batch-processing">3. Batch Processing</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Process multiple items in one API call</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">batchValidate</span><span class="p">(</span><span class="nx">questions</span><span class="p">:</span> <span class="kr">any</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">prompt</span> <span class="o">=</span> <span class="s2">`Validate these </span><span class="p">${</span><span class="nx">questions</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2"> questions...
+  </span><span class="p">${</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">questions</span><span class="p">)}</span><span class="s2">
+  Return a JSON array with validation for each.`</span><span class="p">;</span>
+  
+  <span class="c1">// One API call instead of N</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">chat</span><span class="p">.</span><span class="nx">completions</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-3.5-turbo</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+    <span class="na">response_format</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">json_object</span><span class="dl">'</span> <span class="p">}</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="o">!</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-deployment-architecture">🚀 Deployment Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│         Next.js Frontend                 │
+└─────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│      Next.js API Routes (Edge)          │
+│         (Validation Layer)               │
+└─────────────────────────────────────────┘
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+┌─────────────┐ ┌─────────┐ ┌─────────────┐
+│  OpenAI API │ │Replicate │ │   RunPod    │
+│  (Primary)  │ │(Fallback)│ │  (Custom)   │
+└─────────────┘ └─────────┘ └─────────────┘
+                    │
+                    ▼
+        ┌─────────────────────────┐
+        │    Caching Layer        │
+        │  (Redis/Upstash)        │
+        └─────────────────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-scaling-path">📈 Scaling Path</h2>
+
+<h3 id="phase-1-start-simple-0-1000-users">Phase 1: Start Simple (0-1000 users)</h3>
+<ul>
+  <li>Use OpenAI API directly</li>
+  <li>Basic Redis caching</li>
+  <li>Cost: ~$50-200/month</li>
+</ul>
+
+<h3 id="phase-2-optimize-1000-10k-users">Phase 2: Optimize (1000-10K users)</h3>
+<ul>
+  <li>Add Replicate for bulk operations</li>
+  <li>Implement smart caching</li>
+  <li>Use embeddings for similarity</li>
+  <li>Cost: ~$200-1000/month</li>
+</ul>
+
+<h3 id="phase-3-scale-10k-users">Phase 3: Scale (10K+ users)</h3>
+<ul>
+  <li>Deploy own models on RunPod</li>
+  <li>Use vector databases</li>
+  <li>Implement model routing</li>
+  <li>Cost: ~$1000-5000/month</li>
+</ul>
+
+<hr />
+
+<h2 id="-environment-variables">🔧 Environment Variables</h2>
+
+<pre><code class="language-env"># .env.local
+
+# Option 1: API-based
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_AI_API_KEY=...
+
+# Option 2: Serverless
+REPLICATE_API_TOKEN=r8_...
+MODAL_TOKEN_ID=...
+MODAL_TOKEN_SECRET=...
+
+# Option 3: Self-hosted
+RUNPOD_API_KEY=...
+RUNPOD_ENDPOINT=https://...
+
+# Caching
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+
+# Vector DB (for embeddings)
+PINECONE_API_KEY=...
+PINECONE_INDEX=...
+</code></pre>
+
+<hr />
+
+<h2 id="-recommended-starting-setup">✅ Recommended Starting Setup</h2>
+
+<ol>
+  <li><strong>Start with OpenAI API</strong> ($50-200/month)
+    <ul>
+      <li>Quick to implement</li>
+      <li>High quality results</li>
+      <li>No infrastructure needed</li>
+    </ul>
+  </li>
+  <li><strong>Add Upstash Redis</strong> (Free tier)
+    <ul>
+      <li>Cache AI responses</li>
+      <li>Reduce API costs by 50-80%</li>
+    </ul>
+  </li>
+  <li><strong>Monitor Usage</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Track API usage</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">trackUsage</span><span class="p">(</span><span class="nx">model</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">tokens</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">ai_usage</span><span class="dl">'</span><span class="p">).</span><span class="nx">insert</span><span class="p">({</span>
+    <span class="nx">model</span><span class="p">,</span>
+    <span class="nx">tokens</span><span class="p">,</span>
+    <span class="na">cost</span><span class="p">:</span> <span class="nx">calculateCost</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">tokens</span><span class="p">),</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Optimize as You Grow</strong>
+    <ul>
+      <li>Switch to cheaper models for simple tasks</li>
+      <li>Implement batching</li>
+      <li>Add fallback options</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-next-steps">🎯 Next Steps</h2>
+
+<ol>
+  <li>Sign up for OpenAI API</li>
+  <li>Implement basic validation endpoint</li>
+  <li>Add caching with Redis</li>
+  <li>Monitor costs and usage</li>
+  <li>Optimize based on actual patterns</li>
+</ol>
+
+<p>Need help with any specific implementation?</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / AI_ENGINE_HOSTING_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

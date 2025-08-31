@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUNBOOK ui restoration</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/RUNBOOK_ui_restoration.md</span>
+</div>
+
+<h1>RUNBOOK ui restoration</h1>
+
+
+<h1 id="runbook-ui-restoration--implementation">Runbook: UI Restoration &amp; Implementation</h1>
+
+<p><strong>Service</strong>: Frontend UI Restoration<br />
+<strong>Priority</strong>: CRITICAL<br />
+<strong>Time Estimate</strong>: 2-3 days<br />
+<strong>Last Updated</strong>: 2025-08-25</p>
+
+<hr />
+
+<h2 id="-objective">🎯 Objective</h2>
+
+<p>Restore the complete UI from v3 archive, add skeleton loaders, remove quiz functionality, and implement core features.</p>
+
+<hr />
+
+<h2 id="phase-1-ui-component-restoration-day-1">Phase 1: UI Component Restoration (Day 1)</h2>
+
+<h3 id="step-1-backup-current-state">Step 1: Backup Current State</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>frontend/devmentor-ui
+<span class="nb">cp</span> <span class="nt">-r</span> src src.backup.<span class="si">$(</span><span class="nb">date</span> +%Y%m%d-%H%M%S<span class="si">)</span>
+<span class="nb">echo</span> <span class="s2">"✅ Backup created at src.backup.*"</span>
+</code></pre></div></div>
+
+<h3 id="step-2-restore-v3-components">Step 2: Restore v3 Components</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nv">ARCHIVE_PATH</span><span class="o">=</span><span class="s2">".archive/2024-08-20/03082025v3backup/devmentor-ui/src"</span>
+
+<span class="c"># Core components to restore</span>
+<span class="nb">echo</span> <span class="s2">"📦 Restoring core components..."</span>
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/DashboardLayout.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/DemoTour.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/MemoryBank.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/AIActivityNotifier.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/AIProfileIndicator.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/CodebaseAnalyzer.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/SystemArchitectureVisualization.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/FeatureStatusBadge.tsx src/components/
+<span class="nb">cp</span> <span class="nv">$ARCHIVE_PATH</span>/components/KeyboardShortcutsModal.tsx src/components/
+
+<span class="c"># Pages to restore (except learning/quiz pages)</span>
+<span class="nb">echo</span> <span class="s2">"📄 Restoring pages..."</span>
+<span class="nb">cp</span> <span class="nt">-r</span> <span class="nv">$ARCHIVE_PATH</span>/app/architecture src/app/
+<span class="nb">cp</span> <span class="nt">-r</span> <span class="nv">$ARCHIVE_PATH</span>/app/memory-bank src/app/
+<span class="nb">cp</span> <span class="nt">-r</span> <span class="nv">$ARCHIVE_PATH</span>/app/engineering-excellence src/app/
+
+<span class="nb">echo</span> <span class="s2">"✅ Components restored"</span>
+</code></pre></div></div>
+
+<h3 id="step-3-add-floating-tour-button">Step 3: Add Floating Tour Button</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/components/FloatingTourButton.tsx</span>
+<span class="dl">'</span><span class="s1">use client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Compass</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">lucide-react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">DemoTour</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./DemoTour</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">FloatingTourButton</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isTourOpen</span><span class="p">,</span> <span class="nx">setIsTourOpen</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;&gt;</span>
+      <span class="p">{</span><span class="cm">/* Floating Button */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">fixed bottom-6 right-6 z-50</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">button</span>
+          <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">setIsTourOpen</span><span class="p">(</span><span class="kc">true</span><span class="p">)}</span>
+          <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">group relative p-4 bg-gradient-to-r from-blue-600 to-purple-600 
+                   text-white rounded-full shadow-xl hover:shadow-2xl 
+                   transition-all transform hover:scale-110</span><span class="dl">"</span>
+          <span class="nx">aria</span><span class="o">-</span><span class="nx">label</span><span class="o">=</span><span class="dl">"</span><span class="s2">Start Interactive Tour</span><span class="dl">"</span>
+        <span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Compass</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">w-6 h-6</span><span class="dl">"</span> <span class="o">/&gt;</span>
+          
+          <span class="p">{</span><span class="cm">/* Pulsing indicator for attention */</span><span class="p">}</span>
+          <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">absolute top-0 right-0 w-3 h-3 bg-yellow-400 rounded-full animate-pulse</span><span class="dl">"</span> <span class="o">/&gt;</span>
+          
+          <span class="p">{</span><span class="cm">/* Tooltip */</span><span class="p">}</span>
+          <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-800 
+                         text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 
+                         transition-all whitespace-nowrap</span><span class="dl">"</span><span class="o">&gt;</span>
+            <span class="nx">Start</span> <span class="nx">Interactive</span> <span class="nx">Tour</span>
+          <span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Tour Component */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">DemoTour</span> <span class="nx">isOpen</span><span class="o">=</span><span class="p">{</span><span class="nx">isTourOpen</span><span class="p">}</span> <span class="nx">onClose</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">setIsTourOpen</span><span class="p">(</span><span class="kc">false</span><span class="p">)}</span> <span class="sr">/</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-4-update-layout-with-tour-button">Step 4: Update Layout with Tour Button</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/app/layout.tsx</span>
+<span class="k">import</span> <span class="nx">FloatingTourButton</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/components/FloatingTourButton</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">RootLayout</span><span class="p">({</span> <span class="nx">children</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">html</span> <span class="nx">lang</span><span class="o">=</span><span class="dl">"</span><span class="s2">en</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">body</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="nx">children</span><span class="p">}</span>
+        <span class="o">&lt;</span><span class="nx">FloatingTourButton</span> <span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/body</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/html</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-2-add-skeleton-loaders-day-1">Phase 2: Add Skeleton Loaders (Day 1)</h2>
+
+<h3 id="step-1-create-skeleton-component">Step 1: Create Skeleton Component</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/components/ui/SkeletonLoader.tsx</span>
+<span class="dl">'</span><span class="s1">use client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">motion</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">framer-motion</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kr">interface</span> <span class="nx">SkeletonLoaderProps</span> <span class="p">{</span>
+  <span class="nl">variant</span><span class="p">?:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">card</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">avatar</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">button</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">dashboard</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">count</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">SkeletonLoader</span><span class="p">({</span> 
+  <span class="nx">variant</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span> 
+  <span class="nx">width</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">100%</span><span class="dl">'</span><span class="p">,</span> 
+  <span class="nx">height</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">auto</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">count</span> <span class="o">=</span> <span class="mi">1</span> 
+<span class="p">}:</span> <span class="nx">SkeletonLoaderProps</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">renderSkeleton</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">variant</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="s2">`h-4 bg-gray-700 rounded animate-pulse`</span><span class="p">}</span> <span class="nx">style</span><span class="o">=</span><span class="p">{{</span> <span class="nx">width</span> <span class="p">}}</span> <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="p">);</span>
+      
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">card</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">bg-gray-800 rounded-xl p-6 animate-pulse</span><span class="dl">"</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-4 bg-gray-700 rounded w-3/4 mb-4</span><span class="dl">"</span> <span class="o">/&gt;</span>
+            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-4 bg-gray-700 rounded w-1/2 mb-2</span><span class="dl">"</span> <span class="o">/&gt;</span>
+            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-4 bg-gray-700 rounded w-2/3</span><span class="dl">"</span> <span class="o">/&gt;</span>
+          <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>        <span class="p">);</span>
+      
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">avatar</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">w-12 h-12 bg-gray-700 rounded-full animate-pulse</span><span class="dl">"</span> <span class="o">/&gt;</span>
+        <span class="p">);</span>
+      
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">button</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-10 bg-gray-700 rounded-lg animate-pulse px-6</span><span class="dl">"</span> <span class="nx">style</span><span class="o">=</span><span class="p">{{</span> <span class="nx">width</span> <span class="p">}}</span> <span class="sr">/</span><span class="err">&gt;
+</span>        <span class="p">);</span>
+      
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">dashboard</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">space-y-6</span><span class="dl">"</span><span class="o">&gt;</span>
+            <span class="p">{</span><span class="cm">/* Header skeleton */</span><span class="p">}</span>
+            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">flex items-center justify-between</span><span class="dl">"</span><span class="o">&gt;</span>
+              <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-8 bg-gray-700 rounded w-48 animate-pulse</span><span class="dl">"</span> <span class="o">/&gt;</span>
+              <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-10 bg-gray-700 rounded-lg w-32 animate-pulse</span><span class="dl">"</span> <span class="o">/&gt;</span>
+            <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>            
+            <span class="p">{</span><span class="cm">/* Cards grid skeleton */</span><span class="p">}</span>
+            <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">grid grid-cols-1 md:grid-cols-3 gap-6</span><span class="dl">"</span><span class="o">&gt;</span>
+              <span class="p">{[...</span><span class="nb">Array</span><span class="p">(</span><span class="mi">6</span><span class="p">)].</span><span class="nx">map</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+                <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">bg-gray-800 rounded-xl p-6 animate-pulse</span><span class="dl">"</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-4 bg-gray-700 rounded w-3/4 mb-4</span><span class="dl">"</span> <span class="o">/&gt;</span>
+                  <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-4 bg-gray-700 rounded w-1/2 mb-2</span><span class="dl">"</span> <span class="o">/&gt;</span>
+                  <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">h-4 bg-gray-700 rounded w-2/3</span><span class="dl">"</span> <span class="o">/&gt;</span>
+                <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>              <span class="p">))}</span>
+            <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>        <span class="p">);</span>
+      
+      <span class="nl">default</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">motion</span><span class="p">.</span><span class="nx">div</span>
+      <span class="nx">initial</span><span class="o">=</span><span class="p">{{</span> <span class="na">opacity</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}}</span>
+      <span class="nx">animate</span><span class="o">=</span><span class="p">{{</span> <span class="na">opacity</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}}</span>
+      <span class="nx">transition</span><span class="o">=</span><span class="p">{{</span> <span class="na">duration</span><span class="p">:</span> <span class="mf">0.3</span> <span class="p">}}</span>
+    <span class="o">&gt;</span>
+      <span class="p">{[...</span><span class="nb">Array</span><span class="p">(</span><span class="nx">count</span><span class="p">)].</span><span class="nx">map</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">index</span><span class="p">}</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">mb-4</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">''</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">renderSkeleton</span><span class="p">()}</span>
+        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/motion.div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-2-implement-in-components">Step 2: Implement in Components</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example: src/features/projects/ProjectTasksWidget.tsx</span>
+<span class="k">import</span> <span class="nx">SkeletonLoader</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/components/ui/SkeletonLoader</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">ProjectTasksWidget</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isLoading</span><span class="p">,</span> <span class="nx">setIsLoading</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">tasks</span><span class="p">,</span> <span class="nx">setTasks</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([]);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">fetchTasks</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">setTasks</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="nx">setIsLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isLoading</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">SkeletonLoader</span> <span class="nx">variant</span><span class="o">=</span><span class="dl">"</span><span class="s2">dashboard</span><span class="dl">"</span> <span class="o">/&gt;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* Actual content */</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-3-remove-quiz-functionality-day-2">Phase 3: Remove Quiz Functionality (Day 2)</h2>
+
+<h3 id="step-1-remove-quiz-components">Step 1: Remove Quiz Components</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">echo</span> <span class="s2">"🗑️ Removing quiz components..."</span>
+
+<span class="c"># Remove quiz files</span>
+<span class="nb">rm</span> <span class="nt">-f</span> src/features/learning/<span class="k">*</span>Quiz<span class="k">*</span>.tsx
+<span class="nb">rm</span> <span class="nt">-f</span> src/features/learning/QuizModule.tsx
+<span class="nb">rm</span> <span class="nt">-f</span> src/features/learning/QuizCard.tsx
+<span class="nb">rm</span> <span class="nt">-f</span> src/lib/<span class="k">*</span>quiz<span class="k">*</span>.ts
+<span class="nb">rm</span> <span class="nt">-f</span> src/lib/<span class="k">*</span>Quiz<span class="k">*</span>.ts
+<span class="nb">rm</span> <span class="nt">-rf</span> src/app/learning/quizzes-and-learning
+
+<span class="c"># Remove test files</span>
+<span class="nb">rm</span> <span class="nt">-f</span> src/__tests__/<span class="k">*</span>Quiz<span class="k">*</span>.test.tsx
+<span class="nb">rm</span> <span class="nt">-f</span> src/__tests__/<span class="k">*</span>quiz<span class="k">*</span>.test.ts
+
+<span class="nb">echo</span> <span class="s2">"✅ Quiz components removed"</span>
+</code></pre></div></div>
+
+<h3 id="step-2-update-learning-module">Step 2: Update Learning Module</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/features/learning/InteractiveLearningDashboard.tsx</span>
+<span class="c1">// Remove all quiz-related imports and components</span>
+<span class="c1">// Focus on learning paths, resources, and progress tracking</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">InteractiveLearningDashboard</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">space-y-6</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* Learning Paths */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">section</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Learning</span> <span class="nx">Paths</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>        <span class="p">{</span><span class="cm">/* Path recommendations based on repo analysis */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/section</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Resources */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">section</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Resources</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>        <span class="p">{</span><span class="cm">/* Documentation, tutorials, guides */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/section</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* Progress Tracking */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">section</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Your</span> <span class="nx">Progress</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>        <span class="p">{</span><span class="cm">/* Visual progress indicators */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="sr">/section</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-3-clean-up-routes">Step 3: Clean Up Routes</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/app/learning/page.tsx</span>
+<span class="c1">// Remove quiz routes and navigation</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">LearningPage</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">DashboardLayout</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">space-y-6</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Learning</span> <span class="nx">Hub</span><span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>        <span class="p">{</span><span class="cm">/* Remove quiz tabs */</span><span class="p">}</span>
+        <span class="o">&lt;</span><span class="nx">InteractiveLearningDashboard</span> <span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/DashboardLayout</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-4-verify-and-test-day-2">Phase 4: Verify and Test (Day 2)</h2>
+
+<h3 id="step-1-check-typescript-errors">Step 1: Check TypeScript Errors</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run type-check
+
+<span class="c"># Fix any import errors from removed quiz components</span>
+<span class="c"># Update any components that referenced quizzes</span>
+</code></pre></div></div>
+
+<h3 id="step-2-test-ui-components">Step 2: Test UI Components</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start development server</span>
+npm run dev
+
+<span class="c"># Checklist:</span>
+<span class="c"># ✓ Tour button visible in bottom-right</span>
+<span class="c"># ✓ Tour opens when clicked</span>
+<span class="c"># ✓ All pages load without errors</span>
+<span class="c"># ✓ Skeleton loaders appear during loading</span>
+<span class="c"># ✓ No quiz references remain</span>
+<span class="c"># ✓ Memory Bank page loads</span>
+<span class="c"># ✓ Architecture page loads</span>
+<span class="c"># ✓ Engineering Excellence page loads</span>
+</code></pre></div></div>
+
+<h3 id="step-3-update-tests">Step 3: Update Tests</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Remove quiz tests</span>
+<span class="nb">rm </span>tests/playwright/<span class="k">*</span>quiz<span class="k">*</span>.spec.ts
+<span class="nb">rm </span>tests/cypress/<span class="k">*</span>quiz<span class="k">*</span>.cy.ts
+
+<span class="c"># Run remaining tests</span>
+npm run <span class="nb">test</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="phase-5-integration-checklist">Phase 5: Integration Checklist</h2>
+
+<h3 id="components-status">Components Status</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />FloatingTourButton added</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />DemoTour restored and working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />MemoryBank UI restored</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />AIActivityNotifier restored</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CodebaseAnalyzer restored</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SkeletonLoader implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Quiz components removed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />TypeScript errors fixed</li>
+</ul>
+
+<h3 id="pages-status">Pages Status</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dashboard shows skeleton while loading</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Memory Bank page accessible</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Architecture page working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Engineering Excellence page working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Learning Hub without quizzes</li>
+</ul>
+
+<h3 id="visual-polish">Visual Polish</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tour button pulsing indicator</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Smooth skeleton animations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Consistent loading states</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />No layout shift during load</li>
+</ul>
+
+<hr />
+
+<h2 id="-troubleshooting">🚨 Troubleshooting</h2>
+
+<h3 id="if-tour-button-doesnt-appear">If Tour Button Doesn’t Appear</h3>
+<ol>
+  <li>Check layout.tsx includes FloatingTourButton</li>
+  <li>Verify z-index is high enough (z-50)</li>
+  <li>Check for CSS conflicts</li>
+</ol>
+
+<h3 id="if-skeleton-loaders-dont-show">If Skeleton Loaders Don’t Show</h3>
+<ol>
+  <li>Ensure isLoading state is true initially</li>
+  <li>Check animation classes are applied</li>
+  <li>Verify Tailwind CSS is working</li>
+</ol>
+
+<h3 id="if-typescript-errors-after-quiz-removal">If TypeScript Errors After Quiz Removal</h3>
+<ol>
+  <li>Search for quiz imports: <code class="language-plaintext highlighter-rouge">grep -r "Quiz" src/</code></li>
+  <li>Remove or update affected files</li>
+  <li>Clear TypeScript cache: <code class="language-plaintext highlighter-rouge">rm -rf node_modules/.cache</code></li>
+</ol>
+
+<hr />
+
+<h2 id="-next-steps">📝 Next Steps</h2>
+
+<p>After completing UI restoration:</p>
+<ol>
+  <li>Implement Memory Service backend logic</li>
+  <li>Add WebSocket event handlers</li>
+  <li>Connect frontend to real backends</li>
+  <li>Add error boundaries</li>
+  <li>Implement data persistence</li>
+</ol>
+
+<hr />
+
+<h2 id="-success-criteria">✅ Success Criteria</h2>
+
+<ul>
+  <li>Tour button is visible and functional</li>
+  <li>All v3 UI components are restored</li>
+  <li>Skeleton loaders appear during data fetch</li>
+  <li>No quiz functionality remains</li>
+  <li>No TypeScript errors</li>
+  <li>All pages load without console errors</li>
+</ul>
+
+<hr />
+
+<p><strong>Estimated Time</strong>: 2-3 days total
+<strong>Dependencies</strong>: Access to v3 archive files
+<strong>Risk</strong>: Some v3 components may have dependency conflicts</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/RUNBOOK_ui_restoration.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

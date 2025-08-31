@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EXTENSION GATEWAY ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">vscode-extension/EXTENSION_GATEWAY_ARCHITECTURE.md</span>
+</div>
+
+<h1>EXTENSION GATEWAY ARCHITECTURE</h1>
+
+
+<h1 id="devmentor-vs-code-extension---platform-gateway-architecture">DevMentor VS Code Extension - Platform Gateway Architecture</h1>
+
+<h2 id="-vision">🎯 Vision</h2>
+<p>The VS Code extension serves as an <strong>intelligent gateway</strong> to the DevMentor platform, providing seamless access to platform features while keeping all business logic, data management, and UI complexity in the web platform where it belongs.</p>
+
+<h2 id="️-revised-architecture---extension-as-gateway">🏗️ Revised Architecture - Extension as Gateway</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Developer Workflow with VS Code Extension as Gateway
+├── 🎮 VS Code Extension (Lightweight Client)
+│   ├── 🔌 Platform Connection
+│   │   ├── WebSocket Client (Real-time updates FROM platform)
+│   │   ├── API Client (Send context TO platform)
+│   │   └── Authentication (OAuth to platform)
+│   │
+│   ├── 📡 Context Broadcasting
+│   │   ├── Current File &amp; Position
+│   │   ├── Selected Code
+│   │   ├── Git Branch &amp; Status
+│   │   ├── Test Results
+│   │   └── Debug Session Info
+│   │
+│   ├── 🤖 AI Quick Actions
+│   │   ├── Send Selection to Platform
+│   │   ├── Open Prompt Builder (in browser)
+│   │   ├── Display AI Response (inline)
+│   │   └── Apply Code Suggestions
+│   │
+│   ├── 🔗 Platform Launchers
+│   │   ├── Open Dashboard
+│   │   ├── Open Project Management
+│   │   ├── Open Memory Bank
+│   │   ├── Open Learning Center
+│   │   └── Open Architecture View
+│   │
+│   └── 📝 Background Documentation
+│       ├── Auto-capture Git Commits
+│       ├── Auto-capture File Changes
+│       ├── Auto-capture Test Results
+│       └── Send to Platform for Processing
+│
+├── 🌐 DevMentor Web Platform (All Logic &amp; UI)
+│   ├── Project Management (Full Kanban, Sprints, etc.)
+│   ├── Memory &amp; Learning System (All storage &amp; processing)
+│   ├── AI Prompt Engineering (Builder, Library, Analytics)
+│   ├── Documentation System (Processing &amp; Storage)
+│   ├── Team Collaboration (All features)
+│   └── Architecture Visualization (Full diagrams)
+│
+└── 💾 Data Flow
+    ├── Extension → Platform: Context &amp; Events
+    ├── Platform → Extension: Suggestions &amp; Updates
+    └── All Storage: In Platform (Not in Extension)
+</code></pre></div></div>
+
+<h2 id="-core-extension-responsibilities-what-it-does-do">🔧 Core Extension Responsibilities (What it DOES do)</h2>
+
+<h3 id="1-context-provider">1. Context Provider</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">VSCodeContextProvider</span> <span class="p">{</span>
+  <span class="c1">// Continuously send development context to platform</span>
+  <span class="nx">broadcastContext</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="c1">// Send to platform via WebSocket</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">context.update</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">file</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nb">document</span><span class="p">.</span><span class="nx">fileName</span><span class="p">,</span>
+        <span class="na">language</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nb">document</span><span class="p">.</span><span class="nx">languageId</span><span class="p">,</span>
+        <span class="na">selection</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nx">selection</span><span class="p">,</span>
+        <span class="na">gitBranch</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getGitBranch</span><span class="p">(),</span>
+        <span class="na">openFiles</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">workspace</span><span class="p">.</span><span class="nx">textDocuments</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">fileName</span><span class="p">),</span>
+        <span class="na">workspace</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">workspace</span><span class="p">.</span><span class="nx">name</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Send code snippets for AI processing</span>
+  <span class="nx">sendToAI</span><span class="p">(</span><span class="nx">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">selection</span> <span class="o">=</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nx">selection</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getText</span><span class="p">(</span><span class="nx">selection</span><span class="p">);</span>
+    
+    <span class="c1">// Send to platform</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/ai/analyze</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">code</span><span class="p">:</span> <span class="nx">text</span><span class="p">,</span>
+      <span class="na">prompt</span><span class="p">:</span> <span class="nx">prompt</span><span class="p">,</span>
+      <span class="na">context</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCurrentContext</span><span class="p">()</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Open platform in browser for full experience</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">openExternal</span><span class="p">(</span><span class="nx">vscode</span><span class="p">.</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span>
+      <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/ai/prompt?context=</span><span class="p">${</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">text</span><span class="p">)}</span><span class="s2">`</span>
+    <span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-platform-launcher">2. Platform Launcher</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">PlatformLauncher</span> <span class="p">{</span>
+  <span class="c1">// Quick launchers to open platform features</span>
+  <span class="nx">openDashboard</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">openExternal</span><span class="p">(</span>
+      <span class="nx">vscode</span><span class="p">.</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/dashboard`</span><span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">openProjectManagement</span><span class="p">(</span><span class="nx">projectId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">projectId</span> 
+      <span class="p">?</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/projects/</span><span class="p">${</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span>
+      <span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/projects`</span><span class="p">;</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">openExternal</span><span class="p">(</span><span class="nx">vscode</span><span class="p">.</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">url</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="nx">openMemoryBank</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="c1">// Include current context</span>
+    <span class="kd">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCurrentFileContext</span><span class="p">();</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">openExternal</span><span class="p">(</span>
+      <span class="nx">vscode</span><span class="p">.</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/memory?context=</span><span class="p">${</span><span class="nx">context</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">openPromptBuilder</span><span class="p">(</span><span class="nx">selection</span><span class="p">?:</span> <span class="kr">string</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">selection</span>
+      <span class="p">?</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/ai/prompt-builder?code=</span><span class="p">${</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">selection</span><span class="p">)}</span><span class="s2">`</span>
+      <span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platformUrl</span><span class="p">}</span><span class="s2">/ai/prompt-builder`</span><span class="p">;</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">openExternal</span><span class="p">(</span><span class="nx">vscode</span><span class="p">.</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">url</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-inline-ai-assistant">3. Inline AI Assistant</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">InlineAIAssistant</span> <span class="p">{</span>
+  <span class="c1">// Display AI responses inline without leaving VS Code</span>
+  <span class="nx">showAISuggestion</span><span class="p">(</span><span class="nx">suggestion</span><span class="p">:</span> <span class="nx">AISuggestion</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="c1">// Show as hover or inline completion</span>
+    <span class="kd">const</span> <span class="nx">decoration</span> <span class="o">=</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">createTextEditorDecorationType</span><span class="p">({</span>
+      <span class="na">after</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">contentText</span><span class="p">:</span> <span class="nx">suggestion</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+        <span class="na">color</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rgba(100, 200, 100, 0.7)</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nx">setDecorations</span><span class="p">(</span>
+      <span class="nx">decoration</span><span class="p">,</span> 
+      <span class="p">[</span><span class="nx">suggestion</span><span class="p">.</span><span class="nx">range</span><span class="p">]</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Apply code changes suggested by platform</span>
+  <span class="nx">applyCodeChange</span><span class="p">(</span><span class="nx">change</span><span class="p">:</span> <span class="nx">CodeChange</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">edit</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">WorkspaceEdit</span><span class="p">();</span>
+    <span class="nx">edit</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span>
+      <span class="nx">vscode</span><span class="p">.</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">file</span><span class="p">(</span><span class="nx">change</span><span class="p">.</span><span class="nx">file</span><span class="p">),</span>
+      <span class="nx">change</span><span class="p">.</span><span class="nx">range</span><span class="p">,</span>
+      <span class="nx">change</span><span class="p">.</span><span class="nx">newText</span>
+    <span class="p">);</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">workspace</span><span class="p">.</span><span class="nx">applyEdit</span><span class="p">(</span><span class="nx">edit</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4-background-documentation-capture">4. Background Documentation Capture</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">DocumentationCapture</span> <span class="p">{</span>
+  <span class="c1">// Silently capture development events</span>
+  <span class="nx">captureGitCommit</span><span class="p">(</span><span class="nx">commit</span><span class="p">:</span> <span class="nx">GitCommit</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="c1">// Send to platform, don't store locally</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/docs/capture</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">git.commit</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">hash</span><span class="p">:</span> <span class="nx">commit</span><span class="p">.</span><span class="nx">hash</span><span class="p">,</span>
+        <span class="na">message</span><span class="p">:</span> <span class="nx">commit</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+        <span class="na">files</span><span class="p">:</span> <span class="nx">commit</span><span class="p">.</span><span class="nx">files</span><span class="p">,</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">captureTestRun</span><span class="p">(</span><span class="nx">results</span><span class="p">:</span> <span class="nx">TestResults</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="c1">// Send to platform for processing</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/docs/capture</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test.run</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="nx">results</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">captureDebugSession</span><span class="p">(</span><span class="nx">session</span><span class="p">:</span> <span class="nx">DebugSession</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="c1">// Send key debug events to platform</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/docs/capture</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">debug.session</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">breakpoints</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">breakpoints</span><span class="p">,</span>
+        <span class="na">duration</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">duration</span><span class="p">,</span>
+        <span class="na">errors</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">errors</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-what-the-extension-doesnt-do">🚫 What the Extension DOESN’T Do</h2>
+
+<h3 id="not-in-extension-lives-in-platform">Not in Extension (Lives in Platform)</h3>
+<ul>
+  <li>❌ <strong>Project Management UI</strong> - Open browser to platform</li>
+  <li>❌ <strong>Memory Storage</strong> - All in platform database</li>
+  <li>❌ <strong>Learning System</strong> - Full experience in platform</li>
+  <li>❌ <strong>Complex AI Interactions</strong> - Platform has the UI</li>
+  <li>❌ <strong>Team Collaboration</strong> - Real-time features in platform</li>
+  <li>❌ <strong>Documentation Viewing</strong> - Read docs in platform</li>
+  <li>❌ <strong>Architecture Diagrams</strong> - View in platform</li>
+</ul>
+
+<h2 id="-data-flow">📊 Data Flow</h2>
+
+<h3 id="extension--platform">Extension → Platform</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Continuous context stream</span>
+<span class="p">{</span>
+  <span class="nl">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">context.stream</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">src/index.ts</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">position</span><span class="p">:</span> <span class="p">{</span> <span class="nl">line</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="nx">column</span><span class="p">:</span> <span class="mi">15</span> <span class="p">},</span>
+    <span class="nx">visibleRange</span><span class="p">:</span> <span class="p">{</span> <span class="nl">start</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span> <span class="nx">end</span><span class="p">:</span> <span class="mi">55</span> <span class="p">},</span>
+    <span class="nx">gitStatus</span><span class="p">:</span> <span class="dl">'</span><span class="s1">modified</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">symbols</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">function:calculateTotal</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">class:OrderService</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Event capture</span>
+<span class="p">{</span>
+  <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">event.capture</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">file.saved</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">src/index.ts</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">changes</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2025-08-25T14:30:00Z</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="platform--extension">Platform → Extension</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AI suggestions</span>
+<span class="p">{</span>
+  <span class="nl">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ai.suggestion</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">src/index.ts</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">line</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="nx">suggestion</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Consider using async/await here</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">confidence</span><span class="p">:</span> <span class="mf">0.95</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Quick actions</span>
+<span class="p">{</span>
+  <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">action.available</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">label</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Fix Security Issue</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">command</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor.applyFix</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">args</span><span class="p">:</span> <span class="p">{</span> <span class="na">fixId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">sec-123</span><span class="dl">'</span> <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-minimal-extension-ui">🎨 Minimal Extension UI</h2>
+
+<h3 id="status-bar">Status Bar</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[🟢 DevMentor Connected] [📊 Project: Alpha] [🤖 AI Ready]
+</code></pre></div></div>
+
+<h3 id="command-palette">Command Palette</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; DevMentor: Open Dashboard
+&gt; DevMentor: Send to AI
+&gt; DevMentor: Open Project
+&gt; DevMentor: View Memory Bank
+&gt; DevMentor: Start Learning Path
+</code></pre></div></div>
+
+<h3 id="context-menu-right-click">Context Menu (Right-click)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────┐
+│ Send to DevMentor AI    │
+│ Open in DevMentor       │
+│ Add to Memory Bank      │
+└─────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="activity-bar-icon">Activity Bar Icon</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>🚀 (Click to open quick actions)
+   ├── Open Dashboard
+   ├── Current Project
+   ├── Recent AI Prompts
+   └── Quick Help
+</code></pre></div></div>
+
+<h2 id="-simplified-configuration">🔄 Simplified Configuration</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"devmentor.platformUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://app.devmentor.ai"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"devmentor.autoConnect"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"devmentor.captureContext"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"devmentor.captureGitEvents"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"devmentor.showInlineAI"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="-implementation-phases-revised">🚀 Implementation Phases (Revised)</h2>
+
+<h3 id="phase-1-core-gateway-week-1">Phase 1: Core Gateway (Week 1)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Platform connection (WebSocket + API)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Context broadcasting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Platform launchers</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Basic status bar</li>
+</ul>
+
+<h3 id="phase-2-ai-integration-week-2">Phase 2: AI Integration (Week 2)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Send selection to AI</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Display inline suggestions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Apply code changes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Quick prompt commands</li>
+</ul>
+
+<h3 id="phase-3-background-capture-week-3">Phase 3: Background Capture (Week 3)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Git event capture</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test result capture</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />File change tracking</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Debug session capture</li>
+</ul>
+
+<h3 id="phase-4-polish-week-4">Phase 4: Polish (Week 4)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Optimize context streaming</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add keyboard shortcuts</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Improve notifications</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance tuning</li>
+</ul>
+
+<h2 id="-success-metrics">🎯 Success Metrics</h2>
+
+<h3 id="extension-performance">Extension Performance</h3>
+<ul>
+  <li><strong>Bundle Size</strong>: &lt; 1MB</li>
+  <li><strong>Memory Usage</strong>: &lt; 50MB</li>
+  <li><strong>Startup Time</strong>: &lt; 200ms</li>
+  <li><strong>Context Latency</strong>: &lt; 50ms</li>
+</ul>
+
+<h3 id="user-experience">User Experience</h3>
+<ul>
+  <li><strong>One-Click Access</strong>: All platform features</li>
+  <li><strong>Zero Configuration</strong>: Works out of the box</li>
+  <li><strong>Seamless Context</strong>: Platform knows what you’re working on</li>
+  <li><strong>Non-Intrusive</strong>: Doesn’t interfere with coding</li>
+</ul>
+
+<h2 id="-key-benefits-of-this-architecture">💡 Key Benefits of This Architecture</h2>
+
+<h3 id="for-developers">For Developers</h3>
+<ol>
+  <li><strong>Lightweight</strong>: Extension stays fast and responsive</li>
+  <li><strong>Simple</strong>: No complex UI in VS Code</li>
+  <li><strong>Powerful</strong>: Full platform features in browser</li>
+  <li><strong>Connected</strong>: Platform always knows your context</li>
+</ol>
+
+<h3 id="for-platform">For Platform</h3>
+<ol>
+  <li><strong>Centralized</strong>: All logic in one place</li>
+  <li><strong>Maintainable</strong>: No duplicate implementations</li>
+  <li><strong>Scalable</strong>: Heavy processing on servers</li>
+  <li><strong>Consistent</strong>: Same experience across all clients</li>
+</ol>
+
+<h3 id="for-documentation">For Documentation</h3>
+<ol>
+  <li><strong>Automatic</strong>: Captures everything in background</li>
+  <li><strong>Centralized</strong>: All docs in platform</li>
+  <li><strong>Searchable</strong>: Full-text search in platform</li>
+  <li><strong>Collaborative</strong>: Team can see documentation</li>
+</ol>
+
+<h2 id="-security--privacy">🔐 Security &amp; Privacy</h2>
+
+<h3 id="data-handling">Data Handling</h3>
+<ul>
+  <li><strong>No Local Storage</strong>: Extension doesn’t store sensitive data</li>
+  <li><strong>Secure Transmission</strong>: All data encrypted in transit</li>
+  <li><strong>Context Only</strong>: Only sends necessary context</li>
+  <li><strong>User Control</strong>: Can disable any capture feature</li>
+</ul>
+
+<h3 id="authentication">Authentication</h3>
+<ul>
+  <li><strong>OAuth Flow</strong>: Secure authentication via browser</li>
+  <li><strong>Token Management</strong>: Platform handles tokens</li>
+  <li><strong>Auto Refresh</strong>: Platform manages token lifecycle</li>
+</ul>
+
+<hr />
+
+<p><em>This architecture positions the VS Code extension as a lightweight, intelligent gateway to the DevMentor platform. It captures context, enables quick actions, but keeps all complex features and data in the platform where they belong. This creates a fast, maintainable, and scalable solution.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / vscode-extension/EXTENSION_GATEWAY_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNIFIED AUTH | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">UNIFIED_AUTH.md</span>
+</div>
+
+<h1>UNIFIED AUTH</h1>
+
+
+<h1 id="unified-authentication-system-for-your-product-ecosystem">Unified Authentication System for Your Product Ecosystem</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>The goal is to have <strong>one account, all products</strong> - users sign in once and access DevMentor, QuizMentor, Harvest, and Omni seamlessly.</p>
+
+<h2 id="architecture">Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    ┌─────────────────────────┐
+                    │    Supabase Auth        │
+                    │  (Central Auth Server)  │
+                    └─────────┬───────────────┘
+                              │
+            ┌─────────────────┼─────────────────┬──────────────┐
+            │                 │                 │              │
+      ┌─────▼─────┐    ┌─────▼─────┐    ┌─────▼─────┐  ┌─────▼─────┐
+      │ DevMentor │    │QuizMentor │    │  Harvest  │  │   Omni    │
+      │  (Beta)   │    │  (Live)   │    │  (Live)   │  │  (Beta)   │
+      └───────────┘    └───────────┘    └───────────┘  └───────────┘
+</code></pre></div></div>
+
+<h2 id="implementation-steps">Implementation Steps</h2>
+
+<h3 id="1-single-supabase-project-setup">1. Single Supabase Project Setup</h3>
+
+<p>Use ONE Supabase project for all products:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Single users table for all products</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">public</span><span class="p">.</span><span class="n">users</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">email</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">username</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="c1">-- Product access flags</span>
+  <span class="n">devmentor_access</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="n">quizmentor_access</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="n">harvest_access</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="n">omni_access</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="c1">-- Subscription/billing</span>
+  <span class="n">subscription_tier</span> <span class="nb">TEXT</span> <span class="k">DEFAULT</span> <span class="s1">'free'</span><span class="p">,</span>
+  <span class="n">subscription_status</span> <span class="nb">TEXT</span> <span class="k">DEFAULT</span> <span class="s1">'active'</span><span class="p">,</span>
+  <span class="c1">-- Profile data</span>
+  <span class="n">first_name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">last_name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">avatar_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Product-specific data tables</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">public</span><span class="p">.</span><span class="n">devmentor_projects</span> <span class="p">(</span> <span class="p">...</span> <span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">public</span><span class="p">.</span><span class="n">quizmentor_quizzes</span> <span class="p">(</span> <span class="p">...</span> <span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">public</span><span class="p">.</span><span class="n">harvest_time_entries</span> <span class="p">(</span> <span class="p">...</span> <span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">public</span><span class="p">.</span><span class="n">omni_configurations</span> <span class="p">(</span> <span class="p">...</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="2-shared-authentication-library">2. Shared Authentication Library</h3>
+
+<p>Create a shared npm package for auth:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// @your-org/shared-auth package</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/supabase-js</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">UnifiedAuth</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">supabase</span><span class="p">:</span> <span class="kr">any</span><span class="p">;</span>
+  
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">(</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">signIn</span><span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">password</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Set cross-domain session cookie</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">session</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setCrossDomainSession</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">session</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">setCrossDomainSession</span><span class="p">(</span><span class="nx">session</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Share session across subdomains</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="s2">`sb-access-token=</span><span class="p">${</span><span class="nx">session</span><span class="p">.</span><span class="nx">access_token</span><span class="p">}</span><span class="s2">; domain=.yourdomain.com; path=/; secure; samesite=lax`</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">checkProductAccess</span><span class="p">(</span><span class="nx">product</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">user</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getUser</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">profile</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">users</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">product</span><span class="p">}</span><span class="s2">_access`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+      
+    <span class="k">return</span> <span class="nx">profile</span><span class="p">?.[</span><span class="s2">`</span><span class="p">${</span><span class="nx">product</span><span class="p">}</span><span class="s2">_access`</span><span class="p">]</span> <span class="o">||</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-cross-domain-session-management">3. Cross-Domain Session Management</h3>
+
+<h4 id="option-a-shared-subdomain-cookies">Option A: Shared Subdomain Cookies</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>devmentor.yourdomain.com
+quizmentor.yourdomain.com
+harvest.yourdomain.com
+omni.yourdomain.com
+</code></pre></div></div>
+
+<p>Set cookies with <code class="language-plaintext highlighter-rouge">domain=.yourdomain.com</code> to share across subdomains.</p>
+
+<h4 id="option-b-central-auth-domain">Option B: Central Auth Domain</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auth.yourdomain.com  // Central auth
+app1.yourdomain.com  // DevMentor
+app2.yourdomain.com  // QuizMentor
+</code></pre></div></div>
+
+<p>Use OAuth flow with central auth server.</p>
+
+<h3 id="4-product-integration">4. Product Integration</h3>
+
+<p>Each product checks authentication on load:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In each app's initialization</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UnifiedAuth</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@your-org/shared-auth</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">auth</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UnifiedAuth</span><span class="p">();</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">async</span> <span class="kd">function</span> <span class="nx">checkAuth</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">auth</span><span class="p">.</span><span class="nx">getSession</span><span class="p">();</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">session</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Redirect to central login</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">https://auth.yourdomain.com/login?redirect=</span><span class="dl">'</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Check product access</span>
+      <span class="kd">const</span> <span class="nx">hasAccess</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">auth</span><span class="p">.</span><span class="nx">checkProductAccess</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor</span><span class="dl">'</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">hasAccess</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Show upgrade prompt</span>
+        <span class="nx">showUpgradePrompt</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="nx">checkAuth</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+  
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">YourApp</span> <span class="o">/&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="5-ecosystem-widget-integration">5. Ecosystem Widget Integration</h3>
+
+<p>The widget knows which products the user has access to:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Enhanced ecosystem widget</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">EcosystemWidget</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">userProducts</span><span class="p">,</span> <span class="nx">setUserProducts</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([]);</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">async</span> <span class="kd">function</span> <span class="nx">loadUserProducts</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">profile</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+        <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">users</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor_access, quizmentor_access, harvest_access, omni_access</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+        
+      <span class="kd">const</span> <span class="nx">accessible</span> <span class="o">=</span> <span class="nx">products</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">p</span> <span class="o">=&gt;</span> 
+        <span class="nx">profile</span><span class="p">?.[</span><span class="s2">`</span><span class="p">${</span><span class="nx">p</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">_access`</span><span class="p">]</span>
+      <span class="p">);</span>
+      
+      <span class="nx">setUserProducts</span><span class="p">(</span><span class="nx">accessible</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="nx">loadUserProducts</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">userProducts</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">product</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">ProductCard</span> 
+          <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">product</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span>
+          <span class="nx">product</span><span class="o">=</span><span class="p">{</span><span class="nx">product</span><span class="p">}</span>
+          <span class="nx">isAccessible</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="6-billing-integration-stripe">6. Billing Integration (Stripe)</h3>
+
+<p>Single billing for all products:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Subscription tiers</span>
+<span class="kd">const</span> <span class="nx">TIERS</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">free</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">price</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="na">products</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">devmentor</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">quizmentor</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// Limited access</span>
+  <span class="p">},</span>
+  <span class="na">pro</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">price</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="na">products</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">devmentor</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">quizmentor</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">harvest</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">omni</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// Full access</span>
+  <span class="p">},</span>
+  <span class="na">enterprise</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">price</span><span class="p">:</span> <span class="mi">99</span><span class="p">,</span>
+    <span class="na">products</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">all</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// Everything + priority support</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Webhook handler for Stripe</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">handleStripeWebhook</span><span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">checkout.session.completed</span><span class="dl">'</span><span class="p">:</span>
+      <span class="c1">// Grant access to products based on tier</span>
+      <span class="k">await</span> <span class="nx">updateUserAccess</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">object</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">customer.subscription.deleted</span><span class="dl">'</span><span class="p">:</span>
+      <span class="c1">// Revoke premium access</span>
+      <span class="k">await</span> <span class="nx">revokeUserAccess</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">object</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="environment-configuration">Environment Configuration</h2>
+
+<h3 id="development-envlocal">Development (.env.local)</h3>
+<pre><code class="language-env"># Shared across all products
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_AUTH_DOMAIN=http://localhost:3000
+
+# Product-specific
+NEXT_PUBLIC_PRODUCT_ID=devmentor
+NEXT_PUBLIC_PRODUCT_NAME=DevMentor
+</code></pre>
+
+<h3 id="production">Production</h3>
+<pre><code class="language-env"># Central auth
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_AUTH_DOMAIN=https://auth.yourdomain.com
+
+# Product URLs
+NEXT_PUBLIC_DEVMENTOR_URL=https://devmentor.ai
+NEXT_PUBLIC_QUIZMENTOR_URL=https://quizmentor.ai
+NEXT_PUBLIC_HARVEST_URL=https://harvest.ai
+NEXT_PUBLIC_OMNI_URL=https://omni.dev
+</code></pre>
+
+<h2 id="user-journey">User Journey</h2>
+
+<ol>
+  <li><strong>First Visit to Any Product</strong>
+    <ul>
+      <li>User lands on DevMentor</li>
+      <li>Checks for existing session</li>
+      <li>No session → Redirect to login</li>
+    </ul>
+  </li>
+  <li><strong>Registration</strong>
+    <ul>
+      <li>User registers once</li>
+      <li>Automatically gets access to free tier products</li>
+      <li>Can explore ecosystem via widget</li>
+    </ul>
+  </li>
+  <li><strong>Cross-Product Navigation</strong>
+    <ul>
+      <li>User clicks QuizMentor in ecosystem widget</li>
+      <li>Session cookie recognized</li>
+      <li>Seamless entry to QuizMentor</li>
+    </ul>
+  </li>
+  <li><strong>Upgrade Flow</strong>
+    <ul>
+      <li>User wants Harvest (premium)</li>
+      <li>Clicks upgrade in widget</li>
+      <li>Single payment unlocks multiple products</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<ol>
+  <li><strong>CORS Configuration</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Supabase CORS settings</span>
+<span class="kd">const</span> <span class="nx">allowedOrigins</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="dl">'</span><span class="s1">https://devmentor.ai</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://quizmentor.ai</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://harvest.ai</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://omni.dev</span><span class="dl">'</span>
+<span class="p">];</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Token Validation</strong>
+    <ul>
+      <li>Verify JWT signatures</li>
+      <li>Check token expiration</li>
+      <li>Validate product access claims</li>
+    </ul>
+  </li>
+  <li><strong>Rate Limiting</strong>
+    <ul>
+      <li>Implement per-product rate limits</li>
+      <li>Shared quota across ecosystem</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="benefits">Benefits</h2>
+
+<ul>
+  <li><strong>User Experience</strong>: One login for everything</li>
+  <li><strong>Development</strong>: Shared auth logic</li>
+  <li><strong>Marketing</strong>: Cross-sell opportunities</li>
+  <li><strong>Analytics</strong>: Complete user journey tracking</li>
+  <li><strong>Support</strong>: Single user profile to manage</li>
+</ul>
+
+<h2 id="migration-strategy">Migration Strategy</h2>
+
+<p>For existing products with separate auth:</p>
+
+<ol>
+  <li><strong>Phase 1</strong>: Add Supabase alongside existing auth</li>
+  <li><strong>Phase 2</strong>: Migrate users gradually</li>
+  <li><strong>Phase 3</strong>: Deprecate old auth system</li>
+  <li><strong>Phase 4</strong>: Full ecosystem integration</li>
+</ol>
+
+<h2 id="monitoring--analytics">Monitoring &amp; Analytics</h2>
+
+<p>Track cross-product metrics:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- User engagement across products</span>
+<span class="k">SELECT</span> 
+  <span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+  <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="n">d</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="k">as</span> <span class="n">devmentor_projects</span><span class="p">,</span>
+  <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="n">q</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="k">as</span> <span class="n">quizmentor_quizzes</span><span class="p">,</span>
+  <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="n">h</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="k">as</span> <span class="n">harvest_entries</span>
+<span class="k">FROM</span> <span class="n">users</span> <span class="n">u</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">devmentor_projects</span> <span class="n">d</span> <span class="k">ON</span> <span class="n">u</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">quizmentor_quizzes</span> <span class="n">q</span> <span class="k">ON</span> <span class="n">u</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">harvest_time_entries</span> <span class="n">h</span> <span class="k">ON</span> <span class="n">u</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+  <li>Set up single Supabase project</li>
+  <li>Create shared auth library</li>
+  <li>Implement ecosystem widget</li>
+  <li>Configure cross-domain sessions</li>
+  <li>Set up billing integration</li>
+  <li>Deploy first two products</li>
+  <li>Monitor and iterate</li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / UNIFIED_AUTH.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

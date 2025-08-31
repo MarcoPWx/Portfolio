@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUICK START SUPABASE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">QUICK_START_SUPABASE.md</span>
+</div>
+
+<h1>QUICK START SUPABASE</h1>
+
+
+<h1 id="quizmentor-quick-start-with-supabase--nextjs">QuizMentor Quick Start with Supabase + Next.js</h1>
+
+<p>This guide gets you from zero to GitHub login and working APIs in under an hour, without Kubernetes. You can add Redis later if needed.</p>
+
+<hr />
+
+<h2 id="tldr">TL;DR</h2>
+
+<ul>
+  <li>Use Supabase for Auth (GitHub OAuth), DB, RLS</li>
+  <li>Use Next.js for frontend + API routes (full stack)</li>
+  <li>Skip Kubernetes for now; deploy on Vercel</li>
+  <li>Add Redis (Upstash) only if you need caching/real-time heavy features</li>
+</ul>
+
+<hr />
+
+<h2 id="1-set-up-supabase-10-min">1) Set up Supabase (10 min)</h2>
+
+<ul>
+  <li>Create a project at supabase.com</li>
+  <li>Get your Project URL and anon key</li>
+  <li>Enable GitHub OAuth:
+    <ul>
+      <li>GitHub: Settings → Developer settings → OAuth Apps → New OAuth App
+        <ul>
+          <li>Homepage URL: http://localhost:3000</li>
+          <li>Authorization callback URL: http://localhost:3000/auth/callback</li>
+        </ul>
+      </li>
+      <li>Copy Client ID/Secret and configure them in Supabase → Authentication → Providers → GitHub</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Apply the schema (open Supabase SQL editor and paste supabase/schema.sql from this repo).</p>
+
+<hr />
+
+<h2 id="2-create-the-nextjs-app-1015-min">2) Create the Next.js app (10–15 min)</h2>
+
+<p>Run:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npx create-next-app@latest quizmentor-web <span class="se">\</span>
+  <span class="nt">--typescript</span> <span class="se">\</span>
+  <span class="nt">--tailwind</span> <span class="se">\</span>
+  <span class="nt">--app</span> <span class="se">\</span>
+  <span class="nt">--src-dir</span> <span class="se">\</span>
+  <span class="nt">--import-alias</span> <span class="s2">"@/*"</span>
+<span class="nb">cd </span>quizmentor-web
+npm i @supabase/supabase-js @supabase/ssr
+<span class="c"># Optional caching</span>
+<span class="c"># npm i @upstash/redis</span>
+</code></pre></div></div>
+
+<p>Create .env.local:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> .env.example .env.local <span class="c"># if you use a template</span>
+<span class="c"># Or create manually</span>
+</code></pre></div></div>
+
+<p>Add these values:</p>
+<pre><code class="language-env">NEXT_PUBLIC_SUPABASE_URL=&lt;your_supabase_url&gt;
+NEXT_PUBLIC_SUPABASE_ANON_KEY=&lt;your_supabase_anon_key&gt;
+# optional
+# UPSTASH_REDIS_REST_URL=&lt;your_url&gt;
+# UPSTASH_REDIS_REST_TOKEN=&lt;your_token&gt;
+# OPENAI_API_KEY=&lt;your_key&gt;
+</code></pre>
+
+<hr />
+
+<h2 id="3-add-supabase-clients-browser--server">3) Add Supabase clients (browser + server)</h2>
+
+<p>Create these helper files:</p>
+
+<p>```ts path=null start=null
+// lib/supabase/client.ts
+import { createBrowserClient } from ‘@supabase/ssr’</p>
+
+<p>export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+```ts path=null start=null
+// lib/supabase/server.ts
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+export function createClient() {
+  const cookieStore = cookies()
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () =&gt; cookieStore.getAll(),
+        setAll: (cookiesToSet) =&gt; {
+          cookiesToSet.forEach(({ name, value, options }) =&gt; {
+            cookieStore.set(name, value, options)
+          })
+        }
+      }
+    }
+  )
+}
+</code></pre></div></div>
+
+<p>Optional Redis wrapper:
+```ts path=null start=null
+// lib/redis.ts
+// Only if you enabled Upstash
+import { Redis } from ‘@upstash/redis’
+export const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!
+})</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+---
+
+## 4) GitHub login button and callback
+
+```tsx path=null start=null
+// app/(auth)/login/page.tsx
+'use client'
+import { createClient } from '@/lib/supabase/client'
+
+export default function LoginPage() {
+  const supabase = createClient()
+  const signIn = async () =&gt; {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: `${location.origin}/auth/callback` }
+    })
+    if (error) alert(error.message)
+  }
+  return &lt;button onClick={signIn}&gt;Login with GitHub&lt;/button&gt;
+}
+</code></pre></div></div>
+
+<p>```tsx path=null start=null
+// app/auth/callback/page.tsx
+import { createClient } from ‘@/lib/supabase/server’
+import { redirect } from ‘next/navigation’</p>
+
+<p>export default async function CallbackPage() {
+  const supabase = createClient()
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+  if (user) redirect(‘/dashboard’)
+  redirect(‘/(auth)/login’)
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Create a protected layout and page:
+```tsx path=null start=null
+// app/(dashboard)/layout.tsx
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/(auth)/login')
+  return &lt;&gt;{children}&lt;/&gt;
+}
+</code></pre></div></div>
+
+<p>```tsx path=null start=null
+// app/(dashboard)/page.tsx
+import { createClient } from ‘@/lib/supabase/server’</p>
+
+<p>export default async function DashboardPage() {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  return &lt;main&gt;Welcome {user?.email}&lt;/main&gt;
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+---
+
+## 5) Start a quiz session (API route + service)
+
+Service (simple example):
+```ts path=null start=null
+// services/quiz.service.ts
+import { createClient } from '@/lib/supabase/server'
+
+export class QuizService {
+  static async startSession(userId: string, cfg: { difficulty?: number; count?: number }) {
+    const supabase = createClient()
+    const difficulty = cfg.difficulty ?? 1
+    const count = Math.min(Math.max(cfg.count ?? 10, 1), 25)
+
+    const { data: questions, error: qErr } = await supabase
+      .from('questions')
+      .select('*')
+      .eq('difficulty', difficulty)
+      .limit(count)
+    if (qErr) throw qErr
+
+    const { data: session, error: sErr } = await supabase
+      .from('quiz_sessions')
+      .insert({ user_id: userId, questions })
+      .select()
+      .single()
+    if (sErr) throw sErr
+
+    return session
+  }
+}
+</code></pre></div></div>
+
+<p>API route:
+```ts path=null start=null
+// app/api/quiz/start/route.ts
+import { NextResponse } from ‘next/server’
+import { createClient } from ‘@/lib/supabase/server’
+import { QuizService } from ‘@/services/quiz.service’</p>
+
+<p>export async function POST(req: Request) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: ‘Unauthorized’ }, { status: 401 })</p>
+
+<p>const body = await req.json().catch(() =&gt; ({}))
+  try {
+    const session = await QuizService.startSession(user.id, body)
+    return NextResponse.json(session)
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 })
+  }
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+---
+
+## 6) Do we need Redis?
+
+- Not required for MVP.
+- Add only if you need: rate limiting, leaderboards, heavy real-time features, or caching expensive AI responses.
+
+Caching example (optional):
+```ts path=null start=null
+// app/api/ai/validate/route.ts
+import { NextResponse } from 'next/server'
+// import { redis } from '@/lib/redis'
+
+export async function POST(req: Request) {
+  const body = await req.json()
+  const key = `ai:validate:${JSON.stringify(body).length}`
+  // const cached = await redis.get(key)
+  // if (cached) return NextResponse.json(cached)
+
+  // const result = await callOpenAI(body)
+  const result = { ok: true } // placeholder
+  // await redis.set(key, result, { ex: 3600 })
+  return NextResponse.json(result)
+}
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="7-testing">7) Testing</h2>
+
+<ul>
+  <li>Unit: Jest or Vitest</li>
+  <li>E2E: Playwright</li>
+</ul>
+
+<p>Example unit test:
+```ts path=null start=null
+// tests/unit/quiz.service.test.ts
+import { describe, it, expect } from ‘vitest’</p>
+
+<p>describe(‘QuizService’, () =&gt; {
+  it(‘starts a session with defaults’, async () =&gt; {
+    expect(true).toBe(true) // mock supabase in actual test
+  })
+})</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Example e2e (Playwright):
+```ts path=null start=null
+// e2e/login.spec.ts
+import { test, expect } from '@playwright/test'
+
+test('login page loads', async ({ page }) =&gt; {
+  await page.goto('http://localhost:3000/(auth)/login')
+  await expect(page.getByText('Login')).toBeVisible()
+})
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="8-deploy-on-vercel-5-min">8) Deploy on Vercel (5 min)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm i <span class="nt">-g</span> vercel
+vercel <span class="nb">link
+</span>vercel <span class="c"># follow prompts</span>
+vercel <span class="nb">env </span>add NEXT_PUBLIC_SUPABASE_URL
+vercel <span class="nb">env </span>add NEXT_PUBLIC_SUPABASE_ANON_KEY
+<span class="c"># add optional envs if used</span>
+vercel deploy <span class="nt">--prod</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="9-migration-path-to-kubernetes-later">9) Migration path to Kubernetes (later)</h2>
+
+<ul>
+  <li>Only consider k8s when you have high scale, complex team/org needs, or strict compliance.</li>
+  <li>Until then, Vercel + Supabase + (optionally) Upstash will likely meet your needs with minimal ops.</li>
+</ul>
+
+<hr />
+
+<p>Questions I can help with next:</p>
+<ul>
+  <li>Hooking up your existing TypeScript adaptive engine into Next.js API routes</li>
+  <li>Building the dashboard UI (progress, analytics)</li>
+  <li>Writing proper unit tests with Supabase client mocks</li>
+  <li>Adding OpenAI-powered validation safely with caching</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / QUICK_START_SUPABASE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

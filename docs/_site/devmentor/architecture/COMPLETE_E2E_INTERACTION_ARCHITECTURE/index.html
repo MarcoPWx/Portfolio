@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMPLETE E2E INTERACTION ARCHITECTURE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">architecture/COMPLETE_E2E_INTERACTION_ARCHITECTURE.md</span>
+</div>
+
+<h1>COMPLETE E2E INTERACTION ARCHITECTURE</h1>
+
+
+<h1 id="️-devmentor-complete-e2e-interaction-architecture">🏗️ DevMentor Complete E2E Interaction Architecture</h1>
+
+<h2 id="master-system-flow-diagram">Master System Flow Diagram</h2>
+
+<pre><code class="language-mermaid">graph TB
+    subgraph "User Entry Points"
+        U[User] --&gt; LP[Landing Page]
+        U --&gt; VSC[VS Code Extension]
+        U --&gt; CLI[CLI Tool]
+        U --&gt; API[API Direct]
+    end
+
+    subgraph "Authentication Layer"
+        LP --&gt; AUTH{Authentication}
+        VSC --&gt; AUTH
+        CLI --&gt; AUTH
+        API --&gt; AUTH
+        
+        AUTH --&gt; GH[GitHub OAuth]
+        AUTH --&gt; EM[Email/Password]
+        AUTH --&gt; GO[Google OAuth]
+        
+        GH --&gt; JWT[JWT Generation]
+        EM --&gt; JWT
+        GO --&gt; JWT
+    end
+
+    subgraph "API Gateway Layer"
+        JWT --&gt; GW[API Gateway]
+        GW --&gt; RL[Rate Limiter]
+        RL --&gt; CB[Circuit Breaker]
+        CB --&gt; CACHE[Cache Layer]
+        CACHE --&gt; ROUTER[Request Router]
+    end
+
+    subgraph "Core Services"
+        ROUTER --&gt; REPO[Repo Analyzer]
+        ROUTER --&gt; AI[AI Gateway]
+        ROUTER --&gt; MEM[Memory Service]
+        ROUTER --&gt; PROJ[Project Service]
+        ROUTER --&gt; LEARN[Learning Engine]
+        ROUTER --&gt; PBML[PBML Service]
+        ROUTER --&gt; MON[Monitoring]
+    end
+
+    subgraph "Data Layer"
+        REPO --&gt; PG[(PostgreSQL)]
+        AI --&gt; QDRANT[(Qdrant)]
+        MEM --&gt; QDRANT
+        PROJ --&gt; PG
+        LEARN --&gt; PG
+        LEARN --&gt; REDIS[(Redis)]
+        PBML --&gt; QDRANT
+        MON --&gt; PROM[(Prometheus)]
+    end
+
+    subgraph "Real-time Layer"
+        PROJ --&gt; WS[WebSocket Server]
+        AI --&gt; WS
+        MON --&gt; WS
+        WS --&gt; SSE[Server-Sent Events]
+        WS --&gt; U
+    end
+
+    style AUTH fill:#ff6b6b
+    style GW fill:#4ecdc4
+    style AI fill:#45b7d1
+    style MEM fill:#96ceb4
+    style PROJ fill:#dfe6e9
+</code></pre>
+
+<h2 id="1-user-registration--onboarding-flow">1. User Registration &amp; Onboarding Flow</h2>
+
+<h3 id="complete-user-story">Complete User Story</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Epic</span><span class="pi">:</span> <span class="s">User Onboarding</span>
+<span class="na">User Story</span><span class="pi">:</span> <span class="s">As a new developer, I want to quickly onboard to DevMentor</span>
+<span class="na">Value</span><span class="pi">:</span> <span class="s">Start getting AI assistance within 5 minutes</span>
+
+<span class="na">Acceptance Criteria</span><span class="pi">:</span>
+  <span class="na">1. Registration</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Can sign up with email or OAuth</span>
+     <span class="pi">-</span> <span class="s">Email verification sent within 30 seconds</span>
+     <span class="pi">-</span> <span class="s">OAuth completes in &lt; 3 seconds</span>
+     <span class="pi">-</span> <span class="s">Profile creation with avatar</span>
+     
+  <span class="na">2. Repository Setup</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">GitHub repos listed within 2 seconds</span>
+     <span class="pi">-</span> <span class="s">Can select multiple repos</span>
+     <span class="pi">-</span> <span class="s">Analysis starts immediately</span>
+     <span class="pi">-</span> <span class="s">Progress bar shows real-time status</span>
+     
+  <span class="na">3. Initial Analysis</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Tech stack detected</span>
+     <span class="pi">-</span> <span class="s">Dependency graph generated</span>
+     <span class="pi">-</span> <span class="s">Security vulnerabilities identified</span>
+     <span class="pi">-</span> <span class="s">Code quality score calculated</span>
+     <span class="pi">-</span> <span class="s">Architecture diagram created</span>
+     
+  <span class="na">4. Guided Tour</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Automatically starts after analysis</span>
+     <span class="pi">-</span> <span class="s">Can skip at any time</span>
+     <span class="pi">-</span> <span class="s">Progress saved to localStorage</span>
+     <span class="pi">-</span> <span class="s">Tooltips remain available</span>
+     
+  <span class="na">5. First Value</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Shows 5 actionable insights</span>
+     <span class="pi">-</span> <span class="s">Creates initial task suggestions</span>
+     <span class="pi">-</span> <span class="s">Offers quick wins</span>
+</code></pre></div></div>
+
+<h3 id="detailed-interaction-sequence">Detailed Interaction Sequence</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant U as User
+    participant FE as Frontend
+    participant AUTH as Auth Service
+    participant GH as GitHub
+    participant REPO as Repo Analyzer
+    participant AI as AI Gateway
+    participant MEM as Memory Service
+    participant DB as PostgreSQL
+    participant Q as Qdrant
+
+    Note over U,Q: Registration Flow
+    U-&gt;&gt;FE: Click "Sign Up with GitHub"
+    FE-&gt;&gt;AUTH: Initiate OAuth
+    AUTH-&gt;&gt;GH: Redirect to GitHub
+    GH-&gt;&gt;U: Request permissions
+    U-&gt;&gt;GH: Approve
+    GH-&gt;&gt;AUTH: Return with code
+    AUTH-&gt;&gt;GH: Exchange code for token
+    GH-&gt;&gt;AUTH: Return access token
+    AUTH-&gt;&gt;DB: Create user record
+    AUTH-&gt;&gt;FE: Return JWT + refresh token
+    FE-&gt;&gt;U: Redirect to onboarding
+
+    Note over U,Q: Repository Import
+    U-&gt;&gt;FE: View onboarding wizard
+    FE-&gt;&gt;GH: List user repos (with token)
+    GH-&gt;&gt;FE: Return repo list
+    FE-&gt;&gt;U: Display repos with checkboxes
+    U-&gt;&gt;FE: Select repos &amp; click "Import"
+    FE-&gt;&gt;REPO: Analyze repositories
+    
+    Note over U,Q: Analysis Phase
+    REPO-&gt;&gt;GH: Clone repository
+    REPO-&gt;&gt;REPO: Parse AST
+    REPO-&gt;&gt;REPO: Detect languages
+    REPO-&gt;&gt;REPO: Map dependencies
+    REPO-&gt;&gt;AI: Generate embeddings
+    AI-&gt;&gt;Q: Store vectors
+    REPO-&gt;&gt;DB: Save analysis
+    REPO-&gt;&gt;FE: Stream progress via WebSocket
+    FE-&gt;&gt;U: Show real-time progress
+    
+    Note over U,Q: Initial Learning
+    REPO-&gt;&gt;MEM: Store code patterns
+    MEM-&gt;&gt;Q: Create memory vectors
+    REPO-&gt;&gt;AI: Extract insights
+    AI-&gt;&gt;FE: Return suggestions
+    FE-&gt;&gt;U: Display insights dashboard
+    
+    Note over U,Q: Tour Launch
+    FE-&gt;&gt;FE: Start guided tour
+    FE-&gt;&gt;U: Highlight features
+    U-&gt;&gt;FE: Complete/skip steps
+    FE-&gt;&gt;localStorage: Save progress
+</code></pre>
+
+<h2 id="2-daily-development-workflow">2. Daily Development Workflow</h2>
+
+<h3 id="complete-user-story-1">Complete User Story</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Epic</span><span class="pi">:</span> <span class="s">Daily Development</span>
+<span class="na">User Story</span><span class="pi">:</span> <span class="s">As a developer, I want DevMentor integrated into my daily workflow</span>
+<span class="na">Value</span><span class="pi">:</span> <span class="s">Save 2+ hours daily on routine tasks</span>
+
+<span class="na">Morning Routine</span><span class="pi">:</span>
+  <span class="na">1. Dashboard Check</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Overnight CI/CD status</span>
+     <span class="pi">-</span> <span class="s">Team activity summary</span>
+     <span class="pi">-</span> <span class="s">Priority notifications</span>
+     <span class="pi">-</span> <span class="s">Suggested tasks for today</span>
+     
+  <span class="na">2. Task Planning</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">AI reviews yesterday's progress</span>
+     <span class="pi">-</span> <span class="s">Suggests task priorities</span>
+     <span class="pi">-</span> <span class="s">Estimates completion times</span>
+     <span class="pi">-</span> <span class="s">Identifies blockers</span>
+     
+<span class="na">During Development</span><span class="pi">:</span>
+  <span class="na">1. Code Assistance</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Real-time suggestions</span>
+     <span class="pi">-</span> <span class="s">Error detection</span>
+     <span class="pi">-</span> <span class="s">Performance tips</span>
+     <span class="pi">-</span> <span class="s">Security warnings</span>
+     
+  <span class="na">2. Context Switching</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Saves current context</span>
+     <span class="pi">-</span> <span class="s">Restores previous context</span>
+     <span class="pi">-</span> <span class="s">Shows relevant docs</span>
+     <span class="pi">-</span> <span class="s">Suggests related files</span>
+     
+  <span class="na">3. Code Review</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Pre-commit checks</span>
+     <span class="pi">-</span> <span class="s">PR description generation</span>
+     <span class="pi">-</span> <span class="s">Review comment suggestions</span>
+     <span class="pi">-</span> <span class="s">Conflict resolution help</span>
+     
+<span class="na">End of Day</span><span class="pi">:</span>
+  <span class="na">1. Progress Summary</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Tasks completed</span>
+     <span class="pi">-</span> <span class="s">Code quality metrics</span>
+     <span class="pi">-</span> <span class="s">Learning achievements</span>
+     <span class="pi">-</span> <span class="s">Tomorrow's priorities</span>
+</code></pre></div></div>
+
+<h3 id="development-flow-interactions">Development Flow Interactions</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant D as Developer
+    participant IDE as VS Code
+    participant EXT as DevMentor Extension
+    participant API as API Gateway
+    participant AI as AI Service
+    participant MEM as Memory Service
+    participant PROJ as Project Service
+    participant WS as WebSocket
+
+    Note over D,WS: Morning Startup
+    D-&gt;&gt;IDE: Open VS Code
+    IDE-&gt;&gt;EXT: Initialize extension
+    EXT-&gt;&gt;API: Authenticate (JWT)
+    API-&gt;&gt;PROJ: Get today's tasks
+    API-&gt;&gt;MEM: Get last context
+    PROJ-&gt;&gt;EXT: Return tasks
+    MEM-&gt;&gt;EXT: Return context
+    EXT-&gt;&gt;D: Show daily briefing
+
+    Note over D,WS: Active Development
+    loop Every keystroke
+        D-&gt;&gt;IDE: Type code
+        IDE-&gt;&gt;EXT: Detect changes
+        EXT-&gt;&gt;EXT: Debounce (500ms)
+        EXT-&gt;&gt;AI: Get suggestions
+        AI-&gt;&gt;MEM: Fetch context
+        MEM-&gt;&gt;AI: Return relevant patterns
+        AI-&gt;&gt;EXT: Return suggestions
+        EXT-&gt;&gt;D: Show inline hints
+    end
+
+    Note over D,WS: Error Detection
+    D-&gt;&gt;IDE: Save file
+    IDE-&gt;&gt;EXT: Trigger analysis
+    EXT-&gt;&gt;API: Analyze code
+    API-&gt;&gt;AI: Check for issues
+    AI-&gt;&gt;AI: Run static analysis
+    AI-&gt;&gt;API: Return issues
+    API-&gt;&gt;EXT: Return warnings
+    EXT-&gt;&gt;D: Show problems panel
+
+    Note over D,WS: Task Management
+    D-&gt;&gt;EXT: Mark task complete
+    EXT-&gt;&gt;PROJ: Update task status
+    PROJ-&gt;&gt;WS: Broadcast update
+    WS-&gt;&gt;Team: Notify team members
+    PROJ-&gt;&gt;AI: Update learning
+    AI-&gt;&gt;MEM: Store completion pattern
+</code></pre>
+
+<h2 id="3-ai-assistance-flow">3. AI Assistance Flow</h2>
+
+<h3 id="complete-user-story-2">Complete User Story</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Epic</span><span class="pi">:</span> <span class="s">AI-Powered Assistance</span>
+<span class="na">User Story</span><span class="pi">:</span> <span class="s">As a developer, I want contextual AI help</span>
+<span class="na">Value</span><span class="pi">:</span> <span class="s">Reduce debugging time by 50%</span>
+
+<span class="na">Chat Interface</span><span class="pi">:</span>
+  <span class="na">1. Question Asking</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Natural language queries</span>
+     <span class="pi">-</span> <span class="s">Code snippet sharing</span>
+     <span class="pi">-</span> <span class="s">Error message pasting</span>
+     <span class="pi">-</span> <span class="s">Screenshot support</span>
+     
+  <span class="na">2. Context Building</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Automatically includes current file</span>
+     <span class="pi">-</span> <span class="s">Pulls related files</span>
+     <span class="pi">-</span> <span class="s">Includes recent changes</span>
+     <span class="pi">-</span> <span class="s">Adds project structure</span>
+     
+  <span class="na">3. Response Generation</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Streaming responses</span>
+     <span class="pi">-</span> <span class="s">Code examples</span>
+     <span class="pi">-</span> <span class="s">Step-by-step guides</span>
+     <span class="pi">-</span> <span class="s">Multiple solutions</span>
+     
+  <span class="na">4. Learning Loop</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Rates responses</span>
+     <span class="pi">-</span> <span class="s">Provides corrections</span>
+     <span class="pi">-</span> <span class="s">Saves useful answers</span>
+     <span class="pi">-</span> <span class="s">Improves over time</span>
+
+<span class="na">Code Generation</span><span class="pi">:</span>
+  <span class="na">1. Function Creation</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Describe requirements</span>
+     <span class="pi">-</span> <span class="s">Generate implementation</span>
+     <span class="pi">-</span> <span class="s">Include tests</span>
+     <span class="pi">-</span> <span class="s">Add documentation</span>
+     
+  <span class="na">2. Refactoring</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Suggest improvements</span>
+     <span class="pi">-</span> <span class="s">Show before/after</span>
+     <span class="pi">-</span> <span class="s">Explain changes</span>
+     <span class="pi">-</span> <span class="s">Preview impact</span>
+</code></pre></div></div>
+
+<h3 id="ai-interaction-sequence">AI Interaction Sequence</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant U as User
+    participant UI as UI Chat
+    participant GW as Gateway
+    participant AI as AI Service
+    participant MEM as Memory
+    participant VDB as Qdrant
+    participant LLM as LLM Provider
+    participant CACHE as Redis Cache
+
+    Note over U,CACHE: Question Flow
+    U-&gt;&gt;UI: Type question
+    UI-&gt;&gt;GW: Send with context
+    GW-&gt;&gt;CACHE: Check cache
+    
+    alt Cache Hit
+        CACHE-&gt;&gt;GW: Return cached response
+        GW-&gt;&gt;UI: Stream response
+    else Cache Miss
+        GW-&gt;&gt;AI: Process request
+        AI-&gt;&gt;MEM: Get user context
+        MEM-&gt;&gt;VDB: Vector search
+        VDB-&gt;&gt;MEM: Similar patterns
+        MEM-&gt;&gt;AI: Context bundle
+        
+        AI-&gt;&gt;AI: Build prompt
+        AI-&gt;&gt;LLM: Send to provider
+        
+        alt Primary Provider Success
+            LLM-&gt;&gt;AI: Stream tokens
+        else Primary Fails
+            AI-&gt;&gt;AI: Fallback to Ollama
+            AI-&gt;&gt;LLM: Retry with local
+            LLM-&gt;&gt;AI: Stream tokens
+        end
+        
+        AI-&gt;&gt;CACHE: Store response
+        AI-&gt;&gt;MEM: Store interaction
+        AI-&gt;&gt;GW: Stream response
+        GW-&gt;&gt;UI: Display to user
+    end
+
+    Note over U,CACHE: Learning Flow
+    U-&gt;&gt;UI: Rate response
+    UI-&gt;&gt;AI: Send feedback
+    AI-&gt;&gt;MEM: Update patterns
+    MEM-&gt;&gt;VDB: Adjust vectors
+    AI-&gt;&gt;AI: Retrain weights
+</code></pre>
+
+<h2 id="4-memory-system-flow">4. Memory System Flow</h2>
+
+<h3 id="complete-user-story-3">Complete User Story</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Epic</span><span class="pi">:</span> <span class="s">Intelligent Memory System</span>
+<span class="na">User Story</span><span class="pi">:</span> <span class="s">As a developer, I want DevMentor to remember everything</span>
+<span class="na">Value</span><span class="pi">:</span> <span class="s">Never lose context or repeat mistakes</span>
+
+<span class="na">Memory Creation</span><span class="pi">:</span>
+  <span class="na">1. Automatic Capture</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Code patterns</span>
+     <span class="pi">-</span> <span class="s">Error resolutions</span>
+     <span class="pi">-</span> <span class="s">Decision rationale</span>
+     <span class="pi">-</span> <span class="s">Team discussions</span>
+     
+  <span class="na">2. Manual Storage</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Bookmark important info</span>
+     <span class="pi">-</span> <span class="s">Add notes</span>
+     <span class="pi">-</span> <span class="s">Tag memories</span>
+     <span class="pi">-</span> <span class="s">Set reminders</span>
+     
+<span class="na">Memory Retrieval</span><span class="pi">:</span>
+  <span class="na">1. Contextual Recall</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Similar code detection</span>
+     <span class="pi">-</span> <span class="s">Error pattern matching</span>
+     <span class="pi">-</span> <span class="s">Related discussions</span>
+     <span class="pi">-</span> <span class="s">Previous solutions</span>
+     
+  <span class="na">2. Proactive Suggestions</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s2">"</span><span class="s">You</span><span class="nv"> </span><span class="s">did</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">before"</span>
+     <span class="pi">-</span> <span class="s2">"</span><span class="s">Team</span><span class="nv"> </span><span class="s">member</span><span class="nv"> </span><span class="s">solved</span><span class="nv"> </span><span class="s">similar"</span>
+     <span class="pi">-</span> <span class="s2">"</span><span class="s">This</span><span class="nv"> </span><span class="s">caused</span><span class="nv"> </span><span class="s">issues</span><span class="nv"> </span><span class="s">previously"</span>
+     <span class="pi">-</span> <span class="s2">"</span><span class="s">Consider</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">approach"</span>
+
+<span class="na">Memory Management</span><span class="pi">:</span>
+  <span class="na">1. Organization</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Categorize by project</span>
+     <span class="pi">-</span> <span class="s">Tag by technology</span>
+     <span class="pi">-</span> <span class="s">Link related memories</span>
+     <span class="pi">-</span> <span class="s">Create collections</span>
+     
+  <span class="na">2. Lifecycle</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Auto-expire old memories</span>
+     <span class="pi">-</span> <span class="s">Archive inactive patterns</span>
+     <span class="pi">-</span> <span class="s">Consolidate duplicates</span>
+     <span class="pi">-</span> <span class="s">Export knowledge base</span>
+</code></pre></div></div>
+
+<h3 id="memory-system-interactions">Memory System Interactions</h3>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Capture
+    
+    Capture --&gt; Processing
+    Processing --&gt; Embedding
+    Embedding --&gt; Storage
+    Storage --&gt; Indexing
+    
+    Indexing --&gt; Ready
+    Ready --&gt; Retrieval
+    
+    Retrieval --&gt; Ranking
+    Ranking --&gt; Filtering
+    Filtering --&gt; Delivery
+    
+    Delivery --&gt; [*]
+    
+    state Processing {
+        [*] --&gt; Clean
+        Clean --&gt; Chunk
+        Chunk --&gt; Enhance
+        Enhance --&gt; [*]
+    }
+    
+    state Storage {
+        [*] --&gt; Vector
+        [*] --&gt; Metadata
+        Vector --&gt; Qdrant
+        Metadata --&gt; PostgreSQL
+    }
+    
+    state Retrieval {
+        [*] --&gt; Search
+        Search --&gt; Similar
+        Similar --&gt; Context
+        Context --&gt; [*]
+    }
+</code></pre>
+
+<h2 id="5-project-management-flow">5. Project Management Flow</h2>
+
+<h3 id="complete-user-story-4">Complete User Story</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Epic</span><span class="pi">:</span> <span class="s">Project Management Integration</span>
+<span class="na">User Story</span><span class="pi">:</span> <span class="s">As a team lead, I want to manage development in DevMentor</span>
+<span class="na">Value</span><span class="pi">:</span> <span class="s">Single source of truth for all development activities</span>
+
+<span class="na">Project Setup</span><span class="pi">:</span>
+  <span class="na">1. Creation</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Import from GitHub Projects</span>
+     <span class="pi">-</span> <span class="s">Create from templates</span>
+     <span class="pi">-</span> <span class="s">Clone existing project</span>
+     <span class="pi">-</span> <span class="s">Start from scratch</span>
+     
+  <span class="na">2. Configuration</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Set team members</span>
+     <span class="pi">-</span> <span class="s">Define workflows</span>
+     <span class="pi">-</span> <span class="s">Configure integrations</span>
+     <span class="pi">-</span> <span class="s">Set notifications</span>
+     
+<span class="na">Task Management</span><span class="pi">:</span>
+  <span class="na">1. Creation</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">AI-suggested tasks</span>
+     <span class="pi">-</span> <span class="s">Manual creation</span>
+     <span class="pi">-</span> <span class="s">Import from issues</span>
+     <span class="pi">-</span> <span class="s">Generate from PRs</span>
+     
+  <span class="na">2. Assignment</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Auto-assign by expertise</span>
+     <span class="pi">-</span> <span class="s">Manual assignment</span>
+     <span class="pi">-</span> <span class="s">Round-robin distribution</span>
+     <span class="pi">-</span> <span class="s">Load balancing</span>
+     
+  <span class="na">3. Tracking</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Kanban board</span>
+     <span class="pi">-</span> <span class="s">Scrum board</span>
+     <span class="pi">-</span> <span class="s">Gantt chart</span>
+     <span class="pi">-</span> <span class="s">Calendar view</span>
+     
+<span class="na">Sprint Management</span><span class="pi">:</span>
+  <span class="na">1. Planning</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Capacity planning</span>
+     <span class="pi">-</span> <span class="s">Story pointing</span>
+     <span class="pi">-</span> <span class="s">Dependency mapping</span>
+     <span class="pi">-</span> <span class="s">Risk assessment</span>
+     
+  <span class="na">2. Execution</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Daily standups</span>
+     <span class="pi">-</span> <span class="s">Burndown charts</span>
+     <span class="pi">-</span> <span class="s">Velocity tracking</span>
+     <span class="pi">-</span> <span class="s">Blocker management</span>
+     
+  <span class="na">3. Retrospective</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Auto-generated insights</span>
+     <span class="pi">-</span> <span class="s">Action items</span>
+     <span class="pi">-</span> <span class="s">Improvement tracking</span>
+     <span class="pi">-</span> <span class="s">Team health metrics</span>
+</code></pre></div></div>
+
+<h3 id="project-management-sequence">Project Management Sequence</h3>
+<pre><code class="language-mermaid">graph LR
+    subgraph "Task Lifecycle"
+        CR[Created] --&gt; AS[Assigned]
+        AS --&gt; IP[In Progress]
+        IP --&gt; RV[Review]
+        RV --&gt; TS[Testing]
+        TS --&gt; DN[Done]
+        
+        IP --&gt; BL[Blocked]
+        BL --&gt; IP
+        
+        RV --&gt; RJ[Rejected]
+        RJ --&gt; IP
+    end
+    
+    subgraph "Data Flow"
+        UI[UI Board] --&gt; WS[WebSocket]
+        WS --&gt; PS[Project Service]
+        PS --&gt; DB[(PostgreSQL)]
+        PS --&gt; EV[Event Bus]
+        EV --&gt; NT[Notifications]
+        EV --&gt; AN[Analytics]
+        EV --&gt; AI[AI Learning]
+    end
+    
+    subgraph "Real-time Updates"
+        WS --&gt; T1[Team Member 1]
+        WS --&gt; T2[Team Member 2]
+        WS --&gt; T3[Team Member 3]
+        WS --&gt; MB[Mobile App]
+        WS --&gt; IDE[IDE Plugin]
+    end
+</code></pre>
+
+<h2 id="6-learning-engine-flow">6. Learning Engine Flow</h2>
+
+<h3 id="complete-user-story-5">Complete User Story</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Epic</span><span class="pi">:</span> <span class="s">Personalized Learning System</span>
+<span class="na">User Story</span><span class="pi">:</span> <span class="s">As a developer, I want to continuously improve my skills</span>
+<span class="na">Value</span><span class="pi">:</span> <span class="s">Level up skills 3x faster than traditional learning</span>
+
+<span class="na">Learning Path</span><span class="pi">:</span>
+  <span class="na">1. Assessment</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Initial skill evaluation</span>
+     <span class="pi">-</span> <span class="s">Knowledge gaps identification</span>
+     <span class="pi">-</span> <span class="s">Learning style detection</span>
+     <span class="pi">-</span> <span class="s">Goal setting</span>
+     
+  <span class="na">2. Curriculum</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Personalized path generation</span>
+     <span class="pi">-</span> <span class="s">Adaptive difficulty</span>
+     <span class="pi">-</span> <span class="s">Mixed media content</span>
+     <span class="pi">-</span> <span class="s">Practical exercises</span>
+     
+  <span class="na">3. Progress</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">XP system</span>
+     <span class="pi">-</span> <span class="s">Achievement badges</span>
+     <span class="pi">-</span> <span class="s">Skill tree</span>
+     <span class="pi">-</span> <span class="s">Leaderboards</span>
+     
+<span class="na">Content Delivery</span><span class="pi">:</span>
+  <span class="na">1. Micro-learning</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">5-minute lessons</span>
+     <span class="pi">-</span> <span class="s">Code challenges</span>
+     <span class="pi">-</span> <span class="s">Quick quizzes</span>
+     <span class="pi">-</span> <span class="s">Daily tips</span>
+     
+  <span class="na">2. Deep Dives</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Tutorial series</span>
+     <span class="pi">-</span> <span class="s">Project-based learning</span>
+     <span class="pi">-</span> <span class="s">Pair programming</span>
+     <span class="pi">-</span> <span class="s">Code reviews</span>
+     
+  <span class="na">3. Assessment</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Skill tests</span>
+     <span class="pi">-</span> <span class="s">Certification prep</span>
+     <span class="pi">-</span> <span class="s">Interview practice</span>
+     <span class="pi">-</span> <span class="s">Portfolio building</span>
+
+<span class="na">Gamification</span><span class="pi">:</span>
+  <span class="na">1. Rewards</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">XP points</span>
+     <span class="pi">-</span> <span class="s">Badges</span>
+     <span class="pi">-</span> <span class="s">Certificates</span>
+     <span class="pi">-</span> <span class="s">Profile flair</span>
+     
+  <span class="na">2. Social</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Team challenges</span>
+     <span class="pi">-</span> <span class="s">Peer learning</span>
+     <span class="pi">-</span> <span class="s">Mentorship</span>
+     <span class="pi">-</span> <span class="s">Knowledge sharing</span>
+</code></pre></div></div>
+
+<h3 id="learning-flow-sequence">Learning Flow Sequence</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant L as Learner
+    participant UI as Learning UI
+    participant LE as Learning Engine
+    participant AI as AI Service
+    participant AS as Assessment Service
+    participant DB as Database
+    participant REC as Recommendation Engine
+
+    Note over L,REC: Initial Assessment
+    L-&gt;&gt;UI: Start learning journey
+    UI-&gt;&gt;AS: Request assessment
+    AS-&gt;&gt;L: Present skill quiz
+    L-&gt;&gt;AS: Complete quiz
+    AS-&gt;&gt;AI: Analyze responses
+    AI-&gt;&gt;DB: Store skill profile
+    AI-&gt;&gt;REC: Generate learning path
+
+    Note over L,REC: Content Delivery
+    loop Daily Learning
+        REC-&gt;&gt;UI: Today's content
+        UI-&gt;&gt;L: Show lesson
+        L-&gt;&gt;UI: Complete exercise
+        UI-&gt;&gt;LE: Track progress
+        LE-&gt;&gt;AI: Analyze performance
+        AI-&gt;&gt;REC: Adjust difficulty
+        LE-&gt;&gt;DB: Update XP
+    end
+
+    Note over L,REC: Gamification
+    LE-&gt;&gt;LE: Check achievements
+    alt New Achievement
+        LE-&gt;&gt;UI: Show badge animation
+        LE-&gt;&gt;DB: Award badge
+        LE-&gt;&gt;UI: Update leaderboard
+    end
+
+    Note over L,REC: Adaptive Learning
+    AI-&gt;&gt;AI: Analyze patterns
+    AI-&gt;&gt;REC: Update algorithms
+    REC-&gt;&gt;DB: Save new path
+    REC-&gt;&gt;UI: Suggest next topic
+</code></pre>
+
+<h2 id="7-error-handling--recovery-flows">7. Error Handling &amp; Recovery Flows</h2>
+
+<h3 id="system-wide-error-handling">System-Wide Error Handling</h3>
+<pre><code class="language-mermaid">flowchart TB
+    REQ[Request] --&gt; TRY{Try}
+    
+    TRY --&gt;|Success| RESP[Response]
+    TRY --&gt;|Failure| ERR{Error Type}
+    
+    ERR --&gt;|Network| RETRY[Retry Logic]
+    ERR --&gt;|Auth| REFRESH[Refresh Token]
+    ERR --&gt;|Rate Limit| QUEUE[Queue Request]
+    ERR --&gt;|Server| CB[Circuit Breaker]
+    ERR --&gt;|Invalid| VAL[Validation Error]
+    
+    RETRY --&gt; EXP[Exponential Backoff]
+    EXP --&gt;|Attempt 1| WAIT1[Wait 1s]
+    EXP --&gt;|Attempt 2| WAIT2[Wait 2s]
+    EXP --&gt;|Attempt 3| WAIT4[Wait 4s]
+    EXP --&gt;|Max Attempts| FAIL[Graceful Failure]
+    
+    REFRESH --&gt;|Success| RETRY
+    REFRESH --&gt;|Failure| LOGIN[Re-login]
+    
+    QUEUE --&gt; DELAY[Show Wait Time]
+    DELAY --&gt; EXEC[Execute When Ready]
+    
+    CB --&gt;|Open| CACHED[Return Cached]
+    CB --&gt;|Half-Open| TEST[Test Request]
+    CB --&gt;|Closed| TRY
+    
+    CACHED --&gt; RESP
+    FAIL --&gt; LOG[Log Error]
+    LOG --&gt; USR[User Friendly Message]
+</code></pre>
+
+<h3 id="detailed-error-recovery-patterns">Detailed Error Recovery Patterns</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Network Errors</span><span class="pi">:</span>
+  <span class="na">Strategy</span><span class="pi">:</span> <span class="s">Exponential backoff with jitter</span>
+  <span class="na">Max Attempts</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">Delays</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">1s</span><span class="pi">,</span> <span class="nv">2s</span><span class="pi">,</span> <span class="nv">4s</span><span class="pi">]</span>
+  <span class="na">Jitter</span><span class="pi">:</span> <span class="s">Random 0-1s added</span>
+  <span class="na">Fallback</span><span class="pi">:</span> <span class="s">Show offline mode</span>
+
+<span class="na">Authentication Errors</span><span class="pi">:</span>
+  <span class="na">401 Unauthorized</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Try refresh token</span>
+    <span class="pi">-</span> <span class="s">If fails, redirect to login</span>
+    <span class="pi">-</span> <span class="s">Preserve current state</span>
+  <span class="na">403 Forbidden</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Show permission error</span>
+    <span class="pi">-</span> <span class="s">Suggest upgrade if needed</span>
+    <span class="pi">-</span> <span class="s">Log for audit</span>
+
+<span class="na">Rate Limiting</span><span class="pi">:</span>
+  <span class="na">429 Too Many Requests</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Parse retry-after header</span>
+    <span class="pi">-</span> <span class="s">Queue request</span>
+    <span class="pi">-</span> <span class="s">Show countdown to user</span>
+    <span class="pi">-</span> <span class="s">Execute when allowed</span>
+
+<span class="na">Server Errors</span><span class="pi">:</span>
+  <span class="na">500 Internal Error</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Log full stack trace</span>
+    <span class="pi">-</span> <span class="s">Show generic message</span>
+    <span class="pi">-</span> <span class="s">Offer retry button</span>
+    <span class="pi">-</span> <span class="s">Report to monitoring</span>
+  <span class="na">503 Service Unavailable</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Check circuit breaker</span>
+    <span class="pi">-</span> <span class="s">Use cached if available</span>
+    <span class="pi">-</span> <span class="s">Show maintenance message</span>
+
+<span class="na">Timeout Errors</span><span class="pi">:</span>
+  <span class="na">Request Timeout</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Cancel request</span>
+    <span class="pi">-</span> <span class="s">Try faster endpoint</span>
+    <span class="pi">-</span> <span class="s">Reduce payload size</span>
+    <span class="pi">-</span> <span class="s">Show partial results</span>
+</code></pre></div></div>
+
+<h2 id="8-caching-strategy">8. Caching Strategy</h2>
+
+<h3 id="multi-layer-cache-architecture">Multi-Layer Cache Architecture</h3>
+<pre><code class="language-mermaid">graph TB
+    REQ[Request] --&gt; L1{L1: Browser}
+    
+    L1 --&gt;|Hit| RESP1[Return Cached]
+    L1 --&gt;|Miss| L2{L2: CDN}
+    
+    L2 --&gt;|Hit| RESP2[Return &amp; Update L1]
+    L2 --&gt;|Miss| L3{L3: Redis}
+    
+    L3 --&gt;|Hit| RESP3[Return &amp; Update L1,L2]
+    L3 --&gt;|Miss| L4{L4: App Cache}
+    
+    L4 --&gt;|Hit| RESP4[Return &amp; Update L1,L2,L3]
+    L4 --&gt;|Miss| DB[(Database)]
+    
+    DB --&gt; COMP[Compute Result]
+    COMP --&gt; STORE[Store in All Layers]
+    STORE --&gt; RESP5[Return Response]
+
+    subgraph "Cache TTLs"
+        TTL1[L1: 5 min]
+        TTL2[L2: 1 hour]
+        TTL3[L3: 24 hours]
+        TTL4[L4: 5 min]
+    end
+
+    subgraph "Invalidation"
+        INV1[Time-based: TTL]
+        INV2[Event-based: On mutation]
+        INV3[Manual: Admin clear]
+        INV4[Cascade: Dependencies]
+    end
+</code></pre>
+
+<h2 id="9-websocket-real-time-flow">9. WebSocket Real-time Flow</h2>
+
+<h3 id="websocket-connection-management">WebSocket Connection Management</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant C as Client
+    participant GW as Gateway
+    participant WS as WebSocket Server
+    participant R as Redis PubSub
+    participant S1 as Service 1
+    participant S2 as Service 2
+
+    Note over C,S2: Connection Establishment
+    C-&gt;&gt;GW: WS Upgrade Request
+    GW-&gt;&gt;WS: Establish Connection
+    WS-&gt;&gt;R: Subscribe to channels
+    WS-&gt;&gt;C: Connection Acknowledged
+
+    Note over C,S2: Heartbeat
+    loop Every 30s
+        C-&gt;&gt;WS: Ping
+        WS-&gt;&gt;C: Pong
+    end
+
+    Note over C,S2: Event Broadcasting
+    S1-&gt;&gt;R: Publish task.updated
+    R-&gt;&gt;WS: Distribute to subscribers
+    WS-&gt;&gt;C: Send event
+    
+    S2-&gt;&gt;R: Publish ai.response
+    R-&gt;&gt;WS: Distribute to subscribers
+    WS-&gt;&gt;C: Send event
+
+    Note over C,S2: Connection Recovery
+    C-&gt;&gt;WS: Connection lost
+    C-&gt;&gt;C: Wait with backoff
+    C-&gt;&gt;GW: Reconnect attempt
+    GW-&gt;&gt;WS: Re-establish
+    WS-&gt;&gt;R: Re-subscribe
+    WS-&gt;&gt;C: Send missed events
+</code></pre>
+
+<h2 id="10-complete-service-interaction-matrix">10. Complete Service Interaction Matrix</h2>
+
+<h3 id="service-dependencies">Service Dependencies</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">API Gateway</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Auth</span><span class="pi">,</span> <span class="nv">Redis</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="s">All services</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">WebSocket</span><span class="pi">]</span>
+  
+<span class="na">Auth Service</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">PostgreSQL</span><span class="pi">,</span> <span class="nv">Redis</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">API Gateway</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">JWT</span><span class="pi">]</span>
+  
+<span class="na">Repo Analyzer</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">GitHub API</span><span class="pi">,</span> <span class="nv">AI Gateway</span><span class="pi">,</span> <span class="nv">PostgreSQL</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Frontend</span><span class="pi">,</span> <span class="nv">Learning Engine</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">gRPC</span><span class="pi">]</span>
+  
+<span class="na">AI Gateway</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Memory Service</span><span class="pi">,</span> <span class="nv">Qdrant</span><span class="pi">,</span> <span class="nv">LLM Providers</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="s">All services</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">WebSocket</span><span class="pi">]</span>
+  
+<span class="na">Memory Service</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Qdrant</span><span class="pi">,</span> <span class="nv">PostgreSQL</span><span class="pi">,</span> <span class="nv">AI Gateway</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">AI Gateway</span><span class="pi">,</span> <span class="nv">Learning Engine</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">gRPC</span><span class="pi">]</span>
+  
+<span class="na">Project Service</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">PostgreSQL</span><span class="pi">,</span> <span class="nv">Redis</span><span class="pi">,</span> <span class="nv">WebSocket Server</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Frontend</span><span class="pi">,</span> <span class="nv">Learning Engine</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">WebSocket</span><span class="pi">]</span>
+  
+<span class="na">Learning Engine</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">AI Gateway</span><span class="pi">,</span> <span class="nv">Memory Service</span><span class="pi">,</span> <span class="nv">PostgreSQL</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Frontend</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">WebSocket</span><span class="pi">]</span>
+  
+<span class="na">PBML Service</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Qdrant</span><span class="pi">,</span> <span class="nv">AI Gateway</span><span class="pi">,</span> <span class="nv">Memory Service</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">AI Gateway</span><span class="pi">,</span> <span class="nv">Learning Engine</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">gRPC</span><span class="pi">]</span>
+  
+<span class="na">Monitoring Service</span><span class="pi">:</span>
+  <span class="na">Depends On</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Prometheus</span><span class="pi">,</span> <span class="nv">Grafana</span><span class="pi">,</span> <span class="nv">All Services</span><span class="pi">]</span>
+  <span class="na">Provides To</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">Admin Dashboard</span><span class="pi">]</span>
+  <span class="na">Protocols</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">HTTP</span><span class="pi">,</span> <span class="nv">Metrics</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h2 id="critical-missing-pieces">Critical Missing Pieces</h2>
+
+<h3 id="what-we-dont-have">What We Don’t Have</h3>
+<ol>
+  <li><strong>Service Mesh</strong>: No proper service discovery</li>
+  <li><strong>Message Queue</strong>: No async job processing</li>
+  <li><strong>Workflow Engine</strong>: No complex flow orchestration</li>
+  <li><strong>Feature Flags</strong>: No gradual rollout capability</li>
+  <li><strong>A/B Testing</strong>: No experimentation framework</li>
+  <li><strong>Audit Logs</strong>: No compliance tracking</li>
+  <li><strong>Backup System</strong>: No disaster recovery</li>
+  <li><strong>Multi-tenancy</strong>: No proper isolation</li>
+  <li><strong>Rate Limiting</strong>: Basic implementation only</li>
+  <li><strong>Circuit Breakers</strong>: Not implemented anywhere</li>
+</ol>
+
+<h3 id="required-infrastructure">Required Infrastructure</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Must Have Before Beta</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Service mesh (Istio configured)</span>
+  <span class="pi">-</span> <span class="s">Message queue (RabbitMQ/Kafka)</span>
+  <span class="pi">-</span> <span class="s">Feature flags (LaunchDarkly/Unleash)</span>
+  <span class="pi">-</span> <span class="s">Centralized logging (ELK stack)</span>
+  <span class="pi">-</span> <span class="s">Distributed tracing (Jaeger)</span>
+  <span class="pi">-</span> <span class="s">Metrics collection (Prometheus)</span>
+  <span class="pi">-</span> <span class="s">Alert management (PagerDuty)</span>
+  <span class="pi">-</span> <span class="s">Backup solution (Velero)</span>
+  <span class="pi">-</span> <span class="s">Secret management (Vault)</span>
+  <span class="pi">-</span> <span class="s">Load balancer (properly configured)</span>
+
+<span class="na">Nice to Have</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Workflow engine (Temporal/Airflow)</span>
+  <span class="pi">-</span> <span class="s">A/B testing (Optimizely)</span>
+  <span class="pi">-</span> <span class="s">Advanced monitoring (DataDog)</span>
+  <span class="pi">-</span> <span class="s">CDN (CloudFlare)</span>
+  <span class="pi">-</span> <span class="s">Auto-scaling (HPA/VPA)</span>
+</code></pre></div></div>
+
+<h2 id="deployment--rollback-strategy">Deployment &amp; Rollback Strategy</h2>
+
+<h3 id="blue-green-deployment">Blue-Green Deployment</h3>
+<pre><code class="language-mermaid">graph LR
+    subgraph "Current State"
+        LB1[Load Balancer] --&gt; B1[Blue v1.0]
+        B1 --&gt; DB1[(Database)]
+    end
+    
+    subgraph "Deploy New Version"
+        LB2[Load Balancer] -.-&gt; G1[Green v1.1]
+        G1 --&gt; DB2[(Database)]
+        B2[Blue v1.0] --&gt; DB2
+    end
+    
+    subgraph "Switch Traffic"
+        LB3[Load Balancer] --&gt; G2[Green v1.1]
+        B3[Blue v1.0] -.-&gt; DB3[(Database)]
+        G2 --&gt; DB3
+    end
+    
+    subgraph "Rollback if Needed"
+        LB4[Load Balancer] --&gt; B4[Blue v1.0]
+        G3[Green v1.1] -.-&gt; DB4[(Database)]
+        B4 --&gt; DB4
+    end
+</code></pre>
+
+<h2 id="success-metrics--monitoring">Success Metrics &amp; Monitoring</h2>
+
+<h3 id="key-performance-indicators">Key Performance Indicators</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Daily Active Users (DAU)</span>
+  <span class="pi">-</span> <span class="s">Monthly Active Users (MAU)</span>
+  <span class="pi">-</span> <span class="s">User Retention (D1, D7, D30)</span>
+  <span class="pi">-</span> <span class="s">Session Duration</span>
+  <span class="pi">-</span> <span class="s">Feature Adoption Rate</span>
+
+<span class="na">System Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">API Response Time (p50, p95, p99)</span>
+  <span class="pi">-</span> <span class="s">Error Rate</span>
+  <span class="pi">-</span> <span class="s">Uptime (99.9% target)</span>
+  <span class="pi">-</span> <span class="s">Request Volume</span>
+  <span class="pi">-</span> <span class="s">Cache Hit Rate</span>
+
+<span class="na">Business Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Conversion Rate</span>
+  <span class="pi">-</span> <span class="s">Customer Acquisition Cost (CAC)</span>
+  <span class="pi">-</span> <span class="s">Lifetime Value (LTV)</span>
+  <span class="pi">-</span> <span class="s">Net Promoter Score (NPS)</span>
+  <span class="pi">-</span> <span class="s">Churn Rate</span>
+
+<span class="na">Technical Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Code Coverage</span>
+  <span class="pi">-</span> <span class="s">Technical Debt Ratio</span>
+  <span class="pi">-</span> <span class="s">Deploy Frequency</span>
+  <span class="pi">-</span> <span class="s">Mean Time to Recovery (MTTR)</span>
+  <span class="pi">-</span> <span class="s">Change Failure Rate</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><strong>This document represents the COMPLETE interaction architecture. Every arrow, every flow, every connection must be implemented with proper error handling, caching, monitoring, and testing before we can claim ANY feature is “complete”.</strong></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / architecture/COMPLETE_E2E_INTERACTION_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

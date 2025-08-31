@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUPABASE SETUP GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">SUPABASE_SETUP_GUIDE.md</span>
+</div>
+
+<h1>SUPABASE SETUP GUIDE</h1>
+
+
+<h1 id="supabase-setup-guide-for-quizmentor">Supabase Setup Guide for QuizMentor</h1>
+<p><em>Last Updated: December 26, 2024</em></p>
+
+<h2 id="-prerequisites">📋 Prerequisites</h2>
+<ul>
+  <li>Supabase account created</li>
+  <li>Project created in Supabase dashboard</li>
+  <li>Access to project settings</li>
+</ul>
+
+<hr />
+
+<h2 id="-step-by-step-setup">🚀 Step-by-Step Setup</h2>
+
+<h3 id="step-1-get-your-project-credentials">Step 1: Get Your Project Credentials</h3>
+
+<ol>
+  <li>Go to your <a href="https://app.supabase.com">Supabase Dashboard</a></li>
+  <li>Select your project</li>
+  <li>Navigate to <strong>Settings &gt; API</strong></li>
+  <li>Copy these values:
+    <ul>
+      <li><strong>Project URL</strong>: <code class="language-plaintext highlighter-rouge">https://YOUR_PROJECT_ID.supabase.co</code></li>
+      <li><strong>anon public key</strong>: (safe to expose in client)</li>
+      <li><strong>service_role key</strong>: (NEVER expose, server-only)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-2-configure-environment-variables">Step 2: Configure Environment Variables</h3>
+
+<ol>
+  <li>Copy <code class="language-plaintext highlighter-rouge">.env.example</code> to <code class="language-plaintext highlighter-rouge">.env.local</code>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> .env.example .env.local
+</code></pre></div>    </div>
+  </li>
+  <li>Update <code class="language-plaintext highlighter-rouge">.env.local</code> with your Supabase credentials:
+    <pre><code class="language-env">NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+</code></pre>
+  </li>
+</ol>
+
+<h3 id="step-3-run-database-migrations">Step 3: Run Database Migrations</h3>
+
+<h4 id="option-a-using-supabase-dashboard-easiest">Option A: Using Supabase Dashboard (Easiest)</h4>
+<ol>
+  <li>Go to <strong>SQL Editor</strong> in Supabase dashboard</li>
+  <li>Click “New Query”</li>
+  <li>Copy the entire contents of <code class="language-plaintext highlighter-rouge">supabase/migrations/001_initial_schema.sql</code></li>
+  <li>Paste into the SQL editor</li>
+  <li>Click “Run” to execute</li>
+</ol>
+
+<h4 id="option-b-using-supabase-cli">Option B: Using Supabase CLI</h4>
+<ol>
+  <li>Install Supabase CLI:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> <span class="nt">-g</span> supabase
+</code></pre></div>    </div>
+  </li>
+  <li>Link your project:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase <span class="nb">link</span> <span class="nt">--project-ref</span> YOUR_PROJECT_ID
+</code></pre></div>    </div>
+  </li>
+  <li>Run migrations:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase db push
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-4-configure-authentication">Step 4: Configure Authentication</h3>
+
+<ol>
+  <li>
+    <p>In Supabase Dashboard, go to <strong>Authentication &gt; Providers</strong></p>
+  </li>
+  <li><strong>Enable Email Authentication</strong>:
+    <ul>
+      <li>Toggle “Enable Email” ON</li>
+      <li>Configure email templates if needed</li>
+      <li>Set redirect URLs:
+        <ul>
+          <li>Development: <code class="language-plaintext highlighter-rouge">http://localhost:3000/auth/callback</code></li>
+          <li>Production: <code class="language-plaintext highlighter-rouge">https://yourdomain.com/auth/callback</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Configure Password Requirements</strong>:
+    <ul>
+      <li>Go to <strong>Authentication &gt; Policies</strong></li>
+      <li>Set minimum password length: 8</li>
+      <li>Require uppercase: Yes</li>
+      <li>Require numbers: Yes</li>
+    </ul>
+  </li>
+  <li><strong>(Optional) Enable OAuth Providers</strong>:
+    <ul>
+      <li><strong>GitHub OAuth</strong>:
+        <ol>
+          <li>Toggle GitHub ON</li>
+          <li>Add GitHub OAuth App credentials</li>
+          <li>Set callback URL: <code class="language-plaintext highlighter-rouge">https://YOUR_PROJECT_ID.supabase.co/auth/v1/callback</code></li>
+        </ol>
+      </li>
+      <li><strong>Google OAuth</strong>:
+        <ol>
+          <li>Toggle Google ON</li>
+          <li>Add Google OAuth credentials</li>
+          <li>Configure consent screen</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-5-set-up-row-level-security-rls">Step 5: Set Up Row Level Security (RLS)</h3>
+
+<p>The migration script already includes RLS policies, but verify they’re enabled:</p>
+
+<ol>
+  <li>Go to <strong>Database &gt; Tables</strong></li>
+  <li>For each table, ensure the shield icon is GREEN (RLS enabled)</li>
+  <li>Click on the table &gt; Policies to view/edit policies</li>
+</ol>
+
+<h3 id="step-6-configure-storage-for-avatars">Step 6: Configure Storage (for avatars)</h3>
+
+<ol>
+  <li>Go to <strong>Storage</strong> in dashboard</li>
+  <li>Create a new bucket called <code class="language-plaintext highlighter-rouge">avatars</code></li>
+  <li>Set it as PUBLIC bucket</li>
+  <li>Add policies:</li>
+</ol>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Allow users to upload their own avatar</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can upload own avatar"</span> <span class="k">ON</span> <span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<span class="k">FOR</span> <span class="k">INSERT</span> <span class="k">TO</span> <span class="n">authenticated</span>
+<span class="k">WITH</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">bucket_id</span> <span class="o">=</span> <span class="s1">'avatars'</span> <span class="k">AND</span> <span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()::</span><span class="nb">text</span> <span class="o">=</span> <span class="p">(</span><span class="k">storage</span><span class="p">.</span><span class="n">foldername</span><span class="p">(</span><span class="n">name</span><span class="p">))[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="c1">-- Allow users to update their own avatar</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can update own avatar"</span> <span class="k">ON</span> <span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<span class="k">FOR</span> <span class="k">UPDATE</span> <span class="k">TO</span> <span class="n">authenticated</span>
+<span class="k">USING</span> <span class="p">(</span><span class="n">bucket_id</span> <span class="o">=</span> <span class="s1">'avatars'</span> <span class="k">AND</span> <span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()::</span><span class="nb">text</span> <span class="o">=</span> <span class="p">(</span><span class="k">storage</span><span class="p">.</span><span class="n">foldername</span><span class="p">(</span><span class="n">name</span><span class="p">))[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="c1">-- Allow public to view avatars</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Anyone can view avatars"</span> <span class="k">ON</span> <span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<span class="k">FOR</span> <span class="k">SELECT</span> <span class="k">TO</span> <span class="k">public</span>
+<span class="k">USING</span> <span class="p">(</span><span class="n">bucket_id</span> <span class="o">=</span> <span class="s1">'avatars'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="step-7-set-up-edge-functions-optional">Step 7: Set Up Edge Functions (Optional)</h3>
+
+<p>For advanced features like webhooks and background jobs:</p>
+
+<ol>
+  <li>Install Supabase CLI (if not already installed)</li>
+  <li>Create edge functions:</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase functions new send-achievement-notification
+supabase functions new update-leaderboard
+</code></pre></div></div>
+
+<ol>
+  <li>Deploy functions:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase functions deploy send-achievement-notification
+supabase functions deploy update-leaderboard
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-8-configure-email-templates">Step 8: Configure Email Templates</h3>
+
+<ol>
+  <li>Go to <strong>Authentication &gt; Email Templates</strong></li>
+  <li>Customize templates for:
+    <ul>
+      <li>Confirm signup</li>
+      <li>Reset password</li>
+      <li>Magic link</li>
+      <li>Invite user</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Example confirmation template:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h2&gt;</span>Welcome to QuizMentor!<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;p&gt;</span>Thanks for signing up. Please confirm your email:<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"{{ .ConfirmationURL }}"</span><span class="nt">&gt;</span>Confirm Email<span class="nt">&lt;/a&gt;</span>
+</code></pre></div></div>
+
+<h3 id="step-9-set-up-database-webhooks-optional">Step 9: Set Up Database Webhooks (Optional)</h3>
+
+<p>For real-time features:</p>
+
+<ol>
+  <li>Go to <strong>Database &gt; Webhooks</strong></li>
+  <li>Create webhook for quiz completion:
+    <ul>
+      <li>Table: <code class="language-plaintext highlighter-rouge">quiz_sessions</code></li>
+      <li>Events: UPDATE</li>
+      <li>Conditions: <code class="language-plaintext highlighter-rouge">status = 'completed'</code></li>
+      <li>URL: Your backend webhook endpoint</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-10-configure-realtime-subscriptions">Step 10: Configure Realtime Subscriptions</h3>
+
+<p>Enable realtime for specific tables:</p>
+
+<ol>
+  <li>Go to <strong>Database &gt; Replication</strong></li>
+  <li>Toggle ON for tables:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">leaderboard</code> (for live updates)</li>
+      <li><code class="language-plaintext highlighter-rouge">quiz_sessions</code> (for multiplayer features)</li>
+      <li><code class="language-plaintext highlighter-rouge">user_achievements</code> (for notifications)</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-testing-your-setup">🧪 Testing Your Setup</h2>
+
+<h3 id="test-1-database-connection">Test 1: Database Connection</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// test-connection.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/supabase-js</span><span class="dl">'</span>
+
+<span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">(</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span>
+<span class="p">)</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">testConnection</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+    <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">categories</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Connection failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Connection successful! Categories:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">testConnection</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="test-2-authentication">Test 2: Authentication</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">testAuth</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Sign up</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">signUpData</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">signUpError</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signUp</span><span class="p">({</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">TestPass123!</span><span class="dl">'</span>
+  <span class="p">})</span>
+  
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sign up:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">signUpData</span><span class="p">,</span> <span class="nx">signUpError</span><span class="p">)</span>
+  
+  <span class="c1">// Sign in</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">signInData</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">signInError</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">TestPass123!</span><span class="dl">'</span>
+  <span class="p">})</span>
+  
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sign in:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">signInData</span><span class="p">,</span> <span class="nx">signInError</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="test-3-create-profile">Test 3: Create Profile</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">createProfile</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+    <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">profiles</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">insert</span><span class="p">({</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span>
+      <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">testuser</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">display_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test User</span><span class="dl">'</span>
+    <span class="p">})</span>
+  
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Profile created:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-troubleshooting">🔍 Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues:</h3>
+
+<ol>
+  <li><strong>“relation does not exist” error</strong>
+    <ul>
+      <li>Run the migration script again</li>
+      <li>Check if you’re in the right schema (public)</li>
+    </ul>
+  </li>
+  <li><strong>Authentication not working</strong>
+    <ul>
+      <li>Verify redirect URLs are correct</li>
+      <li>Check if email confirmations are enabled</li>
+      <li>Ensure RLS policies are correct</li>
+    </ul>
+  </li>
+  <li><strong>RLS blocking queries</strong>
+    <ul>
+      <li>Temporarily disable RLS to test</li>
+      <li>Check auth.uid() is being passed correctly</li>
+      <li>Review policy conditions</li>
+    </ul>
+  </li>
+  <li><strong>CORS errors</strong>
+    <ul>
+      <li>Add your domain to allowed origins</li>
+      <li>Check API URL is correct</li>
+    </ul>
+  </li>
+  <li><strong>Email not sending</strong>
+    <ul>
+      <li>Check email settings in dashboard</li>
+      <li>Verify SMTP configuration</li>
+      <li>Check rate limits</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-monitoring">📊 Monitoring</h2>
+
+<h3 id="enable-logging">Enable Logging:</h3>
+<ol>
+  <li>Go to <strong>Logs</strong> in dashboard</li>
+  <li>View different log types:
+    <ul>
+      <li>API logs</li>
+      <li>Database logs</li>
+      <li>Auth logs</li>
+      <li>Function logs</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="set-up-alerts">Set Up Alerts:</h3>
+<ol>
+  <li>Go to <strong>Reports</strong></li>
+  <li>Create custom queries</li>
+  <li>Set up email alerts for:
+    <ul>
+      <li>High error rates</li>
+      <li>Slow queries</li>
+      <li>Failed auth attempts</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-security-checklist">🚨 Security Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />RLS enabled on all tables</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Service role key NOT exposed in client</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Environment variables properly configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Email verification enabled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Password requirements configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting enabled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CORS properly configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SSL enforced</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup strategy in place</li>
+</ul>
+
+<hr />
+
+<h2 id="-next-steps">📚 Next Steps</h2>
+
+<ol>
+  <li><strong>Install Supabase client library</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> @supabase/supabase-js
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Create Supabase client singleton</strong>:
+```typescript
+// lib/supabase.ts
+import { createClient } from ‘@supabase/supabase-js’</li>
+</ol>
+
+<p>export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+```</p>
+
+<ol>
+  <li><strong>Implement authentication service</strong>:
+    <ul>
+      <li>See <code class="language-plaintext highlighter-rouge">services/auth/authService.ts</code></li>
+    </ul>
+  </li>
+  <li><strong>Start building features</strong>:
+    <ul>
+      <li>User registration</li>
+      <li>Quiz sessions</li>
+      <li>Leaderboard</li>
+      <li>Achievements</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-resources">📖 Resources</h2>
+
+<ul>
+  <li><a href="https://supabase.com/docs">Supabase Documentation</a></li>
+  <li><a href="https://supabase.com/docs/reference/javascript/introduction">Supabase JavaScript Client</a></li>
+  <li><a href="https://supabase.com/docs/guides/auth/row-level-security">Row Level Security Guide</a></li>
+  <li><a href="https://supabase.com/docs/guides/auth">Authentication Guide</a></li>
+  <li><a href="https://supabase.com/docs/guides/storage">Storage Guide</a></li>
+</ul>
+
+<hr />
+
+<p><em>Need help? Check the <a href="https://discord.supabase.com">Supabase Discord</a> or <a href="https://github.com/supabase/supabase/discussions">GitHub Discussions</a></em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / SUPABASE_SETUP_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

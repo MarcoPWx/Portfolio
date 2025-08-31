@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>k8s-debugging-enhanced</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/debugging/k8s-debugging-enhanced.md</span>
+</div>
+
+<h1>k8s-debugging-enhanced</h1>
+
+
+<h1 id="enhanced-kubernetes-debugging-guide">Enhanced Kubernetes Debugging Guide</h1>
+
+<h2 id="-purpose">🎯 Purpose</h2>
+<p>This guide contains all debugging commands and techniques used during DevMentor deployment, organized for learning and future reference.</p>
+
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<ol>
+  <li><a href="#pod-troubleshooting">Pod Troubleshooting</a></li>
+  <li><a href="#image-issues">Image Issues</a></li>
+  <li><a href="#resource-problems">Resource Problems</a></li>
+  <li><a href="#service-discovery">Service Discovery</a></li>
+  <li><a href="#istio-service-mesh">Istio Service Mesh</a></li>
+  <li><a href="#logs-and-events">Logs and Events</a></li>
+  <li><a href="#performance-analysis">Performance Analysis</a></li>
+  <li><a href="#common-fixes">Common Fixes</a></li>
+</ol>
+
+<h2 id="-pod-troubleshooting">🔍 Pod Troubleshooting</h2>
+
+<h3 id="check-pod-status">Check Pod Status</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># List all pods with their status</span>
+kubectl get pods <span class="nt">-n</span> devmentor
+
+<span class="c"># Get detailed pod information</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor
+
+<span class="c"># Check pod events (last 20 lines)</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor | <span class="nb">tail</span> <span class="nt">-20</span>
+
+<span class="c"># Get pods across all namespaces</span>
+kubectl get pods <span class="nt">--all-namespaces</span>
+
+<span class="c"># Find problematic pods (not Running or Completed)</span>
+kubectl get pods <span class="nt">--all-namespaces</span> | <span class="nb">grep</span> <span class="nt">-v</span> Running | <span class="nb">grep</span> <span class="nt">-v</span> Completed
+</code></pre></div></div>
+
+<h3 id="common-pod-states-and-solutions">Common Pod States and Solutions</h3>
+
+<h4 id="imagepullbackoff">ImagePullBackOff</h4>
+<p><strong>Symptoms</strong>: Pod can’t pull Docker image</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check the exact error</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor | <span class="nb">grep</span> <span class="nt">-A5</span> <span class="s2">"Events:"</span>
+
+<span class="c"># Common causes:</span>
+<span class="c"># 1. Image doesn't exist</span>
+<span class="c"># 2. No credentials for private registry</span>
+<span class="c"># 3. Image not loaded in Kind cluster</span>
+
+<span class="c"># Fix for Kind:</span>
+kind load docker-image &lt;image-name&gt; <span class="nt">--name</span> &lt;cluster-name&gt;
+</code></pre></div></div>
+
+<h4 id="crashloopbackoff">CrashLoopBackOff</h4>
+<p><strong>Symptoms</strong>: Container starts then immediately crashes</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--previous</span>
+
+<span class="c"># Check container exit code</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor | <span class="nb">grep</span> <span class="nt">-A10</span> <span class="s2">"Last State:"</span>
+
+<span class="c"># Common causes:</span>
+<span class="c"># 1. Application error</span>
+<span class="c"># 2. Missing environment variables</span>
+<span class="c"># 3. Insufficient resources</span>
+</code></pre></div></div>
+
+<h4 id="pending">Pending</h4>
+<p><strong>Symptoms</strong>: Pod stuck in Pending state</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check why scheduling failed</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor | <span class="nb">grep</span> <span class="nt">-A5</span> <span class="s2">"Events:"</span>
+
+<span class="c"># Check node resources</span>
+kubectl describe nodes
+kubectl top nodes
+
+<span class="c"># Common causes:</span>
+<span class="c"># 1. Insufficient resources</span>
+<span class="c"># 2. PVC not bound</span>
+<span class="c"># 3. Node selector not matching</span>
+</code></pre></div></div>
+
+<h2 id="️-image-issues">🖼️ Image Issues</h2>
+
+<h3 id="verify-image-availability">Verify Image Availability</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check local Docker images</span>
+docker images | <span class="nb">grep</span> &lt;image-pattern&gt;
+
+<span class="c"># Check images in Kind nodes</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> &lt;cluster-name&gt;-control-plane crictl images
+
+<span class="c"># Load image into Kind</span>
+kind load docker-image &lt;image-name&gt; <span class="nt">--name</span> &lt;cluster-name&gt;
+
+<span class="c"># Force pod to use local image</span>
+kubectl patch deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-p</span> <span class="se">\</span>
+  <span class="s1">'{"spec":{"template":{"spec":{"containers":[{"name":"&lt;container-name&gt;","imagePullPolicy":"IfNotPresent"}]}}}}'</span>
+</code></pre></div></div>
+
+<h3 id="building-and-loading-images">Building and Loading Images</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build Docker image</span>
+docker build <span class="nt">-t</span> &lt;image-name&gt;:latest <span class="nb">.</span>
+
+<span class="c"># Tag for Kind</span>
+docker tag &lt;image-name&gt;:latest &lt;image-name&gt;:latest
+
+<span class="c"># Load into Kind cluster</span>
+kind load docker-image &lt;image-name&gt;:latest <span class="nt">--name</span> devmentor
+
+<span class="c"># Verify loaded</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[*].spec.containers[*].image}'</span> | <span class="nb">tr</span> <span class="s1">' '</span> <span class="s1">'\n'</span> | <span class="nb">sort</span> | <span class="nb">uniq</span>
+</code></pre></div></div>
+
+<h2 id="-resource-problems">💾 Resource Problems</h2>
+
+<h3 id="check-resource-usage">Check Resource Usage</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install metrics server (if not present)</span>
+kubectl apply <span class="nt">-f</span> https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+<span class="c"># Check node resources</span>
+kubectl top nodes
+
+<span class="c"># Check pod resources</span>
+kubectl top pods <span class="nt">-n</span> devmentor
+
+<span class="c"># Get resource requests and limits</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> custom-columns<span class="o">=</span><span class="se">\</span>
+<span class="s1">'NAME:.metadata.name,CPU-REQ:.spec.containers[*].resources.requests.cpu,MEM-REQ:.spec.containers[*].resources.requests.memory,CPU-LIM:.spec.containers[*].resources.limits.cpu,MEM-LIM:.spec.containers[*].resources.limits.memory'</span>
+</code></pre></div></div>
+
+<h3 id="update-resource-limits">Update Resource Limits</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add resources to deployment (if missing)</span>
+kubectl patch deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/resources",
+    "value": {
+      "requests": {"memory": "512Mi", "cpu": "250m"},
+      "limits": {"memory": "1Gi", "cpu": "1000m"}
+    }
+  }
+]'</span>
+
+<span class="c"># Update existing resources</span>
+kubectl patch deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/resources",
+    "value": {
+      "requests": {"memory": "1Gi", "cpu": "500m"},
+      "limits": {"memory": "2Gi", "cpu": "1000m"}
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h2 id="-service-discovery">🔌 Service Discovery</h2>
+
+<h3 id="check-service-connectivity">Check Service Connectivity</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># List services</span>
+kubectl get svc <span class="nt">-n</span> devmentor
+
+<span class="c"># Get service endpoints</span>
+kubectl get endpoints <span class="nt">-n</span> devmentor
+
+<span class="c"># Test service DNS resolution</span>
+kubectl run <span class="nt">-it</span> <span class="nt">--rm</span> debug <span class="nt">--image</span><span class="o">=</span>busybox <span class="nt">--restart</span><span class="o">=</span>Never <span class="nt">-n</span> devmentor <span class="nt">--</span> nslookup &lt;service-name&gt;
+
+<span class="c"># Test service connectivity</span>
+kubectl run <span class="nt">-it</span> <span class="nt">--rm</span> debug <span class="nt">--image</span><span class="o">=</span>busybox <span class="nt">--restart</span><span class="o">=</span>Never <span class="nt">-n</span> devmentor <span class="nt">--</span> wget <span class="nt">-qO-</span> http://&lt;service-name&gt;:&lt;port&gt;/health
+
+<span class="c"># Port forward for local testing</span>
+kubectl port-forward <span class="nt">-n</span> devmentor svc/&lt;service-name&gt; &lt;local-port&gt;:&lt;service-port&gt;
+</code></pre></div></div>
+
+<h3 id="debug-service-issues">Debug Service Issues</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if pods have correct labels</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">--show-labels</span>
+
+<span class="c"># Check service selector</span>
+kubectl get svc &lt;service-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-o</span> yaml | <span class="nb">grep</span> <span class="nt">-A5</span> selector:
+
+<span class="c"># Verify endpoints are populated</span>
+kubectl get endpoints &lt;service-name&gt; <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h2 id="️-istio-service-mesh">🕸️ Istio Service Mesh</h2>
+
+<h3 id="check-istio-status">Check Istio Status</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verify Istio is installed</span>
+kubectl get pods <span class="nt">-n</span> istio-system
+
+<span class="c"># Check if namespace has injection enabled</span>
+kubectl get namespace devmentor <span class="nt">-o</span> yaml | <span class="nb">grep </span>istio-injection
+
+<span class="c"># Check if pod has sidecar</span>
+kubectl get pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.containers[*].name}'</span>
+</code></pre></div></div>
+
+<h3 id="manage-sidecar-injection">Manage Sidecar Injection</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable injection for namespace</span>
+kubectl label namespace devmentor istio-injection<span class="o">=</span>enabled
+
+<span class="c"># Disable injection for namespace</span>
+kubectl label namespace devmentor istio-injection<span class="o">=</span>disabled <span class="nt">--overwrite</span>
+
+<span class="c"># Disable injection for specific pod</span>
+kubectl patch deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-p</span> <span class="se">\</span>
+  <span class="s1">'{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/inject":"false"}}}}}'</span>
+
+<span class="c"># Force restart to apply changes</span>
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="troubleshoot-istio-issues">Troubleshoot Istio Issues</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check Istio configuration</span>
+istioctl analyze <span class="nt">-n</span> devmentor
+
+<span class="c"># Check proxy status</span>
+istioctl proxy-status
+
+<span class="c"># Get proxy configuration</span>
+istioctl proxy-config all &lt;pod-name&gt;.&lt;namespace&gt;
+
+<span class="c"># Check mTLS status</span>
+istioctl authn tls-check &lt;pod-name&gt;.&lt;namespace&gt;
+</code></pre></div></div>
+
+<h2 id="-logs-and-events">📝 Logs and Events</h2>
+
+<h3 id="view-logs">View Logs</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get pod logs</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor
+
+<span class="c"># Get previous container logs (after crash)</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--previous</span>
+
+<span class="c"># Follow logs in real-time</span>
+kubectl logs <span class="nt">-f</span> &lt;pod-name&gt; <span class="nt">-n</span> devmentor
+
+<span class="c"># Get logs for specific container in pod</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-c</span> &lt;container-name&gt;
+
+<span class="c"># Get logs with timestamps</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--timestamps</span>
+
+<span class="c"># Get last N lines</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--tail</span><span class="o">=</span>50
+</code></pre></div></div>
+
+<h3 id="check-events">Check Events</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get all events in namespace</span>
+kubectl get events <span class="nt">-n</span> devmentor
+
+<span class="c"># Sort events by timestamp</span>
+kubectl get events <span class="nt">-n</span> devmentor <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span>
+
+<span class="c"># Watch events in real-time</span>
+kubectl get events <span class="nt">-n</span> devmentor <span class="nt">-w</span>
+
+<span class="c"># Get events for specific pod</span>
+kubectl get events <span class="nt">-n</span> devmentor <span class="nt">--field-selector</span> involvedObject.name<span class="o">=</span>&lt;pod-name&gt;
+</code></pre></div></div>
+
+<h2 id="-performance-analysis">📊 Performance Analysis</h2>
+
+<h3 id="cpu-and-memory">CPU and Memory</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check container resource usage</span>
+kubectl top pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--containers</span>
+
+<span class="c"># Monitor resource usage over time</span>
+watch <span class="nt">-n</span> 2 kubectl top pods <span class="nt">-n</span> devmentor
+
+<span class="c"># Check for OOMKilled pods</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> json | jq <span class="s1">'.items[] | select(.status.containerStatuses[]?.lastState.terminated.reason == "OOMKilled") | .metadata.name'</span>
+
+<span class="c"># Find resource-hungry pods</span>
+kubectl top pods <span class="nt">-n</span> devmentor <span class="nt">--sort-by</span><span class="o">=</span>memory
+kubectl top pods <span class="nt">-n</span> devmentor <span class="nt">--sort-by</span><span class="o">=</span>cpu
+</code></pre></div></div>
+
+<h3 id="network-analysis">Network Analysis</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Test connectivity between pods</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;source-pod&gt; <span class="nt">-n</span> devmentor <span class="nt">--</span> ping &lt;target-pod-ip&gt;
+
+<span class="c"># Check network policies</span>
+kubectl get networkpolicies <span class="nt">-n</span> devmentor
+
+<span class="c"># Debug DNS</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--</span> nslookup kubernetes.default
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--</span> <span class="nb">cat</span> /etc/resolv.conf
+</code></pre></div></div>
+
+<h2 id="-common-fixes">🔧 Common Fixes</h2>
+
+<h3 id="fix-1-pod-stuck-terminating">Fix 1: Pod Stuck Terminating</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Force delete pod</span>
+kubectl delete pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--grace-period</span><span class="o">=</span>0 <span class="nt">--force</span>
+
+<span class="c"># If still stuck, remove finalizers</span>
+kubectl patch pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-p</span> <span class="s1">'{"metadata":{"finalizers":null}}'</span>
+</code></pre></div></div>
+
+<h3 id="fix-2-reset-failed-deployment">Fix 2: Reset Failed Deployment</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Scale down</span>
+kubectl scale deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--replicas</span><span class="o">=</span>0
+
+<span class="c"># Scale back up</span>
+kubectl scale deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--replicas</span><span class="o">=</span>1
+
+<span class="c"># Or rollout restart</span>
+kubectl rollout restart deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="fix-3-clear-imagepullbackoff">Fix 3: Clear ImagePullBackOff</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Delete pod to retry</span>
+kubectl delete pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor
+
+<span class="c"># Or restart deployment</span>
+kubectl rollout restart deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="fix-4-fix-permission-issues">Fix 4: Fix Permission Issues</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add security context</span>
+kubectl patch deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/securityContext",
+    "value": {
+      "runAsUser": 1000,
+      "runAsGroup": 1000,
+      "fsGroup": 1000
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h2 id="-health-checks">🏥 Health Checks</h2>
+
+<h3 id="test-service-health">Test Service Health</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Port forward and test</span>
+kubectl port-forward <span class="nt">-n</span> devmentor deployment/&lt;deployment-name&gt; 8080:8080 &amp;
+curl http://localhost:8080/health
+<span class="nb">kill</span> %1
+
+<span class="c"># Direct pod exec test</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--</span> curl http://localhost:8080/health
+
+<span class="c"># Through service</span>
+kubectl run <span class="nt">-it</span> <span class="nt">--rm</span> debug <span class="nt">--image</span><span class="o">=</span>curlimages/curl <span class="nt">--restart</span><span class="o">=</span>Never <span class="nt">-n</span> devmentor <span class="nt">--</span> <span class="se">\</span>
+  curl http://&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local:&lt;port&gt;/health
+</code></pre></div></div>
+
+<h3 id="liveness-and-readiness-probes">Liveness and Readiness Probes</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check probe configuration</span>
+kubectl get deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-o</span> yaml | <span class="nb">grep</span> <span class="nt">-A10</span> <span class="s2">"livenessProbe:"</span>
+kubectl get deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">-o</span> yaml | <span class="nb">grep</span> <span class="nt">-A10</span> <span class="s2">"readinessProbe:"</span>
+
+<span class="c"># Add probes to deployment</span>
+kubectl patch deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/livenessProbe",
+    "value": {
+      "httpGet": {"path": "/health", "port": 8080},
+      "initialDelaySeconds": 30,
+      "periodSeconds": 10
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h2 id="-quick-debugging-workflow">🎯 Quick Debugging Workflow</h2>
+
+<h3 id="1-initial-assessment">1. Initial Assessment</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get pods <span class="nt">-n</span> devmentor
+kubectl get events <span class="nt">-n</span> devmentor <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span> | <span class="nb">head</span> <span class="nt">-20</span>
+</code></pre></div></div>
+
+<h3 id="2-deep-dive-on-problem-pod">2. Deep Dive on Problem Pod</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--tail</span><span class="o">=</span>50
+</code></pre></div></div>
+
+<h3 id="3-check-resources">3. Check Resources</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl top nodes
+kubectl top pods <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="4-test-connectivity">4. Test Connectivity</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--</span> /bin/sh
+<span class="c"># Inside pod:</span>
+nslookup &lt;service-name&gt;
+curl http://&lt;service-name&gt;:&lt;port&gt;/health
+<span class="nb">exit</span>
+</code></pre></div></div>
+
+<h3 id="5-apply-fix-and-verify">5. Apply Fix and Verify</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Apply fix (example: restart)</span>
+kubectl rollout restart deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor
+
+<span class="c"># Wait for rollout</span>
+kubectl rollout status deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor
+
+<span class="c"># Verify</span>
+kubectl get pods <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h2 id="-learning-resources">📚 Learning Resources</h2>
+
+<h3 id="essential-kubectl-commands">Essential kubectl Commands</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">kubectl explain</code> - Get documentation for resources</li>
+  <li><code class="language-plaintext highlighter-rouge">kubectl api-resources</code> - List all resource types</li>
+  <li><code class="language-plaintext highlighter-rouge">kubectl get &lt;resource&gt; -o yaml</code> - See full configuration</li>
+  <li><code class="language-plaintext highlighter-rouge">kubectl diff -f &lt;file&gt;</code> - Preview changes before applying</li>
+</ul>
+
+<h3 id="useful-aliases">Useful Aliases</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add to ~/.zshrc or ~/.bashrc</span>
+<span class="nb">alias </span><span class="nv">k</span><span class="o">=</span><span class="s1">'kubectl'</span>
+<span class="nb">alias </span><span class="nv">kgp</span><span class="o">=</span><span class="s1">'kubectl get pods'</span>
+<span class="nb">alias </span><span class="nv">kgs</span><span class="o">=</span><span class="s1">'kubectl get svc'</span>
+<span class="nb">alias </span><span class="nv">kgd</span><span class="o">=</span><span class="s1">'kubectl get deployment'</span>
+<span class="nb">alias </span><span class="nv">kdp</span><span class="o">=</span><span class="s1">'kubectl describe pod'</span>
+<span class="nb">alias </span><span class="nv">klf</span><span class="o">=</span><span class="s1">'kubectl logs -f'</span>
+<span class="nb">alias </span><span class="nv">kex</span><span class="o">=</span><span class="s1">'kubectl exec -it'</span>
+</code></pre></div></div>
+
+<h3 id="debug-container-template">Debug Container Template</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">debug</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">containers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">debug</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">nicolaka/netshoot</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/bin/bash"</span><span class="pi">]</span>
+    <span class="na">args</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">-c"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">while</span><span class="nv"> </span><span class="s">true;</span><span class="nv"> </span><span class="s">do</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">30;</span><span class="nv"> </span><span class="s">done"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h2 id="-emergency-commands">🚨 Emergency Commands</h2>
+
+<h3 id="system-is-down">System is Down</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check all pods</span>
+kubectl get pods <span class="nt">--all-namespaces</span> | <span class="nb">grep</span> <span class="nt">-v</span> Running
+
+<span class="c"># Check nodes</span>
+kubectl get nodes
+kubectl describe nodes | <span class="nb">grep</span> <span class="nt">-A5</span> <span class="s2">"Conditions:"</span>
+
+<span class="c"># Check events</span>
+kubectl get events <span class="nt">--all-namespaces</span> <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span> | <span class="nb">head</span> <span class="nt">-50</span>
+
+<span class="c"># Restart critical services</span>
+kubectl rollout restart deployment <span class="nt">-n</span> istio-system
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="out-of-resources">Out of Resources</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Find resource hogs</span>
+kubectl top pods <span class="nt">--all-namespaces</span> <span class="nt">--sort-by</span><span class="o">=</span>memory | <span class="nb">head</span> <span class="nt">-20</span>
+kubectl top pods <span class="nt">--all-namespaces</span> <span class="nt">--sort-by</span><span class="o">=</span>cpu | <span class="nb">head</span> <span class="nt">-20</span>
+
+<span class="c"># Scale down non-critical services</span>
+kubectl scale deployment &lt;deployment-name&gt; <span class="nt">-n</span> devmentor <span class="nt">--replicas</span><span class="o">=</span>0
+
+<span class="c"># Clear completed pods</span>
+kubectl delete pods <span class="nt">--field-selector</span><span class="o">=</span>status.phase<span class="o">=</span>Succeeded <span class="nt">--all-namespaces</span>
+kubectl delete pods <span class="nt">--field-selector</span><span class="o">=</span>status.phase<span class="o">=</span>Failed <span class="nt">--all-namespaces</span>
+</code></pre></div></div>
+
+<hr />
+<p><em>Created: 2025-08-21</em>
+<em>Purpose: Comprehensive debugging reference for DevMentor Kubernetes deployment</em>
+<em>Remember: Always check logs and events first!</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/debugging/k8s-debugging-enhanced.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

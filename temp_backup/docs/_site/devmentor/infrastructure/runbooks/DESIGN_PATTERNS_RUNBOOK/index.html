@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DESIGN PATTERNS RUNBOOK | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/DESIGN_PATTERNS_RUNBOOK.md</span>
+</div>
+
+<h1>DESIGN PATTERNS RUNBOOK</h1>
+
+
+<h1 id="design-patterns-implementation-runbook">Design Patterns Implementation Runbook</h1>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+  <li><a href="#distributed-locking-pattern">Distributed Locking Pattern</a></li>
+  <li><a href="#blackboard-pattern">Blackboard Pattern</a></li>
+  <li><a href="#circuit-breaker-pattern">Circuit Breaker Pattern</a></li>
+  <li><a href="#actor-pattern">Actor Pattern</a></li>
+  <li><a href="#event-streaming-pattern">Event Streaming Pattern</a></li>
+  <li><a href="#saga-pattern">Saga Pattern</a></li>
+</ol>
+
+<hr />
+
+<h2 id="distributed-locking-pattern">Distributed Locking Pattern</h2>
+
+<h3 id="why-we-need-it">Why We Need It</h3>
+<p>In DevMentor, multiple users might try to edit the same project simultaneously. Without distributed locking:</p>
+<ul>
+  <li><strong>Race Conditions</strong>: Two users save conflicting changes</li>
+  <li><strong>Lost Updates</strong>: User B overwrites User A’s changes</li>
+  <li><strong>Inconsistent State</strong>: Partial updates from multiple sources</li>
+</ul>
+
+<h3 id="how-it-works">How It Works</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User A                Redis Lock            User B
+  |                      |                     |
+  |--Request Lock-------&gt;|                     |
+  |&lt;--Lock Granted-------|                     |
+  |                      |&lt;----Request Lock----|
+  |                      |--Lock Denied-------&gt;|
+  |--Make Changes-------&gt;|                     |
+  |--Release Lock-------&gt;|                     |
+  |                      |&lt;----Request Lock----|
+  |                      |--Lock Granted------&gt;|
+</code></pre></div></div>
+
+<h3 id="implementation-steps">Implementation Steps</h3>
+
+<h4 id="step-1-install-dependencies">Step 1: Install Dependencies</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install </span>ioredis uuid
+</code></pre></div></div>
+
+<h4 id="step-2-create-lock-manager">Step 2: Create Lock Manager</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/shared/RedisLockManager.ts</span>
+<span class="k">import</span> <span class="nx">Redis</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ioredis</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">v4</span> <span class="k">as</span> <span class="nx">uuid</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">uuid</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">RedisLockManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">redisUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">redis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Redis</span><span class="p">(</span><span class="nx">redisUrl</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">acquireLock</span><span class="p">(</span><span class="nx">resource</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">lockId</span> <span class="o">=</span> <span class="nx">uuid</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">lockKey</span> <span class="o">=</span> <span class="s2">`lock:</span><span class="p">${</span><span class="nx">resource</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    
+    <span class="c1">// SET NX (only if not exists) EX (with expiry)</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span>
+      <span class="nx">lockKey</span><span class="p">,</span> 
+      <span class="nx">lockId</span><span class="p">,</span> 
+      <span class="dl">'</span><span class="s1">PX</span><span class="dl">'</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">,</span>  <span class="c1">// milliseconds</span>
+      <span class="dl">'</span><span class="s1">NX</span><span class="dl">'</span>        <span class="c1">// only if not exists</span>
+    <span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">result</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">OK</span><span class="dl">'</span> <span class="p">?</span> <span class="nx">lockId</span> <span class="p">:</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">releaseLock</span><span class="p">(</span><span class="nx">resource</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">lockId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">lockKey</span> <span class="o">=</span> <span class="s2">`lock:</span><span class="p">${</span><span class="nx">resource</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    
+    <span class="c1">// Lua script ensures atomic check-and-delete</span>
+    <span class="kd">const</span> <span class="nx">luaScript</span> <span class="o">=</span> <span class="s2">`
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("del", KEYS[1])
+      else
+        return 0
+      end
+    `</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">luaScript</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">lockKey</span><span class="p">,</span> <span class="nx">lockId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">result</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">extendLock</span><span class="p">(</span><span class="nx">resource</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">lockId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">lockKey</span> <span class="o">=</span> <span class="s2">`lock:</span><span class="p">${</span><span class="nx">resource</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">luaScript</span> <span class="o">=</span> <span class="s2">`
+      if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("pexpire", KEYS[1], ARGV[2])
+      else
+        return 0
+      end
+    `</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">luaScript</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">lockKey</span><span class="p">,</span> <span class="nx">lockId</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">result</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="step-3-use-in-project-service">Step 3: Use in Project Service</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Usage in project editing</span>
+<span class="k">async</span> <span class="nx">claimProject</span><span class="p">(</span><span class="nx">projectId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ClaimToken</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">lockManager</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RedisLockManager</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REDIS_URL</span><span class="p">);</span>
+  
+  <span class="c1">// Try to acquire lock</span>
+  <span class="kd">const</span> <span class="nx">lockId</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">lockManager</span><span class="p">.</span><span class="nx">acquireLock</span><span class="p">(</span><span class="s2">`project:</span><span class="p">${</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="mi">300000</span><span class="p">);</span> <span class="c1">// 5 min</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">lockId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Project is currently being edited by another user</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Create claim token</span>
+  <span class="kd">const</span> <span class="nx">claimToken</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">id</span><span class="p">:</span> <span class="nx">lockId</span><span class="p">,</span>
+    <span class="nx">projectId</span><span class="p">,</span>
+    <span class="nx">userId</span><span class="p">,</span>
+    <span class="na">expiresAt</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">300000</span>
+  <span class="p">};</span>
+  
+  <span class="c1">// Store claim in database</span>
+  <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">claims</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">claimToken</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nx">claimToken</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="testing-the-pattern">Testing the Pattern</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Terminal 1: Try to acquire lock</span>
+curl <span class="nt">-X</span> POST http://localhost:8080/api/projects/123/claim <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer user1_token"</span>
+
+<span class="c"># Terminal 2: Should fail while locked</span>
+curl <span class="nt">-X</span> POST http://localhost:8080/api/projects/123/claim <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer user2_token"</span>
+</code></pre></div></div>
+
+<h3 id="common-pitfalls--solutions">Common Pitfalls &amp; Solutions</h3>
+<ol>
+  <li><strong>Deadlocks</strong>: Always use timeouts (TTL)</li>
+  <li><strong>Clock Skew</strong>: Use Redis server time, not client time</li>
+  <li><strong>Network Partitions</strong>: Implement retry with exponential backoff</li>
+</ol>
+
+<hr />
+
+<h2 id="blackboard-pattern">Blackboard Pattern</h2>
+
+<h3 id="why-we-need-it-1">Why We Need It</h3>
+<p>DevMentor’s AI needs multiple specialized agents to collaborate:</p>
+<ul>
+  <li>Code Analysis Agent</li>
+  <li>Documentation Agent</li>
+  <li>Architecture Agent</li>
+  <li>Security Agent</li>
+</ul>
+
+<p>Without coordination, these agents would work in isolation, missing insights.</p>
+
+<h3 id="how-it-works-1">How It Works</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     Blackboard (Shared Knowledge)
+           |
+    +------+------+------+
+    |      |      |      |
+Agent1  Agent2  Agent3  Controller
+(Code)  (Docs)  (Arch)  (Orchestrator)
+</code></pre></div></div>
+
+<h3 id="implementation-steps-1">Implementation Steps</h3>
+
+<h4 id="step-1-create-blackboard-structure">Step 1: Create Blackboard Structure</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/ai-gateway/blackboard/BlackboardSystem.ts</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">Knowledge</span> <span class="p">{</span>
+  <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">source</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">analysis</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">suggestion</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">warning</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">insight</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">confidence</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">;</span>
+  <span class="nl">timestamp</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">BlackboardSystem</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">knowledgeBase</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">Knowledge</span><span class="p">[]</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="p">();</span>
+  <span class="k">private</span> <span class="nx">agents</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">IKnowledgeAgent</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="p">();</span>
+  
+  <span class="k">async</span> <span class="nx">initializeProblem</span><span class="p">(</span><span class="nx">problemId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">problemData</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Initialize blackboard in Redis</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">hset</span><span class="p">(</span><span class="s2">`blackboard:</span><span class="p">${</span><span class="nx">problemId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">problem</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">problemData</span><span class="p">),</span>
+      <span class="na">createdAt</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Create Redis Stream for contributions</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">xadd</span><span class="p">(</span>
+      <span class="s2">`blackboard:</span><span class="p">${</span><span class="nx">problemId</span><span class="p">}</span><span class="s2">:stream`</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">event</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">initialized</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">problemData</span><span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">contribute</span><span class="p">(</span><span class="nx">problemId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">knowledge</span><span class="p">:</span> <span class="nx">Knowledge</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Add to Redis Stream</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">xadd</span><span class="p">(</span>
+      <span class="s2">`blackboard:</span><span class="p">${</span><span class="nx">problemId</span><span class="p">}</span><span class="s2">:stream`</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">,</span> <span class="nx">knowledge</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">type</span><span class="dl">'</span><span class="p">,</span> <span class="nx">knowledge</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">knowledge</span><span class="p">.</span><span class="nx">data</span><span class="p">),</span>
+      <span class="dl">'</span><span class="s1">confidence</span><span class="dl">'</span><span class="p">,</span> <span class="nx">knowledge</span><span class="p">.</span><span class="nx">confidence</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// Notify controller</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">knowledge:added</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">problemId</span><span class="p">,</span> <span class="nx">knowledge</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">synthesizeSolution</span><span class="p">(</span><span class="nx">problemId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Solution</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Get all contributions</span>
+    <span class="kd">const</span> <span class="nx">contributions</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">xrange</span><span class="p">(</span>
+      <span class="s2">`blackboard:</span><span class="p">${</span><span class="nx">problemId</span><span class="p">}</span><span class="s2">:stream`</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">-</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">+</span><span class="dl">'</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// Aggregate knowledge by type</span>
+    <span class="kd">const</span> <span class="nx">aggregated</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">aggregateKnowledge</span><span class="p">(</span><span class="nx">contributions</span><span class="p">);</span>
+    
+    <span class="c1">// Apply synthesis rules</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">applySynthesisRules</span><span class="p">(</span><span class="nx">aggregated</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="step-2-create-knowledge-agents">Step 2: Create Knowledge Agents</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/ai-gateway/agents/CodeAnalysisAgent.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">CodeAnalysisAgent</span> <span class="k">implements</span> <span class="nx">IKnowledgeAgent</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">analyze</span><span class="p">(</span><span class="nx">problem</span><span class="p">:</span> <span class="nx">Problem</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Knowledge</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="na">knowledge</span><span class="p">:</span> <span class="nx">Knowledge</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+    
+    <span class="c1">// Analyze code structure</span>
+    <span class="kd">const</span> <span class="nx">structure</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">analyzeStructure</span><span class="p">(</span><span class="nx">problem</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+    <span class="nx">knowledge</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">uuid</span><span class="p">(),</span>
+      <span class="na">source</span><span class="p">:</span> <span class="dl">'</span><span class="s1">CodeAnalysisAgent</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">analysis</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">confidence</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="nx">structure</span><span class="p">,</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Check for patterns</span>
+    <span class="kd">const</span> <span class="nx">patterns</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectPatterns</span><span class="p">(</span><span class="nx">problem</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+    <span class="nx">knowledge</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">uuid</span><span class="p">(),</span>
+      <span class="na">source</span><span class="p">:</span> <span class="dl">'</span><span class="s1">CodeAnalysisAgent</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">insight</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">confidence</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="nx">patterns</span><span class="p">,</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">knowledge</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="step-3-orchestrate-collaboration">Step 3: Orchestrate Collaboration</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Usage</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">solveProblem</span><span class="p">(</span><span class="nx">problemData</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">blackboard</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlackboardSystem</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">problemId</span> <span class="o">=</span> <span class="nx">uuid</span><span class="p">();</span>
+  
+  <span class="c1">// Initialize</span>
+  <span class="k">await</span> <span class="nx">blackboard</span><span class="p">.</span><span class="nx">initializeProblem</span><span class="p">(</span><span class="nx">problemId</span><span class="p">,</span> <span class="nx">problemData</span><span class="p">);</span>
+  
+  <span class="c1">// Register agents</span>
+  <span class="nx">blackboard</span><span class="p">.</span><span class="nx">registerAgent</span><span class="p">(</span><span class="k">new</span> <span class="nx">CodeAnalysisAgent</span><span class="p">());</span>
+  <span class="nx">blackboard</span><span class="p">.</span><span class="nx">registerAgent</span><span class="p">(</span><span class="k">new</span> <span class="nx">DocumentationAgent</span><span class="p">());</span>
+  <span class="nx">blackboard</span><span class="p">.</span><span class="nx">registerAgent</span><span class="p">(</span><span class="k">new</span> <span class="nx">ArchitectureAgent</span><span class="p">());</span>
+  
+  <span class="c1">// Let agents contribute (parallel)</span>
+  <span class="k">await</span> <span class="nx">blackboard</span><span class="p">.</span><span class="nx">runAgents</span><span class="p">(</span><span class="nx">problemId</span><span class="p">);</span>
+  
+  <span class="c1">// Wait for contributions</span>
+  <span class="k">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="o">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="mi">5000</span><span class="p">));</span>
+  
+  <span class="c1">// Synthesize solution</span>
+  <span class="kd">const</span> <span class="nx">solution</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">blackboard</span><span class="p">.</span><span class="nx">synthesizeSolution</span><span class="p">(</span><span class="nx">problemId</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nx">solution</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="testing-the-pattern-1">Testing the Pattern</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Submit problem to blackboard</span>
+curl <span class="nt">-X</span> POST http://localhost:8080/api/ai/analyze <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "code": "function getData() { ... }",
+    "context": "performance optimization"
+  }'</span>
+
+<span class="c"># Monitor blackboard contributions</span>
+redis-cli XREAD STREAMS blackboard:problem123:stream 0
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="circuit-breaker-pattern">Circuit Breaker Pattern</h2>
+
+<h3 id="why-we-need-it-2">Why We Need It</h3>
+<p>External services (Ollama, APIs) can fail. Without protection:</p>
+<ul>
+  <li><strong>Cascading Failures</strong>: One service failure brings down everything</li>
+  <li><strong>Resource Exhaustion</strong>: Threads blocked waiting for timeouts</li>
+  <li><strong>Poor User Experience</strong>: Long waits for inevitable failures</li>
+</ul>
+
+<h3 id="how-it-works-2">How It Works</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CLOSED (Normal)
+  |
+  | (failures &gt; threshold)
+  v
+OPEN (Blocking calls)
+  |
+  | (timeout expires)
+  v
+HALF_OPEN (Testing recovery)
+  |
+  | (success/failure)
+  v
+CLOSED or OPEN
+</code></pre></div></div>
+
+<h3 id="implementation-already-exists">Implementation (Already Exists!)</h3>
+<p>Location: <code class="language-plaintext highlighter-rouge">infrastructure/services/ai-gateway/src/patterns/circuitBreaker.ts</code></p>
+
+<h3 id="usage-example">Usage Example</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">breaker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CircuitBreaker</span><span class="p">({</span>
+  <span class="na">failureThreshold</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">recoveryTimeout</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
+  <span class="na">monitoringPeriod</span><span class="p">:</span> <span class="mi">10000</span>
+<span class="p">});</span>
+
+<span class="c1">// Wrap risky calls</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">callOllama</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">breaker</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://ollama:11434/api/generate</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">prompt</span> <span class="p">}),</span>
+      <span class="na">timeout</span><span class="p">:</span> <span class="mi">5000</span>
+    <span class="p">});</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Ollama error</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="actor-pattern">Actor Pattern</h2>
+
+<h3 id="why-we-need-it-3">Why We Need It</h3>
+<p>Managing concurrent AI agents with independent state and behavior.</p>
+
+<h3 id="how-it-works-already-implemented">How It Works (Already Implemented!)</h3>
+<p>Location: <code class="language-plaintext highlighter-rouge">infrastructure/services/learning-engine/core/agents/</code></p>
+
+<p>Each agent is an independent actor with:</p>
+<ul>
+  <li>Own state</li>
+  <li>Message queue</li>
+  <li>Capability declarations</li>
+  <li>Lifecycle management</li>
+</ul>
+
+<hr />
+
+<h2 id="event-streaming-pattern">Event Streaming Pattern</h2>
+
+<h3 id="why-we-need-it-4">Why We Need It</h3>
+<p>Real-time updates across distributed services without tight coupling.</p>
+
+<h3 id="implementation-already-exists-1">Implementation (Already Exists!)</h3>
+<p>Location: <code class="language-plaintext highlighter-rouge">infrastructure/services/ai-gateway/src/principal-developer/RedisStreamsIntegration.ts</code></p>
+
+<hr />
+
+<h2 id="saga-pattern">Saga Pattern</h2>
+
+<h3 id="why-we-need-it-5">Why We Need It</h3>
+<p>Distributed transactions across multiple services.</p>
+
+<h3 id="implementation-steps-2">Implementation Steps</h3>
+
+<h4 id="step-1-define-saga">Step 1: Define Saga</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/shared/saga/SagaOrchestrator.ts</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">SagaStep</span> <span class="p">{</span>
+  <span class="nl">service</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">action</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">params</span><span class="p">:</span> <span class="kr">any</span><span class="p">;</span>
+  <span class="nl">compensation</span><span class="p">?:</span> <span class="nx">SagaStep</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">SagaOrchestrator</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">steps</span><span class="p">:</span> <span class="nx">SagaStep</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">private</span> <span class="nx">executedSteps</span><span class="p">:</span> <span class="nx">SagaStep</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+  
+  <span class="k">async</span> <span class="nx">execute</span><span class="p">(</span><span class="nx">saga</span><span class="p">:</span> <span class="nx">Saga</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">step</span> <span class="k">of</span> <span class="nx">saga</span><span class="p">.</span><span class="nx">steps</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">executeStep</span><span class="p">(</span><span class="nx">step</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">executedSteps</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">step</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Rollback in reverse order</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">compensate</span><span class="p">();</span>
+        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">compensate</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">step</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">executedSteps</span><span class="p">.</span><span class="nx">reverse</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">step</span><span class="p">.</span><span class="nx">compensation</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">executeStep</span><span class="p">(</span><span class="nx">step</span><span class="p">.</span><span class="nx">compensation</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="step-2-define-business-saga">Step 2: Define Business Saga</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example: Create project with AI analysis</span>
+<span class="kd">const</span> <span class="nx">createProjectSaga</span><span class="p">:</span> <span class="nx">Saga</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">CreateProjectWithAnalysis</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">steps</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">validateUser</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="nx">userId</span> <span class="p">},</span>
+      <span class="na">compensation</span><span class="p">:</span> <span class="kc">null</span> <span class="c1">// Can't undo validation</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">create</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="nx">projectData</span> <span class="p">},</span>
+      <span class="na">compensation</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">delete</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">projectId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">{{result.id}}</span><span class="dl">'</span> <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ai-gateway</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">analyzeProject</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">projectId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">{{steps[1].result.id}}</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="na">compensation</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ai-gateway</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">deleteAnalysis</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">projectId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">{{steps[1].result.id}}</span><span class="dl">'</span> <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="quick-reference-commands">Quick Reference Commands</h2>
+
+<h3 id="check-pattern-implementations">Check Pattern Implementations</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check Redis locks</span>
+redis-cli KEYS <span class="s2">"lock:*"</span>
+
+<span class="c"># Monitor blackboard streams</span>
+redis-cli XREAD STREAMS blackboard:<span class="k">*</span>:stream 0
+
+<span class="c"># Check circuit breaker status</span>
+curl http://localhost:8080/api/admin/circuit-breakers
+
+<span class="c"># View actor system status</span>
+curl http://localhost:8080/api/learning/agents/status
+</code></pre></div></div>
+
+<h3 id="debug-commands">Debug Commands</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Watch Redis operations</span>
+redis-cli MONITOR
+
+<span class="c"># Check service logs</span>
+kubectl logs <span class="nt">-f</span> deployment/api-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Test distributed lock</span>
+node <span class="nt">-e</span> <span class="s2">"
+const Redis = require('ioredis');
+const redis = new Redis();
+redis.set('lock:test', 'myid', 'NX', 'EX', 10).then(console.log);
+"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="implementation-priority">Implementation Priority</h2>
+
+<ol>
+  <li><strong>Distributed Locking</strong> (Critical for data integrity)</li>
+  <li><strong>Blackboard Pattern</strong> (Enables AI collaboration)</li>
+  <li><strong>Saga Pattern</strong> (Ensures transaction consistency)</li>
+</ol>
+
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+  <li>Implement RedisLockManager</li>
+  <li>Add lock/claim endpoints to Project Service</li>
+  <li>Create Blackboard system for AI Gateway</li>
+  <li>Test patterns with integration tests</li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/DESIGN_PATTERNS_RUNBOOK.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

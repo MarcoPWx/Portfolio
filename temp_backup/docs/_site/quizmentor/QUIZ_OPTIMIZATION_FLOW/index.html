@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUIZ OPTIMIZATION FLOW | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">QUIZ_OPTIMIZATION_FLOW.md</span>
+</div>
+
+<h1>QUIZ OPTIMIZATION FLOW</h1>
+
+
+<h1 id="how-quiz-optimization-actually-works---simple-flow">How Quiz Optimization Actually Works - Simple Flow</h1>
+
+<h2 id="the-big-picture">The Big Picture</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User Starts Quiz → Check Their Level → Check Recent Performance → Select Smart Questions → Order Them Well → Track Results
+</code></pre></div></div>
+
+<h2 id="step-by-step-logic-flow">Step-by-Step Logic Flow</h2>
+
+<h3 id="1️⃣-when-user-starts-a-quiz">1️⃣ When User Starts a Quiz</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User selects:
+- Category (e.g., "Science")
+- Session Type:
+  • Quick (5 questions, unlimited lives)
+  • Normal (7 questions, 3 lives)
+  • Challenge (10 questions, 1 life)
+</code></pre></div></div>
+
+<h3 id="2️⃣-system-checks-users-skill-level">2️⃣ System Checks User’s Skill Level</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Simple database query</span>
+<span class="k">SELECT</span> <span class="n">total_questions</span><span class="p">,</span> <span class="n">correct_answers</span> 
+<span class="k">FROM</span> <span class="n">user_progress</span> 
+<span class="k">WHERE</span> <span class="n">user_id</span> <span class="o">=</span> <span class="o">?</span> <span class="k">AND</span> <span class="n">category_id</span> <span class="o">=</span> <span class="o">?</span>
+
+<span class="c1">-- Then calculate:</span>
+<span class="n">Accuracy</span> <span class="o">=</span> <span class="n">correct_answers</span> <span class="o">/</span> <span class="n">total_questions</span>
+
+<span class="n">If</span> <span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="mi">90</span><span class="o">%</span> <span class="err">→</span> <span class="k">Level</span> <span class="mi">5</span> <span class="p">(</span><span class="n">Expert</span><span class="p">)</span>
+<span class="n">If</span> <span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="mi">80</span><span class="o">%</span> <span class="err">→</span> <span class="k">Level</span> <span class="mi">4</span> <span class="p">(</span><span class="n">Advanced</span><span class="p">)</span>  
+<span class="n">If</span> <span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="mi">70</span><span class="o">%</span> <span class="err">→</span> <span class="k">Level</span> <span class="mi">3</span> <span class="p">(</span><span class="n">Intermediate</span><span class="p">)</span>
+<span class="n">If</span> <span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="mi">60</span><span class="o">%</span> <span class="err">→</span> <span class="k">Level</span> <span class="mi">2</span> <span class="p">(</span><span class="n">Improving</span><span class="p">)</span>
+<span class="k">Else</span> <span class="err">→</span> <span class="k">Level</span> <span class="mi">1</span> <span class="p">(</span><span class="n">Beginner</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="3️⃣-check-recent-performance-last-10-questions">3️⃣ Check Recent Performance (Last 10 Questions)</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Look at last 10 answers:
+✓ ✓ ✓ → User is on fire! (3+ correct in row)
+✗ ✗ → User is struggling (2+ wrong in row)
+✓ ✗ ✓ → User is normal
+</code></pre></div></div>
+
+<h3 id="4️⃣-smart-question-selection">4️⃣ Smart Question Selection</h3>
+
+<p>The system picks questions based on user’s situation:</p>
+
+<h4 id="if-user-is-struggling-2-wrong">If User is Struggling (2+ wrong):</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>40% EASIER questions (level - 1)
+20% REVIEW questions (ones they got wrong before)
+40% NORMAL questions (their level)
+= Confidence building mix
+</code></pre></div></div>
+
+<h4 id="if-user-is-doing-great-3-correct">If User is Doing Great (3+ correct):</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>30% HARDER questions (level + 1)
+20% REVIEW questions (reinforce learning)
+50% NORMAL questions (maintain flow)
+= Challenge without frustration
+</code></pre></div></div>
+
+<h4 id="if-user-is-normal">If User is Normal:</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>20% REVIEW questions (spaced repetition)
+80% NORMAL questions (their level)
+= Steady progress
+</code></pre></div></div>
+
+<h3 id="5️⃣-question-ordering-the-secret-sauce">5️⃣ Question Ordering (The Secret Sauce)</h3>
+
+<p>Questions are ordered for psychological flow:</p>
+
+<h4 id="for-5-question-quiz">For 5 Question Quiz:</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Easy (warm up)
+2. Medium (build confidence)
+3. Medium (maintain flow)
+4. Hard (peak challenge)
+5. Medium (cool down)
+</code></pre></div></div>
+
+<h4 id="for-7-question-quiz">For 7 Question Quiz:</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Easy
+2. Easy (build confidence)
+3. Medium
+4. Medium (establish rhythm)
+5. Hard
+6. Hard (peak challenge)
+7. Medium (satisfying end)
+</code></pre></div></div>
+
+<h4 id="for-10-question-quiz">For 10 Question Quiz:</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Gradual increase → Peak at 70% → Gradual decrease
+</code></pre></div></div>
+
+<h3 id="6️⃣-real-time-adjustments">6️⃣ Real-Time Adjustments</h3>
+
+<p>After EACH answer, system tracks:</p>
+<ul>
+  <li>Was it correct?</li>
+  <li>How long did it take?</li>
+  <li>What difficulty was it?</li>
+</ul>
+
+<p>This affects the NEXT quiz session.</p>
+
+<h2 id="real-example">Real Example</h2>
+
+<h3 id="sarahs-quiz-experience">Sarah’s Quiz Experience:</h3>
+
+<p><strong>Starting State:</strong></p>
+<ul>
+  <li>Level: 2 (Improving)</li>
+  <li>Recent: Got 2 wrong in a row</li>
+  <li>Selected: Normal mode (7 questions)</li>
+</ul>
+
+<p><strong>System Decides:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>She's struggling, so:
+- 3 easier questions (40% of 7)
+- 1 review question (20% of 7)  
+- 3 normal questions (40% of 7)
+</code></pre></div></div>
+
+<p><strong>Question Order:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Easy (warm up, build confidence)
+2. Easy (continue building)
+3. Review (familiar but needs practice)
+4. Normal (test current level)
+5. Normal (maintain flow)
+6. Easy (prevent frustration)
+7. Normal (end on success)
+</code></pre></div></div>
+
+<p><strong>Result:</strong> Sarah gets 5/7 correct, feels good, and continues playing!</p>
+
+<h2 id="why-this-works">Why This Works</h2>
+
+<h3 id="-psychology">🧠 Psychology:</h3>
+<ul>
+  <li><strong>Never too easy:</strong> Adjusts up when you’re doing well</li>
+  <li><strong>Never too hard:</strong> Adjusts down when struggling</li>
+  <li><strong>Always engaging:</strong> Mix of review + new content</li>
+</ul>
+
+<h3 id="-data-driven">📊 Data-Driven:</h3>
+<ul>
+  <li>Tracks everything</li>
+  <li>Learns your patterns</li>
+  <li>Improves over time</li>
+</ul>
+
+<h3 id="-gamification">🎮 Gamification:</h3>
+<ul>
+  <li>XP scales with difficulty</li>
+  <li>Unlocks based on performance</li>
+  <li>Encouragement when needed</li>
+</ul>
+
+<h2 id="the-database-tables-simple">The Database Tables (Simple!)</h2>
+
+<h3 id="user_progress">user_progress</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_progress</span> <span class="p">(</span>
+  <span class="n">user_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">category_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">total_questions</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">correct_answers</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">current_level</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">unlocked_hints</span> <span class="nb">BOOLEAN</span><span class="p">,</span>
+  <span class="n">unlocked_challenge</span> <span class="nb">BOOLEAN</span><span class="p">,</span>
+  <span class="n">unlocked_multiplayer</span> <span class="nb">BOOLEAN</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="question_history">question_history</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">question_history</span> <span class="p">(</span>
+  <span class="n">user_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">question_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">category_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">is_correct</span> <span class="nb">BOOLEAN</span><span class="p">,</span>
+  <span class="n">difficulty</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">time_spent</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">answered_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="questions">questions</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">questions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">category_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">question</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="k">options</span> <span class="n">JSON</span><span class="p">,</span>
+  <span class="n">correct_answer</span> <span class="nb">INT</span><span class="p">,</span>
+  <span class="n">difficulty</span> <span class="nb">INT</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">5</span><span class="p">),</span>
+  <span class="n">last_shown</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+
+<p>✅ <strong>Phase 1: Basic Logic</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create SimpleQuizOptimizer service</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add to existing quiz flow</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test with sample data</li>
+</ul>
+
+<p>✅ <strong>Phase 2: Database</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create tables</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add RPC functions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up indexes</li>
+</ul>
+
+<p>✅ <strong>Phase 3: UI Updates</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Show difficulty indicators</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Display encouragement messages</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add unlock notifications</li>
+</ul>
+
+<p>✅ <strong>Phase 4: Testing</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test struggling user flow</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test expert user flow</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test edge cases</li>
+</ul>
+
+<h2 id="the-bottom-line">The Bottom Line</h2>
+
+<p><strong>Complex Result, Simple Logic:</strong></p>
+<ul>
+  <li>Check level → Check recent → Pick questions → Order them → Track results</li>
+</ul>
+
+<p><strong>No Over-Engineering:</strong></p>
+<ul>
+  <li>Just IF/THEN logic</li>
+  <li>Simple database queries</li>
+  <li>Clear patterns</li>
+</ul>
+
+<p><strong>User Experience:</strong></p>
+<ul>
+  <li>Feels personalized</li>
+  <li>Never frustrating</li>
+  <li>Always progressing</li>
+</ul>
+
+<p>This is production-ready and actually implementable!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / QUIZ_OPTIMIZATION_FLOW.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

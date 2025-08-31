@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTHENTICATION ARCHITECTURE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">security/AUTHENTICATION_ARCHITECTURE.md</span>
+</div>
+
+<h1>AUTHENTICATION ARCHITECTURE</h1>
+
+
+<h1 id="-devmentor-authentication-architecture-oauth-to-internal-jwt">🔐 DevMentor Authentication Architecture: OAuth to Internal JWT</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>DevMentor uses a <strong>dual-token strategy</strong> where external OAuth/Auth0 tokens are exchanged for internal cluster JWTs, providing security isolation between external and internal services.</p>
+
+<h2 id="️-architecture-overview">🏗️ Architecture Overview</h2>
+
+<pre><code class="language-mermaid">graph TD
+    User([User])
+    
+    subgraph "External Auth Layer"
+        GitHub[GitHub OAuth]
+        Auth0[Auth0]
+        Google[Google OAuth]
+    end
+    
+    subgraph "API Gateway"
+        AuthGW[Auth Gateway]
+        TokenEx[Token Exchange Service]
+        JWTIssuer[Internal JWT Issuer]
+    end
+    
+    subgraph "Internal Services"
+        Memory[Memory Service]
+        Learning[Learning Service]
+        PBML[PBML Service]
+        Repo[Repo Analyzer]
+    end
+    
+    User --&gt;|1. Login| GitHub
+    User --&gt;|1. Login| Auth0
+    GitHub --&gt;|2. OAuth Token| AuthGW
+    Auth0 --&gt;|2. ID Token| AuthGW
+    AuthGW --&gt;|3. Validate| TokenEx
+    TokenEx --&gt;|4. Issue| JWTIssuer
+    JWTIssuer --&gt;|5. Internal JWT| AuthGW
+    AuthGW --&gt;|6. Set Cookie| User
+    User --&gt;|7. Request + JWT| AuthGW
+    AuthGW --&gt;|8. Forward| Memory
+    AuthGW --&gt;|8. Forward| Learning
+</code></pre>
+
+<h2 id="-token-exchange-implementation">🔑 Token Exchange Implementation</h2>
+
+<h3 id="1-auth-gateway-service">1. Auth Gateway Service</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/auth-gateway/src/index.ts</span>
+<span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">jwt</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">OAuth2Client</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">google-auth-library</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Octokit</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@octokit/rest</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ManagementClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">auth0</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AuthGateway</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">internalJWTSecret</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">INTERNAL_JWT_SECRET</span><span class="o">!</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">internalJWTIssuer</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">devmentor-cluster</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">tokenExpiry</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">2h</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">refreshExpiry</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">7d</span><span class="dl">'</span><span class="p">;</span>
+  
+  <span class="c1">// External auth providers</span>
+  <span class="k">private</span> <span class="nx">githubClient</span><span class="p">:</span> <span class="nx">Octokit</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">auth0Client</span><span class="p">:</span> <span class="nx">ManagementClient</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">googleClient</span><span class="p">:</span> <span class="nx">OAuth2Client</span><span class="p">;</span>
+  
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setupProviders</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setupRoutes</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Main token exchange endpoint
+   * Converts external tokens to internal cluster JWT
+   */</span>
+  <span class="k">async</span> <span class="nx">exchangeToken</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">express</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">express</span><span class="p">.</span><span class="nx">Response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">provider</span><span class="p">,</span> <span class="nx">token</span><span class="p">,</span> <span class="nx">refreshToken</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+    
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Step 1: Validate external token</span>
+      <span class="kd">const</span> <span class="nx">externalUser</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateExternalToken</span><span class="p">(</span><span class="nx">provider</span><span class="p">,</span> <span class="nx">token</span><span class="p">);</span>
+      
+      <span class="c1">// Step 2: Get or create internal user</span>
+      <span class="kd">const</span> <span class="nx">internalUser</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">mapToInternalUser</span><span class="p">(</span><span class="nx">externalUser</span><span class="p">,</span> <span class="nx">provider</span><span class="p">);</span>
+      
+      <span class="c1">// Step 3: Generate internal cluster JWT</span>
+      <span class="kd">const</span> <span class="nx">clusterTokens</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateClusterTokens</span><span class="p">(</span><span class="nx">internalUser</span><span class="p">);</span>
+      
+      <span class="c1">// Step 4: Store token mapping for revocation</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">storeTokenMapping</span><span class="p">({</span>
+        <span class="na">externalToken</span><span class="p">:</span> <span class="nx">token</span><span class="p">,</span>
+        <span class="na">internalToken</span><span class="p">:</span> <span class="nx">clusterTokens</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">,</span>
+        <span class="na">userId</span><span class="p">:</span> <span class="nx">internalUser</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="nx">provider</span><span class="p">,</span>
+        <span class="na">expiresAt</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7200000</span><span class="p">)</span> <span class="c1">// 2 hours</span>
+      <span class="p">});</span>
+      
+      <span class="c1">// Step 5: Set secure HTTP-only cookies</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setSecureCookies</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span> <span class="nx">clusterTokens</span><span class="p">);</span>
+      
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
+        <span class="na">success</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">user</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">id</span><span class="p">:</span> <span class="nx">internalUser</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+          <span class="na">email</span><span class="p">:</span> <span class="nx">internalUser</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+          <span class="na">roles</span><span class="p">:</span> <span class="nx">internalUser</span><span class="p">.</span><span class="nx">roles</span>
+        <span class="p">},</span>
+        <span class="c1">// Don't send tokens in response body for security</span>
+        <span class="na">tokenSet</span><span class="p">:</span> <span class="kc">true</span>
+      <span class="p">});</span>
+      
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Token exchange failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Authentication failed</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Validate external OAuth/Auth0 tokens
+   */</span>
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">validateExternalToken</span><span class="p">(</span><span class="nx">provider</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ExternalUser</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">provider</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">github</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateGitHubToken</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">auth0</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateAuth0Token</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">google</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateGoogleToken</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+      <span class="nl">default</span><span class="p">:</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unsupported provider: </span><span class="p">${</span><span class="nx">provider</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * GitHub token validation
+   */</span>
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">validateGitHubToken</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ExternalUser</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">githubClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Octokit</span><span class="p">({</span> <span class="na">auth</span><span class="p">:</span> <span class="nx">token</span> <span class="p">});</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">user</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">githubClient</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">getAuthenticated</span><span class="p">();</span>
+      
+      <span class="c1">// Get user emails if available</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">emails</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">githubClient</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">listEmailsForAuthenticated</span><span class="p">();</span>
+      <span class="kd">const</span> <span class="nx">primaryEmail</span> <span class="o">=</span> <span class="nx">emails</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">primary</span><span class="p">)?.</span><span class="nx">email</span> <span class="o">||</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">;</span>
+      
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="na">externalId</span><span class="p">:</span> <span class="s2">`github_</span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+        <span class="na">email</span><span class="p">:</span> <span class="nx">primaryEmail</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">name</span> <span class="o">||</span> <span class="nx">user</span><span class="p">.</span><span class="nx">login</span><span class="p">,</span>
+        <span class="na">provider</span><span class="p">:</span> <span class="dl">'</span><span class="s1">github</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">login</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">login</span><span class="p">,</span>
+          <span class="na">avatar</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">avatar_url</span><span class="p">,</span>
+          <span class="na">repos</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">public_repos</span><span class="p">,</span>
+          <span class="na">bio</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">bio</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid GitHub token</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Auth0 token validation
+   */</span>
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">validateAuth0Token</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ExternalUser</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Verify JWT signature</span>
+      <span class="kd">const</span> <span class="nx">decoded</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AUTH0_PUBLIC_KEY</span><span class="o">!</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">algorithms</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">RS256</span><span class="dl">'</span><span class="p">],</span>
+        <span class="na">issuer</span><span class="p">:</span> <span class="s2">`https://</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AUTH0_DOMAIN</span><span class="p">}</span><span class="s2">/`</span><span class="p">,</span>
+        <span class="na">audience</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AUTH0_AUDIENCE</span>
+      <span class="p">})</span> <span class="k">as</span> <span class="kr">any</span><span class="p">;</span>
+      
+      <span class="c1">// Get full user profile from Auth0</span>
+      <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">auth0Client</span><span class="p">.</span><span class="nx">getUser</span><span class="p">({</span> <span class="na">id</span><span class="p">:</span> <span class="nx">decoded</span><span class="p">.</span><span class="nx">sub</span> <span class="p">});</span>
+      
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="na">externalId</span><span class="p">:</span> <span class="nx">decoded</span><span class="p">.</span><span class="nx">sub</span><span class="p">,</span>
+        <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="o">!</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">name</span> <span class="o">||</span> <span class="nx">user</span><span class="p">.</span><span class="nx">nickname</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">User</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">provider</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth0</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">picture</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">picture</span><span class="p">,</span>
+          <span class="na">email_verified</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email_verified</span><span class="p">,</span>
+          <span class="na">roles</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">app_metadata</span><span class="p">?.</span><span class="nx">roles</span> <span class="o">||</span> <span class="p">[]</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid Auth0 token</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Map external user to internal user model
+   */</span>
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">mapToInternalUser</span><span class="p">(</span><span class="nx">external</span><span class="p">:</span> <span class="nx">ExternalUser</span><span class="p">,</span> <span class="nx">provider</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">InternalUser</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Check if user exists</span>
+    <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">findByExternalId</span><span class="p">(</span><span class="nx">external</span><span class="p">.</span><span class="nx">externalId</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Create new user</span>
+      <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+        <span class="na">externalId</span><span class="p">:</span> <span class="nx">external</span><span class="p">.</span><span class="nx">externalId</span><span class="p">,</span>
+        <span class="na">email</span><span class="p">:</span> <span class="nx">external</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">external</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+        <span class="nx">provider</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="nx">external</span><span class="p">.</span><span class="nx">metadata</span><span class="p">,</span>
+        <span class="na">roles</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// Default role</span>
+        <span class="na">permissions</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDefaultPermissions</span><span class="p">(),</span>
+        <span class="na">createdAt</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">});</span>
+      
+      <span class="c1">// Trigger onboarding flow</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">user:created</span><span class="dl">'</span><span class="p">,</span> <span class="nx">user</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// Update last login</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">updateLastLogin</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Enhance with internal permissions</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="p">...</span><span class="nx">user</span><span class="p">,</span>
+      <span class="na">permissions</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPermissions</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">),</span>
+      <span class="na">quotas</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getQuotas</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">),</span>
+      <span class="na">features</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getEnabledFeatures</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Generate internal cluster JWT tokens
+   */</span>
+  <span class="k">private</span> <span class="nx">generateClusterTokens</span><span class="p">(</span><span class="nx">user</span><span class="p">:</span> <span class="nx">InternalUser</span><span class="p">):</span> <span class="nx">TokenSet</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">payload</span><span class="p">:</span> <span class="nx">ClusterJWTPayload</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="c1">// User identification</span>
+      <span class="na">sub</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+      <span class="na">name</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      
+      <span class="c1">// Cluster-specific claims</span>
+      <span class="na">cluster</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">version</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1.0</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">issuer</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">internalJWTIssuer</span><span class="p">,</span>
+        <span class="na">services</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAllowedServices</span><span class="p">(</span><span class="nx">user</span><span class="p">),</span>
+        <span class="na">quotas</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">quotas</span>
+      <span class="p">},</span>
+      
+      <span class="c1">// Roles and permissions</span>
+      <span class="na">roles</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">roles</span><span class="p">,</span>
+      <span class="na">permissions</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">permissions</span><span class="p">,</span>
+      <span class="na">features</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">features</span><span class="p">,</span>
+      
+      <span class="c1">// Security metadata</span>
+      <span class="na">iat</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span>
+      <span class="na">exp</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="mi">7200</span><span class="p">,</span> <span class="c1">// 2 hours</span>
+      <span class="na">jti</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateJTI</span><span class="p">(),</span> <span class="c1">// JWT ID for revocation</span>
+      
+      <span class="c1">// Rate limiting</span>
+      <span class="na">rateLimit</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">tier</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">tier</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">free</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">requestsPerMinute</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="na">requestsPerHour</span><span class="p">:</span> <span class="mi">1000</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// Sign tokens</span>
+    <span class="kd">const</span> <span class="nx">accessToken</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">payload</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">internalJWTSecret</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">algorithm</span><span class="p">:</span> <span class="dl">'</span><span class="s1">HS256</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">issuer</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">internalJWTIssuer</span>
+    <span class="p">});</span>
+    
+    <span class="kd">const</span> <span class="nx">refreshPayload</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">sub</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">refresh</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">jti</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateJTI</span><span class="p">()</span>
+    <span class="p">};</span>
+    
+    <span class="kd">const</span> <span class="nx">refreshToken</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">refreshPayload</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">internalJWTSecret</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">algorithm</span><span class="p">:</span> <span class="dl">'</span><span class="s1">HS256</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">expiresIn</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">refreshExpiry</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">accessToken</span><span class="p">,</span>
+      <span class="nx">refreshToken</span><span class="p">,</span>
+      <span class="na">expiresIn</span><span class="p">:</span> <span class="mi">7200</span><span class="p">,</span>
+      <span class="na">tokenType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Bearer</span><span class="dl">'</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Set secure HTTP-only cookies
+   */</span>
+  <span class="k">private</span> <span class="nx">setSecureCookies</span><span class="p">(</span><span class="nx">res</span><span class="p">:</span> <span class="nx">express</span><span class="p">.</span><span class="nx">Response</span><span class="p">,</span> <span class="nx">tokens</span><span class="p">:</span> <span class="nx">TokenSet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Access token cookie (short-lived)</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor_access</span><span class="dl">'</span><span class="p">,</span> <span class="nx">tokens</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">secure</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">sameSite</span><span class="p">:</span> <span class="dl">'</span><span class="s1">strict</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">maxAge</span><span class="p">:</span> <span class="mi">7200000</span><span class="p">,</span> <span class="c1">// 2 hours</span>
+      <span class="na">path</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/</span><span class="dl">'</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Refresh token cookie (long-lived)</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor_refresh</span><span class="dl">'</span><span class="p">,</span> <span class="nx">tokens</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">secure</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">sameSite</span><span class="p">:</span> <span class="dl">'</span><span class="s1">strict</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">maxAge</span><span class="p">:</span> <span class="mi">604800000</span><span class="p">,</span> <span class="c1">// 7 days</span>
+      <span class="na">path</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/auth/refresh</span><span class="dl">'</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// CSRF token (readable by JS)</span>
+    <span class="kd">const</span> <span class="nx">csrfToken</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateCSRFToken</span><span class="p">();</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor_csrf</span><span class="dl">'</span><span class="p">,</span> <span class="nx">csrfToken</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// JS needs to read this</span>
+      <span class="na">secure</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">sameSite</span><span class="p">:</span> <span class="dl">'</span><span class="s1">strict</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">maxAge</span><span class="p">:</span> <span class="mi">7200000</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-jwt-middleware-for-internal-services">2. JWT Middleware for Internal Services</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/shared/auth-middleware.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">NextFunction</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">jwt</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Redis</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ioredis</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">InternalAuthMiddleware</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">publicKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">redis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Redis</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REDIS_URL</span><span class="o">!</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">publicKey</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">INTERNAL_JWT_SECRET</span><span class="o">!</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Validate internal cluster JWT
+   */</span>
+  <span class="k">async</span> <span class="nx">validateClusterToken</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">next</span><span class="p">:</span> <span class="nx">NextFunction</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Get token from cookie or header</span>
+      <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">extractToken</span><span class="p">(</span><span class="nx">req</span><span class="p">);</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">No token provided</span><span class="dl">'</span> <span class="p">});</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Check if token is blacklisted (revoked)</span>
+      <span class="kd">const</span> <span class="nx">isRevoked</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`revoked:</span><span class="p">${</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">isRevoked</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Token revoked</span><span class="dl">'</span> <span class="p">});</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Verify JWT</span>
+      <span class="kd">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicKey</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">algorithms</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">HS256</span><span class="dl">'</span><span class="p">],</span>
+        <span class="na">issuer</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor-cluster</span><span class="dl">'</span>
+      <span class="p">})</span> <span class="k">as</span> <span class="nx">ClusterJWTPayload</span><span class="p">;</span>
+      
+      <span class="c1">// Check if service is allowed</span>
+      <span class="kd">const</span> <span class="nx">serviceName</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SERVICE_NAME</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">payload</span><span class="p">.</span><span class="nx">cluster</span><span class="p">.</span><span class="nx">services</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">403</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Service access denied</span><span class="dl">'</span> <span class="p">});</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Apply rate limiting</span>
+      <span class="kd">const</span> <span class="nx">rateLimitOk</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkRateLimit</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">sub</span><span class="p">,</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">rateLimit</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">rateLimitOk</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">429</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Rate limit exceeded</span><span class="dl">'</span> <span class="p">});</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Attach user context to request</span>
+      <span class="nx">req</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">sub</span><span class="p">,</span>
+        <span class="na">email</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+        <span class="na">roles</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">roles</span><span class="p">,</span>
+        <span class="na">permissions</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">permissions</span><span class="p">,</span>
+        <span class="na">quotas</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">cluster</span><span class="p">.</span><span class="nx">quotas</span>
+      <span class="p">};</span>
+      
+      <span class="nx">next</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">name</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">TokenExpiredError</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Token expired</span><span class="dl">'</span> <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid token</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Check specific permission
+   */</span>
+  <span class="nx">hasPermission</span><span class="p">(</span><span class="nx">permission</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">next</span><span class="p">:</span> <span class="nx">NextFunction</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">?.</span><span class="nx">permissions</span><span class="p">?.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">permission</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">403</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="s2">`Missing permission: </span><span class="p">${</span><span class="nx">permission</span><span class="p">}</span><span class="s2">`</span> <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="nx">next</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Check role
+   */</span>
+  <span class="nx">hasRole</span><span class="p">(</span><span class="nx">role</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">next</span><span class="p">:</span> <span class="nx">NextFunction</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">?.</span><span class="nx">roles</span><span class="p">?.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">role</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">403</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="s2">`Missing role: </span><span class="p">${</span><span class="nx">role</span><span class="p">}</span><span class="s2">`</span> <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="nx">next</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Service-to-service authentication
+   */</span>
+  <span class="k">async</span> <span class="nx">validateServiceToken</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">next</span><span class="p">:</span> <span class="nx">NextFunction</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">x-service-token</span><span class="dl">'</span><span class="p">]</span> <span class="k">as</span> <span class="kr">string</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">No service token</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Service tokens are different - they're signed with service-specific keys</span>
+      <span class="kd">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SERVICE_SECRET</span><span class="o">!</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">algorithms</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">HS256</span><span class="dl">'</span><span class="p">],</span>
+        <span class="na">issuer</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor-service-mesh</span><span class="dl">'</span>
+      <span class="p">})</span> <span class="k">as</span> <span class="nx">ServiceTokenPayload</span><span class="p">;</span>
+      
+      <span class="nx">req</span><span class="p">.</span><span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">service</span><span class="p">,</span>
+        <span class="na">permissions</span><span class="p">:</span> <span class="nx">payload</span><span class="p">.</span><span class="nx">permissions</span>
+      <span class="p">};</span>
+      
+      <span class="nx">next</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid service token</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-token-refresh-strategy">3. Token Refresh Strategy</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/auth-gateway/src/refresh.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">TokenRefreshService</span> <span class="p">{</span>
+  <span class="cm">/**
+   * Refresh expired access token using refresh token
+   */</span>
+  <span class="k">async</span> <span class="nx">refreshAccessToken</span><span class="p">(</span><span class="nx">refreshToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">TokenSet</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Verify refresh token</span>
+      <span class="kd">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">refreshToken</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">internalJWTSecret</span><span class="p">)</span> <span class="k">as</span> <span class="kr">any</span><span class="p">;</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="kd">type</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">refresh</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid token type</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Check if refresh token is revoked</span>
+      <span class="kd">const</span> <span class="nx">isRevoked</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`revoked:refresh:</span><span class="p">${</span><span class="nx">payload</span><span class="p">.</span><span class="nx">jti</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">isRevoked</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Refresh token revoked</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Get user</span>
+      <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">sub</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">User not found</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Check if external token is still valid</span>
+      <span class="kd">const</span> <span class="nx">externalTokenValid</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkExternalTokenStatus</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">externalId</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">externalTokenValid</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// External token expired, need re-authentication</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">External authentication expired</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="c1">// Generate new access token</span>
+      <span class="kd">const</span> <span class="nx">newTokens</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateClusterTokens</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+      
+      <span class="c1">// Rotate refresh token (security best practice)</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">revokeRefreshToken</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">jti</span><span class="p">);</span>
+      
+      <span class="k">return</span> <span class="nx">newTokens</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Token refresh failed</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Revoke tokens on logout
+   */</span>
+  <span class="k">async</span> <span class="nx">revokeTokens</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">tokens</span><span class="p">:</span> <span class="p">{</span> <span class="nl">access</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">refresh</span><span class="p">?:</span> <span class="kr">string</span> <span class="p">})</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">multi</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">multi</span><span class="p">();</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">access</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">decoded</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">access</span><span class="p">)</span> <span class="k">as</span> <span class="kr">any</span><span class="p">;</span>
+      <span class="nx">multi</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="s2">`revoked:</span><span class="p">${</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">access</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">);</span>
+      <span class="nx">multi</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="s2">`revoked:jti:</span><span class="p">${</span><span class="nx">decoded</span><span class="p">.</span><span class="nx">jti</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">refresh</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">decoded</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">refresh</span><span class="p">)</span> <span class="k">as</span> <span class="kr">any</span><span class="p">;</span>
+      <span class="nx">multi</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="s2">`revoked:refresh:</span><span class="p">${</span><span class="nx">decoded</span><span class="p">.</span><span class="nx">jti</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="mi">604800</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">await</span> <span class="nx">multi</span><span class="p">.</span><span class="nx">exec</span><span class="p">();</span>
+    
+    <span class="c1">// Clear user sessions</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sessionStore</span><span class="p">.</span><span class="nx">clearUserSessions</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4-service-mesh-authentication">4. Service Mesh Authentication</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// infrastructure/services/shared/service-auth.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ServiceMeshAuth</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">serviceRegistry</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">ServiceCredentials</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="p">();</span>
+  
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">registerServices</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Generate service-to-service token
+   */</span>
+  <span class="nx">generateServiceToken</span><span class="p">(</span><span class="nx">fromService</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">toService</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">credentials</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">serviceRegistry</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">fromService</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">credentials</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown service: </span><span class="p">${</span><span class="nx">fromService</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="kd">const</span> <span class="nx">payload</span><span class="p">:</span> <span class="nx">ServiceTokenPayload</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">service</span><span class="p">:</span> <span class="nx">fromService</span><span class="p">,</span>
+      <span class="na">target</span><span class="p">:</span> <span class="nx">toService</span><span class="p">,</span>
+      <span class="na">permissions</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getServicePermissions</span><span class="p">(</span><span class="nx">fromService</span><span class="p">,</span> <span class="nx">toService</span><span class="p">),</span>
+      <span class="na">iat</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span>
+      <span class="na">exp</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="mi">300</span><span class="p">,</span> <span class="c1">// 5 minutes</span>
+      <span class="na">nonce</span><span class="p">:</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">randomBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">};</span>
+    
+    <span class="k">return</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">credentials</span><span class="p">.</span><span class="nx">secret</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">algorithm</span><span class="p">:</span> <span class="dl">'</span><span class="s1">HS256</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">issuer</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor-service-mesh</span><span class="dl">'</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * mTLS for service-to-service (optional extra security)
+   */</span>
+  <span class="k">async</span> <span class="nx">establishMTLS</span><span class="p">(</span><span class="nx">service1</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">service2</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">cert1</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCertificate</span><span class="p">(</span><span class="nx">service1</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">cert2</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCertificate</span><span class="p">(</span><span class="nx">service2</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">ca</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCA</span><span class="p">(),</span>
+      <span class="na">cert</span><span class="p">:</span> <span class="nx">cert1</span><span class="p">,</span>
+      <span class="na">key</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPrivateKey</span><span class="p">(</span><span class="nx">service1</span><span class="p">),</span>
+      <span class="na">requestCert</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">rejectUnauthorized</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Service discovery with auth
+   */</span>
+  <span class="k">async</span> <span class="nx">discoverService</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">callerToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ServiceEndpoint</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Validate caller</span>
+    <span class="kd">const</span> <span class="nx">caller</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateServiceToken</span><span class="p">(</span><span class="nx">callerToken</span><span class="p">);</span>
+    
+    <span class="c1">// Check if caller can access target service</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">canAccess</span><span class="p">(</span><span class="nx">caller</span><span class="p">.</span><span class="nx">service</span><span class="p">,</span> <span class="nx">serviceName</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Service access denied</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Return service endpoint with temporary credentials</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">url</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getServiceUrl</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">),</span>
+      <span class="na">token</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateServiceToken</span><span class="p">(</span><span class="nx">caller</span><span class="p">.</span><span class="nx">service</span><span class="p">,</span> <span class="nx">serviceName</span><span class="p">),</span>
+      <span class="na">expires</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">300000</span> <span class="c1">// 5 minutes</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="5-frontend-integration">5. Frontend Integration</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// frontend/src/lib/auth/AuthProvider.tsx</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createContext</span><span class="p">,</span> <span class="nx">useContext</span><span class="p">,</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AuthService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">refreshTimer</span><span class="p">?:</span> <span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="p">;</span>
+  
+  <span class="cm">/**
+   * Login with external provider
+   */</span>
+  <span class="k">async</span> <span class="nx">loginWithProvider</span><span class="p">(</span><span class="nx">provider</span><span class="p">:</span> <span class="dl">'</span><span class="s1">github</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">auth0</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">google</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Redirect to provider</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s2">`/api/auth/</span><span class="p">${</span><span class="nx">provider</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Handle OAuth callback
+   */</span>
+  <span class="k">async</span> <span class="nx">handleCallback</span><span class="p">(</span><span class="nx">provider</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">state</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Exchange authorization code for tokens</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/callback</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">credentials</span><span class="p">:</span> <span class="dl">'</span><span class="s1">include</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Important for cookies</span>
+        <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+          <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+          <span class="dl">'</span><span class="s1">X-CSRF-Token</span><span class="dl">'</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCSRFToken</span><span class="p">()</span> <span class="c1">// CSRF protection</span>
+        <span class="p">},</span>
+        <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">provider</span><span class="p">,</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">state</span> <span class="p">})</span>
+      <span class="p">});</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authentication failed</span><span class="dl">'</span><span class="p">);</span>
+      
+      <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+      
+      <span class="c1">// Store user info (not tokens!)</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">storeUserInfo</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">);</span>
+      
+      <span class="c1">// Setup token refresh</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setupTokenRefresh</span><span class="p">();</span>
+      
+      <span class="k">return</span> <span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Auth callback failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Setup axios interceptors for auth
+   */</span>
+  <span class="nx">setupAxiosInterceptors</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Request interceptor - add CSRF token</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">config</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">X-CSRF-Token</span><span class="dl">'</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCSRFToken</span><span class="p">();</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> <span class="c1">// Send cookies</span>
+      <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Response interceptor - handle token expiry</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">response</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
+      <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">response</span><span class="p">,</span>
+      <span class="k">async</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="p">?.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">401</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// Try to refresh token</span>
+          <span class="kd">const</span> <span class="nx">refreshed</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">();</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">refreshed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// Retry original request</span>
+            <span class="k">return</span> <span class="nx">axios</span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">config</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// Redirect to login</span>
+            <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Refresh access token
+   */</span>
+  <span class="k">async</span> <span class="nx">refreshToken</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/refresh</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">credentials</span><span class="p">:</span> <span class="dl">'</span><span class="s1">include</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+          <span class="dl">'</span><span class="s1">X-CSRF-Token</span><span class="dl">'</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCSRFToken</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      
+      <span class="c1">// Token refreshed (set as cookie)</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setupTokenRefresh</span><span class="p">();</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Token refresh failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Setup automatic token refresh before expiry
+   */</span>
+  <span class="k">private</span> <span class="nx">setupTokenRefresh</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Clear existing timer</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">clearTimeout</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Refresh 5 minutes before expiry</span>
+    <span class="kd">const</span> <span class="nx">refreshIn</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7200</span> <span class="o">-</span> <span class="mi">300</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">;</span> <span class="c1">// 1h 55m</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">();</span>
+    <span class="p">},</span> <span class="nx">refreshIn</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/**
+   * Get CSRF token from cookie
+   */</span>
+  <span class="k">private</span> <span class="nx">getCSRFToken</span><span class="p">():</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">match</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/devmentor_csrf=</span><span class="se">([^</span><span class="sr">;</span><span class="se">]</span><span class="sr">+</span><span class="se">)</span><span class="sr">/</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">match</span> <span class="p">?</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="dl">''</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-security-features">🔒 Security Features</h2>
+
+<h3 id="1-token-security">1. Token Security</h3>
+<ul>
+  <li><strong>Short-lived access tokens</strong> (2 hours)</li>
+  <li><strong>Longer refresh tokens</strong> (7 days)</li>
+  <li><strong>HTTP-only cookies</strong> (XSS protection)</li>
+  <li><strong>CSRF tokens</strong> for state-changing operations</li>
+  <li><strong>Token revocation</strong> on logout</li>
+</ul>
+
+<h3 id="2-service-isolation">2. Service Isolation</h3>
+<ul>
+  <li><strong>Internal tokens</strong> never exposed to frontend</li>
+  <li><strong>Service-specific permissions</strong></li>
+  <li><strong>mTLS for service-to-service</strong> (optional)</li>
+  <li><strong>Rate limiting per token</strong></li>
+</ul>
+
+<h3 id="3-multi-factor-security">3. Multi-Factor Security</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Optional MFA for sensitive operations</span>
+<span class="k">async</span> <span class="nx">requireMFA</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">operation</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Check if operation requires MFA</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sensitiveOperations</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">operation</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">mfaToken</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">requestMFAToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">verifyMFAToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">mfaToken</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-token-claims-structure">📊 Token Claims Structure</h2>
+
+<h3 id="external-token-githubauth0">External Token (GitHub/Auth0)</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github|123456"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user@example.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"github"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"read:user public_repo"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="internal-cluster-jwt">Internal Cluster JWT</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_abc123"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user@example.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"cluster"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devmentor-cluster"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"services"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"memory"</span><span class="p">,</span><span class="w"> </span><span class="s2">"learning"</span><span class="p">,</span><span class="w"> </span><span class="s2">"repo-analyzer"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"quotas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"maxRepos"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"maxFilesPerScan"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"apiCallsPerHour"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"user"</span><span class="p">,</span><span class="w"> </span><span class="s2">"developer"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"repo:read"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"repo:analyze"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"quiz:take"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"memory:write"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"basic"</span><span class="p">,</span><span class="w"> </span><span class="s2">"learning"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"rateLimit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"tier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"free"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requestsPerMinute"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"iat"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567890</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"jti"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unique-jwt-id"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="-complete-authentication-flow">🔄 Complete Authentication Flow</h2>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant AG as Auth Gateway
+    participant EP as External Provider
+    participant TS as Token Service
+    participant IS as Internal Service
+    
+    U-&gt;&gt;F: Click Login
+    F-&gt;&gt;EP: Redirect to OAuth
+    EP-&gt;&gt;U: Authorize
+    U-&gt;&gt;EP: Grant Permission
+    EP-&gt;&gt;AG: Return with code
+    AG-&gt;&gt;EP: Exchange for token
+    EP-&gt;&gt;AG: External token
+    AG-&gt;&gt;TS: Generate internal JWT
+    TS-&gt;&gt;AG: Internal JWT
+    AG-&gt;&gt;F: Set cookies + user info
+    F-&gt;&gt;U: Logged in
+    
+    Note over F,IS: Subsequent requests
+    U-&gt;&gt;F: Make request
+    F-&gt;&gt;AG: Request + Cookie
+    AG-&gt;&gt;AG: Validate JWT
+    AG-&gt;&gt;IS: Forward with JWT
+    IS-&gt;&gt;IS: Validate + Authorize
+    IS-&gt;&gt;AG: Response
+    AG-&gt;&gt;F: Response
+    F-&gt;&gt;U: Show data
+</code></pre>
+
+<h2 id="-implementation-checklist">🚀 Implementation Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Auth Gateway service</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Token exchange endpoint</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />JWT generation/validation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cookie management</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CSRF protection</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Token refresh logic</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Service-to-service auth</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Token revocation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />MFA support (optional)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Session management</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Audit logging</li>
+</ul>
+
+<p>This architecture provides secure, scalable authentication while maintaining clean separation between external and internal auth systems!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / security/AUTHENTICATION_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

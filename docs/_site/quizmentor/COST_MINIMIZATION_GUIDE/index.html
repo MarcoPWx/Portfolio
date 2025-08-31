@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COST MINIMIZATION GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">COST_MINIMIZATION_GUIDE.md</span>
+</div>
+
+<h1>COST MINIMIZATION GUIDE</h1>
+
+
+<h1 id="-quizmentor-cost-minimization-guide">💰 QuizMentor Cost Minimization Guide</h1>
+
+<h2 id="total-monthly-cost-0---50-for-first-10000-users">Total Monthly Cost: $0 - $50 (for first 10,000 users)</h2>
+
+<h2 id="-free-services-to-use">🆓 Free Services to Use</h2>
+
+<h3 id="1-ad-networks---0">1. <strong>Ad Networks - $0</strong></h3>
+<ul>
+  <li><strong>Google AdMob</strong>: Free (they take ~30% of ad revenue)</li>
+  <li><strong>Facebook Audience Network</strong>: Free (revenue share model)</li>
+  <li><strong>Unity Ads</strong>: Free (revenue share model)</li>
+  <li>No upfront costs, only pay from earnings</li>
+</ul>
+
+<h3 id="2-backend--database---0">2. <strong>Backend &amp; Database - $0</strong></h3>
+<ul>
+  <li><strong>Supabase Free Tier</strong>:
+    <ul>
+      <li>500MB database</li>
+      <li>2GB bandwidth</li>
+      <li>50,000 monthly active users</li>
+      <li>500MB file storage</li>
+      <li>Unlimited API requests</li>
+      <li><strong>Perfect for first 10,000 users</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="3-hosting---0">3. <strong>Hosting - $0</strong></h3>
+<ul>
+  <li><strong>Vercel Free Tier</strong>:
+    <ul>
+      <li>100GB bandwidth</li>
+      <li>Unlimited deployments</li>
+      <li>Automatic SSL</li>
+      <li><strong>Handles 100,000+ visits/month</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="4-analytics---0">4. <strong>Analytics - $0</strong></h3>
+<ul>
+  <li><strong>Google Analytics</strong>: Free up to 10M events/month</li>
+  <li><strong>Mixpanel Free Tier</strong>: 100K monthly tracked users</li>
+  <li><strong>Amplitude Free Tier</strong>: 10M events/month</li>
+  <li><strong>Firebase Analytics</strong>: Completely free, unlimited</li>
+</ul>
+
+<h3 id="5-push-notifications---0">5. <strong>Push Notifications - $0</strong></h3>
+<ul>
+  <li><strong>Firebase Cloud Messaging (FCM)</strong>: Completely free</li>
+  <li><strong>Expo Push Notifications</strong>: Free</li>
+  <li>Skip OneSignal ($0-$99/month saved)</li>
+</ul>
+
+<h3 id="6-authentication---0">6. <strong>Authentication - $0</strong></h3>
+<ul>
+  <li><strong>Supabase Auth</strong>: Included in free tier</li>
+  <li><strong>Firebase Auth</strong>: Free up to 10K verifications/month</li>
+  <li>Social logins (Google, Apple, Facebook): Free</li>
+</ul>
+
+<h3 id="7-testing--cicd---0">7. <strong>Testing &amp; CI/CD - $0</strong></h3>
+<ul>
+  <li><strong>GitHub Actions</strong>: 2,000 minutes/month free</li>
+  <li><strong>Expo EAS</strong>: 30 builds/month free</li>
+  <li><strong>Jest/Playwright</strong>: Open source</li>
+</ul>
+
+<h2 id="-minimal-paid-services-when-needed">💸 Minimal Paid Services (When Needed)</h2>
+
+<h3 id="phase-1-launch-0-1000-users---0month">Phase 1: Launch (0-1,000 users) - $0/month</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>✅ Everything free tier
+✅ No paid services needed
+</code></pre></div></div>
+
+<h3 id="phase-2-growth-1000-10000-users---0-25month">Phase 2: Growth (1,000-10,000 users) - $0-25/month</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optional upgrades:
+- Supabase Pro ($25/month) - Only if you exceed limits
+- Everything else stays free
+</code></pre></div></div>
+
+<h3 id="phase-3-scale-10000-users---50-200month">Phase 3: Scale (10,000+ users) - $50-200/month</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- Supabase Pro: $25/month
+- Vercel Pro: $20/month (if needed)
+- Error tracking (Sentry): $26/month
+- Advanced analytics: $50/month
+</code></pre></div></div>
+
+<h2 id="️-implementation-order-cheapest-first">🛠️ Implementation Order (Cheapest First)</h2>
+
+<h3 id="week-1-2-free-foundation">Week 1-2: Free Foundation</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install only free packages</span>
+npm <span class="nb">install </span>react-native-google-mobile-ads  <span class="c"># Free AdMob</span>
+npm <span class="nb">install</span> @supabase/supabase-js           <span class="c"># Free backend</span>
+npm <span class="nb">install </span>zustand                         <span class="c"># Free state management</span>
+npm <span class="nb">install </span>react-native-iap                <span class="c"># Free IAP handling</span>
+</code></pre></div></div>
+
+<h3 id="week-3-4-monetization-without-costs">Week 3-4: Monetization Without Costs</h3>
+<ol>
+  <li><strong>Implement AdMob</strong> (start earning immediately)</li>
+  <li><strong>Add simple subscriptions</strong> ($2.99/month to start)</li>
+  <li><strong>Use Supabase for everything</strong> (auth, database, storage)</li>
+</ol>
+
+<h3 id="week-5-6-free-growth-tools">Week 5-6: Free Growth Tools</h3>
+<ol>
+  <li><strong>Firebase Analytics</strong> for tracking</li>
+  <li><strong>FCM</strong> for push notifications</li>
+  <li><strong>GitHub Actions</strong> for CI/CD</li>
+</ol>
+
+<h2 id="-revenue-vs-cost-projections">📊 Revenue vs. Cost Projections</h2>
+
+<h3 id="month-1-100-users">Month 1 (100 users)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Revenue:
+- Ads: $10-30
+- Subscriptions: $30-50 (10-15 subscribers at $2.99)
+Total Revenue: $40-80
+
+Costs: $0
+Profit: $40-80
+</code></pre></div></div>
+
+<h3 id="month-3-1000-users">Month 3 (1,000 users)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Revenue:
+- Ads: $100-300
+- Subscriptions: $300-500 (100-150 subscribers)
+Total Revenue: $400-800
+
+Costs: $0
+Profit: $400-800
+</code></pre></div></div>
+
+<h3 id="month-6-10000-users">Month 6 (10,000 users)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Revenue:
+- Ads: $1,000-3,000
+- Subscriptions: $3,000-5,000 (1,000-1,500 subscribers)
+Total Revenue: $4,000-8,000
+
+Costs: $25 (Supabase Pro if needed)
+Profit: $3,975-7,975
+</code></pre></div></div>
+
+<h2 id="-cost-cutting-strategies">🎯 Cost-Cutting Strategies</h2>
+
+<h3 id="1-avoid-these-expensive-services">1. <strong>Avoid These Expensive Services</strong></h3>
+<p>❌ <strong>RevenueCat</strong>: $0-2,500/month → Use react-native-iap directly
+❌ <strong>OneSignal</strong>: $99+/month → Use FCM (free)
+❌ <strong>Segment</strong>: $120+/month → Use free analytics
+❌ <strong>Intercom</strong>: $74+/month → Use email + in-app messages
+❌ <strong>Custom servers</strong>: $50+/month → Use Supabase</p>
+
+<h3 id="2-smart-ad-strategy">2. <strong>Smart Ad Strategy</strong></h3>
+<ul>
+  <li>Start with <strong>only rewarded ads</strong> (highest eCPM, best UX)</li>
+  <li>Add interstitials only after 1,000 DAU</li>
+  <li>Focus on US/UK/CA users (highest ad rates)</li>
+  <li>Implement ad mediation for better fill rates</li>
+</ul>
+
+<h3 id="3-subscription-pricing-strategy">3. <strong>Subscription Pricing Strategy</strong></h3>
+<p>Start LOW to get initial users:</p>
+<ul>
+  <li>Monthly: <strong>$2.99</strong> (not $9.99)</li>
+  <li>Annual: <strong>$19.99</strong> (not $89.99)</li>
+  <li>Lifetime: <strong>$49.99</strong> (limited time)</li>
+</ul>
+
+<p>Increase prices gradually as you add features.</p>
+
+<h3 id="4-free-marketing-channels">4. <strong>Free Marketing Channels</strong></h3>
+<ul>
+  <li><strong>Reddit</strong>: Post in relevant subreddits</li>
+  <li><strong>Twitter/X</strong>: Developer community engagement</li>
+  <li><strong>Product Hunt</strong>: Free launch exposure</li>
+  <li><strong>App Store Optimization</strong>: Organic downloads</li>
+  <li><strong>Content Marketing</strong>: Blog posts, tutorials</li>
+</ul>
+
+<h2 id="-quick-start-commands">🚀 Quick Start Commands</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone and setup</span>
+git clone your-repo
+<span class="nb">cd </span>QuizMentor
+
+<span class="c"># Install ONLY free dependencies</span>
+npm <span class="nb">install</span> <span class="nt">--save</span> <span class="se">\</span>
+  react-native-google-mobile-ads <span class="se">\</span>
+  @supabase/supabase-js <span class="se">\</span>
+  zustand <span class="se">\</span>
+  react-native-iap <span class="se">\</span>
+  @react-native-async-storage/async-storage
+
+<span class="c"># Skip expensive services</span>
+<span class="c"># DON'T install: RevenueCat, OneSignal, Segment, etc.</span>
+
+<span class="c"># Setup free services</span>
+npx supabase init      <span class="c"># Free backend</span>
+npx expo <span class="nb">install </span>expo-notifications  <span class="c"># Free push</span>
+
+<span class="c"># Start development</span>
+npm start
+</code></pre></div></div>
+
+<h2 id="-when-to-spend-money">📈 When to Spend Money</h2>
+
+<p>Only pay for services when:</p>
+<ol>
+  <li><strong>Free tier limits exceeded</strong> (usually 10K+ users)</li>
+  <li><strong>Revenue &gt; 10x the cost</strong> of the service</li>
+  <li><strong>Critical feature</strong> that directly increases revenue</li>
+  <li><strong>Time saved &gt; cost</strong> (for developer tools)</li>
+</ol>
+
+<h2 id="-monetization-priority">🎮 Monetization Priority</h2>
+
+<h3 id="high-roi-do-first">High ROI (Do First):</h3>
+<ol>
+  <li><strong>Rewarded Ads</strong>: $0 cost, immediate revenue</li>
+  <li><strong>Simple subscriptions</strong>: $2.99/month, pure profit</li>
+  <li><strong>Interstitial ads</strong>: After 1,000 users</li>
+  <li><strong>Remove ads option</strong>: $0.99 one-time</li>
+</ol>
+
+<h3 id="medium-roi-do-later">Medium ROI (Do Later):</h3>
+<ol>
+  <li><strong>Power-ups/Hints</strong>: $0.99 each</li>
+  <li><strong>Category packs</strong>: $1.99 each</li>
+  <li><strong>Cosmetics</strong>: Themes, avatars</li>
+</ol>
+
+<h3 id="low-roi-skip-initially">Low ROI (Skip Initially):</h3>
+<ol>
+  <li><strong>Complex subscription tiers</strong></li>
+  <li><strong>Team/Enterprise plans</strong></li>
+  <li><strong>Merchandise</strong></li>
+</ol>
+
+<h2 id="-pro-tips-for-saving-money">💡 Pro Tips for Saving Money</h2>
+
+<ol>
+  <li><strong>Use Expo Managed Workflow</strong>: Free builds, OTA updates</li>
+  <li><strong>Batch API calls</strong>: Reduce bandwidth usage</li>
+  <li><strong>Implement caching</strong>: Minimize database reads</li>
+  <li><strong>Compress images</strong>: Reduce storage costs</li>
+  <li><strong>Use CDN for static assets</strong>: Cloudflare free tier</li>
+  <li><strong>Lazy load features</strong>: Reduce initial bundle size</li>
+  <li><strong>Regional pricing</strong>: Charge less in lower-income countries</li>
+</ol>
+
+<h2 id="-break-even-calculator">📊 Break-Even Calculator</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// When to upgrade services</span>
+<span class="kd">const</span> <span class="nx">shouldUpgrade</span> <span class="o">=</span> <span class="p">(</span><span class="nx">monthlyRevenue</span><span class="p">,</span> <span class="nx">serviceCost</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">profitMargin</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">;</span> <span class="c1">// Keep 70% profit</span>
+  <span class="k">return</span> <span class="nx">monthlyRevenue</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">profitMargin</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">serviceCost</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// Examples:</span>
+<span class="c1">// Revenue: $500/month → Max service cost: $150</span>
+<span class="c1">// Revenue: $1000/month → Max service cost: $300</span>
+<span class="c1">// Revenue: $5000/month → Max service cost: $1500</span>
+</code></pre></div></div>
+
+<h2 id="-migration-path-as-you-grow">🔄 Migration Path (As You Grow)</h2>
+
+<h3 id="0-1kmonth-revenue">$0-1K/month Revenue</h3>
+<ul>
+  <li>All free services</li>
+  <li>Manual everything</li>
+  <li>Basic features only</li>
+</ul>
+
+<h3 id="1k-5kmonth-revenue">$1K-5K/month Revenue</h3>
+<ul>
+  <li>Supabase Pro ($25)</li>
+  <li>Basic automation</li>
+  <li>Enhanced features</li>
+</ul>
+
+<h3 id="5k-20kmonth-revenue">$5K-20K/month Revenue</h3>
+<ul>
+  <li>Add premium services</li>
+  <li>Full automation</li>
+  <li>Advanced analytics</li>
+  <li>Customer support tools</li>
+</ul>
+
+<h3 id="20kmonth-revenue">$20K+/month Revenue</h3>
+<ul>
+  <li>Enterprise services</li>
+  <li>Custom infrastructure</li>
+  <li>Full team tools</li>
+  <li>Scale globally</li>
+</ul>
+
+<h2 id="️-common-money-wasters-to-avoid">⚠️ Common Money Wasters to Avoid</h2>
+
+<ol>
+  <li><strong>Paying for users you don’t have</strong>: Don’t buy 100K user plans for 1K users</li>
+  <li><strong>Multiple analytics tools</strong>: One free one is enough</li>
+  <li><strong>Premium themes/templates</strong>: Build your own</li>
+  <li><strong>Expensive cloud services</strong>: Serverless is cheaper</li>
+  <li><strong>Third-party auth services</strong>: Use Supabase/Firebase auth</li>
+  <li><strong>Custom email servers</strong>: Use free tiers (SendGrid, Mailgun)</li>
+  <li><strong>Premium support tools</strong>: Use Discord/Telegram initially</li>
+</ol>
+
+<h2 id="-success-metrics">🎯 Success Metrics</h2>
+
+<p>Track these to ensure profitability:</p>
+<ul>
+  <li><strong>CAC (Customer Acquisition Cost)</strong>: Keep under $1</li>
+  <li><strong>LTV (Lifetime Value)</strong>: Target $10+</li>
+  <li><strong>ARPU</strong>: Target $0.50+ from ads, $5+ from subscriptions</li>
+  <li><strong>Margin</strong>: Maintain 70%+ profit margin</li>
+  <li><strong>Churn</strong>: Keep under 10% monthly</li>
+</ul>
+
+<hr />
+
+<h2 id="summary-your-0-launch-plan">Summary: Your $0 Launch Plan</h2>
+
+<ol>
+  <li><strong>Week 1</strong>: Setup free Supabase + AdMob</li>
+  <li><strong>Week 2</strong>: Implement basic app with ads</li>
+  <li><strong>Week 3</strong>: Add $2.99 subscription</li>
+  <li><strong>Week 4</strong>: Launch on Product Hunt</li>
+  <li><strong>Month 2</strong>: Optimize based on data</li>
+  <li><strong>Month 3</strong>: Scale what works</li>
+</ol>
+
+<p><strong>Total Cost</strong>: $0
+<strong>Expected Revenue by Month 3</strong>: $400-800
+<strong>Profit Margin</strong>: 100%</p>
+
+<p>Remember: <strong>Every dollar saved is a dollar earned!</strong></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / COST_MINIMIZATION_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

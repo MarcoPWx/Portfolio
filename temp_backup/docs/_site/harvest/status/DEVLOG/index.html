@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVLOG | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">Harvest.ai</span> / 
+  <span style="color: #999;">status/DEVLOG.md</span>
+</div>
+
+<h1>DEVLOG</h1>
+
+
+<h1 id="-harvestai-development-log">📝 HARVEST.AI DEVELOPMENT LOG</h1>
+<p><em>Track daily progress, decisions, and learnings</em></p>
+
+<hr />
+
+<h2 id="december-26-2024">December 26, 2024</h2>
+
+<h3 id="-day-1-project-genesis">🎯 Day 1: Project Genesis</h3>
+
+<p><strong>Time:</strong> 13:30 - 14:30 (1 hour)</p>
+
+<h4 id="what-we-started-with">What We Started With</h4>
+<ul>
+  <li>Idea: “Turn any knowledge source into any format”</li>
+  <li>Inspiration: QuizMentor’s question generation capabilities</li>
+  <li>Goal: Build a content transformation platform with BYOK model</li>
+</ul>
+
+<h4 id="what-we-accomplished">What We Accomplished</h4>
+<ol>
+  <li><strong>Created comprehensive documentation</strong> ✅
+    <ul>
+      <li>Value proposition defined</li>
+      <li>100 use cases documented</li>
+      <li>Competitive analysis complete</li>
+      <li>Market positioning clear</li>
+    </ul>
+  </li>
+  <li><strong>Set up project structure</strong> ✅
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">/docs</code> folder organized</li>
+      <li>Frontend initialized with Next.js</li>
+      <li>Tailwind configured with orange theme</li>
+      <li>Navigation component created</li>
+    </ul>
+  </li>
+  <li><strong>Designed core architecture</strong> ✅
+    <ul>
+      <li>Blackboard pattern for multi-agent system</li>
+      <li>Concurrency patterns documented</li>
+      <li>AI gateway design complete</li>
+      <li>Database schema planned</li>
+    </ul>
+  </li>
+  <li><strong>Identified key differentiators</strong> ✅
+    <ul>
+      <li>RAG-based verification (unique)</li>
+      <li>20+ output formats (vs 1-5 competitors)</li>
+      <li>Real-time web scraping (ChatGPT can’t)</li>
+      <li>BYOK model (nobody else)</li>
+      <li>30-second generation (vs 6 hours manual)</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="key-decisions-made">Key Decisions Made</h4>
+<ul>
+  <li><strong>Tech Stack:</strong> Next.js + FastAPI + Supabase</li>
+  <li><strong>Color Scheme:</strong> Orange (inspired by Supabase design)</li>
+  <li><strong>MVP Focus:</strong> Start with quiz generation, expand later</li>
+  <li><strong>Timeline:</strong> 4 weeks to MVP, 6-8 weeks to production</li>
+</ul>
+
+<h4 id="blockers-encountered">Blockers Encountered</h4>
+<ul>
+  <li>❌ No backend code exists yet</li>
+  <li>❌ No API integrations</li>
+  <li>❌ No database configured</li>
+  <li>❌ Need OpenAI API key for testing</li>
+</ul>
+
+<h4 id="tomorrows-priority">Tomorrow’s Priority</h4>
+<ol>
+  <li>Create FastAPI backend structure</li>
+  <li>Set up Supabase project</li>
+  <li>Implement basic BYOK validation</li>
+  <li>Connect frontend to backend</li>
+</ol>
+
+<h4 id="lessons-learned">Lessons Learned</h4>
+<ul>
+  <li>Documentation first approach helps clarify vision</li>
+  <li>QuizMentor code can be adapted (question generator)</li>
+  <li>Need to START BUILDING, not just planning</li>
+</ul>
+
+<hr />
+
+<h2 id="december-27-2024-planned">December 27, 2024 (Planned)</h2>
+
+<h3 id="-day-2-backend-foundation">🎯 Day 2: Backend Foundation</h3>
+
+<p><strong>Goal:</strong> Get FastAPI running with basic endpoints</p>
+
+<h4 id="morning-900---1200">Morning (9:00 - 12:00)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create backend folder structure</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up FastAPI with uvicorn</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create basic models/schemas</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement health check endpoint</li>
+</ul>
+
+<h4 id="afternoon-1300---1700">Afternoon (13:00 - 17:00)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up Supabase project</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create database schema</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Connect FastAPI to Supabase</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test database operations</li>
+</ul>
+
+<h4 id="evening-1900---2100">Evening (19:00 - 21:00)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create <code class="language-plaintext highlighter-rouge">/api/generate</code> endpoint</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add input validation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement error handling</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write basic tests</li>
+</ul>
+
+<h4 id="success-criteria">Success Criteria</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />API responds at localhost:8000</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Database connected and working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Can make POST to /api/generate</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Errors return proper JSON</li>
+</ul>
+
+<hr />
+
+<h2 id="project-insights--patterns">Project Insights &amp; Patterns</h2>
+
+<h3 id="-observations">🔍 Observations</h3>
+
+<h4 id="whats-working">What’s Working</h4>
+<ul>
+  <li>Clear vision and value proposition</li>
+  <li>Strong documentation foundation</li>
+  <li>Good architectural patterns identified</li>
+  <li>Frontend setup is clean</li>
+</ul>
+
+<h4 id="whats-not-working">What’s Not Working</h4>
+<ul>
+  <li>No actual functionality yet</li>
+  <li>Too much planning, not enough building</li>
+  <li>Missing critical integrations</li>
+  <li>No testing framework</li>
+</ul>
+
+<h3 id="-velocity-tracking">📊 Velocity Tracking</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Stories Planned</th>
+      <th>Stories Completed</th>
+      <th>Blockers</th>
+      <th>Velocity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Dec 26</td>
+      <td>0</td>
+      <td>0 (setup day)</td>
+      <td>4</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>Dec 27</td>
+      <td>4</td>
+      <td>TBD</td>
+      <td>TBD</td>
+      <td>TBD</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-technical-decisions-log">🧠 Technical Decisions Log</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Decision</th>
+      <th>Date</th>
+      <th>Rationale</th>
+      <th>Alternative Considered</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Use FastAPI</td>
+      <td>Dec 26</td>
+      <td>Fast, async, auto-docs</td>
+      <td>Flask, Django</td>
+    </tr>
+    <tr>
+      <td>Supabase for DB</td>
+      <td>Dec 26</td>
+      <td>Managed, free tier</td>
+      <td>Raw PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>BYOK model</td>
+      <td>Dec 26</td>
+      <td>Cost effective for users</td>
+      <td>Pay-per-use</td>
+    </tr>
+    <tr>
+      <td>Orange color</td>
+      <td>Dec 26</td>
+      <td>Unique, energetic</td>
+      <td>Blue, purple</td>
+    </tr>
+    <tr>
+      <td>Next.js frontend</td>
+      <td>Dec 26</td>
+      <td>Fast, SEO, familiar</td>
+      <td>Vue, plain React</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-bugs--issues">🐛 Bugs &amp; Issues</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Resolution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>#001</td>
+      <td>Dec 26</td>
+      <td>No backend exists</td>
+      <td>Open</td>
+      <td>Start tomorrow</td>
+    </tr>
+    <tr>
+      <td>#002</td>
+      <td>Dec 26</td>
+      <td>No API keys</td>
+      <td>Open</td>
+      <td>Use BYOK approach</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-ideas-for-later">💡 Ideas for Later</h3>
+
+<ol>
+  <li><strong>Chrome Extension</strong> - Right-click to harvest any page</li>
+  <li><strong>API Marketplace</strong> - Let users sell their formats</li>
+  <li><strong>Team Workspaces</strong> - Shared templates and content</li>
+  <li><strong>Webhooks</strong> - Notify when generation complete</li>
+  <li><strong>Bulk Operations</strong> - Process multiple URLs at once</li>
+  <li><strong>Schedule Generation</strong> - Daily/weekly content creation</li>
+  <li><strong>Content Monitoring</strong> - Alert when source changes</li>
+  <li><strong>Version Control</strong> - Track content changes over time</li>
+  <li><strong>A/B Testing</strong> - Test different formats</li>
+  <li><strong>White Label</strong> - Let others brand Harvest.ai</li>
+</ol>
+
+<h3 id="-metrics">📈 Metrics</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Project Start</span><span class="pi">:</span> <span class="s">December 26, </span><span class="m">2024</span>
+<span class="na">Total Hours</span><span class="pi">:</span> <span class="m">1</span>
+<span class="na">Lines of Code</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">Documentation</span><span class="pi">:</span> <span class="s">~2500</span>
+  <span class="pi">-</span> <span class="na">Frontend</span><span class="pi">:</span> <span class="s">~400</span>
+  <span class="pi">-</span> <span class="na">Backend</span><span class="pi">:</span> <span class="m">0</span>
+  <span class="pi">-</span> <span class="na">Tests</span><span class="pi">:</span> <span class="m">0</span>
+  
+<span class="na">Files Created</span><span class="pi">:</span> <span class="m">12</span>
+<span class="na">Git Commits</span><span class="pi">:</span> <span class="s">~15</span>
+<span class="na">Features Shipped</span><span class="pi">:</span> <span class="m">0</span>
+<span class="na">Users</span><span class="pi">:</span> <span class="m">0</span>
+<span class="na">Revenue</span><span class="pi">:</span> <span class="s">$0</span>
+</code></pre></div></div>
+
+<h3 id="-success-criteria-progress">🎯 Success Criteria Progress</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Criteria</th>
+      <th>Target</th>
+      <th>Current</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Working MVP</td>
+      <td>4 weeks</td>
+      <td>Day 1</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>First user</td>
+      <td>Week 1</td>
+      <td>0</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>100 generations</td>
+      <td>Week 2</td>
+      <td>0</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>$500 MRR</td>
+      <td>Month 2</td>
+      <td>$0</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>1000 users</td>
+      <td>Month 3</td>
+      <td>0</td>
+      <td>🔴</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-predictions--estimates">🔮 Predictions &amp; Estimates</h2>
+
+<h3 id="optimistic-timeline-everything-goes-right">Optimistic Timeline (Everything goes right)</h3>
+<ul>
+  <li><strong>Day 3:</strong> Basic flow working</li>
+  <li><strong>Week 1:</strong> MVP with 1 format</li>
+  <li><strong>Week 2:</strong> 5 formats, caching</li>
+  <li><strong>Week 3:</strong> Full features</li>
+  <li><strong>Week 4:</strong> Production launch</li>
+</ul>
+
+<h3 id="realistic-timeline-some-issues">Realistic Timeline (Some issues)</h3>
+<ul>
+  <li><strong>Week 1:</strong> Backend working</li>
+  <li><strong>Week 2:</strong> Basic flow complete</li>
+  <li><strong>Week 3:</strong> Core features done</li>
+  <li><strong>Week 4:</strong> Testing &amp; polish</li>
+  <li><strong>Week 5-6:</strong> Production ready</li>
+</ul>
+
+<h3 id="pessimistic-timeline-many-issues">Pessimistic Timeline (Many issues)</h3>
+<ul>
+  <li><strong>Week 1-2:</strong> Still setting up</li>
+  <li><strong>Week 3-4:</strong> Basic features</li>
+  <li><strong>Week 5-6:</strong> Making it work</li>
+  <li><strong>Week 7-8:</strong> Bug fixes</li>
+  <li><strong>Month 3:</strong> Maybe launch</li>
+</ul>
+
+<hr />
+
+<h2 id="-notes--reminders">📝 Notes &amp; Reminders</h2>
+
+<ul>
+  <li><strong>IMPORTANT:</strong> Start building backend tomorrow!</li>
+  <li><strong>REMEMBER:</strong> BYOK validation is critical for trust</li>
+  <li><strong>TODO:</strong> Get OpenAI API key for testing</li>
+  <li><strong>IDEA:</strong> Use QuizMentor’s scraper as starting point</li>
+  <li><strong>WARNING:</strong> Don’t over-engineer, ship MVP fast</li>
+  <li><strong>TIP:</strong> Test with real URLs early</li>
+  <li><strong>NOTE:</strong> Cache aggressively to reduce costs</li>
+  <li><strong>LEARN:</strong> Study Supabase’s website for UI inspiration</li>
+</ul>
+
+<hr />
+
+<p><em>This log is updated daily during active development.</em>
+<em>Honest reflection on progress, no sugarcoating.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: Harvest.ai / status/DEVLOG.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

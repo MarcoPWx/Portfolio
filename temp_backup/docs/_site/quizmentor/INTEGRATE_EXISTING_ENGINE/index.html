@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INTEGRATE EXISTING ENGINE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">INTEGRATE_EXISTING_ENGINE.md</span>
+</div>
+
+<h1>INTEGRATE EXISTING ENGINE</h1>
+
+
+<h1 id="integrating-your-existing-quizmentor-engine-with-nextjs--supabase">Integrating Your Existing QuizMentor Engine with Next.js + Supabase</h1>
+
+<h2 id="-the-challenge">🎯 The Challenge</h2>
+
+<p>You’ve built a sophisticated self-learning engine with:</p>
+<ul>
+  <li><strong>BloomsTaxonomyValidator</strong> - Question classification and validation</li>
+  <li><strong>AdaptiveLearningEngine</strong> - ML-inspired adaptive algorithms</li>
+  <li><strong>SelfLearningOrchestrator</strong> - Coordinates the learning experience</li>
+</ul>
+
+<p>Now we need to deploy this WITHOUT overengineering. Here’s how.</p>
+
+<hr />
+
+<h2 id="-architecture-overview">📊 Architecture Overview</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│      Next.js Frontend (Vercel)          │
+└─────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│    Next.js API Routes (Your Engine)     │
+│  - /api/bloom/validate                  │
+│  - /api/adaptive/adjust                 │
+│  - /api/orchestrator/session            │
+└─────────────────────────────────────────┘
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+┌─────────────┐ ┌─────────┐ ┌─────────────┐
+│  Your TS    │ │Supabase │ │OpenAI (opt) │
+│   Engine    │ │   DB    │ │  for NLP    │
+└─────────────┘ └─────────┘ └─────────────┘
+</code></pre></div></div>
+
+<h2 id="-step-1-adapt-your-services-for-nextjs-api-routes">🔧 Step 1: Adapt Your Services for Next.js API Routes</h2>
+
+<p>Your existing services become API routes. No microservices needed!</p>
+
+<h3 id="file-structure">File Structure</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/
+├── api/
+│   ├── bloom/
+│   │   ├── validate/
+│   │   │   └── route.ts       # POST /api/bloom/validate
+│   │   └── classify/
+│   │       └── route.ts       # POST /api/bloom/classify
+│   ├── adaptive/
+│   │   ├── adjust/
+│   │   │   └── route.ts       # POST /api/adaptive/adjust
+│   │   ├── flow-state/
+│   │   │   └── route.ts       # POST /api/adaptive/flow-state
+│   │   └── recommendations/
+│   │       └── route.ts       # GET /api/adaptive/recommendations
+│   └── orchestrator/
+│       ├── session/
+│       │   └── route.ts       # POST /api/orchestrator/session
+│       └── learning-path/
+│           └── route.ts       # POST /api/orchestrator/learning-path
+└── lib/
+    └── engine/                 # YOUR EXISTING ENGINE CODE
+        ├── bloomsTaxonomyValidator.ts
+        ├── adaptiveLearningEngine.ts
+        └── selfLearningOrchestrator.ts
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-step-2-wrap-your-engine-in-api-routes">🚀 Step 2: Wrap Your Engine in API Routes</h2>
+
+<h3 id="blooms-taxonomy-validator-api">Bloom’s Taxonomy Validator API</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/bloom/validate/route.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">BloomsTaxonomyValidator</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/engine/bloomsTaxonomyValidator</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/server</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">validator</span> <span class="o">=</span> <span class="nx">BloomsTaxonomyValidator</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Get user (for permissions)</span>
+    <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">user</span> <span class="p">}</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getUser</span><span class="p">();</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Unauthorized</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">status</span><span class="p">:</span> <span class="mi">401</span> <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Get question from request</span>
+    <span class="kd">const</span> <span class="nx">question</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+    
+    <span class="c1">// Use your existing validator</span>
+    <span class="kd">const</span> <span class="nx">validation</span> <span class="o">=</span> <span class="nx">validator</span><span class="p">.</span><span class="nx">validateQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+    
+    <span class="c1">// Store validation results in Supabase (optional)</span>
+    <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">question_validations</span><span class="dl">'</span><span class="p">).</span><span class="nx">insert</span><span class="p">({</span>
+      <span class="na">question_id</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">user_id</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">validation_result</span><span class="p">:</span> <span class="nx">validation</span><span class="p">,</span>
+      <span class="na">created_at</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">validation</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Validation error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span>
+      <span class="p">{</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Validation failed</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">status</span><span class="p">:</span> <span class="mi">500</span> <span class="p">}</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Batch validation endpoint</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">PUT</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">questions</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">validator</span> <span class="o">=</span> <span class="nx">BloomsTaxonomyValidator</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">validator</span><span class="p">.</span><span class="nx">validateQuestionSet</span><span class="p">(</span><span class="nx">questions</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">results</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="adaptive-engine-api">Adaptive Engine API</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/adaptive/adjust/route.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">AdaptiveLearningEngine</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/engine/adaptiveLearningEngine</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/server</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">user</span> <span class="p">}</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getUser</span><span class="p">();</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Unauthorized</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">status</span><span class="p">:</span> <span class="mi">401</span> <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">sessionId</span><span class="p">,</span> <span class="nx">performance</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  
+  <span class="c1">// Initialize engine with user data from Supabase</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">profile</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+    <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">profiles</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+  
+  <span class="kd">const</span> <span class="nx">engine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AdaptiveLearningEngine</span><span class="p">({</span>
+    <span class="na">userId</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="na">profile</span><span class="p">:</span> <span class="nx">profile</span>
+  <span class="p">});</span>
+  
+  <span class="c1">// Use your existing adaptive logic</span>
+  <span class="kd">const</span> <span class="nx">adjustments</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">engine</span><span class="p">.</span><span class="nx">adjustDifficulty</span><span class="p">(</span><span class="nx">performance</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">flowState</span> <span class="o">=</span> <span class="nx">engine</span><span class="p">.</span><span class="nx">analyzeFlowState</span><span class="p">(</span><span class="nx">performance</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">recommendations</span> <span class="o">=</span> <span class="nx">engine</span><span class="p">.</span><span class="nx">generateRecommendations</span><span class="p">();</span>
+  
+  <span class="c1">// Store in Supabase</span>
+  <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">learning_sessions</span><span class="dl">'</span><span class="p">).</span><span class="nx">update</span><span class="p">({</span>
+    <span class="na">adaptations</span><span class="p">:</span> <span class="nx">adjustments</span><span class="p">,</span>
+    <span class="na">flow_state</span><span class="p">:</span> <span class="nx">flowState</span><span class="p">,</span>
+    <span class="na">recommendations</span><span class="p">:</span> <span class="nx">recommendations</span>
+  <span class="p">}).</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">sessionId</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
+    <span class="nx">adjustments</span><span class="p">,</span>
+    <span class="nx">flowState</span><span class="p">,</span>
+    <span class="nx">recommendations</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="orchestrator-api">Orchestrator API</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/orchestrator/session/route.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">SelfLearningOrchestrator</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/engine/selfLearningOrchestrator</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/server</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">redis</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/redis</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Optional caching</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">user</span> <span class="p">}</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getUser</span><span class="p">();</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Unauthorized</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">status</span><span class="p">:</span> <span class="mi">401</span> <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">topic</span><span class="p">,</span> <span class="nx">difficulty</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  
+  <span class="c1">// Check cache for existing session</span>
+  <span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="s2">`session:</span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">topic</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">redis</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">cached</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Initialize orchestrator</span>
+  <span class="kd">const</span> <span class="nx">orchestrator</span> <span class="o">=</span> <span class="nx">SelfLearningOrchestrator</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+  
+  <span class="c1">// Generate optimal session using your existing logic</span>
+  <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">orchestrator</span><span class="p">.</span><span class="nx">generateOptimalSession</span><span class="p">(</span>
+    <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="nx">topic</span><span class="p">,</span>
+    <span class="p">{</span> <span class="na">questionCount</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">difficulty</span> <span class="p">}</span>
+  <span class="p">);</span>
+  
+  <span class="c1">// Store in Supabase</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">dbSession</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+    <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">quiz_sessions</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">insert</span><span class="p">({</span>
+      <span class="na">user_id</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">questions</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">questions</span><span class="p">,</span>
+      <span class="na">config</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">sessionParams</span><span class="p">,</span>
+      <span class="na">pedagogical_metadata</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">pedagogicalMetadata</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">select</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+  
+  <span class="c1">// Cache for quick retrieval</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">redis</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">dbSession</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">dbSession</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-step-3-connect-your-engine-to-supabase">💾 Step 3: Connect Your Engine to Supabase</h2>
+
+<p>Modify your engine classes to use Supabase as the data store:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/engine/adaptiveLearningEngine.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/server</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AdaptiveLearningEngine</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">supabase</span><span class="p">;</span>
+  
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">();</span>
+    <span class="c1">// Your existing initialization</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getUserProgress</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Instead of in-memory or file storage, use Supabase</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">learning_progress</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">user_id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">processProgressData</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">saveAdaptation</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">adaptation</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">adaptations</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">insert</span><span class="p">({</span>
+        <span class="na">user_id</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span>
+        <span class="p">...</span><span class="nx">adaptation</span><span class="p">,</span>
+        <span class="na">created_at</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Keep your existing ML algorithms intact</span>
+  <span class="nx">calculateDifficultyAdjustment</span><span class="p">(</span><span class="nx">performance</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="kr">number</span> <span class="p">{</span>
+    <span class="c1">// Your existing logic remains the same</span>
+    <span class="kd">const</span> <span class="nx">momentum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">momentumOptimizer</span><span class="p">.</span><span class="nx">optimize</span><span class="p">(</span><span class="nx">performance</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">applyAdaptiveRate</span><span class="p">(</span><span class="nx">momentum</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-step-4-frontend-integration">🎨 Step 4: Frontend Integration</h2>
+
+<p>Call your engine from React components:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// components/QuizSession.tsx</span>
+<span class="dl">'</span><span class="s1">use client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">QuizSession</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">session</span><span class="p">,</span> <span class="nx">setSession</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">currentQuestion</span><span class="p">,</span> <span class="nx">setCurrentQuestion</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  
+  <span class="c1">// Start session using your orchestrator</span>
+  <span class="kd">const</span> <span class="nx">startSession</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/orchestrator/session</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="na">topic</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mathematics</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">difficulty</span><span class="p">:</span> <span class="mi">3</span>
+      <span class="p">})</span>
+    <span class="p">});</span>
+    
+    <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+    <span class="nx">setSession</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">};</span>
+  
+  <span class="c1">// Submit answer and get adaptation</span>
+  <span class="kd">const</span> <span class="nx">submitAnswer</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">answer</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Validate with Bloom's</span>
+    <span class="kd">const</span> <span class="nx">validation</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/bloom/validate</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="na">question</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">questions</span><span class="p">[</span><span class="nx">currentQuestion</span><span class="p">],</span>
+        <span class="nx">answer</span>
+      <span class="p">})</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Adjust difficulty with adaptive engine</span>
+    <span class="kd">const</span> <span class="nx">adaptation</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/adaptive/adjust</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="na">sessionId</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="na">performance</span><span class="p">:</span> <span class="nx">calculatePerformance</span><span class="p">(</span><span class="nx">answer</span><span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">});</span>
+    
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">adjustments</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">adaptation</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+    
+    <span class="c1">// Apply adjustments to next question</span>
+    <span class="nx">applyAdjustments</span><span class="p">(</span><span class="nx">adjustments</span><span class="p">);</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* Your quiz UI */</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-step-5-deploy-everything-together">🚢 Step 5: Deploy Everything Together</h2>
+
+<h3 id="option-a-vercel-simplest">Option A: Vercel (Simplest)</h3>
+
+<p>Your engine runs as part of the Next.js app:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">package.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"dev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"next dev"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"next build"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"next start"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"@supabase/supabase-js"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^2.39.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"@upstash/redis"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^1.28.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"14.0.4"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Deploy:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vercel
+</code></pre></div></div>
+
+<h3 id="option-b-docker-if-you-need-more-control">Option B: Docker (If you need more control)</h3>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dockerfile</span>
+<span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="c"># Copy your engine and app</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci
+
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm run build
+
+<span class="k">EXPOSE</span><span class="s"> 3000</span>
+<span class="k">CMD</span><span class="s"> ["npm", "start"]</span>
+</code></pre></div></div>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.yml</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">app</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">.</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}</span>
+      <span class="pi">-</span> <span class="s">NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}</span>
+      <span class="pi">-</span> <span class="s">UPSTASH_REDIS_REST_URL=${REDIS_URL}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-step-6-migration-path">🔄 Step 6: Migration Path</h2>
+
+<h3 id="from-your-current-services-to-api-routes">From Your Current Services to API Routes</h3>
+
+<ol>
+  <li><strong>Move service classes to <code class="language-plaintext highlighter-rouge">lib/engine/</code></strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> app/lib/engine
+<span class="nb">cp </span>services/<span class="k">*</span>.ts app/lib/engine/
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Update imports to use Supabase</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before: File/memory storage</span>
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="dl">'</span><span class="s1">data.json</span><span class="dl">'</span><span class="p">);</span>
+   
+<span class="c1">// After: Supabase</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">table</span><span class="dl">'</span><span class="p">).</span><span class="nx">select</span><span class="p">();</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Replace internal HTTP calls with direct function calls</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before: Microservices</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://bloom-validator:3012/validate</span><span class="dl">'</span><span class="p">);</span>
+   
+<span class="c1">// After: Direct import</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">validator</span><span class="p">.</span><span class="nx">validateQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-performance-optimizations">⚡ Performance Optimizations</h2>
+
+<h3 id="1-use-edge-runtime-for-fast-apis">1. Use Edge Runtime for Fast APIs</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/bloom/validate/route.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">runtime</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">edge</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Runs at edge locations</span>
+</code></pre></div></div>
+
+<h3 id="2-cache-heavy-computations">2. Cache Heavy Computations</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="s2">`bloom:</span><span class="p">${</span><span class="nx">questionHash</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">validator</span><span class="p">.</span><span class="nx">validateQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">);</span>
+<span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="3-background-jobs-for-heavy-processing">3. Background Jobs for Heavy Processing</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Use Vercel Cron or Supabase Edge Functions</span>
+<span class="c1">// app/api/cron/process-adaptations/route.ts</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">GET</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Process adaptations in background</span>
+  <span class="k">await</span> <span class="nx">processAdaptationQueue</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">ok</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-what-you-get">🎯 What You Get</h2>
+
+<ol>
+  <li><strong>Your existing engine logic</strong> - Completely preserved</li>
+  <li><strong>Simple deployment</strong> - Just <code class="language-plaintext highlighter-rouge">vercel</code> or <code class="language-plaintext highlighter-rouge">docker compose up</code></li>
+  <li><strong>Built-in auth</strong> - GitHub OAuth via Supabase</li>
+  <li><strong>Database</strong> - PostgreSQL via Supabase</li>
+  <li><strong>Caching</strong> - Optional Redis via Upstash</li>
+  <li><strong>No Kubernetes complexity</strong> - Everything in one Next.js app</li>
+  <li><strong>Cost effective</strong> - Free tier covers most use cases</li>
+</ol>
+
+<hr />
+
+<h2 id="-environment-variables">📝 Environment Variables</h2>
+
+<pre><code class="language-env"># .env.local
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
+
+# Optional: Redis for caching
+UPSTASH_REDIS_REST_URL=https://xxxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=xxxx
+
+# Optional: OpenAI for enhanced NLP
+OPENAI_API_KEY=sk-xxxx
+
+# Your engine config
+BLOOM_CONFIDENCE_THRESHOLD=0.7
+ADAPTIVE_FLOW_THRESHOLD=0.75
+SPACED_REPETITION_ENABLED=true
+</code></pre>
+
+<hr />
+
+<h2 id="-quick-start-commands">🚀 Quick Start Commands</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Create Next.js app</span>
+npx create-next-app@latest quizmentor <span class="nt">--typescript</span> <span class="nt">--tailwind</span> <span class="nt">--app</span>
+
+<span class="c"># 2. Copy your engine</span>
+<span class="nb">cp</span> <span class="nt">-r</span> services/<span class="k">*</span> quizmentor/app/lib/engine/
+
+<span class="c"># 3. Install dependencies</span>
+<span class="nb">cd </span>quizmentor
+npm <span class="nb">install</span> @supabase/supabase-js @supabase/ssr
+
+<span class="c"># 4. Set up Supabase</span>
+<span class="c"># - Create project at supabase.com</span>
+<span class="c"># - Run migrations (copy from our schema)</span>
+<span class="c"># - Enable GitHub auth</span>
+
+<span class="c"># 5. Create API routes wrapping your engine</span>
+
+<span class="c"># 6. Run locally</span>
+npm run dev
+
+<span class="c"># 7. Deploy</span>
+vercel
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-checklist">✅ Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Move engine code to <code class="language-plaintext highlighter-rouge">lib/engine/</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create API routes for each service method</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up Supabase project</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure GitHub OAuth</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update engine to use Supabase instead of file storage</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add caching where needed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy to Vercel</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test end-to-end flow</li>
+</ul>
+
+<hr />
+
+<p><strong>The Bottom Line</strong>: Your sophisticated engine doesn’t need microservices. It runs beautifully as part of a Next.js app with Supabase handling the infrastructure complexity!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / INTEGRATE_EXISTING_ENGINE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

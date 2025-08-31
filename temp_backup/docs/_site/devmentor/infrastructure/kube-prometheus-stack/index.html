@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kube-prometheus-stack | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/kube-prometheus-stack.md</span>
+</div>
+
+<h1>kube-prometheus-stack</h1>
+
+
+<h1 id="runbook-kubernetes-monitoring-with-kube-prometheus-stack-prometheus-grafana-alertmanager">Runbook: Kubernetes Monitoring with kube-prometheus-stack (Prometheus, Grafana, Alertmanager)</h1>
+
+<p>This runbook installs and operates a full monitoring stack locally (kind/minikube) or in any Kubernetes cluster using the kube-prometheus-stack Helm chart.</p>
+
+<p>Audience: Developers and operators running local or dev clusters.</p>
+
+<p>Prereqs:</p>
+<ul>
+  <li>Kubernetes cluster running (e.g., kind, minikube, k3d, or remote cluster)</li>
+  <li>kubectl configured for the target cluster</li>
+  <li>Helm v3 installed</li>
+</ul>
+
+<p>Sections</p>
+<ul>
+  <li>Status snapshot &amp; links</li>
+  <li>Quick CLI (obs) and Logs Helper</li>
+  <li>Install/Upgrade</li>
+  <li>Apply overlay (kustomize)</li>
+  <li>Access (Port-forward)</li>
+  <li>Grafana Credentials</li>
+  <li>Customize via values.yaml</li>
+  <li>Integrations (Istio, Kiali)</li>
+  <li>Verification</li>
+  <li>Troubleshooting</li>
+  <li>Uninstall</li>
+  <li>How this ties into Epic Management and System Status</li>
+  <li>TODOs / Next actions</li>
+</ul>
+
+<hr />
+
+<h2 id="status-snapshot--links-last-reviewed-2025-08-23">Status snapshot &amp; links (Last reviewed: 2025-08-23)</h2>
+
+<ul>
+  <li>Current repo components:
+    <ul>
+      <li>Helm values: infrastructure/observability/values.kube-prom-stack.yaml</li>
+      <li>Overlay: infrastructure/observability/ (kustomization, Istio monitors, PrometheusRule)</li>
+      <li>CLI helpers: scripts/obs (observability CLI), scripts/port-forward-observability.sh</li>
+    </ul>
+  </li>
+  <li>Known mismatches to be aware of:
+    <ul>
+      <li>Port-forward service names vary between docs and scripts. This runbook prefers kube-prometheus-stack-prometheus and kube-prometheus-stack-alertmanager; scripts may use the operator-created prometheus-operated and alertmanager-operated services. Use whichever exists in your cluster.</li>
+      <li>Kustomize may block external file paths referenced by configMapGenerator. If so, use the manual ConfigMap approach documented below or restructure the overlay to be self-contained.</li>
+    </ul>
+  </li>
+  <li>Where this fits:
+    <ul>
+      <li>Epic tracker: docs/status/EPIC_MANAGEMENT.md (see EPIC-OBS: Observability &amp; Monitoring Integration)</li>
+      <li>System status snapshots: system_status.md and CLUSTER_STATUS_REPORT.md</li>
+      <li>Monitoring overview: docs/monitoring/README.md</li>
+      <li>Recent work log: docs/devlog/2025-08-21-monitoring-istio-setup.md</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="quick-cli-obs-and-logs-helper">Quick CLI (obs) and Logs Helper</h2>
+
+<p>To make monitoring tasks easy, this repo includes:</p>
+<ul>
+  <li>scripts/obs — lightweight observability CLI wrapper</li>
+  <li>scripts/dev-logs.sh — colorful, multi-source logs for Docker and Kubernetes</li>
+</ul>
+
+<p>Install aliases and permissions:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x scripts/obs scripts/dev-logs.sh
+<span class="c"># Optional: add a shell alias for convenience (zsh)</span>
+<span class="nb">echo</span> <span class="s2">"alias obs=</span><span class="se">\"</span><span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span><span class="s2">/scripts/obs</span><span class="se">\"</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> ~/.zshrc <span class="o">&amp;&amp;</span> <span class="nb">source</span> ~/.zshrc
+</code></pre></div></div>
+
+<p>Common usage:</p>
+<ul>
+  <li>Status: obs status -n monitoring</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Port-forward UIs: obs pf prom</td>
+          <td>obs pf grafana</td>
+          <td>obs pf am</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>K8s logs (namespace devmentor, past 10m): obs logs k8s -n devmentor –since 10m</li>
+  <li>Include all containers (sidecars): obs logs k8s -n devmentor –since 10m –containers</li>
+  <li>Docker logs only: obs logs docker –since 15m</li>
+  <li>Both Kubernetes and Docker: obs logs both -n devmentor –since 10m</li>
+  <li>Filter pods by label: obs logs k8s -n devmentor -l app=ai-gateway</li>
+</ul>
+
+<h2 id="install--upgrade">Install / Upgrade</h2>
+
+<p>Recommended: use kube-prometheus-stack with a small overlay that wires Istio monitors, custom alert rules, and Grafana dashboards.</p>
+
+<p>Repo and chart:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+</code></pre></div></div>
+
+<p>Install with repo values file in this repo:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># uses infrastructure/observability/values.kube-prom-stack.yaml</span>
+helm upgrade <span class="nt">--install</span> kube-prometheus-stack prometheus-community/kube-prometheus-stack <span class="se">\</span>
+  <span class="nt">-n</span> monitoring <span class="nt">--create-namespace</span> <span class="se">\</span>
+  <span class="nt">-f</span> infrastructure/observability/values.kube-prom-stack.yaml
+</code></pre></div></div>
+
+<p>If you need to override secrets (like Grafana admin password), set them via –set or pre-create a Secret. Avoid committing secrets to Git.</p>
+
+<h2 id="apply-overlay-kustomize">Apply overlay (kustomize)</h2>
+
+<p>Apply the repo overlay that supplies Istio monitors, custom alert rules, and Grafana dashboards/datasources:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-k</span> infrastructure/observability
+</code></pre></div></div>
+
+<p>File map:</p>
+<ul>
+  <li>infrastructure/observability/kustomization.yaml — generators and resources</li>
+  <li>infrastructure/observability/values.kube-prom-stack.yaml — Helm values for the chart</li>
+  <li>infrastructure/observability/prometheusrules/devmentor-rules.yaml — alert rules</li>
+  <li>infrastructure/observability/istio-monitors.yaml — ServiceMonitor/PodMonitor for Istio</li>
+  <li>configs/grafana-dashboards/*.json — your dashboards</li>
+  <li>config/grafana/provisioning/datasources/datasources.yml — Prometheus datasource</li>
+</ul>
+
+<p>Editing/adding dashboards:</p>
+<ul>
+  <li>Drop a new dashboard JSON into configs/grafana-dashboards/ and re-apply the overlay:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-k</span> infrastructure/observability
+</code></pre></div></div>
+
+<p>Alternative: Manual apply if kustomize path guardrails block external files</p>
+<ul>
+  <li>Create ConfigMaps from files and label them so Grafana sidecar picks them up:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dashboards</span>
+kubectl <span class="nt">-n</span> monitoring create configmap grafana-dashboards <span class="se">\</span>
+  <span class="nt">--from-file</span><span class="o">=</span>configs/grafana-dashboards/devmentor-fixed.json <span class="se">\</span>
+  <span class="nt">--from-file</span><span class="o">=</span>configs/grafana-dashboards/devmentor-overview.json <span class="se">\</span>
+  <span class="nt">--dry-run</span><span class="o">=</span>client <span class="nt">-o</span> yaml | kubectl <span class="nt">-n</span> monitoring apply <span class="nt">-f</span> -
+
+kubectl <span class="nt">-n</span> monitoring label configmap grafana-dashboards <span class="nv">grafana_dashboard</span><span class="o">=</span>1 <span class="nt">--overwrite</span>
+
+<span class="c"># Datasources</span>
+kubectl <span class="nt">-n</span> monitoring create configmap grafana-datasources <span class="se">\</span>
+  <span class="nt">--from-file</span><span class="o">=</span>config/grafana/provisioning/datasources/datasources.yml <span class="se">\</span>
+  <span class="nt">--dry-run</span><span class="o">=</span>client <span class="nt">-o</span> yaml | kubectl <span class="nt">-n</span> monitoring apply <span class="nt">-f</span> -
+
+kubectl <span class="nt">-n</span> monitoring label configmap grafana-datasources <span class="nv">grafana_datasource</span><span class="o">=</span>1 <span class="nt">--overwrite</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Apply Istio monitors and custom rules directly if needed:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> infrastructure/observability/istio-monitors.yaml
+kubectl apply <span class="nt">-f</span> infrastructure/observability/prometheusrules/devmentor-rules.yaml
+</code></pre></div></div>
+
+<h2 id="access-port-forward">Access (Port-forward)</h2>
+
+<p>Prometheus (http://localhost:9090):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> monitoring port-forward svc/kube-prometheus-stack-prometheus 9090:9090
+<span class="c"># or, if your cluster exposes the operator service:</span>
+<span class="c"># kubectl -n monitoring port-forward svc/prometheus-operated 9090:9090</span>
+</code></pre></div></div>
+
+<p>Grafana (http://localhost:3000):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> monitoring port-forward svc/kube-prometheus-stack-grafana 3000:80
+</code></pre></div></div>
+
+<p>Alertmanager (http://localhost:9093):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> monitoring port-forward svc/kube-prometheus-stack-alertmanager 9093:9093
+<span class="c"># or:</span>
+<span class="c"># kubectl -n monitoring port-forward svc/alertmanager-operated 9093:9093</span>
+</code></pre></div></div>
+
+<h2 id="grafana-credentials">Grafana Credentials</h2>
+
+<p>Username: <code class="language-plaintext highlighter-rouge">admin</code></p>
+
+<p>Password: stored in a Kubernetes Secret named <code class="language-plaintext highlighter-rouge">kube-prometheus-stack-grafana</code>.</p>
+
+<p>macOS (base64 -D):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">GRAFANA_PASS</span><span class="o">=</span><span class="si">$(</span>kubectl <span class="nt">-n</span> monitoring get secret kube-prometheus-stack-grafana <span class="nt">-o</span> <span class="se">\</span>
+  <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.admin-password}'</span> | <span class="nb">base64</span> <span class="nt">-D</span><span class="si">)</span>
+</code></pre></div></div>
+
+<p>Linux (GNU base64 -d):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">GRAFANA_PASS</span><span class="o">=</span><span class="si">$(</span>kubectl <span class="nt">-n</span> monitoring get secret kube-prometheus-stack-grafana <span class="nt">-o</span> <span class="se">\</span>
+  <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.admin-password}'</span> | <span class="nb">base64</span> <span class="nt">-d</span><span class="si">)</span>
+</code></pre></div></div>
+
+<p>Then log in to Grafana at http://localhost:3000 with:</p>
+<ul>
+  <li>username: <code class="language-plaintext highlighter-rouge">admin</code></li>
+  <li>password: the value stored in <code class="language-plaintext highlighter-rouge">$GRAFANA_PASS</code></li>
+</ul>
+
+<p>Note: Avoid echoing secrets to the terminal. Use the variable in commands as needed.</p>
+
+<h2 id="customize-via-valuesyaml">Customize via values.yaml</h2>
+
+<p>Create a <code class="language-plaintext highlighter-rouge">values.yaml</code> to tailor storage, retention, resource requests, and data sources. Minimal example:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">global</span><span class="pi">:</span>
+  <span class="na">rbac</span><span class="pi">:</span>
+    <span class="na">create</span><span class="pi">:</span> <span class="no">true</span>
+
+<span class="na">grafana</span><span class="pi">:</span>
+  <span class="na">adminPassword</span><span class="pi">:</span> <span class="s2">"</span><span class="s">change-me"</span>           <span class="c1"># set your own</span>
+  <span class="na">service</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">ClusterIP</span>                     <span class="c1"># ClusterIP works for kind/minikube</span>
+  <span class="na">persistence</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">size</span><span class="pi">:</span> <span class="s">5Gi</span>
+  <span class="na">additionalDataSources</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Loki</span>
+      <span class="na">type</span><span class="pi">:</span> <span class="s">loki</span>
+      <span class="na">url</span><span class="pi">:</span> <span class="s">http://loki:3100</span>            <span class="c1"># example if you add Loki later</span>
+
+<span class="na">prometheus</span><span class="pi">:</span>
+  <span class="na">prometheusSpec</span><span class="pi">:</span>
+    <span class="na">retention</span><span class="pi">:</span> <span class="s">15d</span>
+    <span class="na">resources</span><span class="pi">:</span>
+      <span class="na">requests</span><span class="pi">:</span>
+        <span class="na">cpu</span><span class="pi">:</span> <span class="s">200m</span>
+        <span class="na">memory</span><span class="pi">:</span> <span class="s">1Gi</span>
+    <span class="na">storageSpec</span><span class="pi">:</span>
+      <span class="na">volumeClaimTemplate</span><span class="pi">:</span>
+        <span class="na">spec</span><span class="pi">:</span>
+          <span class="na">accessModes</span><span class="pi">:</span> <span class="pi">[</span> <span class="s2">"</span><span class="s">ReadWriteOnce"</span> <span class="pi">]</span>
+          <span class="na">resources</span><span class="pi">:</span>
+            <span class="na">requests</span><span class="pi">:</span>
+              <span class="na">storage</span><span class="pi">:</span> <span class="s">20Gi</span>
+
+<span class="na">alertmanager</span><span class="pi">:</span>
+  <span class="na">alertmanagerSpec</span><span class="pi">:</span>
+    <span class="na">resources</span><span class="pi">:</span>
+      <span class="na">requests</span><span class="pi">:</span>
+        <span class="na">cpu</span><span class="pi">:</span> <span class="s">100m</span>
+        <span class="na">memory</span><span class="pi">:</span> <span class="s">256Mi</span>
+</code></pre></div></div>
+
+<p>Apply with:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm upgrade <span class="nt">--install</span> monitoring prometheus-community/kube-prometheus-stack <span class="se">\</span>
+  <span class="nt">-n</span> monitoring <span class="nt">-f</span> values.yaml <span class="nt">--create-namespace</span>
+</code></pre></div></div>
+
+<h2 id="integrations-istio-kiali">Integrations (Istio, Kiali)</h2>
+
+<ul>
+  <li>kube-prometheus-stack includes Prometheus Operator and supports ServiceMonitor/PodMonitor CRs.</li>
+  <li>This repo ships a kustomize overlay at infrastructure/observability that applies:
+    <ul>
+      <li>Istio PodMonitor and ServiceMonitor (copied from Istio samples) so Prometheus scrapes Envoy and control-plane metrics</li>
+      <li>A PrometheusRule (infrastructure/observability/prometheusrules/devmentor-rules.yaml) with DevMentor and system alerts</li>
+      <li>Grafana dashboards and datasources via ConfigMap generators with labels Grafana’s sidecar watches</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Apply the overlay any time after installing the chart:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-k</span> infrastructure/observability
+</code></pre></div></div>
+
+<ul>
+  <li>Kiali:
+    <ul>
+      <li>Configure to point to this Prometheus:
+<code class="language-plaintext highlighter-rouge">kiali external_services.prometheus.url = http://kube-prometheus-stack-prometheus.monitoring:9090</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="verification">Verification</h2>
+
+<ul>
+  <li>Prometheus: Status → Targets
+    <ul>
+      <li>Expect kubelet, apiserver, cAdvisor, kube-state-metrics, node-exporter, Istio targets (envoy-stats, istio-component-monitor)</li>
+    </ul>
+  </li>
+  <li>Prometheus: Status → Rules
+    <ul>
+      <li>Look for groups devmentor-service-alerts and system-health (from devmentor-rules)</li>
+    </ul>
+  </li>
+  <li>Grafana: built-in dashboards + DevMentor dashboards
+    <ul>
+      <li>DevMentor dashboards are loaded from the grafana-dashboards ConfigMap via sidecar</li>
+    </ul>
+  </li>
+  <li>Alertmanager: active/silenced alerts</li>
+</ul>
+
+<p>Alerting flow:</p>
+<ul>
+  <li>Prometheus evaluates alerting rules in rule_files</li>
+  <li>Sends firing alerts to Alertmanager (alerting &gt; alertmanagers in prometheus.yml)</li>
+  <li>Alertmanager groups/routes/silences/deduplicates and delivers to receivers (email/Slack/webhook)</li>
+  <li>Grafana can visualize alerts; if using Grafana Alerting, choose one system of record to avoid duplication</li>
+</ul>
+
+<p>Sorting alerts:</p>
+<ul>
+  <li>Prometheus UI: limited grouping; use label filters to narrow</li>
+  <li>Use Alertmanager UI for triage (group_by, receivers, silences) or Grafana Alerting views</li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>Minimal working examples</p>
+
+<p>Prometheus rule (High CPU):</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">groups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-service-alerts</span>
+    <span class="na">rules</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">HighCPUUsage</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">sum(rate(container_cpu_usage_seconds_total{namespace="devmentor"}[5m])) by (pod) &gt; </span><span class="m">1.5</span>
+        <span class="na">for</span><span class="pi">:</span> <span class="s">5m</span>
+        <span class="na">labels</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">warning</span>
+          <span class="na">team</span><span class="pi">:</span> <span class="s">platform</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">High</span><span class="nv"> </span><span class="s">CPU</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}"</span>
+          <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">CPU</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">1.5</span><span class="nv"> </span><span class="s">cores</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">5m</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">namespace</span><span class="nv"> </span><span class="s">devmentor."</span>
+</code></pre></div></div>
+
+<p>Prometheus -&gt; Alertmanager (prometheus.yml):</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">alerting</span><span class="pi">:</span>
+  <span class="na">alertmanagers</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">static_configs</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">targets</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">alertmanager.monitoring.svc.cluster.local:9093</span>
+<span class="na">rule_files</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">/etc/prometheus/rules/*.yml</span>
+</code></pre></div></div>
+
+<p>Alertmanager route/receiver (alertmanager.yml):</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">route</span><span class="pi">:</span>
+  <span class="na">receiver</span><span class="pi">:</span> <span class="s">default</span>
+  <span class="na">group_by</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">alertname'</span><span class="pi">,</span><span class="s1">'</span><span class="s">namespace'</span><span class="pi">]</span>
+  <span class="na">group_wait</span><span class="pi">:</span> <span class="s">30s</span>
+  <span class="na">group_interval</span><span class="pi">:</span> <span class="s">5m</span>
+  <span class="na">repeat_interval</span><span class="pi">:</span> <span class="s">4h</span>
+  <span class="na">routes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">matchers</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">severity="critical"</span>
+      <span class="na">receiver</span><span class="pi">:</span> <span class="s">pager</span>
+<span class="na">receivers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+    <span class="na">webhook_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">url</span><span class="pi">:</span> <span class="s">http://monitoring-service.devmentor.svc.cluster.local:3006/api/alerts</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">pager</span>
+    <span class="na">email_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">to</span><span class="pi">:</span> <span class="s">your-oncall@example.com</span>
+<span class="na">inhibit_rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">source_matchers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">severity="critical"</span><span class="pi">]</span>
+    <span class="na">target_matchers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">severity="warning"</span><span class="pi">]</span>
+    <span class="na">equal</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">alertname'</span><span class="pi">,</span><span class="s1">'</span><span class="s">namespace'</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<ul>
+  <li>zsh: parse error near `)’
+    <ul>
+      <li>You likely pasted commentary or YAML into the shell or an unmatched <code class="language-plaintext highlighter-rouge">)</code>.</li>
+      <li>Only paste commands in code fences above. Put YAML into files, not the terminal.</li>
+    </ul>
+  </li>
+  <li>Port-forward not connecting
+    <ul>
+      <li>Ensure pods are Ready: <code class="language-plaintext highlighter-rouge">kubectl -n monitoring get pods</code></li>
+      <li>Check service names match those used above: <code class="language-plaintext highlighter-rouge">kubectl -n monitoring get svc</code></li>
+    </ul>
+  </li>
+  <li>PVCs pending on kind/minikube
+    <ul>
+      <li>Confirm a default StorageClass: <code class="language-plaintext highlighter-rouge">kubectl get storageclass</code></li>
+      <li>For LoadBalancer needs on local clusters, consider MetalLB; otherwise use port-forward or NodePort.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="uninstall--cleanup">Uninstall / Cleanup</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Remove overlayed resources (non-namespaced generators are handled by ns deletion)</span>
+kubectl delete <span class="nt">-k</span> infrastructure/observability <span class="o">||</span> <span class="nb">true</span>
+
+<span class="c"># Remove the chart release and namespace</span>
+helm uninstall monitoring <span class="nt">-n</span> monitoring <span class="o">||</span> <span class="nb">true
+</span>kubectl delete ns monitoring <span class="nt">--wait</span><span class="o">=</span><span class="nb">false</span> <span class="o">||</span> <span class="nb">true</span>
+</code></pre></div></div>
+
+<p>That’s it. With this, you have a production-style monitoring stack that’s easy to run locally. Adjust values.yaml for persistence, retention, and resource needs.</p>
+
+<h2 id="how-this-runbook-ties-into-epic-management-and-system-status">How this runbook ties into Epic Management and System Status</h2>
+
+<ul>
+  <li>Epic status:
+    <ul>
+      <li>Use this runbook to complete EPIC-OBS tasks in docs/status/EPIC_MANAGEMENT.md: install the stack, apply overlay, port-forward, wire dashboards, configure alerts.</li>
+      <li>After verifying targets and rules, update the Service Readiness Checklist in that file.</li>
+    </ul>
+  </li>
+  <li>System snapshots:
+    <ul>
+      <li>After verification, update system_status.md and CLUSTER_STATUS_REPORT.md with a brief summary (targets up, dashboards loaded, alerts firing).</li>
+      <li>Log changes in docs/status/devlog.md.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="todos--next-actions">TODOs / Next actions</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Restructure the observability overlay to be self-contained for kustomize or keep script-based ConfigMap apply as the standard.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Standardize port-forward service names across docs and scripts; prefer kube-prometheus-stack-{prometheus,alertmanager}.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure Alertmanager receivers (Slack/email/webhook) and document them here.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add ServiceMonitor/PodMonitor resources for application services in devmentor[-app] if not using Istio scrape labels.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Confirm devmentor-rules.yaml groups appear in Prometheus (Status -&gt; Rules) and alerts reach Alertmanager.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Optional: add Loki and Jaeger datasources and document log/trace access.</li>
+</ul>
+
+<p>Runbook version: v2025-08-23</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/kube-prometheus-stack.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

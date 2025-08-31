@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CONCURRENCY AND LOCKING PATTERNS | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">Harvest.ai</span> / 
+  <span style="color: #999;">architecture/CONCURRENCY_AND_LOCKING_PATTERNS.md</span>
+</div>
+
+<h1>CONCURRENCY AND LOCKING PATTERNS</h1>
+
+
+<h1 id="-concurrency--resource-management-patterns">🔒 CONCURRENCY &amp; RESOURCE MANAGEMENT PATTERNS</h1>
+
+<p><strong>Purpose:</strong> Handle thousands of concurrent operations safely and efficiently<br />
+<strong>Focus:</strong> Locking, claiming, resource pools, and coordination patterns</p>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+  <li><a href="#core-locking-patterns">Core Locking Patterns</a></li>
+  <li><a href="#resource-pool-management">Resource Pool Management</a></li>
+  <li><a href="#work-queue-patterns">Work Queue Patterns</a></li>
+  <li><a href="#distributed-coordination">Distributed Coordination</a></li>
+  <li><a href="#production-implementation">Production Implementation</a></li>
+</ol>
+
+<hr />
+
+<h2 id="-core-locking-patterns">🔐 Core Locking Patterns</h2>
+
+<h3 id="1-distributed-lock-with-redis">1. Distributed Lock with Redis</h3>
+
+<h4 id="what-is-it">What is it?</h4>
+<p>Ensures only one process/thread can access a resource at a time across multiple servers.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thread A ──┐
+Thread B ──┼──▶ [Try Acquire Lock] ──▶ [Redis] ──▶ [Process Resource]
+Thread C ──┘         │                              │
+                     ▼                              ▼
+                  [Wait/Retry]                  [Release Lock]
+</code></pre></div></div>
+
+<h4 id="implementation">Implementation:</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">redis.asyncio</span> <span class="k">as</span> <span class="n">redis</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">asynccontextmanager</span>
+
+<span class="k">class</span> <span class="nc">DistributedLock</span><span class="p">:</span>
+    <span class="s">"""Redis-based distributed lock with auto-renewal"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_client</span><span class="p">:</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis_client</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"lock:</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="n">ttl</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">token</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="p">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">_renewal_task</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""Acquire the lock"""</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># Try to set lock with NX (only if not exists)
+</span>            <span class="n">acquired</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="p">.</span><span class="n">token</span><span class="p">,</span>
+                <span class="n">nx</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>  <span class="c1"># Only set if not exists
+</span>                <span class="n">ex</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">ttl</span>  <span class="c1"># Expire after TTL seconds
+</span>            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">acquired</span><span class="p">:</span>
+                <span class="c1"># Start auto-renewal
+</span>                <span class="bp">self</span><span class="p">.</span><span class="n">_renewal_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_auto_renew</span><span class="p">())</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">blocking</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            
+            <span class="c1"># Check timeout
+</span>            <span class="k">if</span> <span class="n">timeout</span> <span class="ow">and</span> <span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            
+            <span class="c1"># Wait before retry
+</span>            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""Release the lock if we own it"""</span>
+        <span class="c1"># Stop auto-renewal
+</span>        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">_renewal_task</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">_renewal_task</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span>
+        
+        <span class="c1"># Use Lua script for atomic check-and-delete
+</span>        <span class="n">lua_script</span> <span class="o">=</span> <span class="s">"""
+        if redis.call("get", KEYS[1]) == ARGV[1] then
+            return redis.call("del", KEYS[1])
+        else
+            return 0
+        end
+        """</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span>
+            <span class="n">lua_script</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>  <span class="c1"># Number of keys
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span>  <span class="c1"># KEYS[1]
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">token</span>  <span class="c1"># ARGV[1]
+</span>        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_auto_renew</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Auto-renew lock while held"""</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Renew at 1/3 TTL
+</span>                
+                <span class="c1"># Check if we still own the lock and renew
+</span>                <span class="n">lua_script</span> <span class="o">=</span> <span class="s">"""
+                if redis.call("get", KEYS[1]) == ARGV[1] then
+                    return redis.call("expire", KEYS[1], ARGV[2])
+                else
+                    return 0
+                end
+                """</span>
+                
+                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span>
+                    <span class="n">lua_script</span><span class="p">,</span>
+                    <span class="mi">1</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">token</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">ttl</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">CancelledError</span><span class="p">:</span>
+                <span class="k">break</span>
+    
+    <span class="o">@</span><span class="n">asynccontextmanager</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">lock_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="s">"""Context manager for lock"""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">acquired</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">blocking</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">acquired</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">LockAcquisitionError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Could not acquire lock </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="bp">self</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>
+
+<span class="c1"># Usage
+</span><span class="n">redis_client</span> <span class="o">=</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">.</span><span class="n">from_url</span><span class="p">(</span><span class="s">"redis://localhost"</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">process_resource</span><span class="p">(</span><span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">DistributedLock</span><span class="p">(</span><span class="n">redis_client</span><span class="p">,</span> <span class="sa">f</span><span class="s">"resource:</span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">with</span> <span class="n">lock</span><span class="p">.</span><span class="n">lock_context</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="c1"># Critical section - only one thread/process can be here
+</span>        <span class="k">await</span> <span class="n">process_expensive_operation</span><span class="p">(</span><span class="n">resource_id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-semaphore-for-rate-limiting">2. Semaphore for Rate Limiting</h3>
+
+<h4 id="what-is-it-1">What is it?</h4>
+<p>Limits the number of concurrent operations.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DistributedSemaphore</span><span class="p">:</span>
+    <span class="s">"""Distributed semaphore for rate limiting"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_client</span><span class="p">:</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_permits</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis_client</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"semaphore:</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">max_permits</span> <span class="o">=</span> <span class="n">max_permits</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">permit_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="p">.</span><span class="n">uuid4</span><span class="p">())</span>
+        
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""Acquire permits from semaphore"""</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># Get current permit count
+</span>            <span class="n">current</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zcard</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">current</span> <span class="o">+</span> <span class="n">permits</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="p">.</span><span class="n">max_permits</span><span class="p">:</span>
+                <span class="c1"># Add our permits with timestamp score
+</span>                <span class="n">pipe</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">pipeline</span><span class="p">()</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+                
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">permits</span><span class="p">):</span>
+                    <span class="n">member</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">permit_id</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s">"</span>
+                    <span class="n">pipe</span><span class="p">.</span><span class="n">zadd</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span> <span class="p">{</span><span class="n">member</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">})</span>
+                
+                <span class="n">pipe</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Clean up after 1 hour
+</span>                <span class="k">await</span> <span class="n">pipe</span><span class="p">.</span><span class="n">execute</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            
+            <span class="k">if</span> <span class="n">timeout</span> <span class="ow">and</span> <span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            
+            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="s">"""Release permits back to semaphore"""</span>
+        <span class="c1"># Remove oldest permits matching our ID
+</span>        <span class="n">members</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zrange</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">member</span><span class="p">.</span><span class="n">decode</span><span class="p">().</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">permit_id</span><span class="p">):</span>
+                <span class="n">to_remove</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_remove</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">permits</span><span class="p">:</span>
+                    <span class="k">break</span>
+        
+        <span class="k">if</span> <span class="n">to_remove</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zrem</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">to_remove</span><span class="p">)</span>
+
+<span class="c1"># Usage - Limit to 10 concurrent API calls
+</span><span class="n">api_semaphore</span> <span class="o">=</span> <span class="n">DistributedSemaphore</span><span class="p">(</span><span class="n">redis_client</span><span class="p">,</span> <span class="s">"api_calls"</span><span class="p">,</span> <span class="n">max_permits</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">call_api_with_limit</span><span class="p">():</span>
+    <span class="k">if</span> <span class="k">await</span> <span class="n">api_semaphore</span><span class="p">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">make_api_call</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">api_semaphore</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-resource-pool-management">💼 Resource Pool Management</h2>
+
+<h3 id="3-resource-claimrelease-system">3. Resource Claim/Release System</h3>
+
+<h4 id="what-is-it-2">What is it?</h4>
+<p>Manages a pool of resources (API keys, connections, etc.) that can be claimed and released.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ResourcePool</span><span class="p">:</span>
+    <span class="s">"""Manages a pool of claimable resources"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_client</span><span class="p">:</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">,</span> <span class="n">pool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis_client</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pool_name</span> <span class="o">=</span> <span class="n">pool_name</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">available_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"pool:</span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s">:available"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">claimed_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"pool:</span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s">:claimed"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">stats_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"pool:</span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s">:stats"</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="s">"""Add a resource to the pool"""</span>
+        <span class="n">resource_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'id'</span><span class="p">:</span> <span class="n">resource_id</span><span class="p">,</span>
+            <span class="s">'metadata'</span><span class="p">:</span> <span class="n">metadata</span> <span class="ow">or</span> <span class="p">{},</span>
+            <span class="s">'added_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="p">}</span>
+        
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">sadd</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">available_key</span><span class="p">,</span> <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">resource_data</span><span class="p">))</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hincrby</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">stats_key</span><span class="p">,</span> <span class="s">'total_resources'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">claim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                   <span class="n">claimer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                   <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+                   <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                   <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="s">"""Claim a resource from the pool"""</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># Pop from available pool
+</span>            <span class="n">resource_json</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">spop</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">available_key</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">resource_json</span><span class="p">:</span>
+                <span class="n">resource</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resource_json</span><span class="p">)</span>
+                
+                <span class="c1"># Add to claimed set with expiry
+</span>                <span class="n">claim_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s">'resource'</span><span class="p">:</span> <span class="n">resource</span><span class="p">,</span>
+                    <span class="s">'claimer_id'</span><span class="p">:</span> <span class="n">claimer_id</span><span class="p">,</span>
+                    <span class="s">'claimed_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">(),</span>
+                    <span class="s">'expires_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">duration</span>
+                <span class="p">}</span>
+                
+                <span class="n">claim_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">claimed_key</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">resource</span><span class="p">[</span><span class="s">'id'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">setex</span><span class="p">(</span>
+                    <span class="n">claim_key</span><span class="p">,</span>
+                    <span class="n">duration</span><span class="p">,</span>
+                    <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">claim_data</span><span class="p">)</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Update stats
+</span>                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hincrby</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">stats_key</span><span class="p">,</span> <span class="s">'claims'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                
+                <span class="c1"># Start heartbeat for auto-renewal
+</span>                <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">_heartbeat</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span> <span class="n">claimer_id</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+                <span class="p">)</span>
+                
+                <span class="k">return</span> <span class="n">resource</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">wait</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">None</span>
+            
+            <span class="k">if</span> <span class="n">timeout</span> <span class="ow">and</span> <span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">None</span>
+            
+            <span class="c1"># Wait for resource to become available
+</span>            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">claimer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""Release a claimed resource"""</span>
+        <span class="n">claim_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">claimed_key</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s">"</span>
+        
+        <span class="c1"># Verify ownership
+</span>        <span class="n">claim_data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">claim_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">claim_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        
+        <span class="n">claim</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">claim_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">claim</span><span class="p">[</span><span class="s">'claimer_id'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">claimer_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        
+        <span class="c1"># Return to available pool
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">sadd</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">available_key</span><span class="p">,</span>
+            <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">claim</span><span class="p">[</span><span class="s">'resource'</span><span class="p">])</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Remove from claimed
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">claim_key</span><span class="p">)</span>
+        
+        <span class="c1"># Update stats
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hincrby</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">stats_key</span><span class="p">,</span> <span class="s">'releases'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">True</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">claimer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="s">"""Keep claim alive with heartbeat"""</span>
+        <span class="n">claim_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">claimed_key</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s">"</span>
+        
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">duration</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+            
+            <span class="c1"># Check if still claimed by us
+</span>            <span class="n">claim_data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">claim_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">claim_data</span><span class="p">:</span>
+                <span class="k">break</span>
+            
+            <span class="n">claim</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">claim_data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">claim</span><span class="p">[</span><span class="s">'claimer_id'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">claimer_id</span><span class="p">:</span>
+                <span class="k">break</span>
+            
+            <span class="c1"># Extend expiry
+</span>            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="n">claim_key</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="s">"""Get pool statistics"""</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hgetall</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">stats_key</span><span class="p">)</span>
+        <span class="n">available_count</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">scard</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">available_key</span><span class="p">)</span>
+        
+        <span class="c1"># Count claimed resources
+</span>        <span class="n">claimed_pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">claimed_key</span><span class="si">}</span><span class="s">:*"</span>
+        <span class="n">claimed_keys</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">keys</span><span class="p">(</span><span class="n">claimed_pattern</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'total_resources'</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">stats</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="sa">b</span><span class="s">'total_resources'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="s">'available'</span><span class="p">:</span> <span class="n">available_count</span><span class="p">,</span>
+            <span class="s">'claimed'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">claimed_keys</span><span class="p">),</span>
+            <span class="s">'total_claims'</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">stats</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="sa">b</span><span class="s">'claims'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="s">'total_releases'</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">stats</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="sa">b</span><span class="s">'releases'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="p">}</span>
+
+<span class="c1"># Usage Example - API Key Pool
+</span><span class="n">api_key_pool</span> <span class="o">=</span> <span class="n">ResourcePool</span><span class="p">(</span><span class="n">redis_client</span><span class="p">,</span> <span class="s">"api_keys"</span><span class="p">)</span>
+
+<span class="c1"># Add API keys to pool
+</span><span class="k">await</span> <span class="n">api_key_pool</span><span class="p">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"key1"</span><span class="p">,</span> <span class="p">{</span><span class="s">"provider"</span><span class="p">:</span> <span class="s">"openai"</span><span class="p">,</span> <span class="s">"tier"</span><span class="p">:</span> <span class="s">"paid"</span><span class="p">})</span>
+<span class="k">await</span> <span class="n">api_key_pool</span><span class="p">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"key2"</span><span class="p">,</span> <span class="p">{</span><span class="s">"provider"</span><span class="p">:</span> <span class="s">"openai"</span><span class="p">,</span> <span class="s">"tier"</span><span class="p">:</span> <span class="s">"free"</span><span class="p">})</span>
+
+<span class="c1"># Claim an API key
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">process_with_api_key</span><span class="p">(</span><span class="n">worker_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">resource</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api_key_pool</span><span class="p">.</span><span class="n">claim</span><span class="p">(</span>
+        <span class="n">claimer_id</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
+        <span class="n">duration</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Hold for 60 seconds
+</span>        <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span>    <span class="c1"># Wait up to 10 seconds
+</span>    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">resource</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Use the API key
+</span>            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">call_api</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s">'id'</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Always release when done
+</span>            <span class="k">await</span> <span class="n">api_key_pool</span><span class="p">.</span><span class="n">release</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span> <span class="n">worker_id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="4-connection-pool-with-health-checks">4. Connection Pool with Health Checks</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ManagedConnectionPool</span><span class="p">:</span>
+    <span class="s">"""Connection pool with health monitoring"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create_connection_func</span><span class="p">,</span> <span class="n">max_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">create_connection</span> <span class="o">=</span> <span class="n">create_connection_func</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">max_size</span> <span class="o">=</span> <span class="n">max_size</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">available</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">max_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">in_use</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">unhealthy</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Lock</span><span class="p">()</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="s">"""Get a healthy connection"""</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to get existing connection
+</span>                <span class="n">conn</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">wait_for</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Health check
+</span>                <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">_is_healthy</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">in_use</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">conn</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Mark as unhealthy and try again
+</span>                    <span class="bp">self</span><span class="p">.</span><span class="n">unhealthy</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                    
+            <span class="k">except</span> <span class="n">asyncio</span><span class="p">.</span><span class="nb">TimeoutError</span><span class="p">:</span>
+                <span class="c1"># No available connections, create new one
+</span>                <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="p">.</span><span class="n">_lock</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">in_use</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">qsize</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">max_size</span><span class="p">:</span>
+                        <span class="n">conn</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_connection</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="p">.</span><span class="n">in_use</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">conn</span>
+                
+                <span class="c1"># Pool is full, wait
+</span>                <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
+        <span class="s">"""Return connection to pool"""</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">in_use</span><span class="p">.</span><span class="n">discard</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">_is_healthy</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Don't return unhealthy connections
+</span>            <span class="bp">self</span><span class="p">.</span><span class="n">unhealthy</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="c1"># Create replacement
+</span>            <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_replace_unhealthy</span><span class="p">())</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_is_healthy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""Check connection health"""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Implement actual health check
+</span>            <span class="k">await</span> <span class="n">conn</span><span class="p">.</span><span class="n">ping</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_replace_unhealthy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Replace unhealthy connections"""</span>
+        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">unhealthy</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">conn</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">unhealthy</span><span class="p">.</span><span class="n">discard</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            
+            <span class="c1"># Create new connection
+</span>            <span class="k">try</span><span class="p">:</span>
+                <span class="n">new_conn</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_connection</span><span class="p">()</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">new_conn</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-work-queue-patterns">📋 Work Queue Patterns</h2>
+
+<h3 id="5-priority-work-queue-with-backpressure">5. Priority Work Queue with Backpressure</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PriorityWorkQueue</span><span class="p">:</span>
+    <span class="s">"""Work queue with priorities and backpressure"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_client</span><span class="p">:</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis_client</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">queue_name</span> <span class="o">=</span> <span class="n">queue_name</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">max_size</span> <span class="o">=</span> <span class="n">max_size</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"queue:</span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s">:processing"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">completed_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"queue:</span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s">:completed"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">failed_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"queue:</span><span class="si">{</span><span class="n">queue_name</span><span class="si">}</span><span class="s">:failed"</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">enqueue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                     <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                     <span class="n">task_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                     <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                     <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""Add task to queue with priority"""</span>
+        
+        <span class="c1"># Check backpressure
+</span>        <span class="n">queue_size</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zcard</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">queue_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">queue_size</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="p">.</span><span class="n">max_size</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>  <span class="c1"># Queue is full
+</span>        
+        <span class="c1"># Calculate score (lower = higher priority)
+</span>        <span class="c1"># Score = timestamp + (1000000 - priority)
+</span>        <span class="n">score</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">delay</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1000000</span> <span class="o">-</span> <span class="n">priority</span><span class="p">)</span>
+        
+        <span class="n">task</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'id'</span><span class="p">:</span> <span class="n">task_id</span><span class="p">,</span>
+            <span class="s">'data'</span><span class="p">:</span> <span class="n">task_data</span><span class="p">,</span>
+            <span class="s">'enqueued_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">(),</span>
+            <span class="s">'priority'</span><span class="p">:</span> <span class="n">priority</span><span class="p">,</span>
+            <span class="s">'attempts'</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+        
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zadd</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">queue_name</span><span class="p">,</span>
+            <span class="p">{</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">task</span><span class="p">):</span> <span class="n">score</span><span class="p">}</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">True</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">dequeue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="s">"""Get next task from queue"""</span>
+        
+        <span class="c1"># Get highest priority task
+</span>        <span class="n">tasks</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zrange</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">queue_name</span><span class="p">,</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># Get first item
+</span>            <span class="n">withscores</span><span class="o">=</span><span class="bp">True</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tasks</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        
+        <span class="n">task_json</span><span class="p">,</span> <span class="n">score</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">task_json</span><span class="p">)</span>
+        
+        <span class="c1"># Move to processing
+</span>        <span class="n">pipe</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">pipeline</span><span class="p">()</span>
+        <span class="n">pipe</span><span class="p">.</span><span class="n">zrem</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">queue_name</span><span class="p">,</span> <span class="n">task_json</span><span class="p">)</span>
+        <span class="n">pipe</span><span class="p">.</span><span class="n">hset</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span><span class="p">,</span>
+            <span class="n">task</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span>
+            <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="o">**</span><span class="n">task</span><span class="p">,</span>
+                <span class="s">'worker_id'</span><span class="p">:</span> <span class="n">worker_id</span><span class="p">,</span>
+                <span class="s">'started_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="p">})</span>
+        <span class="p">)</span>
+        <span class="n">pipe</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Auto-cleanup
+</span>        
+        <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">pipe</span><span class="p">.</span><span class="n">execute</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># Successfully removed from queue
+</span>            <span class="k">return</span> <span class="n">task</span>
+        
+        <span class="k">return</span> <span class="bp">None</span>  <span class="c1"># Someone else got it
+</span>    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="s">"""Mark task as completed"""</span>
+        <span class="c1"># Remove from processing
+</span>        <span class="n">task_data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hget</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hdel</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
+        
+        <span class="c1"># Store completion
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hset</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">completed_key</span><span class="p">,</span>
+            <span class="n">task_id</span><span class="p">,</span>
+            <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'task'</span><span class="p">:</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">task_data</span><span class="p">)</span> <span class="k">if</span> <span class="n">task_data</span> <span class="k">else</span> <span class="p">{},</span>
+                <span class="s">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+                <span class="s">'completed_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="p">})</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Expire old completions
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">completed_key</span><span class="p">,</span> <span class="mi">86400</span><span class="p">)</span>  <span class="c1"># 24 hours
+</span>    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">retry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span>
+        <span class="s">"""Handle failed task"""</span>
+        <span class="n">task_data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hget</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">task_data</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="n">task</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">task_data</span><span class="p">)</span>
+        <span class="n">task</span><span class="p">[</span><span class="s">'attempts'</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="k">if</span> <span class="n">retry</span> <span class="ow">and</span> <span class="n">task</span><span class="p">[</span><span class="s">'attempts'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># Re-queue with lower priority
+</span>            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">enqueue</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="p">,</span>
+                <span class="n">task</span><span class="p">[</span><span class="s">'data'</span><span class="p">],</span>
+                <span class="n">priority</span><span class="o">=</span><span class="n">task</span><span class="p">[</span><span class="s">'priority'</span><span class="p">]</span> <span class="o">-</span> <span class="mi">100</span><span class="p">,</span>
+                <span class="n">delay</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="n">task</span><span class="p">[</span><span class="s">'attempts'</span><span class="p">]</span>  <span class="c1"># Exponential backoff
+</span>            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Move to failed queue
+</span>            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hset</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">failed_key</span><span class="p">,</span>
+                <span class="n">task_id</span><span class="p">,</span>
+                <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">({</span>
+                    <span class="o">**</span><span class="n">task</span><span class="p">,</span>
+                    <span class="s">'error'</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
+                    <span class="s">'failed_at'</span><span class="p">:</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="p">})</span>
+            <span class="p">)</span>
+        
+        <span class="c1"># Remove from processing
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hdel</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">processing_key</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
+
+<span class="c1"># Worker Implementation
+</span><span class="k">class</span> <span class="nc">QueueWorker</span><span class="p">:</span>
+    <span class="s">"""Worker that processes tasks from queue"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">:</span> <span class="n">PriorityWorkQueue</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">worker_id</span> <span class="o">=</span> <span class="n">worker_id</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">running</span> <span class="o">=</span> <span class="bp">True</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Main worker loop"""</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="p">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Get next task
+</span>                <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">queue</span><span class="p">.</span><span class="n">dequeue</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">worker_id</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                
+                <span class="c1"># Process task
+</span>                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">process_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">queue</span><span class="p">.</span><span class="n">complete</span><span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span> <span class="n">result</span><span class="p">)</span>
+                <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">queue</span><span class="p">.</span><span class="n">fail</span><span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Worker </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">worker_id</span><span class="si">}</span><span class="s"> error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="s">"""Override this to implement task processing"""</span>
+        <span class="k">raise</span> <span class="nb">NotImplementedError</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-distributed-coordination">🌐 Distributed Coordination</h2>
+
+<h3 id="6-leader-election">6. Leader Election</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">LeaderElection</span><span class="p">:</span>
+    <span class="s">"""Distributed leader election using Redis"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_client</span><span class="p">:</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">,</span> <span class="n">cluster_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis_client</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cluster_name</span> <span class="o">=</span> <span class="n">cluster_name</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">node_id</span> <span class="o">=</span> <span class="n">node_id</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">leader_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"leader:</span><span class="si">{</span><span class="n">cluster_name</span><span class="si">}</span><span class="s">"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Leadership expires after 10 seconds
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">is_leader</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">_renewal_task</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Start leader election process"""</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to become leader
+</span>                <span class="n">became_leader</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="nb">set</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">leader_key</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">node_id</span><span class="p">,</span>
+                    <span class="n">nx</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>  <span class="c1"># Only if not exists
+</span>                    <span class="n">ex</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">ttl</span>
+                <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">became_leader</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="p">.</span><span class="n">is_leader</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Node </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">node_id</span><span class="si">}</span><span class="s"> became leader"</span><span class="p">)</span>
+                    
+                    <span class="c1"># Start renewal
+</span>                    <span class="bp">self</span><span class="p">.</span><span class="n">_renewal_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">.</span><span class="n">_renew_leadership</span><span class="p">()</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Do leader work
+</span>                    <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">leader_work</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Check who is leader
+</span>                    <span class="n">current_leader</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">leader_key</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">current_leader</span> <span class="o">==</span> <span class="bp">self</span><span class="p">.</span><span class="n">node_id</span><span class="p">.</span><span class="n">encode</span><span class="p">():</span>
+                        <span class="c1"># We're still leader
+</span>                        <span class="k">continue</span>
+                    
+                    <span class="c1"># Someone else is leader
+</span>                    <span class="bp">self</span><span class="p">.</span><span class="n">is_leader</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">follower_work</span><span class="p">()</span>
+                
+                <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+                
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Election error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_renew_leadership</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Renew leadership while active"""</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="p">.</span><span class="n">is_leader</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+            
+            <span class="c1"># Renew if still leader
+</span>            <span class="n">lua_script</span> <span class="o">=</span> <span class="s">"""
+            if redis.call("get", KEYS[1]) == ARGV[1] then
+                return redis.call("expire", KEYS[1], ARGV[2])
+            else
+                return 0
+            end
+            """</span>
+            
+            <span class="n">renewed</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span>
+                <span class="n">lua_script</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">leader_key</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">node_id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">ttl</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">renewed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">is_leader</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">break</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">leader_work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Override this - work done by leader"""</span>
+        <span class="k">pass</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">follower_work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Override this - work done by followers"""</span>
+        <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="7-distributed-barrier">7. Distributed Barrier</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DistributedBarrier</span><span class="p">:</span>
+    <span class="s">"""Synchronization barrier for distributed workers"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_client</span><span class="p">:</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">,</span> <span class="n">barrier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">participant_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis_client</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">barrier_name</span> <span class="o">=</span> <span class="n">barrier_name</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">participant_count</span> <span class="o">=</span> <span class="n">participant_count</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">participants_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"barrier:</span><span class="si">{</span><span class="n">barrier_name</span><span class="si">}</span><span class="s">:participants"</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ready_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"barrier:</span><span class="si">{</span><span class="n">barrier_name</span><span class="si">}</span><span class="s">:ready"</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">participant_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="s">"""Wait at barrier until all participants arrive"""</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="c1"># Register arrival
+</span>        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">sadd</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">participants_key</span><span class="p">,</span> <span class="n">participant_id</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">participants_key</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  <span class="c1"># 5 min timeout
+</span>        
+        <span class="c1"># Wait for all participants
+</span>        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">scard</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">participants_key</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="p">.</span><span class="n">participant_count</span><span class="p">:</span>
+                <span class="c1"># All participants have arrived
+</span>                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">setex</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ready_key</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="s">"ready"</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            
+            <span class="k">if</span> <span class="n">timeout</span> <span class="ow">and</span> <span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="c1"># Timeout - remove ourselves and return
+</span>                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">srem</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">participants_key</span><span class="p">,</span> <span class="n">participant_id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            
+            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Reset barrier for reuse"""</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">participants_key</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ready_key</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-production-implementation">🚀 Production Implementation</h2>
+
+<h3 id="complete-concurrent-processing-system">Complete Concurrent Processing System</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HarvestConcurrentProcessor</span><span class="p">:</span>
+    <span class="s">"""Production-ready concurrent processing system"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">,</span> <span class="n">decode_responses</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">max_workers</span> <span class="o">=</span> <span class="n">max_workers</span>
+        
+        <span class="c1"># Resource pools
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">api_key_pool</span> <span class="o">=</span> <span class="n">ResourcePool</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">,</span> <span class="s">"api_keys"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">connection_pool</span> <span class="o">=</span> <span class="n">ManagedConnectionPool</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">create_ai_connection</span><span class="p">,</span>
+            <span class="n">max_size</span><span class="o">=</span><span class="mi">20</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Work queue
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">work_queue</span> <span class="o">=</span> <span class="n">PriorityWorkQueue</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">,</span>
+            <span class="s">"harvest_tasks"</span><span class="p">,</span>
+            <span class="n">max_size</span><span class="o">=</span><span class="mi">10000</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Semaphores for rate limiting
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">api_semaphore</span> <span class="o">=</span> <span class="n">DistributedSemaphore</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">,</span>
+            <span class="s">"api_rate_limit"</span><span class="p">,</span>
+            <span class="n">max_permits</span><span class="o">=</span><span class="mi">100</span>  <span class="c1"># 100 concurrent API calls
+</span>        <span class="p">)</span>
+        
+        <span class="c1"># Locks for critical resources
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">cache_lock</span> <span class="o">=</span> <span class="n">DistributedLock</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">,</span> <span class="s">"cache_update"</span><span class="p">)</span>
+        
+        <span class="c1"># Workers
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">workers</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Start the processing system"""</span>
+        <span class="c1"># Start workers
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">max_workers</span><span class="p">):</span>
+            <span class="n">worker</span> <span class="o">=</span> <span class="n">ProcessingWorker</span><span class="p">(</span>
+                <span class="n">worker_id</span><span class="o">=</span><span class="sa">f</span><span class="s">"worker_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">"</span><span class="p">,</span>
+                <span class="n">processor</span><span class="o">=</span><span class="bp">self</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">workers</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">worker</span><span class="p">)</span>
+            <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">worker</span><span class="p">.</span><span class="n">run</span><span class="p">())</span>
+        
+        <span class="c1"># Start monitoring
+</span>        <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">monitor</span><span class="p">())</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">submit_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="s">"""Submit a task for processing"""</span>
+        <span class="n">task_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="p">.</span><span class="n">uuid4</span><span class="p">())</span>
+        
+        <span class="n">success</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">work_queue</span><span class="p">.</span><span class="n">enqueue</span><span class="p">(</span>
+            <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span>
+            <span class="n">task_data</span><span class="o">=</span><span class="n">task_data</span><span class="p">,</span>
+            <span class="n">priority</span><span class="o">=</span><span class="n">priority</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">QueueFullError</span><span class="p">(</span><span class="s">"Work queue is at capacity"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">task_id</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Monitor system health"""</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">'api_keys'</span><span class="p">:</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">api_key_pool</span><span class="p">.</span><span class="n">get_stats</span><span class="p">(),</span>
+                <span class="s">'queue_size'</span><span class="p">:</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">zcard</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">work_queue</span><span class="p">.</span><span class="n">queue_name</span><span class="p">),</span>
+                <span class="s">'processing'</span><span class="p">:</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">hlen</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">work_queue</span><span class="p">.</span><span class="n">processing_key</span><span class="p">),</span>
+                <span class="s">'workers'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">workers</span><span class="p">)</span>
+            <span class="p">}</span>
+            
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"System stats: </span><span class="si">{</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ProcessingWorker</span><span class="p">(</span><span class="n">QueueWorker</span><span class="p">):</span>
+    <span class="s">"""Worker that processes harvest tasks"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">processor</span><span class="p">:</span> <span class="n">HarvestConcurrentProcessor</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">(</span><span class="n">processor</span><span class="p">.</span><span class="n">work_queue</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">processor</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="s">"""Process a single task with all safety measures"""</span>
+        
+        <span class="c1"># Claim an API key
+</span>        <span class="n">api_key</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">api_key_pool</span><span class="p">.</span><span class="n">claim</span><span class="p">(</span>
+            <span class="n">claimer_id</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">worker_id</span><span class="p">,</span>
+            <span class="n">duration</span><span class="o">=</span><span class="mi">300</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ResourceUnavailableError</span><span class="p">(</span><span class="s">"No API keys available"</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Acquire rate limit permit
+</span>            <span class="k">if</span> <span class="ow">not</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">api_semaphore</span><span class="p">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">RateLimitError</span><span class="p">(</span><span class="s">"Rate limit exceeded"</span><span class="p">)</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Get AI connection
+</span>                <span class="n">conn</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">connection_pool</span><span class="p">.</span><span class="n">acquire</span><span class="p">()</span>
+                
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Process with the connection
+</span>                    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">process_with_ai</span><span class="p">(</span>
+                        <span class="n">task</span><span class="p">[</span><span class="s">'data'</span><span class="p">],</span>
+                        <span class="n">api_key</span><span class="p">,</span>
+                        <span class="n">conn</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Update cache with lock
+</span>                    <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">cache_lock</span><span class="p">.</span><span class="n">lock_context</span><span class="p">():</span>
+                        <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">update_cache</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    
+                    <span class="k">return</span> <span class="n">result</span>
+                    
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">connection_pool</span><span class="p">.</span><span class="n">release</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+                    
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">api_semaphore</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>
+                
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="p">.</span><span class="n">processor</span><span class="p">.</span><span class="n">api_key_pool</span><span class="p">.</span><span class="n">release</span><span class="p">(</span>
+                <span class="n">api_key</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">worker_id</span>
+            <span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_with_ai</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
+        <span class="s">"""Actual AI processing logic"""</span>
+        <span class="c1"># Your processing logic here
+</span>        <span class="k">pass</span>
+    
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="s">"""Update shared cache safely"""</span>
+        <span class="c1"># Your cache update logic here
+</span>        <span class="k">pass</span>
+
+<span class="c1"># Usage
+</span><span class="n">processor</span> <span class="o">=</span> <span class="n">HarvestConcurrentProcessor</span><span class="p">(</span>
+    <span class="n">redis_url</span><span class="o">=</span><span class="s">"redis://localhost"</span><span class="p">,</span>
+    <span class="n">max_workers</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span>
+
+<span class="k">await</span> <span class="n">processor</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># Submit tasks
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">processor</span><span class="p">.</span><span class="n">submit_task</span><span class="p">(</span>
+        <span class="n">task_data</span><span class="o">=</span><span class="p">{</span><span class="s">'url'</span><span class="p">:</span> <span class="sa">f</span><span class="s">'https://example.com/page</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">},</span>
+        <span class="n">priority</span><span class="o">=</span><span class="mi">100</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="k">else</span> <span class="mi">0</span>  <span class="c1"># First 10 are high priority
+</span>    <span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-performance-considerations">📊 Performance Considerations</h2>
+
+<h3 id="tuning-for-high-concurrency">Tuning for High Concurrency</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Configuration for different scales
+</span><span class="n">CONCURRENCY_CONFIGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'small'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'max_workers'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s">'connection_pool_size'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s">'api_rate_limit'</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s">'queue_size'</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s">'redis_pool_size'</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="p">},</span>
+    <span class="s">'medium'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'max_workers'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s">'connection_pool_size'</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s">'api_rate_limit'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s">'queue_size'</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="s">'redis_pool_size'</span><span class="p">:</span> <span class="mi">50</span>
+    <span class="p">},</span>
+    <span class="s">'large'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'max_workers'</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s">'connection_pool_size'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s">'api_rate_limit'</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s">'queue_size'</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span>
+        <span class="s">'redis_pool_size'</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="p">},</span>
+    <span class="s">'xlarge'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'max_workers'</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s">'connection_pool_size'</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s">'api_rate_limit'</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+        <span class="s">'queue_size'</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span>
+        <span class="s">'redis_pool_size'</span><span class="p">:</span> <span class="mi">500</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="monitoring-metrics">Monitoring Metrics</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CONCURRENCY_METRICS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'throughput'</span><span class="p">:</span> <span class="s">'tasks_per_second'</span><span class="p">,</span>
+    <span class="s">'latency'</span><span class="p">:</span> <span class="s">'task_processing_time_p50_p95_p99'</span><span class="p">,</span>
+    <span class="s">'queue_depth'</span><span class="p">:</span> <span class="s">'pending_tasks_count'</span><span class="p">,</span>
+    <span class="s">'resource_utilization'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'api_keys'</span><span class="p">:</span> <span class="s">'percent_in_use'</span><span class="p">,</span>
+        <span class="s">'connections'</span><span class="p">:</span> <span class="s">'percent_in_use'</span><span class="p">,</span>
+        <span class="s">'workers'</span><span class="p">:</span> <span class="s">'percent_busy'</span>
+    <span class="p">},</span>
+    <span class="s">'errors'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'lock_timeouts'</span><span class="p">:</span> <span class="s">'count_per_minute'</span><span class="p">,</span>
+        <span class="s">'resource_exhaustion'</span><span class="p">:</span> <span class="s">'count_per_minute'</span><span class="p">,</span>
+        <span class="s">'task_failures'</span><span class="p">:</span> <span class="s">'count_per_minute'</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-key-takeaways">🎯 Key Takeaways</h2>
+
+<ol>
+  <li><strong>Always use distributed locks</strong> for shared resources</li>
+  <li><strong>Implement backpressure</strong> to prevent system overload</li>
+  <li><strong>Use semaphores</strong> for rate limiting</li>
+  <li><strong>Pool and reuse</strong> expensive resources</li>
+  <li><strong>Monitor everything</strong> - you can’t optimize what you don’t measure</li>
+  <li><strong>Plan for failure</strong> - every lock can timeout, every claim can fail</li>
+  <li><strong>Test at scale</strong> - 10 threads work differently than 1000</li>
+</ol>
+
+<p>This system can handle thousands of concurrent operations safely and efficiently! 🚀</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: Harvest.ai / architecture/CONCURRENCY_AND_LOCKING_PATTERNS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

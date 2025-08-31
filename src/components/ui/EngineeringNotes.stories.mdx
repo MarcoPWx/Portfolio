@@ -1,0 +1,130 @@
+import { Meta, Title, Subtitle, Description, Source } from '@storybook/blocks';
+
+<Meta title="Guides/Engineering Notes" tags={['docs']} />
+
+<Title>Engineering Notes: Storybook Webpack & Docs</Title>
+
+<Subtitle>Polyfills, environment flags, module fallbacks, and bundle analysis</Subtitle>
+
+<Description>
+This page summarizes key configuration that makes MDX docs and components run smoothly in the browser, plus how to analyze bundles to guide SplitChunks tuning.
+</Description>
+
+## Runtime globals via ProvidePlugin
+
+Some dependencies reference Node globals (e.g., <code>process</code>, <code>Buffer</code>) which don’t exist in the browser. We use ProvidePlugin so those names resolve to browser-friendly shims at runtime.
+
+```js path=null start=null
+const webpack = require('webpack');
+
+(config.plugins || (config.plugins = [])).push(
+  new webpack.ProvidePlugin({
+    process: 'process/browser',
+    Buffer: ['buffer', 'Buffer'],
+  })
+);
+```
+
+## Compile-time constants via DefinePlugin
+
+Libraries (React, others) gate dev/prod code on <code>process.env.NODE_ENV</code>. DefinePlugin replaces it at build time, unlocking tree-shaking and predictable behavior.
+
+```js path=null start=null
+const webpack = require('webpack');
+
+(config.plugins || (config.plugins = [])).push(
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+  })
+);
+```
+
+## Node core fallbacks (browser shims)
+
+If a package imports Node core modules (e.g., <code>tty</code>, <code>buffer</code>), map them to browser shims. Only add fallbacks that you need.
+
+```js path=null start=null
+config.resolve = config.resolve || {};
+config.resolve.fallback = {
+  ...(config.resolve.fallback || {}),
+  buffer: require.resolve('buffer'),
+  tty: require.resolve('tty-browserify'),
+  // Add only if an error requires it:
+  // path: require.resolve('path-browserify'),
+  // stream: require.resolve('stream-browserify'),
+};
+```
+
+## SplitChunks: safer defaults + optional vendor groups
+
+SplitChunks reduces entrypoint size and improves caching. Start broad, then add targeted cache groups as needed.
+
+```js path=null start=null
+config.optimization = {
+  ...(config.optimization || {}),
+  splitChunks: {
+    ...(config.optimization?.splitChunks || {}),
+    chunks: 'all',
+    cacheGroups: {
+      ...(config.optimization?.splitChunks?.cacheGroups || {}),
+      vendor: {
+        test: /[\\/]node_modules[\\/]/,
+        name: 'vendors',
+        chunks: 'all',
+      },
+    },
+  },
+};
+```
+
+Optional, app-specific groups:
+
+```js path=null start=null
+config.optimization.splitChunks.cacheGroups = {
+  ...config.optimization.splitChunks.cacheGroups,
+  reactVendor: {
+    test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+    name: 'react-vendor',
+    chunks: 'all',
+    priority: 20,
+  },
+  uiVendor: {
+    test: /[\\/]node_modules[\\/](framer-motion|lucide-react)[\\/]/,
+    name: 'ui-vendor',
+    chunks: 'all',
+    priority: 10,
+  },
+};
+```
+
+## MDX docs: Live stories with Canvas, Source, Controls
+
+Reference CSF stories directly in MDX so docs always match behavior. Example pattern:
+
+```mdx path=null start=null
+import { Meta, Canvas, Source, Controls } from '@storybook/blocks';
+import * as ButtonStories from './Button.stories';
+
+<Meta title="UI/Button/Docs" />
+
+<Canvas of={ButtonStories.Playground} />
+<Controls of={ButtonStories.Playground} />
+<Source of={ButtonStories.Playground} />
+```
+
+## Bundle analysis
+
+We integrate <code>webpack-bundle-analyzer</code> into the Storybook preview build. Generate a static report to visualize module and chunk sizes.
+
+Commands:
+
+```bash path=null start=null
+npm run analyze-storybook
+```
+
+This writes a static HTML report at:
+
+- <code>storybook-static/storybook-bundle-report.html</code>
+
+Open it in your browser to inspect chunk composition and guide SplitChunks tuning.
+

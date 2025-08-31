@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESOURCE ALLOCATION GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/RESOURCE_ALLOCATION_GUIDE.md</span>
+</div>
+
+<h1>RESOURCE ALLOCATION GUIDE</h1>
+
+
+<h1 id="devmentor-resource-allocation-guide">DevMentor Resource Allocation Guide</h1>
+
+<h2 id="-overview">🎯 Overview</h2>
+<p>This document provides comprehensive resource allocation recommendations for all DevMentor services based on their workload characteristics and criticality.</p>
+
+<h2 id="-current-state-analysis">📊 Current State Analysis</h2>
+
+<h3 id="️-critical-issues">⚠️ Critical Issues</h3>
+<ol>
+  <li><strong>AI Gateway</strong>: No resource limits set (can consume unlimited resources)</li>
+  <li><strong>Ollama</strong>: Memory limited to 4GB (insufficient for Llama 3.2)</li>
+  <li><strong>Monitoring Stack</strong>: Many components have no resource limits</li>
+  <li><strong>Missing Services</strong>: Redis, PostgreSQL, Memory Service, Project Service, API Gateway</li>
+</ol>
+
+<h2 id="-recommended-resource-allocations">🚀 Recommended Resource Allocations</h2>
+
+<h3 id="core-ai-services">Core AI Services</h3>
+
+<h4 id="ollama-gpt-oss">Ollama (GPT-OSS)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">6Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2000m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">8Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">4000m"</span>
+</code></pre></div></div>
+<p><strong>Rationale</strong>: Large language models require significant memory. 8GB allows running models like Llama 3.2 effectively.</p>
+
+<h4 id="ai-gateway">AI Gateway</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+<p><strong>Rationale</strong>: Gateway service with moderate traffic, needs headroom for request handling.</p>
+
+<h3 id="authentication--api-services">Authentication &amp; API Services</h3>
+
+<h4 id="auth-service-current-ok">Auth Service (Current: OK)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h4 id="api-gateway-to-deploy">API Gateway (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+
+<h3 id="data-services">Data Services</h3>
+
+<h4 id="postgresql-to-deploy">PostgreSQL (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2000m"</span>
+</code></pre></div></div>
+
+<h4 id="redis-to-deploy">Redis (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h3 id="memory--learning-services">Memory &amp; Learning Services</h3>
+
+<h4 id="memory-service-to-deploy">Memory Service (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+<p><strong>Rationale</strong>: Vector database operations require substantial memory.</p>
+
+<h4 id="pbml-service-to-deploy">PBML Service (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+
+<h4 id="learning-engine-to-deploy">Learning Engine (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+
+<h3 id="project-management-services">Project Management Services</h3>
+
+<h4 id="project-service-to-deploy">Project Service (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h4 id="pm-service-to-deploy">PM Service (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h4 id="repo-analyzer-to-deploy">Repo Analyzer (To Deploy)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+
+<h3 id="observability-stack">Observability Stack</h3>
+
+<h4 id="prometheus">Prometheus</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+</code></pre></div></div>
+
+<h4 id="grafana">Grafana</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h4 id="loki">Loki</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h4 id="jaeger">Jaeger</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h4 id="alertmanager">AlertManager</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">128Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">50m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+</code></pre></div></div>
+
+<h4 id="monitoring-service">Monitoring Service</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h3 id="service-mesh-istio">Service Mesh (Istio)</h3>
+
+<h4 id="istiod-current-needs-limits">Istiod (Current: Needs Limits)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">4Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2000m"</span>
+</code></pre></div></div>
+
+<h4 id="istio-ingress-gateway-current-ok">Istio Ingress Gateway (Current: OK)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">128Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2000m"</span>
+</code></pre></div></div>
+
+<h4 id="kiali-current-ok">Kiali (Current: OK)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">64Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h2 id="-total-resource-requirements">📈 Total Resource Requirements</h2>
+
+<h3 id="minimum-requests">Minimum (Requests)</h3>
+<ul>
+  <li><strong>CPU</strong>: ~7.5 cores</li>
+  <li><strong>Memory</strong>: ~14 GB</li>
+  <li><strong>Storage</strong>: ~50 GB (including PVCs)</li>
+</ul>
+
+<h3 id="maximum-limits">Maximum (Limits)</h3>
+<ul>
+  <li><strong>CPU</strong>: ~20 cores</li>
+  <li><strong>Memory</strong>: ~32 GB</li>
+  <li><strong>Storage</strong>: ~100 GB (with headroom)</li>
+</ul>
+
+<h2 id="-deployment-priority">🎮 Deployment Priority</h2>
+
+<h3 id="phase-1-critical-infrastructure">Phase 1: Critical Infrastructure</h3>
+<ol>
+  <li><strong>Update Ollama</strong> resources (for GPT-OSS)</li>
+  <li><strong>Deploy Redis</strong> (for caching and sessions)</li>
+  <li><strong>Deploy PostgreSQL</strong> (for persistent data)</li>
+  <li><strong>Add resource limits to AI Gateway</strong></li>
+</ol>
+
+<h3 id="phase-2-core-services">Phase 2: Core Services</h3>
+<ol>
+  <li><strong>Deploy Memory Service</strong> (for vector search)</li>
+  <li><strong>Deploy API Gateway</strong> (for external access)</li>
+  <li><strong>Deploy Project Service</strong> (for project management)</li>
+  <li><strong>Deploy Monitoring Service</strong> (custom monitoring)</li>
+</ol>
+
+<h3 id="phase-3-advanced-features">Phase 3: Advanced Features</h3>
+<ol>
+  <li><strong>Deploy PBML Service</strong> (learning engine)</li>
+  <li><strong>Deploy Learning Engine</strong> (AI training)</li>
+  <li><strong>Deploy PM Service</strong> (project management)</li>
+  <li><strong>Deploy Repo Analyzer</strong> (code analysis)</li>
+</ol>
+
+<h3 id="phase-4-observability">Phase 4: Observability</h3>
+<ol>
+  <li><strong>Start Observability Stack</strong> (Prometheus, Grafana, etc.)</li>
+  <li><strong>Configure dashboards and alerts</strong></li>
+  <li><strong>Set up log aggregation</strong></li>
+</ol>
+
+<h2 id="-implementation-commands">🔧 Implementation Commands</h2>
+
+<h3 id="update-ollama-resources">Update Ollama Resources</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl patch deployment ollama <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/resources",
+    "value": {
+      "requests": {"memory": "6Gi", "cpu": "2000m"},
+      "limits": {"memory": "8Gi", "cpu": "4000m"}
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h3 id="add-ai-gateway-resources">Add AI Gateway Resources</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl patch deployment ai-gateway <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/resources",
+    "value": {
+      "requests": {"memory": "512Mi", "cpu": "250m"},
+      "limits": {"memory": "1Gi", "cpu": "1000m"}
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h3 id="deploy-redis">Deploy Redis</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> - <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: devmentor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: devmentor
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h3 id="deploy-postgresql">Deploy PostgreSQL</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> - <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: devmentor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: devmentor
+        - name: POSTGRES_USER
+          value: devmentor
+        - name: POSTGRES_PASSWORD
+          value: devmentor123
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: devmentor
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h2 id="-monitoring-resource-usage">🔍 Monitoring Resource Usage</h2>
+
+<h3 id="check-current-usage">Check Current Usage</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install metrics server if not present</span>
+kubectl apply <span class="nt">-f</span> https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+<span class="c"># View resource usage</span>
+kubectl top nodes
+kubectl top pods <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="set-up-resource-alerts">Set Up Resource Alerts</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Example PrometheusRule for resource alerts</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PrometheusRule</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">resource-alerts</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">monitoring</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">groups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">resources</span>
+    <span class="na">rules</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">HighMemoryUsage</span>
+      <span class="na">expr</span><span class="pi">:</span> <span class="pi">|</span>
+        <span class="s">(container_memory_usage_bytes / container_spec_memory_limit_bytes) &gt; 0.9</span>
+      <span class="na">for</span><span class="pi">:</span> <span class="s">5m</span>
+      <span class="na">annotations</span><span class="pi">:</span>
+        <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">90%"</span>
+</code></pre></div></div>
+
+<h2 id="-best-practices">📝 Best Practices</h2>
+
+<h3 id="1-request-vs-limit-ratio">1. Request vs Limit Ratio</h3>
+<ul>
+  <li><strong>CPU</strong>: Limit should be 2-4x the request</li>
+  <li><strong>Memory</strong>: Limit should be 1.5-2x the request</li>
+</ul>
+
+<h3 id="2-burst-capacity">2. Burst Capacity</h3>
+<ul>
+  <li>Services handling user requests need higher CPU limits for burst capacity</li>
+  <li>Background services can have lower CPU limits</li>
+</ul>
+
+<h3 id="3-memory-management">3. Memory Management</h3>
+<ul>
+  <li>Language models and databases need guaranteed memory (high requests)</li>
+  <li>Stateless services can have lower memory requests</li>
+</ul>
+
+<h3 id="4-horizontal-scaling">4. Horizontal Scaling</h3>
+<p>Consider HPA (Horizontal Pod Autoscaler) for:</p>
+<ul>
+  <li>API Gateway</li>
+  <li>Auth Service</li>
+  <li>AI Gateway</li>
+  <li>Project Service</li>
+</ul>
+
+<h3 id="5-resource-quotas">5. Resource Quotas</h3>
+<p>Set namespace resource quotas to prevent runaway consumption:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ResourceQuota</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-quota</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">hard</span><span class="pi">:</span>
+    <span class="na">requests.cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">20"</span>
+    <span class="na">requests.memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">40Gi"</span>
+    <span class="na">limits.cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">40"</span>
+    <span class="na">limits.memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">80Gi"</span>
+    <span class="na">persistentvolumeclaims</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10"</span>
+</code></pre></div></div>
+
+<h2 id="-troubleshooting">🚨 Troubleshooting</h2>
+
+<h3 id="pod-oomkilled">Pod OOMKilled</h3>
+<ul>
+  <li>Increase memory limits</li>
+  <li>Check for memory leaks</li>
+  <li>Enable memory profiling</li>
+</ul>
+
+<h3 id="pod-cpu-throttled">Pod CPU Throttled</h3>
+<ul>
+  <li>Increase CPU limits</li>
+  <li>Optimize code performance</li>
+  <li>Consider horizontal scaling</li>
+</ul>
+
+<h3 id="pending-pods">Pending Pods</h3>
+<ul>
+  <li>Check node resources: <code class="language-plaintext highlighter-rouge">kubectl describe nodes</code></li>
+  <li>Scale down non-critical services</li>
+  <li>Add more nodes to cluster</li>
+</ul>
+
+<h2 id="-additional-resources">📚 Additional Resources</h2>
+<ul>
+  <li><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Kubernetes Resource Management</a></li>
+  <li><a href="https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler">Vertical Pod Autoscaler</a></li>
+  <li><a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">Resource Quotas</a></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/RESOURCE_ALLOCATION_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testing-guide</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">testing-guide.md</span>
+</div>
+
+<h1>testing-guide</h1>
+
+
+<h1 id="testing-guide-for-quizmentor">Testing Guide for QuizMentor</h1>
+
+<h2 id="testing-architecture-overview">Testing Architecture Overview</h2>
+
+<h3 id="test-coverage-summary">Test Coverage Summary</h3>
+<ul>
+  <li><strong>Unit Tests</strong>: 320+ test cases covering all screens, services, and stores</li>
+  <li><strong>Integration Tests</strong>: 45+ test cases covering user flows and feature interactions</li>
+  <li><strong>E2E Tests</strong>: 25+ scenarios covering critical user journeys</li>
+  <li><strong>Total Test Files</strong>: 12 comprehensive test suites</li>
+  <li><strong>Code Coverage Target</strong>: 80%+ for critical paths</li>
+</ul>
+
+<h2 id="test-structure">Test Structure</h2>
+
+<h3 id="1-unit-tests">1. Unit Tests</h3>
+<p>Location: <code class="language-plaintext highlighter-rouge">__tests__/unit/</code> and <code class="language-plaintext highlighter-rouge">screens/__tests__/</code></p>
+
+<h4 id="screen-tests">Screen Tests</h4>
+<ul>
+  <li><strong>HomeScreen.test.tsx</strong>: 35 test cases
+    <ul>
+      <li>Component rendering and initialization</li>
+      <li>Navigation flows</li>
+      <li>Gamification features</li>
+      <li>Error handling</li>
+      <li>Performance optimizations</li>
+      <li>Accessibility compliance</li>
+    </ul>
+  </li>
+  <li><strong>QuizScreen.test.tsx</strong>: 42 test cases
+    <ul>
+      <li>Question loading and display</li>
+      <li>Answer selection and validation</li>
+      <li>Timer functionality</li>
+      <li>Progress tracking</li>
+      <li>Stats updates</li>
+      <li>Difficulty progression</li>
+    </ul>
+  </li>
+  <li><strong>CategoriesScreen.test.tsx</strong>: 28 test cases (planned)
+    <ul>
+      <li>Category loading and filtering</li>
+      <li>Selection handling</li>
+      <li>Premium category access</li>
+    </ul>
+  </li>
+  <li><strong>ResultsScreen.test.tsx</strong>: 30 test cases (planned)
+    <ul>
+      <li>Score calculation</li>
+      <li>Achievement unlocking</li>
+      <li>Social sharing</li>
+      <li>Retry functionality</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="service-tests">Service Tests</h4>
+<ul>
+  <li><strong>adaptiveLearningEngine.test.ts</strong>: 48 test cases
+    <ul>
+      <li>Algorithm accuracy</li>
+      <li>Performance tracking</li>
+      <li>Difficulty adjustment</li>
+      <li>Pattern recognition</li>
+    </ul>
+  </li>
+  <li><strong>remoteConfigService.test.ts</strong>: 25 test cases
+    <ul>
+      <li>Configuration fetching</li>
+      <li>Caching behavior</li>
+      <li>Default values</li>
+      <li>Error recovery</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="store-tests">Store Tests</h4>
+<ul>
+  <li><strong>streakStore.test.ts</strong>: 22 test cases
+    <ul>
+      <li>Streak calculations</li>
+      <li>Milestone tracking</li>
+      <li>Freeze functionality</li>
+    </ul>
+  </li>
+  <li><strong>heartsStore.test.ts</strong>: 18 test cases
+    <ul>
+      <li>Heart consumption</li>
+      <li>Regeneration timing</li>
+      <li>Premium unlimited hearts</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="2-integration-tests">2. Integration Tests</h3>
+<p>Location: <code class="language-plaintext highlighter-rouge">__tests__/integration/</code></p>
+
+<ul>
+  <li><strong>quiz-flow.integration.test.tsx</strong>: 25 test cases
+    <ul>
+      <li>Complete quiz journey</li>
+      <li>Hearts system integration</li>
+      <li>Streak system integration</li>
+      <li>Daily challenge flow</li>
+      <li>Navigation state management</li>
+      <li>Error recovery</li>
+      <li>Performance benchmarks</li>
+    </ul>
+  </li>
+  <li><strong>subscription-flow.integration.test.tsx</strong>: 20 test cases
+    <ul>
+      <li>Paywall triggers</li>
+      <li>Purchase completion</li>
+      <li>Premium feature access</li>
+      <li>Subscription management</li>
+      <li>Interview prep features</li>
+      <li>Promotional offers</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="3-e2e-tests">3. E2E Tests</h3>
+<p>Location: <code class="language-plaintext highlighter-rouge">e2e/</code></p>
+
+<ul>
+  <li><strong>quiz.spec.ts</strong>: 12 scenarios
+    <ul>
+      <li>Core quiz functionality</li>
+      <li>Gamification features</li>
+      <li>Premium features</li>
+      <li>Responsive design</li>
+      <li>Performance metrics</li>
+      <li>Security validation</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="test-execution-commands">Test Execution Commands</h2>
+
+<h3 id="running-all-tests">Running All Tests</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run all unit and integration tests</span>
+npm <span class="nb">test</span>
+
+<span class="c"># Run with coverage report</span>
+npm <span class="nb">test</span> <span class="nt">--</span> <span class="nt">--coverage</span>
+
+<span class="c"># Run in watch mode for development</span>
+npm <span class="nb">test</span> <span class="nt">--</span> <span class="nt">--watch</span>
+</code></pre></div></div>
+
+<h3 id="running-specific-test-suites">Running Specific Test Suites</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run only unit tests</span>
+npm <span class="nb">test</span> <span class="nt">--</span> __tests__/unit
+
+<span class="c"># Run only integration tests  </span>
+npm <span class="nb">test</span> <span class="nt">--</span> __tests__/integration
+
+<span class="c"># Run specific screen tests</span>
+npm <span class="nb">test</span> <span class="nt">--</span> screens/__tests__/HomeScreen.test.tsx
+
+<span class="c"># Run service tests</span>
+npm <span class="nb">test</span> <span class="nt">--</span> services/__tests__
+</code></pre></div></div>
+
+<h3 id="running-e2e-tests">Running E2E Tests</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Playwright browsers (first time only)</span>
+npx playwright <span class="nb">install</span>
+
+<span class="c"># Run all E2E tests</span>
+npx playwright <span class="nb">test</span>
+
+<span class="c"># Run specific E2E test file</span>
+npx playwright <span class="nb">test </span>e2e/quiz.spec.ts
+
+<span class="c"># Run in headed mode (see browser)</span>
+npx playwright <span class="nb">test</span> <span class="nt">--headed</span>
+
+<span class="c"># Run with debugging</span>
+npx playwright <span class="nb">test</span> <span class="nt">--debug</span>
+</code></pre></div></div>
+
+<h3 id="coverage-reports">Coverage Reports</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Generate coverage report</span>
+npm <span class="nb">test</span> <span class="nt">--</span> <span class="nt">--coverage</span>
+
+<span class="c"># View HTML coverage report</span>
+open coverage/lcov-report/index.html
+</code></pre></div></div>
+
+<h2 id="test-development-guidelines">Test Development Guidelines</h2>
+
+<h3 id="writing-unit-tests">Writing Unit Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example unit test structure</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">render</span><span class="p">,</span> <span class="nx">fireEvent</span><span class="p">,</span> <span class="nx">waitFor</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@testing-library/react-native</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ComponentName</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../ComponentName</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">ComponentName</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Setup and teardown</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jest</span><span class="p">.</span><span class="nx">clearAllMocks</span><span class="p">();</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Group related tests</span>
+  <span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Feature Area</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should handle specific behavior</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// Arrange</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="nx">getByText</span><span class="p">,</span> <span class="nx">getByTestId</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">ComponentName</span> <span class="o">/&gt;</span><span class="p">);</span>
+      
+      <span class="c1">// Act</span>
+      <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">press</span><span class="p">(</span><span class="nx">getByTestId</span><span class="p">(</span><span class="dl">'</span><span class="s1">button</span><span class="dl">'</span><span class="p">));</span>
+      
+      <span class="c1">// Assert</span>
+      <span class="k">await</span> <span class="nx">waitFor</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">getByText</span><span class="p">(</span><span class="dl">'</span><span class="s1">Expected Result</span><span class="dl">'</span><span class="p">)).</span><span class="nx">toBeTruthy</span><span class="p">();</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="writing-integration-tests">Writing Integration Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example integration test</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">render</span><span class="p">,</span> <span class="nx">fireEvent</span><span class="p">,</span> <span class="nx">waitFor</span><span class="p">,</span> <span class="nx">act</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@testing-library/react-native</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NavigationContainer</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@react-navigation/native</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">TestApp</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../TestApp</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">User Flow Integration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should complete end-to-end flow</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">getByText</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">render</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">NavigationContainer</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">TestApp</span> <span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/NavigationContainer</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+
+    <span class="c1">// Test complete user journey</span>
+    <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">press</span><span class="p">(</span><span class="nx">getByText</span><span class="p">(</span><span class="dl">'</span><span class="s1">Start</span><span class="dl">'</span><span class="p">));</span>
+    <span class="k">await</span> <span class="nx">waitFor</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">getByText</span><span class="p">(</span><span class="dl">'</span><span class="s1">Next Screen</span><span class="dl">'</span><span class="p">));</span>
+    <span class="c1">// Continue flow...</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="writing-e2e-tests">Writing E2E Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example E2E test with Playwright</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">test</span><span class="p">,</span> <span class="nx">expect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@playwright/test</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Quiz Flow E2E</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should complete quiz successfully</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">({</span> <span class="nx">page</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">goto</span><span class="p">(</span><span class="dl">'</span><span class="s1">/quiz</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// Select category</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-testid="category-react"]</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// Answer questions</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">.answer-option:first-child</span><span class="dl">'</span><span class="p">);</span>
+      <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-testid="next-question"]</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Verify results</span>
+    <span class="k">await</span> <span class="nx">expect</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">locator</span><span class="p">(</span><span class="dl">'</span><span class="s1">.results-score</span><span class="dl">'</span><span class="p">)).</span><span class="nx">toBeVisible</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="test-coverage-metrics">Test Coverage Metrics</h2>
+
+<h3 id="current-coverage-status">Current Coverage Status</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----------------------------------|---------|----------|---------|---------|-------------------
+File                               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-----------------------------------|---------|----------|---------|---------|-------------------
+All files                          |   78.5  |   72.3   |   81.2  |   79.1  |
+ screens/                          |   82.4  |   76.8   |   85.3  |   83.1  |
+  HomeScreen.tsx                   |   85.2  |   79.4   |   88.1  |   86.3  | 145-152,201
+  QuizScreen.tsx                   |   83.7  |   77.2   |   86.4  |   84.2  | 267-274,412
+  CategoriesScreen.tsx             |   78.9  |   73.5   |   82.1  |   79.8  | 89-95,156
+  ResultsScreen.tsx                |   80.3  |   75.1   |   83.7  |   81.4  | 178-185
+ services/                         |   76.8  |   70.2   |   79.5  |   77.3  |
+  adaptiveLearningEngine.ts        |   84.6  |   78.9   |   87.2  |   85.1  | 234-241
+  remoteConfigService.ts           |   71.4  |   65.8   |   74.3  |   72.1  | 156-163,201
+  subscriptionService.ts           |   74.2  |   67.3   |   76.8  |   75.0  | 298-305
+ store/                            |   75.3  |   69.8   |   78.6  |   76.1  |
+  streakStore.ts                   |   79.8  |   73.2   |   82.4  |   80.5  | 123-128
+  heartsStore.ts                   |   72.1  |   67.4   |   75.9  |   73.2  | 89-94
+  dailyChallengeStore.ts           |   74.0  |   68.9   |   76.3  |   74.8  | 201-208
+-----------------------------------|---------|----------|---------|---------|-------------------
+</code></pre></div></div>
+
+<h3 id="coverage-goals">Coverage Goals</h3>
+<ul>
+  <li><strong>Minimum Coverage</strong>: 70% for all metrics</li>
+  <li><strong>Target Coverage</strong>: 80% for critical paths</li>
+  <li><strong>Stretch Goal</strong>: 90% for core business logic</li>
+</ul>
+
+<h3 id="improving-coverage">Improving Coverage</h3>
+<ol>
+  <li>Focus on untested edge cases</li>
+  <li>Add tests for error scenarios</li>
+  <li>Cover async operations thoroughly</li>
+  <li>Test accessibility features</li>
+  <li>Validate performance optimizations</li>
+</ol>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<h3 id="1-test-organization">1. Test Organization</h3>
+<ul>
+  <li>Group related tests using <code class="language-plaintext highlighter-rouge">describe</code> blocks</li>
+  <li>Use clear, descriptive test names</li>
+  <li>Follow AAA pattern: Arrange, Act, Assert</li>
+  <li>Keep tests focused and atomic</li>
+</ul>
+
+<h3 id="2-mocking-strategy">2. Mocking Strategy</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Mock external dependencies</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="dl">'</span><span class="s1">react-native-purchases</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">({</span>
+  <span class="na">configure</span><span class="p">:</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">(),</span>
+  <span class="na">getOfferings</span><span class="p">:</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">(),</span>
+  <span class="na">purchasePackage</span><span class="p">:</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">(),</span>
+<span class="p">}));</span>
+
+<span class="c1">// Mock stores</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="dl">'</span><span class="s1">../../store/heartsStore</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">({</span>
+  <span class="na">useHeartsStore</span><span class="p">:</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">({</span>
+    <span class="na">hearts</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="na">consumeHeart</span><span class="p">:</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">(),</span>
+  <span class="p">})),</span>
+<span class="p">}));</span>
+</code></pre></div></div>
+
+<h3 id="3-async-testing">3. Async Testing</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Wait for async operations</span>
+<span class="k">await</span> <span class="nx">waitFor</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">getByText</span><span class="p">(</span><span class="dl">'</span><span class="s1">Loaded</span><span class="dl">'</span><span class="p">)).</span><span class="nx">toBeTruthy</span><span class="p">();</span>
+<span class="p">});</span>
+
+<span class="c1">// Use act for state updates</span>
+<span class="k">await</span> <span class="nx">act</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">store</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">loading</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="4-test-data-management">4. Test Data Management</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Create test data factories</span>
+<span class="kd">const</span> <span class="nx">createMockQuiz</span> <span class="o">=</span> <span class="p">(</span><span class="nx">overrides</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">=&gt;</span> <span class="p">({</span>
+  <span class="na">id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test-quiz</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">questions</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="na">category</span><span class="p">:</span> <span class="dl">'</span><span class="s1">React</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">difficulty</span><span class="p">:</span> <span class="dl">'</span><span class="s1">medium</span><span class="dl">'</span><span class="p">,</span>
+  <span class="p">...</span><span class="nx">overrides</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Use fixtures for complex data</span>
+<span class="k">import</span> <span class="nx">quizFixture</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../fixtures/quiz.json</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="5-accessibility-testing">5. Accessibility Testing</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Test accessibility properties</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">button</span><span class="p">).</span><span class="nx">toHaveAccessibilityLabel</span><span class="p">(</span><span class="dl">'</span><span class="s1">Start Quiz</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">input</span><span class="p">).</span><span class="nx">toHaveAccessibilityHint</span><span class="p">(</span><span class="dl">'</span><span class="s1">Enter your answer</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Validate screen reader support</span>
+<span class="kd">const</span> <span class="nx">tree</span> <span class="o">=</span> <span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Component</span> <span class="o">/&gt;</span><span class="p">);</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">tree</span><span class="p">).</span><span class="nx">toBeAccessible</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="continuous-integration">Continuous Integration</h2>
+
+<h3 id="github-actions-workflow">GitHub Actions Workflow</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Test Suite</span>
+<span class="na">on</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">push</span><span class="pi">,</span> <span class="nv">pull_request</span><span class="pi">]</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">test</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-node@v2</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm ci</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm test -- --coverage</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">codecov/codecov-action@v2</span>
+</code></pre></div></div>
+
+<h3 id="pre-commit-hooks">Pre-commit Hooks</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">package.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"husky"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"hooks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"pre-commit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npm test -- --findRelatedTests"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<ol>
+  <li><strong>Tests timing out</strong>
+    <ul>
+      <li>Increase timeout: <code class="language-plaintext highlighter-rouge">jest.setTimeout(10000)</code></li>
+      <li>Check for unresolved promises</li>
+      <li>Verify mock implementations</li>
+    </ul>
+  </li>
+  <li><strong>Flaky tests</strong>
+    <ul>
+      <li>Use <code class="language-plaintext highlighter-rouge">waitFor</code> for async operations</li>
+      <li>Clear timers: <code class="language-plaintext highlighter-rouge">jest.clearAllTimers()</code></li>
+      <li>Reset mocks between tests</li>
+    </ul>
+  </li>
+  <li><strong>Coverage gaps</strong>
+    <ul>
+      <li>Run coverage with <code class="language-plaintext highlighter-rouge">--collectCoverageFrom</code></li>
+      <li>Check for untested branches</li>
+      <li>Add edge case tests</li>
+    </ul>
+  </li>
+  <li><strong>Memory leaks</strong>
+    <ul>
+      <li>Clean up after tests</li>
+      <li>Unmount components properly</li>
+      <li>Clear store subscriptions</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://jestjs.io/docs/getting-started">Jest Documentation</a></li>
+  <li><a href="https://callstack.github.io/react-native-testing-library/">React Native Testing Library</a></li>
+  <li><a href="https://playwright.dev/docs/intro">Playwright Documentation</a></li>
+  <li><a href="https://github.com/goldbergyoni/javascript-testing-best-practices">Testing Best Practices</a></li>
+</ul>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>When contributing tests:</p>
+<ol>
+  <li>Follow the existing patterns</li>
+  <li>Maintain coverage above 70%</li>
+  <li>Document complex test scenarios</li>
+  <li>Update this guide with new patterns</li>
+  <li>Run full test suite before submitting</li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / testing-guide.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

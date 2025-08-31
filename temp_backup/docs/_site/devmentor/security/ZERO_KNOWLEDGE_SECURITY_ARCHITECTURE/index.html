@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZERO KNOWLEDGE SECURITY ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">security/ZERO_KNOWLEDGE_SECURITY_ARCHITECTURE.md</span>
+</div>
+
+<h1>ZERO KNOWLEDGE SECURITY ARCHITECTURE</h1>
+
+
+<h1 id="-devmentor-zero-knowledge-security-architecture">🔐 DevMentor Zero-Knowledge Security Architecture</h1>
+
+<h2 id="executive-summary">Executive Summary</h2>
+
+<p>DevMentor implements a <strong>zero-knowledge security model</strong> where we learn from your code without storing sensitive data. We analyze patterns, not secrets.</p>
+
+<h2 id="️-core-security-principles">🛡️ Core Security Principles</h2>
+
+<ol>
+  <li><strong>Minimal Data Collection</strong>: Only what’s needed for learning</li>
+  <li><strong>Pattern Extraction, Not Code Storage</strong>: Store insights, not source</li>
+  <li><strong>User-Controlled Access</strong>: You decide what we can see</li>
+  <li><strong>Encrypted at Rest</strong>: All stored data is encrypted</li>
+  <li><strong>No Secrets Ever</strong>: Automatic detection and rejection of sensitive data</li>
+</ol>
+
+<h2 id="-github-oauth-implementation">🔑 GitHub OAuth Implementation</h2>
+
+<h3 id="oauth-flow-with-security-controls">OAuth Flow with Security Controls</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/auth/github-oauth.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">GitHubOAuthService</span> <span class="p">{</span>
+  <span class="c1">// Minimal scope request - only what we need</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">SCOPES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">read:user</span><span class="dl">'</span><span class="p">,</span>           <span class="c1">// Basic profile</span>
+    <span class="dl">'</span><span class="s1">repo:status</span><span class="dl">'</span><span class="p">,</span>         <span class="c1">// Repository metadata only</span>
+    <span class="dl">'</span><span class="s1">public_repo</span><span class="dl">'</span>          <span class="c1">// Public repos only by default</span>
+  <span class="p">];</span>
+  
+  <span class="c1">// User can optionally grant more access</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">OPTIONAL_SCOPES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">repo</span><span class="dl">'</span>                 <span class="c1">// Private repos (requires explicit consent)</span>
+  <span class="p">];</span>
+  
+  <span class="k">async</span> <span class="nx">initiateOAuth</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">generateCryptoRandomString</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">client_id</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">GITHUB_CLIENT_ID</span><span class="p">,</span>
+      <span class="na">redirect_uri</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">APP_URL</span><span class="p">}</span><span class="s2">/auth/github/callback`</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">SCOPES</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">),</span>
+      <span class="nx">state</span><span class="p">,</span>
+      <span class="na">allow_signup</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// Store state in encrypted session</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">storeState</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="p">{</span> 
+      <span class="na">expires</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">600000</span><span class="p">,</span> <span class="c1">// 10 minutes</span>
+      <span class="na">ip</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">ip</span><span class="p">,</span>
+      <span class="na">fingerprint</span><span class="p">:</span> <span class="nx">generateFingerprint</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="s2">`https://github.com/login/oauth/authorize?</span><span class="p">${</span><span class="nx">querystring</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">handleCallback</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">state</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Verify state to prevent CSRF</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">verifyState</span><span class="p">(</span><span class="nx">state</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">SecurityError</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid state parameter</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Exchange code for token</span>
+    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">exchangeCodeForToken</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+    
+    <span class="c1">// Encrypt token before storage</span>
+    <span class="kd">const</span> <span class="nx">encryptedToken</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">encryptToken</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+    
+    <span class="c1">// Store with automatic expiration</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">storeToken</span><span class="p">(</span><span class="nx">encryptedToken</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">expires</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7200000</span><span class="p">,</span> <span class="c1">// 2 hours</span>
+      <span class="na">refreshable</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">token</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="secure-token-management">Secure Token Management</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/security/token-manager.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">SecureTokenManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">encryption</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AES256_GCM</span><span class="p">();</span>
+  
+  <span class="k">async</span> <span class="nx">storeToken</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Never store raw tokens</span>
+    <span class="kd">const</span> <span class="nx">encrypted</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">encryption</span><span class="p">.</span><span class="nx">encrypt</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">key</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">deriveUserKey</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+      <span class="na">additionalData</span><span class="p">:</span> <span class="p">{</span> <span class="nx">userId</span><span class="p">,</span> <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Store in secure vault with automatic rotation</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">vault</span><span class="p">.</span><span class="nx">store</span><span class="p">(</span><span class="s2">`token:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">encrypted</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">ttl</span><span class="p">:</span> <span class="mi">7200</span><span class="p">,</span> <span class="c1">// 2 hours</span>
+      <span class="na">autoRotate</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">encrypted</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">vault</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`token:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">encrypted</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    
+    <span class="c1">// Decrypt with user-specific key</span>
+    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">encryption</span><span class="p">.</span><span class="nx">decrypt</span><span class="p">(</span><span class="nx">encrypted</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">key</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">deriveUserKey</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Validate token is still valid</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">isTokenExpired</span><span class="p">(</span><span class="nx">token</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">token</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-repository-access-limits">📊 Repository Access Limits</h2>
+
+<h3 id="configurable-security-limits">Configurable Security Limits</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/config/security-limits.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">REPO_ANALYSIS_LIMITS</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// File access limits</span>
+  <span class="na">files</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">maxFilesPerScan</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>        <span class="c1">// Maximum files to analyze</span>
+    <span class="na">maxFileSize</span><span class="p">:</span> <span class="mi">500</span><span class="nx">_000</span><span class="p">,</span>         <span class="c1">// 500KB per file</span>
+    <span class="na">maxTotalSize</span><span class="p">:</span> <span class="mi">10</span><span class="nx">_000_000</span><span class="p">,</span>     <span class="c1">// 10MB total</span>
+    <span class="na">excludePatterns</span><span class="p">:</span> <span class="p">[</span>
+      <span class="dl">'</span><span class="s1">*.env*</span><span class="dl">'</span><span class="p">,</span>                  <span class="c1">// Environment files</span>
+      <span class="dl">'</span><span class="s1">*secret*</span><span class="dl">'</span><span class="p">,</span>                 <span class="c1">// Files with 'secret' in name</span>
+      <span class="dl">'</span><span class="s1">*.key</span><span class="dl">'</span><span class="p">,</span>                    <span class="c1">// Key files</span>
+      <span class="dl">'</span><span class="s1">*.pem</span><span class="dl">'</span><span class="p">,</span>                    <span class="c1">// Certificates</span>
+      <span class="dl">'</span><span class="s1">.git/**</span><span class="dl">'</span><span class="p">,</span>                  <span class="c1">// Git internals</span>
+      <span class="dl">'</span><span class="s1">node_modules/**</span><span class="dl">'</span><span class="p">,</span>          <span class="c1">// Dependencies</span>
+      <span class="dl">'</span><span class="s1">vendor/**</span><span class="dl">'</span><span class="p">,</span>                <span class="c1">// Vendor code</span>
+      <span class="dl">'</span><span class="s1">*.min.js</span><span class="dl">'</span><span class="p">,</span>                 <span class="c1">// Minified files</span>
+      <span class="dl">'</span><span class="s1">dist/**</span><span class="dl">'</span><span class="p">,</span>                  <span class="c1">// Build outputs</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// Content filtering</span>
+  <span class="na">content</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">maxLineLength</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>           <span class="c1">// Skip files with long lines (likely minified)</span>
+    <span class="na">maxComplexity</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>           <span class="c1">// Skip overly complex files</span>
+    <span class="na">allowedExtensions</span><span class="p">:</span> <span class="p">[</span>
+      <span class="dl">'</span><span class="s1">.js</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.jsx</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.ts</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.tsx</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// JavaScript/TypeScript</span>
+      <span class="dl">'</span><span class="s1">.py</span><span class="dl">'</span><span class="p">,</span>                          <span class="c1">// Python</span>
+      <span class="dl">'</span><span class="s1">.java</span><span class="dl">'</span><span class="p">,</span>                        <span class="c1">// Java</span>
+      <span class="dl">'</span><span class="s1">.go</span><span class="dl">'</span><span class="p">,</span>                          <span class="c1">// Go</span>
+      <span class="dl">'</span><span class="s1">.rs</span><span class="dl">'</span><span class="p">,</span>                          <span class="c1">// Rust</span>
+      <span class="dl">'</span><span class="s1">.md</span><span class="dl">'</span><span class="p">,</span>                          <span class="c1">// Documentation</span>
+      <span class="dl">'</span><span class="s1">.json</span><span class="dl">'</span><span class="p">,</span>                        <span class="c1">// Config (filtered)</span>
+      <span class="dl">'</span><span class="s1">.yml</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.yaml</span><span class="dl">'</span>                 <span class="c1">// Config (filtered)</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// API rate limits</span>
+  <span class="na">api</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">maxRequestsPerMinute</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="na">maxRequestsPerHour</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="na">maxConcurrentAnalysis</span><span class="p">:</span> <span class="mi">3</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// Time limits</span>
+  <span class="na">time</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">maxAnalysisTime</span><span class="p">:</span> <span class="mi">300</span><span class="nx">_000</span><span class="p">,</span>     <span class="c1">// 5 minutes max</span>
+    <span class="na">scanTimeout</span><span class="p">:</span> <span class="mi">30</span><span class="nx">_000</span><span class="p">,</span>           <span class="c1">// 30 seconds per file</span>
+    <span class="na">totalTimeout</span><span class="p">:</span> <span class="mi">600</span><span class="nx">_000</span>          <span class="c1">// 10 minutes absolute max</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="user-consent--control-panel">User Consent &amp; Control Panel</h3>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/components/PrivacyControls.tsx</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">PrivacyControls</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">settings</span><span class="p">,</span> <span class="nx">setSettings</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">({</span>
+    <span class="na">allowPrivateRepos</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">sharePatterns</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>        <span class="c1">// Share learned patterns with team</span>
+    <span class="na">storeCode</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>           <span class="c1">// Never store actual code</span>
+    <span class="na">analyticsEnabled</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">dataRetention</span><span class="p">:</span> <span class="mi">30</span>           <span class="c1">// Days to retain data</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">Card</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>🔐 Privacy <span class="err">&amp;</span> Security Settings<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">Section</span> <span class="na">title</span><span class="p">=</span><span class="s">"Repository Access"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Toggle</span>
+          <span class="na">label</span><span class="p">=</span><span class="s">"Allow analysis of private repositories"</span>
+          <span class="na">checked</span><span class="p">=</span><span class="si">{</span><span class="nx">settings</span><span class="p">.</span><span class="nx">allowPrivateRepos</span><span class="si">}</span>
+          <span class="na">onChange</span><span class="p">=</span><span class="si">{</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">updateSetting</span><span class="p">(</span><span class="dl">'</span><span class="s1">allowPrivateRepos</span><span class="dl">'</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span><span class="si">}</span>
+        <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Info</span><span class="p">&gt;</span>
+          We only analyze code structure and patterns, never storing source code.
+        <span class="p">&lt;/</span><span class="nc">Info</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">Section</span><span class="p">&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">Section</span> <span class="na">title</span><span class="p">=</span><span class="s">"Data Limits"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Slider</span>
+          <span class="na">label</span><span class="p">=</span><span class="s">"Maximum files to analyze"</span>
+          <span class="na">min</span><span class="p">=</span><span class="si">{</span><span class="mi">10</span><span class="si">}</span>
+          <span class="na">max</span><span class="p">=</span><span class="si">{</span><span class="mi">500</span><span class="si">}</span>
+          <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">settings</span><span class="p">.</span><span class="nx">maxFiles</span><span class="si">}</span>
+          <span class="na">onChange</span><span class="p">=</span><span class="si">{</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">updateSetting</span><span class="p">(</span><span class="dl">'</span><span class="s1">maxFiles</span><span class="dl">'</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span><span class="si">}</span>
+        <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nc">MultiSelect</span>
+          <span class="na">label</span><span class="p">=</span><span class="s">"File types to exclude"</span>
+          <span class="na">options</span><span class="p">=</span><span class="si">{</span><span class="nx">FILE_TYPES</span><span class="si">}</span>
+          <span class="na">selected</span><span class="p">=</span><span class="si">{</span><span class="nx">settings</span><span class="p">.</span><span class="nx">excludedTypes</span><span class="si">}</span>
+          <span class="na">onChange</span><span class="p">=</span><span class="si">{</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">updateSetting</span><span class="p">(</span><span class="dl">'</span><span class="s1">excludedTypes</span><span class="dl">'</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span><span class="si">}</span>
+        <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">Section</span><span class="p">&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">Section</span> <span class="na">title</span><span class="p">=</span><span class="s">"Data Retention"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Select</span>
+          <span class="na">label</span><span class="p">=</span><span class="s">"Delete my data after"</span>
+          <span class="na">options</span><span class="p">=</span><span class="si">{</span><span class="p">[</span>
+            <span class="p">{</span> <span class="na">value</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="na">label</span><span class="p">:</span> <span class="dl">'</span><span class="s1">7 days</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">value</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="na">label</span><span class="p">:</span> <span class="dl">'</span><span class="s1">30 days</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">value</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="na">label</span><span class="p">:</span> <span class="dl">'</span><span class="s1">90 days</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">value</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">label</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Never (manual deletion only)</span><span class="dl">'</span> <span class="p">}</span>
+          <span class="p">]</span><span class="si">}</span>
+          <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">settings</span><span class="p">.</span><span class="nx">dataRetention</span><span class="si">}</span>
+          <span class="na">onChange</span><span class="p">=</span><span class="si">{</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">updateSetting</span><span class="p">(</span><span class="dl">'</span><span class="s1">dataRetention</span><span class="dl">'</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span><span class="si">}</span>
+        <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">Section</span><span class="p">&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">Section</span> <span class="na">title</span><span class="p">=</span><span class="s">"What We Learn (Not Store)"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">LearnedPatterns</span><span class="p">&gt;</span>
+          ✓ Coding style patterns
+          ✓ Framework preferences  
+          ✓ Test coverage levels
+          ✓ Architectural patterns
+          ✗ Actual source code
+          ✗ Business logic
+          ✗ API keys or secrets
+          ✗ Proprietary algorithms
+        <span class="p">&lt;/</span><span class="nc">LearnedPatterns</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">Section</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">Card</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-zero-knowledge-pattern-learning">🧬 Zero-Knowledge Pattern Learning</h2>
+
+<h3 id="how-we-learn-without-storing-code">How We Learn Without Storing Code</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/security/zero-knowledge-analyzer.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ZeroKnowledgeAnalyzer</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">analyzeCode</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Patterns</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Step 1: Sanitize (remove all sensitive data)</span>
+    <span class="kd">const</span> <span class="nx">sanitized</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">sanitize</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+    
+    <span class="c1">// Step 2: Extract patterns (not content)</span>
+    <span class="kd">const</span> <span class="nx">patterns</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">syntaxPatterns</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">extractSyntaxPatterns</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">structurePatterns</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">extractStructure</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">stylePatterns</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">extractStyle</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">complexityMetrics</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateComplexity</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">)</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// Step 3: Convert to vectors (one-way transformation)</span>
+    <span class="kd">const</span> <span class="nx">vectors</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">patternsToVectors</span><span class="p">(</span><span class="nx">patterns</span><span class="p">);</span>
+    
+    <span class="c1">// Step 4: Destroy original code</span>
+    <span class="nx">sanitized</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span> <span class="c1">// Securely overwrite memory</span>
+    
+    <span class="c1">// Step 5: Store only vectors</span>
+    <span class="k">return</span> <span class="nx">vectors</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">sanitize</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">SanitizedCode</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">code</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">[</span><span class="sr">"'</span><span class="se">]</span><span class="sr">.*</span><span class="se">?[</span><span class="sr">"'</span><span class="se">]</span><span class="sr">/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">STRING</span><span class="dl">'</span><span class="p">)</span>           <span class="c1">// Replace all strings</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\d</span><span class="sr">+/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">NUMBER</span><span class="dl">'</span><span class="p">)</span>                   <span class="c1">// Replace all numbers</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\/\*[\s\S]</span><span class="sr">*</span><span class="se">?\*\/</span><span class="sr">/g</span><span class="p">,</span> <span class="dl">''</span><span class="p">)</span>           <span class="c1">// Remove comments</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\/\/</span><span class="sr">.*/g</span><span class="p">,</span> <span class="dl">''</span><span class="p">)</span>                      <span class="c1">// Remove line comments</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\b[</span><span class="sr">A-Z_</span><span class="se">]</span><span class="sr">+</span><span class="se">\b</span><span class="sr">/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">CONSTANT</span><span class="dl">'</span><span class="p">)</span>        <span class="c1">// Replace constants</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\b\w</span><span class="sr">+@</span><span class="se">\w</span><span class="sr">+</span><span class="se">\.\w</span><span class="sr">+</span><span class="se">\b</span><span class="sr">/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">EMAIL</span><span class="dl">'</span><span class="p">)</span>      <span class="c1">// Replace emails</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/https</span><span class="se">?</span><span class="sr">:</span><span class="se">\/\/[^\s]</span><span class="sr">+/g</span><span class="p">,</span> <span class="dl">'</span><span class="s1">URL</span><span class="dl">'</span><span class="p">);</span>      <span class="c1">// Replace URLs</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">extractPatterns</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">:</span> <span class="nx">SanitizedCode</span><span class="p">):</span> <span class="nx">Patterns</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="c1">// We learn HOW you code, not WHAT you code</span>
+      <span class="na">indentationStyle</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectIndentation</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">namingConvention</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectNaming</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">functionLength</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">averageFunctionLength</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">commentRatio</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">commentToCodeRatio</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">testingStyle</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectTestingPatterns</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">errorHandling</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectErrorPatterns</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">),</span>
+      <span class="na">asyncPatterns</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectAsyncUsage</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">)</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="secret-detection--rejection">Secret Detection &amp; Rejection</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/security/secret-detector.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">SecretDetector</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">patterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1">// API Keys</span>
+    <span class="sr">/</span><span class="se">[</span><span class="sr">a-zA-Z0-9</span><span class="se">]{32,}</span><span class="sr">/</span><span class="p">,</span>
+    <span class="sr">/sk_</span><span class="se">[</span><span class="sr">a-zA-Z0-9</span><span class="se">]{32,}</span><span class="sr">/</span><span class="p">,</span>
+    <span class="sr">/pk_</span><span class="se">[</span><span class="sr">a-zA-Z0-9</span><span class="se">]{32,}</span><span class="sr">/</span><span class="p">,</span>
+    
+    <span class="c1">// AWS</span>
+    <span class="sr">/AKIA</span><span class="se">[</span><span class="sr">0-9A-Z</span><span class="se">]{16}</span><span class="sr">/</span><span class="p">,</span>
+    
+    <span class="c1">// Private Keys</span>
+    <span class="sr">/-----BEGIN </span><span class="se">(?:</span><span class="sr">RSA </span><span class="se">)?</span><span class="sr">PRIVATE KEY-----/</span><span class="p">,</span>
+    
+    <span class="c1">// Passwords</span>
+    <span class="sr">/password</span><span class="se">\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">:=</span><span class="se">]\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">"'</span><span class="se">][^</span><span class="sr">"'</span><span class="se">]</span><span class="sr">+</span><span class="se">[</span><span class="sr">"'</span><span class="se">]</span><span class="sr">/i</span><span class="p">,</span>
+    
+    <span class="c1">// Tokens</span>
+    <span class="sr">/token</span><span class="se">\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">:=</span><span class="se">]\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">"'</span><span class="se">][^</span><span class="sr">"'</span><span class="se">]</span><span class="sr">+</span><span class="se">[</span><span class="sr">"'</span><span class="se">]</span><span class="sr">/i</span><span class="p">,</span>
+    
+    <span class="c1">// Environment variables with sensitive names</span>
+    <span class="sr">/</span><span class="se">(?:</span><span class="sr">DATABASE_URL|API_KEY|SECRET|PASSWORD|TOKEN</span><span class="se">)</span><span class="sr">/i</span>
+  <span class="p">];</span>
+  
+  <span class="k">async</span> <span class="nx">scan</span><span class="p">(</span><span class="nx">content</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResult</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">detected</span> <span class="o">=</span> <span class="p">[];</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">pattern</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">patterns</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">pattern</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">content</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">detected</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">potential_secret</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">pattern</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span>
+          <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rejected</span><span class="dl">'</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">detected</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Log detection (not the secret itself!)</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">logDetection</span><span class="p">({</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+        <span class="na">count</span><span class="p">:</span> <span class="nx">detected</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="na">types</span><span class="p">:</span> <span class="nx">detected</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span> <span class="o">=&gt;</span> <span class="nx">d</span><span class="p">.</span><span class="kd">type</span><span class="p">)</span>
+      <span class="p">});</span>
+      
+      <span class="c1">// Reject the file completely</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">SecurityError</span><span class="p">(</span><span class="dl">'</span><span class="s1">Potential secrets detected. File rejected for security.</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="p">{</span> <span class="na">safe</span><span class="p">:</span> <span class="kc">true</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-data-encryption-architecture">🔒 Data Encryption Architecture</h2>
+
+<h3 id="multi-layer-encryption">Multi-Layer Encryption</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/security/encryption-manager.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">EncryptionManager</span> <span class="p">{</span>
+  <span class="c1">// Layer 1: User-specific encryption</span>
+  <span class="k">async</span> <span class="nx">encryptUserData</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">userKey</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">deriveUserKey</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">aesEncrypt</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">userKey</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Layer 2: Application-level encryption</span>
+  <span class="k">async</span> <span class="nx">encryptAppData</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">appKey</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getAppKey</span><span class="p">();</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">aesEncrypt</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">appKey</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Layer 3: Database-level encryption (transparent)</span>
+  <span class="c1">// Handled by database (PostgreSQL TDE or similar)</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">deriveUserKey</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Buffer</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// User-specific key derivation</span>
+    <span class="k">return</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">pbkdf2Sync</span><span class="p">(</span>
+      <span class="nx">userId</span><span class="p">,</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">USER_SALT</span><span class="o">!</span><span class="p">,</span>
+      <span class="mi">100000</span><span class="p">,</span>
+      <span class="mi">32</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-privacy-dashboard">📈 Privacy Dashboard</h2>
+
+<h3 id="what-users-see">What Users See</h3>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/components/PrivacyDashboard.tsx</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">PrivacyDashboard</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">Dashboard</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span>
+        <span class="na">title</span><span class="p">=</span><span class="s">"Data Analyzed"</span>
+        <span class="na">value</span><span class="p">=</span><span class="s">"1,234 patterns"</span>
+        <span class="na">subtitle</span><span class="p">=</span><span class="s">"0 source files stored"</span>
+        <span class="na">icon</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">Shield</span> <span class="p">/&gt;</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">MetricCard</span>
+        <span class="na">title</span><span class="p">=</span><span class="s">"Security Score"</span>
+        <span class="na">value</span><span class="p">=</span><span class="s">"A+"</span>
+        <span class="na">subtitle</span><span class="p">=</span><span class="s">"All data encrypted"</span>
+        <span class="na">icon</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">Lock</span> <span class="p">/&gt;</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">MetricCard</span>
+        <span class="na">title</span><span class="p">=</span><span class="s">"Data Retention"</span>
+        <span class="na">value</span><span class="p">=</span><span class="s">"30 days"</span>
+        <span class="na">subtitle</span><span class="p">=</span><span class="s">"Auto-delete enabled"</span>
+        <span class="na">icon</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">Clock</span> <span class="p">/&gt;</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">DataFlowVisualization</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="cm">/* Visual showing data flow with encryption points */</span><span class="si">}</span>
+        Your Code → Pattern Extraction → Vectors → Encrypted Storage
+                ↓                          ↓              ↓
+            (destroyed)            (one-way)     (AES-256)
+      <span class="p">&lt;/</span><span class="nc">DataFlowVisualization</span><span class="p">&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">ActivityLog</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">LogEntry</span> <span class="na">time</span><span class="p">=</span><span class="s">"2 min ago"</span><span class="p">&gt;</span>
+          ✓ Repository scanned: 45 files analyzed, 0 secrets detected
+        <span class="p">&lt;/</span><span class="nc">LogEntry</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">LogEntry</span> <span class="na">time</span><span class="p">=</span><span class="s">"5 min ago"</span><span class="p">&gt;</span>
+          ✓ Patterns extracted: Function style, naming conventions
+        <span class="p">&lt;/</span><span class="nc">LogEntry</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">LogEntry</span> <span class="na">time</span><span class="p">=</span><span class="s">"10 min ago"</span><span class="p">&gt;</span>
+          ✓ Security check passed: No sensitive data found
+        <span class="p">&lt;/</span><span class="nc">LogEntry</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">ActivityLog</span><span class="p">&gt;</span>
+      
+      <span class="p">&lt;</span><span class="nc">Actions</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="nx">downloadMyData</span><span class="si">}</span><span class="p">&gt;</span>
+          📥 Download My Data
+        <span class="p">&lt;/</span><span class="nc">Button</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Button</span> <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="nx">deleteMyData</span><span class="si">}</span> <span class="na">variant</span><span class="p">=</span><span class="s">"danger"</span><span class="p">&gt;</span>
+          🗑️ Delete All My Data
+        <span class="p">&lt;/</span><span class="nc">Button</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nc">Actions</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">Dashboard</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="️-security-headers--csp">🛡️ Security Headers &amp; CSP</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/middleware/security.ts</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">securityMiddleware</span><span class="p">(</span><span class="nx">app</span><span class="p">:</span> <span class="nx">Express</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">helmet</span><span class="p">({</span>
+    <span class="na">contentSecurityPolicy</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directives</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">defaultSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'self'</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">scriptSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'self'</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">'unsafe-inline'</span><span class="dl">"</span><span class="p">],</span> <span class="c1">// Will tighten in production</span>
+        <span class="na">styleSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'self'</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">'unsafe-inline'</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">imgSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'self'</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">data:</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">https:</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">connectSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'self'</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">https://api.github.com</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">fontSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'self'</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">objectSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'none'</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">mediaSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'none'</span><span class="dl">"</span><span class="p">],</span>
+        <span class="na">frameSrc</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">'none'</span><span class="dl">"</span><span class="p">],</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="na">hsts</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">maxAge</span><span class="p">:</span> <span class="mi">31536000</span><span class="p">,</span>
+      <span class="na">includeSubDomains</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">preload</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+  <span class="p">}));</span>
+  
+  <span class="c1">// Additional security headers</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">X-Frame-Options</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">DENY</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">X-Content-Type-Options</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">nosniff</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">Referrer-Policy</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">strict-origin-when-cross-origin</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">Permissions-Policy</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">geolocation=(), microphone=(), camera=()</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">next</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-authentication-flow">🔐 Authentication Flow</h2>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant DevMentor
+    participant GitHub
+    participant SecureVault
+    
+    User-&gt;&gt;DevMentor: Click "Connect GitHub"
+    DevMentor-&gt;&gt;DevMentor: Generate state token
+    DevMentor-&gt;&gt;GitHub: Redirect to OAuth
+    GitHub-&gt;&gt;User: Request permissions
+    User-&gt;&gt;GitHub: Approve minimal scopes
+    GitHub-&gt;&gt;DevMentor: Return with code
+    DevMentor-&gt;&gt;DevMentor: Verify state
+    DevMentor-&gt;&gt;GitHub: Exchange code for token
+    GitHub-&gt;&gt;DevMentor: Return access token
+    DevMentor-&gt;&gt;SecureVault: Encrypt &amp; store token
+    SecureVault-&gt;&gt;DevMentor: Confirm stored
+    DevMentor-&gt;&gt;User: Success + Privacy Dashboard
+</code></pre>
+
+<h2 id="-what-we-track-vs-what-we-dont">📊 What We Track vs What We Don’t</h2>
+
+<h3 id="-we-track-patterns-only">✅ We Track (Patterns Only)</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="nl">patterns</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">codingStyle</span><span class="p">:</span> <span class="dl">"</span><span class="s2">functional</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">indentation</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2 spaces</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">naming</span><span class="p">:</span> <span class="dl">"</span><span class="s2">camelCase</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">testCoverage</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span>
+    <span class="na">avgFunctionLength</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="na">preferredFrameworks</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">React</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Node.js</span><span class="dl">"</span><span class="p">],</span>
+    <span class="na">errorHandlingStyle</span><span class="p">:</span> <span class="dl">"</span><span class="s2">try-catch</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">asyncPreference</span><span class="p">:</span> <span class="dl">"</span><span class="s2">async-await</span><span class="dl">"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="-we-never-store">❌ We Never Store</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="c1">// NEVER stored or transmitted</span>
+  <span class="nl">sourceCode</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DESTROYED</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">businessLogic</span><span class="p">:</span> <span class="dl">"</span><span class="s2">NEVER_CAPTURED</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">apiKeys</span><span class="p">:</span> <span class="dl">"</span><span class="s2">AUTO_REJECTED</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">credentials</span><span class="p">:</span> <span class="dl">"</span><span class="s2">BLOCKED</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">proprietaryAlgorithms</span><span class="p">:</span> <span class="dl">"</span><span class="s2">IGNORED</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">customerData</span><span class="p">:</span> <span class="dl">"</span><span class="s2">NEVER_ACCESSED</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">privateComments</span><span class="p">:</span> <span class="dl">"</span><span class="s2">STRIPPED</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-security-audit-trail">🚨 Security Audit Trail</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Every security-relevant action is logged</span>
+<span class="kr">interface</span> <span class="nx">SecurityAuditLog</span> <span class="p">{</span>
+  <span class="nl">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">;</span>
+  <span class="nl">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">action</span><span class="p">:</span> <span class="nx">SecurityAction</span><span class="p">;</span>
+  <span class="nl">result</span><span class="p">:</span> <span class="dl">'</span><span class="s1">allowed</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">blocked</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">metadata</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">ip</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">userAgent</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">requestId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// Examples:</span>
+<span class="p">{</span>
+  <span class="na">timestamp</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2024-01-20T10:30:00Z</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">userId</span><span class="p">:</span> <span class="dl">"</span><span class="s2">user_123</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">action</span><span class="p">:</span> <span class="dl">"</span><span class="s2">REPO_ACCESS</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">result</span><span class="p">:</span> <span class="dl">"</span><span class="s2">allowed</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">repoType</span><span class="p">:</span> <span class="dl">"</span><span class="s2">public</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">filesScanned</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+    <span class="na">secretsDetected</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-security-commitments">🎯 Security Commitments</h2>
+
+<ol>
+  <li><strong>Your code is your code</strong> - We never store source</li>
+  <li><strong>Patterns, not secrets</strong> - We learn how, not what</li>
+  <li><strong>You control access</strong> - Granular permissions</li>
+  <li><strong>Transparent operations</strong> - See everything we do</li>
+  <li><strong>Right to deletion</strong> - Remove all data anytime</li>
+  <li><strong>Encrypted always</strong> - At rest and in transit</li>
+  <li><strong>Regular audits</strong> - Third-party security reviews</li>
+</ol>
+
+<h2 id="-implementation-checklist">🔧 Implementation Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GitHub OAuth with minimal scopes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Token encryption and rotation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Secret detection and rejection</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />File/size limits implementation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Zero-knowledge pattern extraction</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Privacy control panel</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Audit logging system</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Data retention policies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GDPR compliance tools</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security headers (CSP, HSTS, etc.)</li>
+</ul>
+
+<p>This architecture ensures DevMentor learns from your code while maintaining <strong>complete privacy and security</strong>!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / security/ZERO_KNOWLEDGE_SECURITY_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

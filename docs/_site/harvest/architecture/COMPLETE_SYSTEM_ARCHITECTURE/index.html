@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMPLETE SYSTEM ARCHITECTURE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">Harvest.ai</span> / 
+  <span style="color: #999;">architecture/COMPLETE_SYSTEM_ARCHITECTURE.md</span>
+</div>
+
+<h1>COMPLETE SYSTEM ARCHITECTURE</h1>
+
+
+<h1 id="️-harvestai-complete-system-architecture">🏗️ HARVEST.AI COMPLETE SYSTEM ARCHITECTURE</h1>
+
+<p><strong>Version:</strong> 1.0.0<br />
+<strong>Status:</strong> 🟡 <strong>RAPID DEVELOPMENT MODE</strong><br />
+<strong>Target:</strong> 100% MVP in 4-6 weeks with smart shortcuts</p>
+
+<h2 id="-system-overview">📊 System Overview</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌────────────────────────────────────────────────────────────────────┐
+│                         CLIENT LAYER                               │
+├────────────────┬───────────────────┬──────────────────────────────┤
+│  Next.js App   │   CLI Tool        │   API SDK                    │
+│  - BYOK UI     │   - Quick Gen     │   - Python/JS/Go            │
+│  - Export UI   │   - Batch Ops     │   - Auto-retry               │
+└────────┬───────┴────────┬──────────┴────────┬─────────────────────┘
+         │                 │                   │
+         └─────────────────┼───────────────────┘
+                           ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                      API GATEWAY (FastAPI)                         │
+├────────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+│  │ Rate Limiter │  │ Auth/BYOK    │  │ Cost Calc    │            │
+│  │ - Redis      │  │ - JWT        │  │ - Tiered     │            │
+│  │ - Sliding   │  │ - API Keys   │  │ - Pre-flight │            │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘            │
+│         └──────────────────┼──────────────────┘                   │
+└────────────────────────────┼───────────────────────────────────────┘
+                             ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                    AI GATEWAY (Smart Router)                       │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │                   Decision Engine                            │  │
+│  │  if complexity &lt; 0.3 &amp;&amp; cost_sensitive:  → GPT-3.5         │  │
+│  │  if complexity &lt; 0.6 &amp;&amp; balanced:        → Claude Haiku    │  │
+│  │  if complexity &gt; 0.8 || quality_critical: → GPT-4/Claude-3 │  │
+│  │  if local_only || offline:               → Ollama          │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
+│  │ OpenAI   │  │Anthropic │  │ Ollama   │  │ Gemini   │         │
+│  │ Provider │  │ Provider │  │ Provider │  │ Provider │         │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘         │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │             Response Cache (Redis + Semantic Hash)          │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+└────────────────────────────┼───────────────────────────────────────┘
+                             ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                   PROCESSING PIPELINE                              │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Stage 1: Acquisition       Stage 2: Intelligence                  │
+│  ┌─────────────────┐       ┌──────────────────────┐              │
+│  │ Legal Checker   │       │ Concept Extractor    │              │
+│  │ - Robots.txt    │──────▶│ - NER                │              │
+│  │ - Rate limits   │       │ - Keywords           │              │
+│  │ - Attribution   │       │ - Relationships       │              │
+│  └─────────────────┘       └──────────────────────┘              │
+│                                    │                               │
+│  Stage 3: Transformation           ▼                               │
+│  ┌─────────────────┐       ┌──────────────────────┐              │
+│  │ Format Engine   │◀──────│ Content Synthesizer  │              │
+│  │ - Quiz          │       │ - RAG Pipeline       │              │
+│  │ - Blog          │       │ - Template Engine    │              │
+│  │ - Video Script  │       │ - Quality Validator  │              │
+│  │ - Study Guide   │       └──────────────────────┘              │
+│  └─────────────────┘                                              │
+│           │                                                        │
+│           ▼                                                        │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │              Deduplication &amp; Optimization                   │  │
+│  │  - Semantic similarity (Sentence-BERT + FAISS)             │  │
+│  │  - Content compression                                     │  │
+│  │  - Metadata enrichment                                     │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+└────────────────────────────┼───────────────────────────────────────┘
+                             ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                        DATA LAYER                                  │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐ │
+│  │ PostgreSQL │  │   Redis    │  │    S3      │  │  Pinecone  │ │
+│  │            │  │            │  │            │  │            │ │
+│  │ - Users    │  │ - Cache    │  │ - Files    │  │ - Vectors  │ │
+│  │ - Content  │  │ - Sessions │  │ - Exports  │  │ - Search   │ │
+│  │ - Usage    │  │ - Queues   │  │ - Backups  │  │ - RAG      │ │
+│  └────────────┘  └────────────┘  └────────────┘  └────────────┘ │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="-fast-track-implementation-strategy">🚀 Fast-Track Implementation Strategy</h2>
+
+<h3 id="why-we-can-build-this-in-4-6-weeks">Why We Can Build This in 4-6 Weeks</h3>
+
+<ol>
+  <li><strong>Use Existing Libraries</strong> - Don’t reinvent the wheel</li>
+  <li><strong>Leverage AI for Code</strong> - GPT-4/Claude for boilerplate</li>
+  <li><strong>Smart Architecture Choices</strong> - Serverless where possible</li>
+  <li><strong>Progressive Enhancement</strong> - Ship core, iterate features</li>
+  <li><strong>Buy vs Build</strong> - Use SaaS for non-core (Auth0, Stripe, etc.)</li>
+</ol>
+
+<h2 id="-core-algorithms-practical-implementation">🧠 Core Algorithms (Practical Implementation)</h2>
+
+<h3 id="1-content-intelligence-pipeline-week-1">1. Content Intelligence Pipeline (Week 1)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># FAST IMPLEMENTATION - Use existing libraries
+</span><span class="kn">from</span> <span class="nn">langchain</span> <span class="kn">import</span> <span class="n">LLMChain</span><span class="p">,</span> <span class="n">PromptTemplate</span>
+<span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span class="kn">import</span> <span class="nn">faiss</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="k">class</span> <span class="nc">FastContentPipeline</span><span class="p">:</span>
+    <span class="s">"""Pragmatic implementation using existing tools"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Use pre-trained models
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s">'all-MiniLM-L6-v2'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexFlatL2</span><span class="p">(</span><span class="mi">384</span><span class="p">)</span>  <span class="c1"># Dimension for MiniLM
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># 1. Quick cache check
+</span>        <span class="n">cache_key</span> <span class="o">=</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">md5</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">content</span><span class="si">}{</span><span class="n">output_format</span><span class="si">}</span><span class="s">"</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+        
+        <span class="c1"># 2. Extract concepts (use spaCy for speed)
+</span>        <span class="n">concepts</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">extract_concepts_fast</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        
+        <span class="c1"># 3. Generate output (use templates for consistency)
+</span>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">generate_output</span><span class="p">(</span><span class="n">concepts</span><span class="p">,</span> <span class="n">output_format</span><span class="p">)</span>
+        
+        <span class="c1"># 4. Cache and return
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+        <span class="k">return</span> <span class="n">output</span>
+</code></pre></div></div>
+
+<h3 id="2-cost-optimized-router-week-1">2. Cost-Optimized Router (Week 1)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># PRACTICAL ROUTER - Start simple, enhance later
+</span><span class="k">class</span> <span class="nc">PragmaticAIRouter</span><span class="p">:</span>
+    <span class="s">"""Simple but effective routing"""</span>
+    
+    <span class="n">ROUTES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'simple'</span><span class="p">:</span> <span class="p">{</span><span class="s">'model'</span><span class="p">:</span> <span class="s">'gpt-3.5-turbo'</span><span class="p">,</span> <span class="s">'cost'</span><span class="p">:</span> <span class="mf">0.002</span><span class="p">},</span>
+        <span class="s">'balanced'</span><span class="p">:</span> <span class="p">{</span><span class="s">'model'</span><span class="p">:</span> <span class="s">'claude-3-haiku'</span><span class="p">,</span> <span class="s">'cost'</span><span class="p">:</span> <span class="mf">0.005</span><span class="p">},</span>
+        <span class="s">'quality'</span><span class="p">:</span> <span class="p">{</span><span class="s">'model'</span><span class="p">:</span> <span class="s">'gpt-4-turbo'</span><span class="p">,</span> <span class="s">'cost'</span><span class="p">:</span> <span class="mf">0.03</span><span class="p">},</span>
+        <span class="s">'local'</span><span class="p">:</span> <span class="p">{</span><span class="s">'model'</span><span class="p">:</span> <span class="s">'ollama/llama3'</span><span class="p">,</span> <span class="s">'cost'</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="c1"># Start with simple rules
+</span>        <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'force_local'</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">ROUTES</span><span class="p">[</span><span class="s">'local'</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'max_cost'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">ROUTES</span><span class="p">[</span><span class="s">'simple'</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'quality_priority'</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">ROUTES</span><span class="p">[</span><span class="s">'quality'</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">ROUTES</span><span class="p">[</span><span class="s">'balanced'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="3-semantic-deduplication-week-2">3. Semantic Deduplication (Week 2)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># WORKING IMPLEMENTATION - Ready to use
+</span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">cosine_similarity</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">class</span> <span class="nc">FastDeduplicator</span><span class="p">:</span>
+    <span class="s">"""Production-ready deduplication"""</span>
+    
+    <span class="k">def</span> <span class="nf">deduplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.85</span><span class="p">):</span>
+        <span class="c1"># Quick TF-IDF for MVP, upgrade to transformers later
+</span>        <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        
+        <span class="c1"># Compute similarity matrix
+</span>        <span class="n">similarity</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+        
+        <span class="c1"># Keep only unique texts
+</span>        <span class="n">keep_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)):</span>
+            <span class="n">is_duplicate</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">keep_indices</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">similarity</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+                    <span class="n">is_duplicate</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_duplicate</span><span class="p">:</span>
+                <span class="n">keep_indices</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">[</span><span class="n">texts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keep_indices</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="-byok-implementation-week-1">🔐 BYOK Implementation (Week 1)</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Frontend - Secure key storage</span>
+<span class="kd">class</span> <span class="nx">BYOKManager</span> <span class="p">{</span>
+    <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">providers</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">anthropic</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">gemini</span><span class="dl">'</span><span class="p">];</span>
+    <span class="p">}</span>
+    
+    <span class="nx">saveKey</span><span class="p">(</span><span class="nx">provider</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Encrypt in localStorage (use SubtleCrypto API)</span>
+        <span class="kd">const</span> <span class="nx">encrypted</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">encrypt</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+        <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">`harvest_</span><span class="p">${</span><span class="nx">provider</span><span class="p">}</span><span class="s2">_key`</span><span class="p">,</span> <span class="nx">encrypted</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">async</span> <span class="nx">validateKey</span><span class="p">(</span><span class="nx">provider</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Quick validation call</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/validate-key</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+                <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">provider</span><span class="p">,</span> <span class="nx">key</span> <span class="p">}),</span>
+                <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">}</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-monitoring-week-3">📈 Monitoring (Week 3)</h2>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Simple but effective monitoring</span>
+<span class="na">monitoring</span><span class="pi">:</span>
+  <span class="c1"># Use existing services</span>
+  <span class="na">error_tracking</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Sentry"</span>  <span class="c1"># 5 min setup</span>
+  <span class="na">analytics</span><span class="pi">:</span> <span class="s2">"</span><span class="s">PostHog"</span>      <span class="c1"># 10 min setup</span>
+  <span class="na">uptime</span><span class="pi">:</span> <span class="s2">"</span><span class="s">BetterUptime"</span>    <span class="c1"># 5 min setup</span>
+  
+  <span class="c1"># Custom metrics (use existing Prometheus client)</span>
+  <span class="na">metrics</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">harvest_requests_total</span>
+    <span class="pi">-</span> <span class="s">harvest_cost_total</span>
+    <span class="pi">-</span> <span class="s">harvest_cache_hits</span>
+    <span class="pi">-</span> <span class="s">harvest_processing_time_seconds</span>
+  
+  <span class="c1"># Simple alerting rules</span>
+  <span class="na">alerts</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">metric</span><span class="pi">:</span> <span class="s">error_rate</span>
+      <span class="na">threshold</span><span class="pi">:</span> <span class="m">0.05</span>
+      <span class="na">action</span><span class="pi">:</span> <span class="s2">"</span><span class="s">PagerDuty"</span>
+    
+    <span class="pi">-</span> <span class="na">metric</span><span class="pi">:</span> <span class="s">cost_per_request</span>
+      <span class="na">threshold</span><span class="pi">:</span> <span class="m">0.10</span>
+      <span class="na">action</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Slack</span><span class="nv"> </span><span class="s">warning"</span>
+</code></pre></div></div>
+
+<h2 id="-deployment-strategy">🚢 Deployment Strategy</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────┐
+│                   PRODUCTION SETUP                       │
+│                                                          │
+│  Frontend:    Vercel (auto-deploy from GitHub)         │
+│  API:         Railway/Render (auto-scale)              │
+│  Database:    Supabase (managed Postgres)              │
+│  Cache:       Upstash Redis (serverless)               │
+│  Vectors:     Pinecone (managed)                       │
+│  Files:       Cloudflare R2 (S3-compatible)           │
+│                                                          │
+│  Total Setup Time: 2 hours                              │
+│  Monthly Cost: ~$50-100 for moderate usage              │
+└─────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="-aggressive-timeline-100-mvp">⚡ Aggressive Timeline (100% MVP)</h2>
+
+<h3 id="week-1-core-foundation-">Week 1: Core Foundation ✅</h3>
+<p><strong>Goal:</strong> Working API with BYOK</p>
+
+<ul>
+  <li>Day 1-2: FastAPI setup, BYOK system, basic auth</li>
+  <li>Day 3-4: AI router, cost calculator, simple caching</li>
+  <li>Day 5: Basic UI with Next.js, key management</li>
+  <li>Weekend: Testing, documentation</li>
+</ul>
+
+<p><strong>Deliverable:</strong> Users can input keys and generate content</p>
+
+<h3 id="week-2-intelligence-layer-">Week 2: Intelligence Layer ✅</h3>
+<p><strong>Goal:</strong> Smart content processing</p>
+
+<ul>
+  <li>Day 1-2: Content scraper with compliance</li>
+  <li>Day 3-4: Semantic deduplication, concept extraction</li>
+  <li>Day 5: Multiple output formats</li>
+  <li>Weekend: Optimization, caching</li>
+</ul>
+
+<p><strong>Deliverable:</strong> Full pipeline working end-to-end</p>
+
+<h3 id="week-3-production-features-">Week 3: Production Features ✅</h3>
+<p><strong>Goal:</strong> Ready for real users</p>
+
+<ul>
+  <li>Day 1-2: Error handling, retry logic, circuit breakers</li>
+  <li>Day 3-4: Monitoring, analytics, alerting</li>
+  <li>Day 5: Export system (CSV, JSON, PDF)</li>
+  <li>Weekend: Performance optimization</li>
+</ul>
+
+<p><strong>Deliverable:</strong> Production-ready system</p>
+
+<h3 id="week-4-polish--scale-">Week 4: Polish &amp; Scale ✅</h3>
+<p><strong>Goal:</strong> Public launch ready</p>
+
+<ul>
+  <li>Day 1-2: UI polish, better UX</li>
+  <li>Day 3-4: Documentation, examples</li>
+  <li>Day 5: Load testing, optimization</li>
+  <li>Weekend: Deploy to production</li>
+</ul>
+
+<p><strong>Deliverable:</strong> Live system at harvest.ai</p>
+
+<h3 id="week-5-6-enhancement-sprint">Week 5-6: Enhancement Sprint</h3>
+<p><strong>Goal:</strong> Competitive advantage</p>
+
+<ul>
+  <li>Advanced algorithms (RAG, better routing)</li>
+  <li>More output formats</li>
+  <li>Team features</li>
+  <li>API SDK releases</li>
+  <li>Marketing website</li>
+</ul>
+
+<h2 id="-success-metrics">🎯 Success Metrics</h2>
+
+<h3 id="technical-week-4">Technical (Week 4)</h3>
+<ul>
+  <li>✅ &lt;5s response time (cached)</li>
+  <li>✅ &lt;30s response time (generation)</li>
+  <li>✅ &lt;5% error rate</li>
+  <li>✅ &gt;60% cache hit rate</li>
+  <li>✅ &lt;$0.10 per generation</li>
+</ul>
+
+<h3 id="business-week-6">Business (Week 6)</h3>
+<ul>
+  <li>✅ 100 beta users</li>
+  <li>✅ 1,000 successful generations</li>
+  <li>✅ 5 paying customers</li>
+  <li>✅ $500 MRR</li>
+  <li>✅ &lt;2% churn rate</li>
+</ul>
+
+<h2 id="-tech-stack-pragmatic-choices">🔧 Tech Stack (Pragmatic Choices)</h2>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">frontend</span><span class="pi">:</span>
+  <span class="na">framework</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Next.js</span><span class="nv"> </span><span class="s">14"</span>  <span class="c1"># Fast, familiar</span>
+  <span class="na">ui</span><span class="pi">:</span> <span class="s2">"</span><span class="s">shadcn/ui"</span>          <span class="c1"># Beautiful, ready-to-use</span>
+  <span class="na">styling</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Tailwind</span><span class="nv"> </span><span class="s">CSS"</span>  <span class="c1"># Rapid development</span>
+  <span class="na">state</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Zustand"</span>         <span class="c1"># Simple, powerful</span>
+
+<span class="na">backend</span><span class="pi">:</span>
+  <span class="na">framework</span><span class="pi">:</span> <span class="s2">"</span><span class="s">FastAPI"</span>     <span class="c1"># Fast, async, auto-docs</span>
+  <span class="na">ai</span><span class="pi">:</span> <span class="s2">"</span><span class="s">LangChain"</span>         <span class="c1"># Abstracts AI complexity</span>
+  <span class="na">queue</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Celery"</span>         <span class="c1"># For background jobs</span>
+  <span class="na">cache</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Redis"</span>          <span class="c1"># Fast, reliable</span>
+
+<span class="na">infrastructure</span><span class="pi">:</span>
+  <span class="na">hosting</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Railway/Vercel"</span>  <span class="c1"># Zero-config deploys</span>
+  <span class="na">database</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Supabase"</span>       <span class="c1"># Managed Postgres</span>
+  <span class="na">monitoring</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Sentry"</span>       <span class="c1"># Error tracking</span>
+  <span class="na">analytics</span><span class="pi">:</span> <span class="s2">"</span><span class="s">PostHog"</span>       <span class="c1"># Product analytics</span>
+
+<span class="na">ai_providers</span><span class="pi">:</span>
+  <span class="na">primary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">OpenAI"</span>          <span class="c1"># Most reliable</span>
+  <span class="na">secondary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Anthropic"</span>     <span class="c1"># Good alternative</span>
+  <span class="na">local</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Ollama"</span>           <span class="c1"># Offline option</span>
+  <span class="na">embeddings</span><span class="pi">:</span> <span class="s2">"</span><span class="s">OpenAI"</span>       <span class="c1"># Best quality</span>
+</code></pre></div></div>
+
+<h2 id="-why-this-will-work">💪 Why This Will Work</h2>
+
+<ol>
+  <li><strong>Existing Tools</strong> - We’re not building from scratch</li>
+  <li><strong>Smart Priorities</strong> - Core features first, enhance later</li>
+  <li><strong>Parallel Work</strong> - Frontend/backend can progress simultaneously</li>
+  <li><strong>Progressive Enhancement</strong> - Ship early, iterate often</li>
+  <li><strong>Managed Services</strong> - Let others handle the hard stuff</li>
+  <li><strong>AI Assistance</strong> - Use AI to write boilerplate code</li>
+  <li><strong>Clear Scope</strong> - MVP is well-defined, no scope creep</li>
+</ol>
+
+<hr />
+
+<p><strong>Reality:</strong> With focused execution, smart tool choices, and aggressive prioritization, we can deliver 100% of the MVP in 4-6 weeks. The key is to start simple, use existing tools, and iterate fast. 🚀</p>
+
+<p><strong>Let’s build it!</strong></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: Harvest.ai / architecture/COMPLETE_SYSTEM_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

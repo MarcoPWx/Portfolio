@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>learning-engine-architecture</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/learning-engine/learning-engine-architecture.md</span>
+</div>
+
+<h1>learning-engine-architecture</h1>
+
+
+<h1 id="learning-engine-system-design">Learning Engine System Design</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    DevMentor Learning Engine Architecture
+                                                                    DesignGurus.io
+                              Client
+                                🖥️
+                          ────────────────
+                                │
+                                ▼
+                         ◇─────────────◇
+                        ╱  Load         ╲
+                       ╱   Balancer      ╲───────────────────────────┐
+                      ╱                   ╲                          │
+                     ◇─────────────────────◇                         │
+                                │                                    │
+                                ▼                                    ▼
+                    ┌──────────────────────┐              ┌─────────────────┐
+                    │ Learning Engine 1    │              │Learning Engine 2 │
+                    │      (Port 3005)     │              │   (Port 3005)   │
+                    └──────────────────────┘              └─────────────────┘
+                          Control │ Data                         │
+                                  ▼                              │
+     ┌──────────────────────────────────────────────────────────┼────────────┐
+     │                                                           │            │
+     │  ┌─────────────────────────────────────────────────────────────────┐  │
+     │  │                  LEARNING ENGINE CORE                           │  │
+     │  │                                                                 │  │
+     │  │  ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+     │  │  │ Adaptive    │        │   Quiz      │       │   Progress  │ │  │
+┌────────┐ │  Learning   │        │  Generator  │       │   Tracker   │ │  │
+│Search  │ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+│Index   │                                                                │  │
+│(Elastic│ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+│Search) │ │Recommendation│       │  Skill      │       │Gamification │ │  │
+└────────┘ │   Engine    │        │ Assessment  │       │   System    │ │  │
+     │     └─────────────┘        └─────────────┘       └─────────────┘ │  │
+┌────────┐                                                                │  │
+│ Cache  │ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+│(Redis) │ │  Monitoring │        │   Logging   │       │   Tracing   │ │  │
+└────────┘ │             │        │  (Winston)  │       │(OpenTelemetry│ │  │
+     │     └─────────────┘        └─────────────┘       └─────────────┘ │  │
+┌────────┐                                                                │  │
+│Learning│ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+│  Path  │ │ Serverless  │        │  Learning   │       │     XP      │ │  │
+│ Store  │ │  Functions  │        │  Analytics  │       │   Manager   │ │  │
+└────────┘ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+     ▲     └─────────────────────────────────────────────────────────────┘  │
+     │                                                                       │
+     │                            ┌──────────────┐                          │
+     │     ┌──────────────┐      │              │      ┌──────────────┐    │
+     │     │              │◄──────│   Learning   │─────►│              │    │
+     │     │ Personalized│       │ Orchestrator │      │   Content    │    │
+     │     │    Paths    │       │              │      │   Library    │    │
+     │     │              │       └──────────────┘      │              │    │
+     │     └──────────────┘              ▲              └──────────────┘    │
+     │            │                      │                      │           │
+     │            │              Learning Adaptation            │           │
+     │            │                      │                      │           │
+     │            ▼                      ▼                      ▼           │
+     │  ┌─────────────────────────────────────────────────────────────┐    │
+     │  │                                                             │    │
+     │  │                   🎓 Learning Models 🎓                    │    │
+     │  │           (Spaced Repetition, Mastery Learning)            │    │
+     │  │                                                             │    │
+     │  └─────────────────────────────────────────────────────────┘    │
+     │            │                                              │           │
+     │            │                                              │           │
+     └────────────┼──────────────────────────────────────────────┼──────────┘
+                  │                                              │
+                  ▼                                              ▼
+     ┌────────────────────────────┐                ┌─────────────────────────┐
+     │                            │                │                         │
+     │   Content Processing       │                │    Assessment Pipeline  │
+     │       Pipeline             │                │                         │
+     │                            │                │                         │
+     └────────────────────────────┘                └─────────────────────────┘
+                  │                                              │
+                  │                                              │
+     ┌────────────┼────────────┐                   ┌────────────┼────────────┐
+     │            │            │                   │            │            │
+     ▼            ▼            ▼                   ▼            ▼            ▼
+┌──────────┐ ┌──────────┐ ┌──────────┐      ┌──────────┐ ┌──────────┐ ┌──────────┐
+│          │ │          │ │          │      │  Quiz    │ │  Score   │ │ Feedback │
+│ Courses  │ │ Modules  │ │ Lessons  │      │  Engine  │ │ Tracker  │ │  System  │
+│   Store  │ │  Store   │ │  Store   │      │          │ │          │ │          │
+│          │ │          │ │          │      │          │ │          │ │          │
+└──────────┘ └──────────┘ └──────────┘      └──────────┘ └──────────┘ └──────────┘
+     │            │            │                   │            │            │
+     └────────────┼────────────┘                   └────────────┼────────────┘
+                  │                                              │
+                  ▼                                              ▼
+     ┌────────────────────────────┐                ┌─────────────────────────┐
+     │  🗄️ PostgreSQL Database    │                │  📊 Analytics Storage   │
+     │                            │                │                         │
+     │  • User Progress           │                │  • Learning Analytics   │
+     │  • Course Enrollment       │                │  • Performance Metrics  │
+     │  • Quiz Results            │                │  • Engagement Data      │
+     │  • XP &amp; Achievements       │                │  • Skill Assessment     │
+     │  • Learning Paths          │                │  • Time Tracking        │
+     └────────────────────────────┘                └─────────────────────────┘
+                  │                                              │
+                  └──────────────────┬───────────────────────────┘
+                                     │
+                                     ▼
+                  ┌──────────────────────────────────────┐
+                  │                                      │
+                  │     Machine Learning Pipeline        │
+                  │                                      │
+                  │  (Recommendation, Personalization)   │
+                  │                                      │
+                  └──────────────────────────────────────┘
+                           │                    │
+                           ▼                    ▼
+                  ┌──────────────┐     ┌──────────────┐
+                  │              │     │              │
+                  │   ML Model   │     │  Prediction  │
+                  │   Training   │     │    Engine    │
+                  │              │     │              │
+                  └──────────────┘     └──────────────┘
+                           │                    │
+                           └────────┬───────────┘
+                                    │
+                                    ▼
+                           ┌──────────────┐
+                           │              │
+                           │ Personalized │
+                           │Recommendations│
+                           │              │
+                           └──────────────┘
+                                    │
+                                    │ Output
+                                    ▼
+                           ┌──────────────┐
+                           │              │
+                           │   Learning   │─────────────────┐
+                           │  Dashboard   │                 │
+                           └──────────────┘                 │
+                                    │                       ▼
+                                    │              ┌──────────────┐
+                                    │              │  Achievement │
+                                    └─────────────►│   Rewards    │
+                                                   │              │
+                                                   └──────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Service Components                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  🎓 Learning Features                                               │
+│  ├── Adaptive Learning Paths                                        │
+│  ├── Spaced Repetition Algorithm                                    │
+│  ├── Mastery-Based Progression                                      │
+│  ├── Personalized Recommendations                                   │
+│  └── Multi-modal Content Support                                    │
+│                                                                      │
+│  📊 Assessment &amp; Analytics                                          │
+│  ├── Dynamic Quiz Generation                                        │
+│  ├── Skill Assessment Matrix                                        │
+│  ├── Learning Analytics Dashboard                                   │
+│  ├── Progress Tracking                                              │
+│  └── Performance Predictions                                        │
+│                                                                      │
+│  🎮 Gamification System                                             │
+│  ├── XP Points &amp; Leveling                                          │
+│  ├── Achievement Badges                                             │
+│  ├── Leaderboards                                                   │
+│  ├── Streaks &amp; Challenges                                           │
+│  └── Reward System                                                  │
+│                                                                      │
+│  🤖 AI-Powered Features                                            │
+│  ├── Content Recommendation Engine                                  │
+│  ├── Difficulty Adjustment                                          │
+│  ├── Learning Style Detection                                       │
+│  ├── Predictive Performance Modeling                                │
+│  └── Automated Feedback Generation                                  │
+│                                                                      │
+│  🔄 Integration Points                                              │
+│  ├── AI Gateway (Port 3001)                                        │
+│  ├── Auth Service (Port 3002)                                      │
+│  ├── Memory Service (Port 3003)                                    │
+│  └── Project Service (Port 3004)                                   │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Data Flow Patterns                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  Learning Path Flow:                                                │
+│  User Profile → Skill Assessment → Path Generation                  │
+│     ↓                                                               │
+│  Content Selection → Progress Tracking → Adaptation                 │
+│     ↓                                                               │
+│  Achievement Unlock → XP Award → Level Up                           │
+│                                                                      │
+│  Quiz Generation Flow:                                              │
+│  Topic Selection → Difficulty Analysis → Question Bank              │
+│     ↓                                                               │
+│  Dynamic Generation → User Response → Scoring                       │
+│     ↓                                                               │
+│  Feedback Generation → Progress Update → Next Question              │
+│                                                                      │
+│  Recommendation Flow:                                               │
+│  User History → Pattern Analysis → ML Model                         │
+│     ↓                                                               │
+│  Content Matching → Ranking → Personalized Feed                     │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="system-components-legend">System Components Legend</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Description</th>
+      <th>Technology</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🖥️ Client</td>
+      <td>Web/Mobile/CLI Applications</td>
+      <td>React, Mobile Apps</td>
+    </tr>
+    <tr>
+      <td>◇ Load Balancer</td>
+      <td>Traffic Distribution</td>
+      <td>NGINX/HAProxy</td>
+    </tr>
+    <tr>
+      <td>🎓 Learning</td>
+      <td>Educational Engine</td>
+      <td>Node.js/Python</td>
+    </tr>
+    <tr>
+      <td>📊 Analytics</td>
+      <td>Learning Analytics</td>
+      <td>TensorFlow/PyTorch</td>
+    </tr>
+    <tr>
+      <td>🎮 Gamification</td>
+      <td>Game Mechanics</td>
+      <td>Redis/PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>🗄️ Database</td>
+      <td>Progress Storage</td>
+      <td>PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>🤖 ML</td>
+      <td>Machine Learning</td>
+      <td>Python/Scikit-learn</td>
+    </tr>
+    <tr>
+      <td>⚡ Cache</td>
+      <td>Fast Access</td>
+      <td>Redis</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="service-ports--endpoints">Service Ports &amp; Endpoints</h2>
+
+<ul>
+  <li><strong>Learning Engine</strong>: Port 3005</li>
+  <li><strong>Health Check</strong>: <code class="language-plaintext highlighter-rouge">/health</code></li>
+  <li><strong>Learning Paths</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/paths</code></li>
+  <li><strong>Quiz API</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/quiz/*</code></li>
+  <li><strong>Progress</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/progress</code></li>
+  <li><strong>XP System</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/xp</code></li>
+  <li><strong>Recommendations</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/recommendations</code></li>
+  <li><strong>Analytics</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/analytics</code></li>
+  <li><strong>Metrics</strong>: <code class="language-plaintext highlighter-rouge">/metrics</code></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/learning-engine/learning-engine-architecture.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

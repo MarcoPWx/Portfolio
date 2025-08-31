@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REDIS PATTERNS REFERENCE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/redis/REDIS_PATTERNS_REFERENCE.md</span>
+</div>
+
+<h1>REDIS PATTERNS REFERENCE</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="redis-patterns-reference-guide">Redis Patterns Reference Guide</h1>
+
+<h2 id="currently-implemented-patterns-in-devmentor">Currently Implemented Patterns in DevMentor</h2>
+
+<h3 id="1-cache-database-queries--in-use">1. Cache Database Queries (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// UI Server - devmentor-ui/src/server/redis.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getCachedData</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Data</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Try cache first</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`cache:</span><span class="p">${</span><span class="nx">key</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">cached</span><span class="p">);</span>
+
+    <span class="c1">// Cache miss - get from database</span>
+    <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">expensiveDbQuery</span><span class="p">();</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+      <span class="s2">`cache:</span><span class="p">${</span><span class="nx">key</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="mi">300</span><span class="p">,</span>  <span class="c1">// 5 min TTL</span>
+      <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">);</span>
+    <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">expensiveDbQuery</span><span class="p">();</span> <span class="c1">// Fallback to DB</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-message-queue--in-use---project-events">2. Message Queue (✅ In Use - Project Events)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Project Service - project-service/src/redis.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">publishEvent</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Add to stream for durable processing</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">xadd</span><span class="p">(</span>
+    <span class="dl">'</span><span class="s1">stream:projects</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// Auto ID</span>
+    <span class="dl">'</span><span class="s1">event</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Consumer</span>
+<span class="kd">const</span> <span class="nx">events</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">xreadgroup</span><span class="p">(</span>
+  <span class="dl">'</span><span class="s1">GROUP</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">analytics</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">consumer1</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">STREAMS</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">stream:projects</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">&gt;</span><span class="dl">'</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="3-distributed-locking--in-use">3. Distributed Locking (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Auth Service - auth-service/src/redis.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">acquireLock</span><span class="p">(</span><span class="nx">resource</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span>
+    <span class="s2">`lock:</span><span class="p">${</span><span class="nx">resource</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="nx">serverId</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">NX</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// Only set if not exists</span>
+    <span class="dl">'</span><span class="s1">PX</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// Expire in milliseconds</span>
+    <span class="mi">5000</span>   <span class="c1">// 5 second lock</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4-request-throttling--in-use">4. Request Throttling (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Rate Limiter - auth-service/src/redis.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">isRateLimited</span><span class="p">(</span><span class="nx">ip</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`rate:</span><span class="p">${</span><span class="nx">ip</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">requests</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">incr</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">requests</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">expire</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">60</span><span class="p">);</span> <span class="c1">// 1 minute window</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">requests</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">;</span> <span class="c1">// Limit: 100 requests/minute</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="5-session-store--in-use">5. Session Store (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Auth Service - auth-service/src/redis.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">storeSession</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">SessionData</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+    <span class="s2">`session:</span><span class="p">${</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="mi">3600</span><span class="p">,</span>  <span class="c1">// 1 hour</span>
+    <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getSession</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">SessionData</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`session:</span><span class="p">${</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">data</span> <span class="p">?</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">:</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="6-rate-limiting--in-use">6. Rate Limiting (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// API Gateway - api-gateway/src/middleware/rateLimiter.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">rateLimit</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`ratelimit:</span><span class="p">${</span><span class="nx">req</span><span class="p">.</span><span class="nx">ip</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">count</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">incr</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">count</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">expire</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">60</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">429</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Too Many Requests</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="nx">next</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="7-real-time-leaderboard--partially-implemented">7. Real-time Leaderboard (🔄 Partially Implemented)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Learning Service - learning-service/src/redis.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">updateUserScore</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">score</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">zadd</span><span class="p">(</span><span class="dl">'</span><span class="s1">leaderboard</span><span class="dl">'</span><span class="p">,</span> <span class="nx">score</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getTopUsers</span><span class="p">(</span><span class="nx">count</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">zrevrange</span><span class="p">(</span><span class="dl">'</span><span class="s1">leaderboard</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="dl">'</span><span class="s1">WITHSCORES</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="8-hyperloglog-for-metrics--planned">8. HyperLogLog for Metrics (⏳ Planned)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// To be implemented in analytics service</span>
+<span class="c1">// Will track unique visitors per endpoint</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">trackEndpointVisit</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">pfadd</span><span class="p">(</span><span class="s2">`visitors:</span><span class="p">${</span><span class="nx">endpoint</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getUniqueVisitors</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">pfcount</span><span class="p">(</span><span class="s2">`visitors:</span><span class="p">${</span><span class="nx">endpoint</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="9-pubsub-for-real-time-updates--in-use">9. Pub/Sub for Real-time Updates (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Project Service - project-service/src/redis.ts</span>
+<span class="c1">// Publisher</span>
+<span class="k">await</span> <span class="nx">redisPub</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span>
+  <span class="dl">'</span><span class="s1">realtime:projects</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">// Subscriber (WebSocket Server)</span>
+<span class="nx">redisSub</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">realtime:projects</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">redisSub</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">channel</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">websocketServer</span><span class="p">.</span><span class="nx">broadcast</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="10-geospatial--planned">10. Geospatial (⏳ Planned)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// To be implemented for nearby user features</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">updateUserLocation</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">lat</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">lon</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">geoadd</span><span class="p">(</span><span class="dl">'</span><span class="s1">user_locations</span><span class="dl">'</span><span class="p">,</span> <span class="nx">lon</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getNearbyUsers</span><span class="p">(</span><span class="nx">lat</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">lon</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">radius</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">georadius</span><span class="p">(</span><span class="dl">'</span><span class="s1">user_locations</span><span class="dl">'</span><span class="p">,</span> <span class="nx">lon</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">radius</span><span class="p">,</span> <span class="dl">'</span><span class="s1">km</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="11-time-series--planned">11. Time Series (⏳ Planned)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// To be implemented for analytics</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">trackMetric</span><span class="p">(</span><span class="nx">metric</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">ts</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">ts</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">`metrics:</span><span class="p">${</span><span class="nx">metric</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">ts</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="12-social-timeline--in-use">12. Social Timeline (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// User Activity Feed</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">addToTimeline</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">activity</span><span class="p">:</span> <span class="nx">Activity</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">lpush</span><span class="p">(</span>
+    <span class="s2">`timeline:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">activity</span><span class="p">)</span>
+  <span class="p">);</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">ltrim</span><span class="p">(</span><span class="s2">`timeline:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">999</span><span class="p">);</span> <span class="c1">// Keep last 1000</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="13-full-text-search--planned">13. Full-text Search (⏳ Planned)</h3>
+<p>Will be used for documentation search</p>
+
+<h3 id="14-nested-json--in-use">14. Nested JSON (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Learning Service - Context Storage</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">storeContext</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">json</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span>
+    <span class="s2">`context:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">.</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// Root path</span>
+    <span class="nx">context</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="15-graph-relationships--planned">15. Graph Relationships (⏳ Planned)</h3>
+<p>Will be used for skill tree visualization</p>
+
+<h3 id="16-job-scheduler--in-use">16. Job Scheduler (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Task Scheduler</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">scheduleTask</span><span class="p">(</span><span class="nx">task</span><span class="p">:</span> <span class="nx">Task</span><span class="p">,</span> <span class="nx">time</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">zadd</span><span class="p">(</span><span class="dl">'</span><span class="s1">scheduled_tasks</span><span class="dl">'</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">task</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="c1">// Worker</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">processScheduledTasks</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">now</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">zrangebyscore</span><span class="p">(</span><span class="dl">'</span><span class="s1">scheduled_tasks</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">now</span><span class="p">);</span>
+  
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">task</span> <span class="k">of</span> <span class="nx">tasks</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">processTask</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">task</span><span class="p">));</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">zrem</span><span class="p">(</span><span class="dl">'</span><span class="s1">scheduled_tasks</span><span class="dl">'</span><span class="p">,</span> <span class="nx">task</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="17-bloom-filter--planned">17. Bloom Filter (⏳ Planned)</h3>
+<p>Will be used for content recommendation deduplication</p>
+
+<h3 id="18-distributed-counter--in-use">18. Distributed Counter (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Analytics Service</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">incrementMetric</span><span class="p">(</span><span class="nx">metric</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">incr</span><span class="p">(</span><span class="s2">`counter:</span><span class="p">${</span><span class="nx">metric</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="19-shopping-cart--planned">19. Shopping Cart (⏳ Planned)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// To be implemented for premium features store</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">addToCart</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">item</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">hset</span><span class="p">(</span><span class="s2">`cart:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">item</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="20-idempotency-keys--in-use">20. Idempotency Keys (✅ In Use)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// API Gateway - Idempotency Middleware</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">checkIdempotency</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">idempotency-key</span><span class="dl">'</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">key</span><span class="p">)</span> <span class="k">return</span> <span class="nx">next</span><span class="p">();</span>
+  
+  <span class="kd">const</span> <span class="nx">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span>
+    <span class="s2">`idempotent:</span><span class="p">${</span><span class="nx">key</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">processing</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">NX</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">EX</span><span class="dl">'</span><span class="p">,</span>
+    <span class="mi">3600</span>
+  <span class="p">);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">exists</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">409</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Request already processed</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="nx">next</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="implementation-status-summary">Implementation Status Summary</h2>
+
+<p>✅ Fully Implemented:</p>
+<ul>
+  <li>Caching (1)</li>
+  <li>Message Queue (2)</li>
+  <li>Distributed Locking (3)</li>
+  <li>Request Throttling (4)</li>
+  <li>Session Store (5)</li>
+  <li>Rate Limiting (6)</li>
+  <li>Pub/Sub (9)</li>
+  <li>Social Timeline (12)</li>
+  <li>Nested JSON (14)</li>
+  <li>Job Scheduler (16)</li>
+  <li>Distributed Counter (18)</li>
+  <li>Idempotency Keys (20)</li>
+</ul>
+
+<p>🔄 Partially Implemented:</p>
+<ul>
+  <li>Real-time Leaderboard (7)</li>
+</ul>
+
+<p>⏳ Planned:</p>
+<ul>
+  <li>HyperLogLog Metrics (8)</li>
+  <li>Geospatial (10)</li>
+  <li>Time Series (11)</li>
+  <li>Full-text Search (13)</li>
+  <li>Graph DB (15)</li>
+  <li>Bloom Filter (17)</li>
+  <li>Shopping Cart (19)</li>
+</ul>
+
+<h2 id="key-files-to-reference">Key Files to Reference</h2>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">devmentor-ui/src/server/redis.ts</code> - Caching implementation</li>
+  <li><code class="language-plaintext highlighter-rouge">auth-service/src/redis.ts</code> - Sessions, rate limiting</li>
+  <li><code class="language-plaintext highlighter-rouge">project-service/src/redis.ts</code> - Events, pub/sub</li>
+  <li><code class="language-plaintext highlighter-rouge">learning-service/src/redis.ts</code> - Leaderboards, context</li>
+</ol>
+
+<h2 id="common-interview-questions">Common Interview Questions</h2>
+
+<ol>
+  <li><strong>“How do you handle Redis failures?”</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// We implement graceful degradation</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">cached</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Redis down - fallback to database</span>
+  <span class="k">return</span> <span class="nx">expensiveDbQuery</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>“How do you prevent race conditions?”</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// We use distributed locks</span>
+<span class="kd">const</span> <span class="nx">lock</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span>
+  <span class="s2">`lock:</span><span class="p">${</span><span class="nx">resource</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+  <span class="nx">serverId</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">NX</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">PX</span><span class="dl">'</span><span class="p">,</span>
+  <span class="mi">5000</span>
+<span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">lock</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Resource locked</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>“How do you handle hot keys?”</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// We shard the keys</span>
+<span class="kd">const</span> <span class="nx">shard</span> <span class="o">=</span> <span class="nx">userId</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`rate_limit:</span><span class="p">${</span><span class="nx">shard</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/redis/REDIS_PATTERNS_REFERENCE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

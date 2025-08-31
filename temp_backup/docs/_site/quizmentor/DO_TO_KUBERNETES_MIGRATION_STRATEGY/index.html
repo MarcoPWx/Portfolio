@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DO TO KUBERNETES MIGRATION STRATEGY | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">DO_TO_KUBERNETES_MIGRATION_STRATEGY.md</span>
+</div>
+
+<h1>DO TO KUBERNETES MIGRATION STRATEGY</h1>
+
+
+<h1 id="digitalocean-to-kubernetes-migration-strategy">DigitalOcean to Kubernetes Migration Strategy</h1>
+
+<h2 id="executive-summary">Executive Summary</h2>
+
+<p>This document outlines the decision framework and migration path from DigitalOcean App Platform to Kubernetes for QuizMentor as the application scales beyond 1000 users.</p>
+
+<p><strong>Current Status</strong>: The application is designed to start on DigitalOcean App Platform (simpler, managed) and migrate to Kubernetes when complexity and scale justify it.</p>
+
+<h2 id="when-to-migrate-decision-matrix">When to Migrate: Decision Matrix</h2>
+
+<h3 id="stay-on-digitalocean-app-platform-when">Stay on DigitalOcean App Platform When:</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Criteria</th>
+      <th>Threshold</th>
+      <th>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>User Count</strong></td>
+      <td>&lt; 5,000 concurrent</td>
+      <td>App Platform auto-scaling handles this well</td>
+    </tr>
+    <tr>
+      <td><strong>Monthly Cost</strong></td>
+      <td>&lt; $2,000</td>
+      <td>Managed services cost-effective at this scale</td>
+    </tr>
+    <tr>
+      <td><strong>Team Size</strong></td>
+      <td>&lt; 5 developers</td>
+      <td>Limited DevOps expertise needed</td>
+    </tr>
+    <tr>
+      <td><strong>Services</strong></td>
+      <td>&lt; 10 microservices</td>
+      <td>Simple architecture manageable</td>
+    </tr>
+    <tr>
+      <td><strong>Customization</strong></td>
+      <td>Standard deployments</td>
+      <td>Platform constraints acceptable</td>
+    </tr>
+    <tr>
+      <td><strong>Regions</strong></td>
+      <td>Single region</td>
+      <td>No complex geo-distribution needed</td>
+    </tr>
+    <tr>
+      <td><strong>Compliance</strong></td>
+      <td>Basic requirements</td>
+      <td>Platform security sufficient</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="migrate-to-kubernetes-when">Migrate to Kubernetes When:</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Trigger</th>
+      <th>Indicator</th>
+      <th>Impact</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Scale</strong></td>
+      <td>&gt; 5,000 concurrent users</td>
+      <td>Need fine-grained resource control</td>
+    </tr>
+    <tr>
+      <td><strong>Cost</strong></td>
+      <td>&gt; $2,000/month</td>
+      <td>K8s becomes more cost-effective</td>
+    </tr>
+    <tr>
+      <td><strong>Complexity</strong></td>
+      <td>&gt; 10 microservices</td>
+      <td>Need service mesh, advanced networking</td>
+    </tr>
+    <tr>
+      <td><strong>Customization</strong></td>
+      <td>Custom operators needed</td>
+      <td>Platform limitations blocking features</td>
+    </tr>
+    <tr>
+      <td><strong>Multi-region</strong></td>
+      <td>Global presence required</td>
+      <td>Need geo-distributed clusters</td>
+    </tr>
+    <tr>
+      <td><strong>Compliance</strong></td>
+      <td>HIPAA/PCI/SOC2</td>
+      <td>Need detailed security controls</td>
+    </tr>
+    <tr>
+      <td><strong>Performance</strong></td>
+      <td>&lt; 100ms P99 latency</td>
+      <td>Need proximity to users</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="cost-comparison">Cost Comparison</h2>
+
+<h3 id="digitalocean-app-platform-costs">DigitalOcean App Platform Costs</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Monthly costs for different scales</span>
+<span class="na">100 users</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">Basic</span><span class="pi">:</span> <span class="s">$5 (1 container, 512MB)</span>
+  <span class="pi">-</span> <span class="na">Database</span><span class="pi">:</span> <span class="s">$15 (Basic Postgres)</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$20/month</span>
+
+<span class="s">1,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Professional</span><span class="pi">:</span> <span class="s">$50 (2 containers, 1GB each)</span>
+  <span class="pi">-</span> <span class="na">Database</span><span class="pi">:</span> <span class="s">$60 (2GB RAM, 25GB)</span>
+  <span class="pi">-</span> <span class="na">Redis</span><span class="pi">:</span> <span class="s">$15</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$125/month</span>
+
+<span class="s">5,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Professional</span><span class="pi">:</span> <span class="s">$250 (10 containers, 2GB each)</span>
+  <span class="pi">-</span> <span class="na">Database</span><span class="pi">:</span> <span class="s">$240 (8GB RAM, 115GB)</span>
+  <span class="pi">-</span> <span class="na">Redis</span><span class="pi">:</span> <span class="s">$60</span>
+  <span class="pi">-</span> <span class="na">Load Balancer</span><span class="pi">:</span> <span class="s">$12</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$562/month</span>
+
+<span class="s">10,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Professional</span><span class="pi">:</span> <span class="s">$500 (20 containers)</span>
+  <span class="pi">-</span> <span class="na">Database</span><span class="pi">:</span> <span class="s">$960 (32GB RAM cluster)</span>
+  <span class="pi">-</span> <span class="na">Redis</span><span class="pi">:</span> <span class="s">$240</span>
+  <span class="pi">-</span> <span class="na">Load Balancer</span><span class="pi">:</span> <span class="s">$12</span>
+  <span class="pi">-</span> <span class="na">CDN</span><span class="pi">:</span> <span class="s">$20</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$1,732/month</span>
+</code></pre></div></div>
+
+<h3 id="kubernetes-costs-digitalocean-kubernetes">Kubernetes Costs (DigitalOcean Kubernetes)</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Monthly costs for Kubernetes setup</span>
+<span class="s">1,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Control Plane</span><span class="pi">:</span> <span class="s">Free</span>
+  <span class="pi">-</span> <span class="na">Worker Nodes</span><span class="pi">:</span> <span class="s">$80 (2x $40 nodes)</span>
+  <span class="pi">-</span> <span class="na">Database (Managed)</span><span class="pi">:</span> <span class="s">$60</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$140/month (similar to App Platform)</span>
+
+<span class="s">5,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Control Plane</span><span class="pi">:</span> <span class="s">Free</span>
+  <span class="pi">-</span> <span class="na">Worker Nodes</span><span class="pi">:</span> <span class="s">$240 (6x $40 nodes)</span>
+  <span class="pi">-</span> <span class="na">Database (Managed)</span><span class="pi">:</span> <span class="s">$240</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$480/month (15% cheaper)</span>
+
+<span class="s">10,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Control Plane</span><span class="pi">:</span> <span class="s">Free</span>
+  <span class="pi">-</span> <span class="na">Worker Nodes</span><span class="pi">:</span> <span class="s">$480 (12x $40 nodes)</span>
+  <span class="pi">-</span> <span class="na">Database (Managed)</span><span class="pi">:</span> <span class="s">$960</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$1,440/month (17% cheaper)</span>
+
+<span class="s">50,000 users</span><span class="err">:</span>
+  <span class="pi">-</span> <span class="na">Control Plane</span><span class="pi">:</span> <span class="s">Free</span>
+  <span class="pi">-</span> <span class="na">Worker Nodes</span><span class="pi">:</span> <span class="s">$2,400 (60x $40 nodes)</span>
+  <span class="pi">-</span> <span class="na">Database (Self-managed)</span><span class="pi">:</span> <span class="s">$500</span>
+  <span class="pi">-</span> <span class="na">Total</span><span class="pi">:</span> <span class="s">$2,900/month (60% cheaper than App Platform equivalent)</span>
+</code></pre></div></div>
+
+<h2 id="migration-timeline">Migration Timeline</h2>
+
+<h3 id="phase-0-current-state-0-1000-users">Phase 0: Current State (0-1000 users)</h3>
+<p><strong>Duration</strong>: Now - 6 months
+<strong>Platform</strong>: DigitalOcean App Platform</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Architecture</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Monolithic API with some services</span>
+  <span class="pi">-</span> <span class="s">Managed Postgres via Supabase</span>
+  <span class="pi">-</span> <span class="s">Managed Redis</span>
+  <span class="pi">-</span> <span class="s">CDN for static assets</span>
+
+<span class="na">Deployment</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Git push to deploy</span>
+  <span class="pi">-</span> <span class="s">Auto-scaling (1-5 instances)</span>
+  <span class="pi">-</span> <span class="s">Built-in health checks</span>
+
+<span class="na">Cost</span><span class="pi">:</span> <span class="s">$50-200/month</span>
+</code></pre></div></div>
+
+<h3 id="phase-1-preparation-1000-2500-users">Phase 1: Preparation (1000-2500 users)</h3>
+<p><strong>Duration</strong>: Month 6-9
+<strong>Platform</strong>: Still on DO App Platform</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Tasks</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Containerize all services properly</span>
+  <span class="pi">-</span> <span class="s">Implement health checks and readiness probes</span>
+  <span class="pi">-</span> <span class="s">Set up CI/CD pipelines</span>
+  <span class="pi">-</span> <span class="s">Create Kubernetes manifests</span>
+  <span class="pi">-</span> <span class="s">Test in local Kind cluster</span>
+  <span class="pi">-</span> <span class="s">Document all configurations</span>
+  <span class="pi">-</span> <span class="s">Train team on Kubernetes basics</span>
+
+<span class="na">Deliverables</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Docker images for all services</span>
+  <span class="pi">-</span> <span class="s">Kubernetes YAML files</span>
+  <span class="pi">-</span> <span class="s">Helm charts</span>
+  <span class="pi">-</span> <span class="s">CI/CD pipelines</span>
+  <span class="pi">-</span> <span class="s">Runbooks</span>
+</code></pre></div></div>
+
+<h3 id="phase-2-hybrid-setup-2500-5000-users">Phase 2: Hybrid Setup (2500-5000 users)</h3>
+<p><strong>Duration</strong>: Month 9-12
+<strong>Platform</strong>: Mixed DO App Platform + Kubernetes</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Migration</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Create DO Kubernetes cluster</span>
+  <span class="pi">-</span> <span class="s">Move stateless services first</span>
+  <span class="pi">-</span> <span class="s">Keep database on managed service</span>
+  <span class="pi">-</span> <span class="s">Implement service mesh (Istio)</span>
+  <span class="pi">-</span> <span class="s">Set up monitoring (Prometheus/Grafana)</span>
+  
+<span class="na">Services on Kubernetes</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">API Gateway</span>
+  <span class="pi">-</span> <span class="s">Worker pods</span>
+  <span class="pi">-</span> <span class="s">Cache layer</span>
+  <span class="pi">-</span> <span class="s">Analytics service</span>
+
+<span class="na">Services on App Platform</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Main web app (gradual migration)</span>
+  <span class="pi">-</span> <span class="s">Admin dashboard</span>
+
+<span class="na">Cost</span><span class="pi">:</span> <span class="s">$300-500/month</span>
+</code></pre></div></div>
+
+<h3 id="phase-3-full-migration-5000-users">Phase 3: Full Migration (5000+ users)</h3>
+<p><strong>Duration</strong>: Month 12-15
+<strong>Platform</strong>: Kubernetes</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Final Migration</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Move all services to Kubernetes</span>
+  <span class="pi">-</span> <span class="s">Implement auto-scaling (HPA/VPA)</span>
+  <span class="pi">-</span> <span class="s">Set up multi-region if needed</span>
+  <span class="pi">-</span> <span class="s">Implement GitOps (ArgoCD)</span>
+  <span class="pi">-</span> <span class="s">Advanced monitoring</span>
+
+<span class="na">Architecture</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Full microservices on K8s</span>
+  <span class="pi">-</span> <span class="s">Service mesh for communication</span>
+  <span class="pi">-</span> <span class="s">Distributed tracing</span>
+  <span class="pi">-</span> <span class="s">Centralized logging</span>
+  <span class="pi">-</span> <span class="s">Auto-scaling everything</span>
+
+<span class="na">Cost</span><span class="pi">:</span> <span class="s">$500-2000/month</span>
+</code></pre></div></div>
+
+<h2 id="technical-migration-guide">Technical Migration Guide</h2>
+
+<h3 id="step-1-containerization-check">Step 1: Containerization Check</h3>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Ensure all services have optimized Dockerfiles</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci <span class="nt">--only</span><span class="o">=</span>production
+
+<span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> --from=builder /app/node_modules ./node_modules</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">EXPOSE</span><span class="s"> 3000</span>
+<span class="k">CMD</span><span class="s"> ["npm", "start"]</span>
+</code></pre></div></div>
+
+<h3 id="step-2-create-kubernetes-manifests">Step 2: Create Kubernetes Manifests</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Already created in k8s/ directory:</span>
+<span class="pi">-</span> <span class="s">deployments/</span>
+<span class="pi">-</span> <span class="s">services/</span>
+<span class="pi">-</span> <span class="s">configmaps/</span>
+<span class="pi">-</span> <span class="s">secrets/</span>
+<span class="pi">-</span> <span class="s">ingress/</span>
+<span class="pi">-</span> <span class="s">self-healing/</span>
+  <span class="s">- hpa.yaml (Horizontal Pod Autoscaler)</span>
+  <span class="s">- pdb.yaml (PodDisruptionBudget)</span>
+</code></pre></div></div>
+
+<h3 id="step-3-database-migration-strategy">Step 3: Database Migration Strategy</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Option 1 - Keep Managed</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Continue using Supabase</span>
+  <span class="pi">-</span> <span class="s">Or use DO Managed Database</span>
+  <span class="pi">-</span> <span class="na">Pros</span><span class="pi">:</span> <span class="s">No maintenance, backups handled</span>
+  <span class="pi">-</span> <span class="na">Cons</span><span class="pi">:</span> <span class="s">Higher cost, less control</span>
+
+<span class="na">Option 2 - Self-Managed</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Run Postgres in Kubernetes</span>
+  <span class="pi">-</span> <span class="s">Use operators (CloudNativePG)</span>
+  <span class="pi">-</span> <span class="na">Pros</span><span class="pi">:</span> <span class="s">Full control, lower cost</span>
+  <span class="pi">-</span> <span class="na">Cons</span><span class="pi">:</span> <span class="s">Maintenance overhead</span>
+
+<span class="na">Recommendation</span><span class="pi">:</span>
+  <span class="s">&lt; 10,000 users</span><span class="err">:</span> <span class="s">Managed</span>
+  <span class="s">&gt; 10,000 users</span><span class="err">:</span> <span class="s">Self-managed with operator</span>
+</code></pre></div></div>
+
+<h3 id="step-4-data-migration">Step 4: Data Migration</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Zero-downtime migration process</span>
+
+<span class="c"># 1. Set up replication</span>
+pg_dump <span class="nt">--schema-only</span> source_db | psql target_db
+
+<span class="c"># 2. Initial data copy</span>
+pg_dump <span class="nt">--data-only</span> source_db | psql target_db
+
+<span class="c"># 3. Set up CDC (Change Data Capture)</span>
+<span class="c"># Use Debezium or similar</span>
+
+<span class="c"># 4. Switchover</span>
+<span class="c"># - Stop writes to old DB</span>
+<span class="c"># - Final sync</span>
+<span class="c"># - Update connection strings</span>
+<span class="c"># - Resume writes to new DB</span>
+</code></pre></div></div>
+
+<h3 id="step-5-traffic-migration">Step 5: Traffic Migration</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Gradual traffic shift using weighted routing</span>
+
+<span class="c1"># 10% traffic to Kubernetes</span>
+<span class="pi">-</span> <span class="na">host</span><span class="pi">:</span> <span class="s">api.quizmentor.com</span>
+  <span class="na">http</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
+      <span class="na">backend</span><span class="pi">:</span>
+        <span class="na">service</span><span class="pi">:</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">api-service</span>
+          <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+      <span class="na">weight</span><span class="pi">:</span> <span class="m">10</span>  <span class="c1"># 10% to K8s</span>
+    <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
+      <span class="na">backend</span><span class="pi">:</span>
+        <span class="na">service</span><span class="pi">:</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">legacy-app-platform</span>
+          <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+      <span class="na">weight</span><span class="pi">:</span> <span class="m">90</span>  <span class="c1"># 90% to App Platform</span>
+
+<span class="c1"># Gradually increase K8s percentage</span>
+<span class="c1"># Monitor metrics at each stage</span>
+<span class="c1"># Full cutover when stable</span>
+</code></pre></div></div>
+
+<h2 id="risk-mitigation">Risk Mitigation</h2>
+
+<h3 id="technical-risks">Technical Risks</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Risk</th>
+      <th>Mitigation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Data Loss</strong></td>
+      <td>Automated backups, point-in-time recovery</td>
+    </tr>
+    <tr>
+      <td><strong>Downtime</strong></td>
+      <td>Blue-green deployment, gradual rollout</td>
+    </tr>
+    <tr>
+      <td><strong>Performance Degradation</strong></td>
+      <td>Load testing, monitoring, rollback plan</td>
+    </tr>
+    <tr>
+      <td><strong>Security Vulnerabilities</strong></td>
+      <td>Security scanning, RBAC, network policies</td>
+    </tr>
+    <tr>
+      <td><strong>Cost Overrun</strong></td>
+      <td>Resource limits, monitoring, alerts</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="rollback-strategy">Rollback Strategy</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Rollback Triggers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Error rate &gt; 5%</span>
+  <span class="pi">-</span> <span class="s">P99 latency &gt; 2000ms</span>  
+  <span class="pi">-</span> <span class="s">Database connection errors</span>
+  <span class="pi">-</span> <span class="s">Memory/CPU exhaustion</span>
+
+<span class="na">Rollback Process</span><span class="pi">:</span>
+  <span class="s">1. Switch DNS back to App Platform (&lt; 1 min)</span>
+  <span class="s">2. Or use Ingress to route to App Platform</span>
+  <span class="s">3. Investigate and fix issues</span>
+  <span class="s">4. Retry migration with fixes</span>
+</code></pre></div></div>
+
+<h2 id="monitoring-during-migration">Monitoring During Migration</h2>
+
+<h3 id="key-metrics-to-track">Key Metrics to Track</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Business Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">User experience scores</span>
+  <span class="pi">-</span> <span class="s">Transaction success rate</span>
+  <span class="pi">-</span> <span class="s">Page load times</span>
+  <span class="pi">-</span> <span class="s">Error rates by endpoint</span>
+
+<span class="na">Technical Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Request latency (P50, P95, P99)</span>
+  <span class="pi">-</span> <span class="s">Error rates (4xx, 5xx)</span>
+  <span class="pi">-</span> <span class="s">Database query times</span>
+  <span class="pi">-</span> <span class="s">Cache hit rates</span>
+  <span class="pi">-</span> <span class="s">Resource utilization</span>
+
+<span class="na">Migration Specific</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Traffic distribution %</span>
+  <span class="pi">-</span> <span class="s">Response time comparison</span>
+  <span class="pi">-</span> <span class="s">Error rate comparison</span>
+  <span class="pi">-</span> <span class="s">Cost per request</span>
+</code></pre></div></div>
+
+<h3 id="success-criteria">Success Criteria</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Before Cutover</span><span class="pi">:</span>
+  <span class="s">✓ All services running in K8s for 48 hours</span>
+  <span class="s">✓ Error rate &lt; 0.5%</span>
+  <span class="s">✓ P99 latency &lt; 1000ms</span>
+  <span class="s">✓ Load test passed at 2x expected traffic</span>
+  <span class="s">✓ Monitoring and alerts configured</span>
+  <span class="s">✓ Runbooks updated</span>
+  <span class="s">✓ Team trained</span>
+
+<span class="na">After Cutover</span><span class="pi">:</span>
+  <span class="s">✓ 24 hours stable operation</span>
+  <span class="s">✓ No critical incidents</span>
+  <span class="s">✓ Performance metrics maintained</span>
+  <span class="s">✓ Cost within budget</span>
+  <span class="s">✓ Backup and recovery tested</span>
+</code></pre></div></div>
+
+<h2 id="team-requirements">Team Requirements</h2>
+
+<h3 id="skills-needed">Skills Needed</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Before Migration</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Docker basics</span>
+  <span class="pi">-</span> <span class="s">Basic Kubernetes concepts</span>
+  <span class="pi">-</span> <span class="s">Git/GitHub</span>
+  <span class="pi">-</span> <span class="s">Basic monitoring</span>
+
+<span class="na">For Migration</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Kubernetes administration</span>
+  <span class="pi">-</span> <span class="s">Helm charts</span>
+  <span class="pi">-</span> <span class="s">Service mesh (Istio)</span>
+  <span class="pi">-</span> <span class="s">Prometheus/Grafana</span>
+  <span class="pi">-</span> <span class="s">CI/CD pipelines</span>
+
+<span class="na">After Migration</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Kubernetes troubleshooting</span>
+  <span class="pi">-</span> <span class="s">Performance tuning</span>
+  <span class="pi">-</span> <span class="s">Security best practices</span>
+  <span class="pi">-</span> <span class="s">Disaster recovery</span>
+</code></pre></div></div>
+
+<h3 id="training-plan">Training Plan</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Month 1-2</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Kubernetes fundamentals course</span>
+  <span class="pi">-</span> <span class="s">Docker deep dive</span>
+  <span class="pi">-</span> <span class="s">Hands-on with Kind cluster</span>
+
+<span class="na">Month 3-4</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Helm workshop</span>
+  <span class="pi">-</span> <span class="s">Monitoring with Prometheus</span>
+  <span class="pi">-</span> <span class="s">Service mesh basics</span>
+
+<span class="na">Month 5-6</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Production Kubernetes</span>
+  <span class="pi">-</span> <span class="s">Security best practices</span>
+  <span class="pi">-</span> <span class="s">Disaster recovery drills</span>
+</code></pre></div></div>
+
+<h2 id="decision-checklist">Decision Checklist</h2>
+
+<h3 id="should-we-migrate-now">Should We Migrate Now?</h3>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Business Factors:
+□ Are we consistently above 5000 concurrent users?
+□ Is our monthly infrastructure bill &gt; $2000?
+□ Do we need features App Platform doesn't support?
+□ Do we have customers requiring specific compliance?
+□ Do we need multi-region presence?
+
+Technical Factors:
+□ Do we have &gt; 10 microservices?
+□ Do we need custom networking/security policies?
+□ Do we need fine-grained resource control?
+□ Are we hitting App Platform limitations?
+□ Do we need advanced deployment strategies?
+
+Team Factors:
+□ Do we have Kubernetes expertise in-house?
+□ Can we dedicate 2+ people to DevOps?
+□ Is the team trained on Kubernetes?
+□ Do we have 24/7 on-call coverage?
+
+If you checked 5+ boxes: Consider migration
+If you checked 8+ boxes: Start migration planning
+If you checked 10+ boxes: Migrate ASAP
+</code></pre></div></div>
+
+<h2 id="current-development-status">Current Development Status</h2>
+
+<h3 id="whats-already-built">What’s Already Built</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Completed</span><span class="pi">:</span>
+  <span class="s">✅ Kubernetes manifests (k8s/ directory)</span>
+  <span class="s">✅ Horizontal Pod Autoscaler configs</span>
+  <span class="s">✅ PodDisruptionBudget configs</span>
+  <span class="s">✅ Service definitions</span>
+  <span class="s">✅ Deployment strategies</span>
+  <span class="s">✅ Self-healing configurations</span>
+  <span class="s">✅ Monitoring setup guides</span>
+  <span class="s">✅ Load testing framework (Locust)</span>
+
+<span class="na">Ready to Deploy</span><span class="pi">:</span>
+  <span class="s">✅ All services containerized</span>
+  <span class="s">✅ Health checks implemented</span>
+  <span class="s">✅ Resource limits defined</span>
+  <span class="s">✅ Auto-scaling rules configured</span>
+  <span class="s">✅ Monitoring dashboards designed</span>
+
+<span class="na">Not Yet Built</span><span class="pi">:</span>
+  <span class="s">⏳ Actual DO Kubernetes cluster</span>
+  <span class="s">⏳ Production Helm charts</span>
+  <span class="s">⏳ GitOps setup (ArgoCD)</span>
+  <span class="s">⏳ Service mesh implementation</span>
+  <span class="s">⏳ Production monitoring stack</span>
+</code></pre></div></div>
+
+<h2 id="recommendations">Recommendations</h2>
+
+<h3 id="for-quizmentor-specifically">For QuizMentor Specifically</h3>
+
+<ol>
+  <li><strong>Start with DO App Platform</strong> (Current Choice ✅)
+    <ul>
+      <li>Perfect for MVP and early growth</li>
+      <li>Minimal operational overhead</li>
+      <li>Focus on product development</li>
+    </ul>
+  </li>
+  <li><strong>Prepare for Kubernetes</strong> (In Progress)
+    <ul>
+      <li>Keep services containerized</li>
+      <li>Use environment variables for config</li>
+      <li>Implement proper health checks</li>
+      <li>Document everything</li>
+    </ul>
+  </li>
+  <li><strong>Migration Trigger Points</strong>:
+    <ul>
+      <li>When you hit 5000 concurrent users</li>
+      <li>When monthly costs exceed $2000</li>
+      <li>When you need multi-region</li>
+      <li>When you need custom operators</li>
+    </ul>
+  </li>
+  <li><strong>Migration Timeline</strong>:
+    <ul>
+      <li>Start planning at 2500 users</li>
+      <li>Begin hybrid setup at 3500 users</li>
+      <li>Complete migration by 5000 users</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The migration from DigitalOcean App Platform to Kubernetes is not a matter of “if” but “when” for a growing application like QuizMentor. The current architecture is designed to support both platforms, making the migration smooth when the time comes.</p>
+
+<p><strong>Current Recommendation</strong>: Continue with DigitalOcean App Platform until you consistently serve 3000+ concurrent users or your monthly infrastructure costs exceed $1500. At that point, begin the migration process outlined in this document.</p>
+
+<p>The Kubernetes infrastructure is already designed and ready to deploy when needed, ensuring a smooth transition when the business requirements justify the additional complexity.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / DO_TO_KUBERNETES_MIGRATION_STRATEGY.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

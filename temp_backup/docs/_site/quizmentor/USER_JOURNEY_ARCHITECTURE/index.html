@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USER JOURNEY ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">USER_JOURNEY_ARCHITECTURE.md</span>
+</div>
+
+<h1>USER JOURNEY ARCHITECTURE</h1>
+
+
+<h1 id="quizmentor-complete-user-journey--technical-architecture">QuizMentor Complete User Journey &amp; Technical Architecture</h1>
+
+<h2 id="-end-to-end-user-journey">🎯 End-to-End User Journey</h2>
+
+<h3 id="1-authentication-flow">1. Authentication Flow</h3>
+<pre><code class="language-mermaid">graph LR
+    A[Landing Page] --&gt; B{User Status?}
+    B --&gt;|New User| C[Sign Up]
+    B --&gt;|Existing| D[Sign In]
+    B --&gt;|Guest| E[Limited Access]
+    
+    C --&gt; F[Email Verification]
+    F --&gt; G[Profile Setup]
+    G --&gt; H[Onboarding]
+    
+    D --&gt; I[Dashboard]
+    E --&gt; J[Guest Dashboard]
+    
+    H --&gt; I
+    J --&gt; K[Conversion Prompt]
+    K --&gt; C
+</code></pre>
+
+<h3 id="2-main-user-flow">2. Main User Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Landing → Auth → Dashboard → Category Selection → Quiz → Results → Leaderboard
+                ↑                                              ↓
+                └──────────── Progress Saved ←────────────────┘
+</code></pre></div></div>
+
+<h2 id="️-complete-system-architecture">🏗️ Complete System Architecture</h2>
+
+<h3 id="frontend-architecture">Frontend Architecture</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────┐
+│                     QuizMentor Frontend                      │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                    UI Layer                          │    │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐         │    │
+│  │  │  Screens  │  │Components│  │  Modals  │         │    │
+│  │  └──────────┘  └──────────┘  └──────────┘         │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              ↓                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                State Management                      │    │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐         │    │
+│  │  │  Zustand │  │   React  │  │  React   │         │    │
+│  │  │  Stores  │  │   Query  │  │  Context │         │    │
+│  │  └──────────┘  └──────────┘  └──────────┘         │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                              ↓                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                  Service Layer                       │    │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐         │    │
+│  │  │ Supabase │  │   API    │  │  Cache   │         │    │
+│  │  │  Client  │  │  Client  │  │  Manager │         │    │
+│  │  └──────────┘  └──────────┘  └──────────┘         │    │
+│  └─────────────────────────────────────────────────────┘    │
+└───────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="-screen-flow--state-management">📱 Screen Flow &amp; State Management</h2>
+
+<h3 id="screen-navigation-tree">Screen Navigation Tree</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>App.tsx
+├── AuthNavigator
+│   ├── LandingScreen
+│   ├── LoginScreen
+│   ├── SignUpScreen
+│   └── ForgotPasswordScreen
+│
+└── MainNavigator (Protected)
+    ├── TabNavigator
+    │   ├── HomeTab
+    │   │   ├── DashboardScreen
+    │   │   └── StatsScreen
+    │   │
+    │   ├── QuizTab
+    │   │   ├── CategoriesScreen
+    │   │   ├── QuizScreen
+    │   │   └── ResultsScreen
+    │   │
+    │   ├── LeaderboardTab
+    │   │   ├── GlobalLeaderboard
+    │   │   ├── FriendsLeaderboard
+    │   │   └── CategoryLeaderboard
+    │   │
+    │   └── ProfileTab
+    │       ├── ProfileScreen
+    │       ├── SettingsScreen
+    │       └── AchievementsScreen
+    │
+    └── ModalStack
+        ├── QuizSettingsModal
+        ├── ShareModal
+        └── ChallengeModal
+</code></pre></div></div>
+
+<h2 id="-state-management-details">🔄 State Management Details</h2>
+
+<h3 id="1-zustand-stores-structure">1. Zustand Stores Structure</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// stores/authStore.ts</span>
+<span class="kr">interface</span> <span class="nx">AuthStore</span> <span class="p">{</span>
+  <span class="nl">user</span><span class="p">:</span> <span class="nx">User</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nl">session</span><span class="p">:</span> <span class="nx">Session</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nl">isLoading</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
+  <span class="nl">error</span><span class="p">:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
+  
+  <span class="c1">// Actions</span>
+  <span class="nl">signIn</span><span class="p">:</span> <span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nl">signUp</span><span class="p">:</span> <span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nl">signOut</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nl">refreshSession</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// stores/quizStore.ts</span>
+<span class="kr">interface</span> <span class="nx">QuizStore</span> <span class="p">{</span>
+  <span class="nl">currentQuiz</span><span class="p">:</span> <span class="nx">Quiz</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nl">questions</span><span class="p">:</span> <span class="nx">Question</span><span class="p">[];</span>
+  <span class="nl">currentQuestionIndex</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">answers</span><span class="p">:</span> <span class="nx">Answer</span><span class="p">[];</span>
+  <span class="nl">score</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">timeRemaining</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  
+  <span class="c1">// Actions</span>
+  <span class="nl">startQuiz</span><span class="p">:</span> <span class="p">(</span><span class="nx">categoryId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">submitAnswer</span><span class="p">:</span> <span class="p">(</span><span class="nx">answer</span><span class="p">:</span> <span class="nx">Answer</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">nextQuestion</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">finishQuiz</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// stores/gameStore.ts</span>
+<span class="kr">interface</span> <span class="nx">GameStore</span> <span class="p">{</span>
+  <span class="nl">level</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">xp</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">stars</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">streak</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">achievements</span><span class="p">:</span> <span class="nx">Achievement</span><span class="p">[];</span>
+  
+  <span class="c1">// Actions</span>
+  <span class="nl">addXP</span><span class="p">:</span> <span class="p">(</span><span class="nx">amount</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">addStars</span><span class="p">:</span> <span class="p">(</span><span class="nx">amount</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">unlockAchievement</span><span class="p">:</span> <span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nl">updateStreak</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-react-query-configuration">2. React Query Configuration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// config/queryClient.ts</span>
+<span class="kd">const</span> <span class="nx">queryClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">QueryClient</span><span class="p">({</span>
+  <span class="na">defaultOptions</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">queries</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">staleTime</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="c1">// 5 minutes</span>
+      <span class="na">cacheTime</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="c1">// 10 minutes</span>
+      <span class="na">retry</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="na">refetchOnWindowFocus</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="na">mutations</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">retry</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// hooks/useQuizQueries.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">useCategories</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">useQuery</span><span class="p">({</span>
+    <span class="na">queryKey</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">categories</span><span class="dl">'</span><span class="p">],</span>
+    <span class="na">queryFn</span><span class="p">:</span> <span class="nx">fetchCategories</span><span class="p">,</span>
+    <span class="na">staleTime</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span> <span class="c1">// 1 hour</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">useQuestions</span> <span class="o">=</span> <span class="p">(</span><span class="nx">categoryId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">useQuery</span><span class="p">({</span>
+    <span class="na">queryKey</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">questions</span><span class="dl">'</span><span class="p">,</span> <span class="nx">categoryId</span><span class="p">],</span>
+    <span class="na">queryFn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">fetchQuestions</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">),</span>
+    <span class="na">enabled</span><span class="p">:</span> <span class="o">!!</span><span class="nx">categoryId</span><span class="p">,</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">useLeaderboard</span> <span class="o">=</span> <span class="p">(</span><span class="kd">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">global</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">friends</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">category</span><span class="dl">'</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">useQuery</span><span class="p">({</span>
+    <span class="na">queryKey</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">leaderboard</span><span class="dl">'</span><span class="p">,</span> <span class="kd">type</span><span class="p">],</span>
+    <span class="na">queryFn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">fetchLeaderboard</span><span class="p">(</span><span class="kd">type</span><span class="p">),</span>
+    <span class="na">refetchInterval</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span> <span class="c1">// Refresh every minute</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="️-backend-architecture-supabase">🗄️ Backend Architecture (Supabase)</h2>
+
+<h3 id="database-schema">Database Schema</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Users table (extends auth.users)</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">profiles</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">username</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">display_name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">avatar_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="k">level</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">total_xp</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">stars</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">rating</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">1200</span><span class="p">,</span> <span class="c1">-- ELO rating</span>
+  <span class="n">streak_count</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">last_active</span> <span class="nb">DATE</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Categories</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">categories</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">slug</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">icon</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">color</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">question_count</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">difficulty_level</span> <span class="nb">INTEGER</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">difficulty_level</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">5</span><span class="p">),</span>
+  <span class="n">parent_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">categories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">order_index</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">is_active</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Questions</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">questions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">category_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">categories</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">question_text</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">question_type</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">question_type</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'multiple_choice'</span><span class="p">,</span> <span class="s1">'true_false'</span><span class="p">,</span> <span class="s1">'code'</span><span class="p">)),</span>
+  <span class="n">difficulty</span> <span class="nb">INTEGER</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">difficulty</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">5</span><span class="p">),</span>
+  <span class="n">points</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="n">time_limit</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">30</span><span class="p">,</span> <span class="c1">-- seconds</span>
+  <span class="n">explanation</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">hints</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">tags</span> <span class="nb">TEXT</span><span class="p">[],</span>
+  <span class="n">is_active</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="n">created_by</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Question Options</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">question_options</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">question_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">questions</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">option_text</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">is_correct</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">explanation</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">order_index</span> <span class="nb">INTEGER</span>
+<span class="p">);</span>
+
+<span class="c1">-- Quiz Sessions</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">quiz_sessions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">category_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">categories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">quiz_type</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">quiz_type</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'practice'</span><span class="p">,</span> <span class="s1">'timed'</span><span class="p">,</span> <span class="s1">'challenge'</span><span class="p">,</span> <span class="s1">'tournament'</span><span class="p">)),</span>
+  <span class="n">questions</span> <span class="n">JSONB</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span> <span class="c1">-- Array of question IDs</span>
+  <span class="n">answers</span> <span class="n">JSONB</span><span class="p">,</span> <span class="c1">-- User's answers</span>
+  <span class="n">score</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">max_score</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">time_taken</span> <span class="nb">INTEGER</span><span class="p">,</span> <span class="c1">-- seconds</span>
+  <span class="n">xp_earned</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">stars_earned</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">rating_change</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">completed_at</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- User Progress</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_progress</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">category_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">categories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">questions_attempted</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">questions_correct</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">total_time_spent</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">-- seconds</span>
+  <span class="n">average_score</span> <span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+  <span class="n">best_score</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">current_streak</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">best_streak</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">last_attempt</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+  <span class="k">UNIQUE</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">category_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Achievements</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">achievements</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">icon</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">criteria</span> <span class="n">JSONB</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">xp_reward</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">star_reward</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">rarity</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">rarity</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'common'</span><span class="p">,</span> <span class="s1">'rare'</span><span class="p">,</span> <span class="s1">'epic'</span><span class="p">,</span> <span class="s1">'legendary'</span><span class="p">)),</span>
+  <span class="n">category</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">order_index</span> <span class="nb">INTEGER</span>
+<span class="p">);</span>
+
+<span class="c1">-- User Achievements</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_achievements</span> <span class="p">(</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">achievement_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">achievements</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">unlocked_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">progress</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">achievement_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Leaderboards (Materialized View)</span>
+<span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">leaderboard_global</span> <span class="k">AS</span>
+<span class="k">SELECT</span> 
+  <span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">username</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">display_name</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">avatar_url</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="k">level</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">total_xp</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">stars</span><span class="p">,</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">rating</span><span class="p">,</span>
+  <span class="n">RANK</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">p</span><span class="p">.</span><span class="n">rating</span> <span class="k">DESC</span><span class="p">)</span> <span class="k">as</span> <span class="n">rank</span>
+<span class="k">FROM</span> <span class="n">profiles</span> <span class="n">p</span>
+<span class="k">WHERE</span> <span class="n">p</span><span class="p">.</span><span class="n">last_active</span> <span class="o">&gt;</span> <span class="n">NOW</span><span class="p">()</span> <span class="o">-</span> <span class="n">INTERVAL</span> <span class="s1">'30 days'</span><span class="p">;</span>
+
+<span class="c1">-- Friends System</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">friendships</span> <span class="p">(</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">friend_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">status</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">status</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'pending'</span><span class="p">,</span> <span class="s1">'accepted'</span><span class="p">,</span> <span class="s1">'blocked'</span><span class="p">)),</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">friend_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Challenges</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">challenges</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">challenger_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">challenged_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">category_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">categories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">status</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">status</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'pending'</span><span class="p">,</span> <span class="s1">'accepted'</span><span class="p">,</span> <span class="s1">'declined'</span><span class="p">,</span> <span class="s1">'completed'</span><span class="p">)),</span>
+  <span class="n">challenger_score</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">challenged_score</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">winner_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">expires_at</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+  <span class="n">completed_at</span> <span class="n">TIMESTAMPTZ</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="row-level-security-rls-policies">Row Level Security (RLS) Policies</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Enable RLS</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">profiles</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">quiz_sessions</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">user_progress</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">user_achievements</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+
+<span class="c1">-- Profiles policies</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Public profiles are viewable by everyone"</span>
+  <span class="k">ON</span> <span class="n">profiles</span> <span class="k">FOR</span> <span class="k">SELECT</span>
+  <span class="k">USING</span> <span class="p">(</span><span class="k">true</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can update own profile"</span>
+  <span class="k">ON</span> <span class="n">profiles</span> <span class="k">FOR</span> <span class="k">UPDATE</span>
+  <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">id</span><span class="p">);</span>
+
+<span class="c1">-- Quiz sessions policies</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can view own sessions"</span>
+  <span class="k">ON</span> <span class="n">quiz_sessions</span> <span class="k">FOR</span> <span class="k">SELECT</span>
+  <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">user_id</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can create own sessions"</span>
+  <span class="k">ON</span> <span class="n">quiz_sessions</span> <span class="k">FOR</span> <span class="k">INSERT</span>
+  <span class="k">WITH</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">user_id</span><span class="p">);</span>
+
+<span class="c1">-- Progress policies</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can view own progress"</span>
+  <span class="k">ON</span> <span class="n">user_progress</span> <span class="k">FOR</span> <span class="k">SELECT</span>
+  <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">user_id</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can update own progress"</span>
+  <span class="k">ON</span> <span class="n">user_progress</span> <span class="k">FOR</span> <span class="k">ALL</span>
+  <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">user_id</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="-authentication-flow">🔐 Authentication Flow</h2>
+
+<h3 id="supabase-auth-configuration">Supabase Auth Configuration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/supabase.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/supabase-js</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">AsyncStorage</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@react-native-async-storage/async-storage</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">supabaseUrl</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EXPO_PUBLIC_SUPABASE_URL</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">supabaseAnonKey</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EXPO_PUBLIC_SUPABASE_ANON_KEY</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">(</span><span class="nx">supabaseUrl</span><span class="p">,</span> <span class="nx">supabaseAnonKey</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">storage</span><span class="p">:</span> <span class="nx">AsyncStorage</span><span class="p">,</span>
+    <span class="na">autoRefreshToken</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">persistSession</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">detectSessionInUrl</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Auth functions</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">authService</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">signUp</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="na">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="na">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="na">username</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signUp</span><span class="p">({</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">password</span><span class="p">,</span>
+      <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">username</span> <span class="p">},</span>
+      <span class="p">},</span>
+    <span class="p">});</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    
+    <span class="c1">// Create profile</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">profiles</span><span class="dl">'</span><span class="p">).</span><span class="nx">insert</span><span class="p">({</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="nx">username</span><span class="p">,</span>
+        <span class="na">display_name</span><span class="p">:</span> <span class="nx">username</span><span class="p">,</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+  <span class="p">},</span>
+  
+  <span class="na">signIn</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="na">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="na">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">password</span><span class="p">,</span>
+    <span class="p">});</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+  <span class="p">},</span>
+  
+  <span class="na">signOut</span><span class="p">:</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signOut</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+  <span class="p">},</span>
+  
+  <span class="na">resetPassword</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="na">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">resetPasswordForEmail</span><span class="p">(</span><span class="nx">email</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="-game-logic--algorithms">🎮 Game Logic &amp; Algorithms</h2>
+
+<h3 id="xp-calculation">XP Calculation</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">calculateXP</span><span class="p">(</span>
+  <span class="nx">score</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">maxScore</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">timeBonus</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">streakMultiplier</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">difficultyMultiplier</span><span class="p">:</span> <span class="kr">number</span>
+<span class="p">):</span> <span class="kr">number</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">baseXP</span> <span class="o">=</span> <span class="p">(</span><span class="nx">score</span> <span class="o">/</span> <span class="nx">maxScore</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">timeBonusXP</span> <span class="o">=</span> <span class="nx">timeBonus</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">totalXP</span> <span class="o">=</span> <span class="p">(</span><span class="nx">baseXP</span> <span class="o">+</span> <span class="nx">timeBonusXP</span><span class="p">)</span> <span class="o">*</span> <span class="nx">streakMultiplier</span> <span class="o">*</span> <span class="nx">difficultyMultiplier</span><span class="p">;</span>
+  
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">totalXP</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="elo-rating-system">ELO Rating System</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">calculateEloRating</span><span class="p">(</span>
+  <span class="nx">playerRating</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">opponentRating</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">playerScore</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">opponentScore</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+  <span class="nx">kFactor</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="p">):</span> <span class="kr">number</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">expectedScore</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="nx">opponentRating</span> <span class="o">-</span> <span class="nx">playerRating</span><span class="p">)</span> <span class="o">/</span> <span class="mi">400</span><span class="p">));</span>
+  <span class="kd">const</span> <span class="nx">actualScore</span> <span class="o">=</span> <span class="nx">playerScore</span> <span class="o">&gt;</span> <span class="nx">opponentScore</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="nx">playerScore</span> <span class="o">===</span> <span class="nx">opponentScore</span> <span class="p">?</span> <span class="mf">0.5</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">newRating</span> <span class="o">=</span> <span class="nx">playerRating</span> <span class="o">+</span> <span class="nx">kFactor</span> <span class="o">*</span> <span class="p">(</span><span class="nx">actualScore</span> <span class="o">-</span> <span class="nx">expectedScore</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">newRating</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="adaptive-difficulty">Adaptive Difficulty</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">DifficultyEngine</span> <span class="p">{</span>
+  <span class="nx">calculateNextDifficulty</span><span class="p">(</span>
+    <span class="nx">userPerformance</span><span class="p">:</span> <span class="kr">number</span><span class="p">[],</span> <span class="c1">// Last 10 quiz scores (0-100)</span>
+    <span class="nx">currentDifficulty</span><span class="p">:</span> <span class="kr">number</span> <span class="c1">// 1-5</span>
+  <span class="p">):</span> <span class="kr">number</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">avgPerformance</span> <span class="o">=</span> <span class="nx">userPerformance</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nx">userPerformance</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">avgPerformance</span> <span class="o">&gt;</span> <span class="mi">85</span> <span class="o">&amp;&amp;</span> <span class="nx">currentDifficulty</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">currentDifficulty</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">avgPerformance</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="o">&amp;&amp;</span> <span class="nx">currentDifficulty</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">currentDifficulty</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">currentDifficulty</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-caching-strategy">💾 Caching Strategy</h2>
+
+<h3 id="react-query-cache-configuration">React Query Cache Configuration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Aggressive caching for static data</span>
+<span class="kd">const</span> <span class="nx">staticDataOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">staleTime</span><span class="p">:</span> <span class="kc">Infinity</span><span class="p">,</span>
+  <span class="na">cacheTime</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">,</span> <span class="c1">// 24 hours</span>
+<span class="p">};</span>
+
+<span class="c1">// Moderate caching for user data</span>
+<span class="kd">const</span> <span class="nx">userDataOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">staleTime</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="c1">// 5 minutes</span>
+  <span class="na">cacheTime</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">30</span><span class="p">,</span> <span class="c1">// 30 minutes</span>
+<span class="p">};</span>
+
+<span class="c1">// No caching for real-time data</span>
+<span class="kd">const</span> <span class="nx">realtimeDataOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">staleTime</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="na">cacheTime</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="na">refetchInterval</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="c1">// 10 seconds</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="offline-support">Offline Support</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/offlineManager.ts</span>
+<span class="k">import</span> <span class="nx">NetInfo</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@react-native-community/netinfo</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">OfflineManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">queue</span><span class="p">:</span> <span class="nx">OfflineAction</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+  
+  <span class="k">async</span> <span class="nx">syncOfflineData</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">isConnected</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">NetInfo</span><span class="p">.</span><span class="nx">fetch</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">state</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">.</span><span class="nx">isConnected</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isConnected</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">while</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">executeAction</span><span class="p">(</span><span class="nx">action</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">action</span><span class="p">);</span> <span class="c1">// Re-add to queue</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">executeAction</span><span class="p">(</span><span class="nx">action</span><span class="p">:</span> <span class="nx">OfflineAction</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">SUBMIT_QUIZ</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">quiz_sessions</span><span class="dl">'</span><span class="p">).</span><span class="nx">insert</span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">UPDATE_PROGRESS</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">user_progress</span><span class="dl">'</span><span class="p">).</span><span class="nx">upsert</span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+      <span class="c1">// ... other actions</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-ui-component-architecture">🎨 UI Component Architecture</h2>
+
+<h3 id="design-system">Design System</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// theme/index.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">theme</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">colors</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">primary</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#3b82f6</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">secondary</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#10b981</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">danger</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#ef4444</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">warning</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#f59e0b</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">success</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#22c55e</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">background</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#f3f4f6</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">surface</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#ffffff</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">text</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">primary</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#1f2937</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">secondary</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#6b7280</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">disabled</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#9ca3af</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="na">spacing</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">xs</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="na">sm</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="na">md</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="na">lg</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="na">xl</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="na">xxl</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="na">typography</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">h1</span><span class="p">:</span> <span class="p">{</span> <span class="na">fontSize</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="na">fontWeight</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bold</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">h2</span><span class="p">:</span> <span class="p">{</span> <span class="na">fontSize</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="na">fontWeight</span><span class="p">:</span> <span class="dl">'</span><span class="s1">bold</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">h3</span><span class="p">:</span> <span class="p">{</span> <span class="na">fontSize</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="na">fontWeight</span><span class="p">:</span> <span class="dl">'</span><span class="s1">600</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">body</span><span class="p">:</span> <span class="p">{</span> <span class="na">fontSize</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="na">fontWeight</span><span class="p">:</span> <span class="dl">'</span><span class="s1">normal</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">caption</span><span class="p">:</span> <span class="p">{</span> <span class="na">fontSize</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="na">fontWeight</span><span class="p">:</span> <span class="dl">'</span><span class="s1">normal</span><span class="dl">'</span> <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="na">borderRadius</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">sm</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="na">md</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="na">lg</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="na">xl</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="na">full</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="component-library-structure">Component Library Structure</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>components/
+├── atoms/
+│   ├── Button.tsx
+│   ├── Text.tsx
+│   ├── Input.tsx
+│   └── Icon.tsx
+├── molecules/
+│   ├── QuizCard.tsx
+│   ├── LeaderboardItem.tsx
+│   ├── AchievementBadge.tsx
+│   └── ProgressBar.tsx
+├── organisms/
+│   ├── QuizQuestion.tsx
+│   ├── CategoryGrid.tsx
+│   ├── StatsPanel.tsx
+│   └── NavigationHeader.tsx
+└── templates/
+    ├── QuizLayout.tsx
+    ├── AuthLayout.tsx
+    └── DashboardLayout.tsx
+</code></pre></div></div>
+
+<h2 id="-analytics--monitoring">📊 Analytics &amp; Monitoring</h2>
+
+<h3 id="event-tracking">Event Tracking</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// analytics/events.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">trackEvent</span> <span class="o">=</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">properties</span><span class="p">?:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Amplitude/Mixpanel integration</span>
+  <span class="nx">amplitude</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="nx">eventName</span><span class="p">,</span> <span class="p">{</span>
+    <span class="p">...</span><span class="nx">properties</span><span class="p">,</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
+    <span class="na">platform</span><span class="p">:</span> <span class="nx">Platform</span><span class="p">.</span><span class="nx">OS</span><span class="p">,</span>
+    <span class="na">version</span><span class="p">:</span> <span class="nx">Constants</span><span class="p">.</span><span class="nx">manifest</span><span class="p">.</span><span class="nx">version</span><span class="p">,</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="c1">// Usage</span>
+<span class="nx">trackEvent</span><span class="p">(</span><span class="dl">'</span><span class="s1">quiz_completed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">category_id</span><span class="p">:</span> <span class="nx">categoryId</span><span class="p">,</span>
+  <span class="na">score</span><span class="p">:</span> <span class="nx">score</span><span class="p">,</span>
+  <span class="na">time_taken</span><span class="p">:</span> <span class="nx">timeTaken</span><span class="p">,</span>
+  <span class="na">difficulty</span><span class="p">:</span> <span class="nx">difficulty</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="performance-monitoring">Performance Monitoring</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// monitoring/performance.ts</span>
+<span class="k">import</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">Sentry</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@sentry/react-native</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">Sentry</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+  <span class="na">dsn</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SENTRY_DSN</span><span class="p">,</span>
+  <span class="na">environment</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">,</span>
+  <span class="na">tracesSampleRate</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Measure screen load time</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">measureScreenLoad</span> <span class="o">=</span> <span class="p">(</span><span class="nx">screenName</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="nx">Sentry</span><span class="p">.</span><span class="nx">startTransaction</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s2">`screen_load_</span><span class="p">${</span><span class="nx">screenName</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">finish</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">finish</span><span class="p">(),</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="-deployment-pipeline">🚀 Deployment Pipeline</h2>
+
+<h3 id="cicd-with-github-actions">CI/CD with GitHub Actions</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .github/workflows/deploy.yml</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">Deploy QuizMentor</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">main</span><span class="pi">]</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">test</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm install</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm test</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npx playwright test</span>
+
+  <span class="na">deploy-web</span><span class="pi">:</span>
+    <span class="na">needs</span><span class="pi">:</span> <span class="s">test</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm install</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm run build:web</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">amondnet/vercel-action@v20</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">vercel-token</span><span class="pi">:</span> <span class="s">${{ secrets.VERCEL_TOKEN }}</span>
+
+  <span class="na">build-mobile</span><span class="pi">:</span>
+    <span class="na">needs</span><span class="pi">:</span> <span class="s">test</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">expo/expo-github-action@v7</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">eas build --platform all --non-interactive</span>
+</code></pre></div></div>
+
+<h2 id="-complete-user-journey-example">🎯 Complete User Journey Example</h2>
+
+<h3 id="sarahs-journey-new-user">Sarah’s Journey (New User)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. LANDING PAGE
+   - Sees marketing content
+   - Views feature highlights
+   - Clicks "Get Started"
+
+2. SIGN UP
+   - Enters email/password
+   - Chooses username
+   - Verifies email
+   - State: User created in Supabase Auth
+
+3. ONBOARDING
+   - Selects interests (categories)
+   - Sets difficulty preference
+   - Completes tutorial quiz
+   - State: Profile created, preferences saved
+
+4. DASHBOARD
+   - Sees personalized categories
+   - Views daily challenges
+   - Checks streak status
+   - State: User data fetched, cached in React Query
+
+5. STARTS QUIZ
+   - Selects "JavaScript" category
+   - Chooses "Timed Mode"
+   - Answers 10 questions
+   - State: Quiz session created, answers stored locally
+
+6. COMPLETES QUIZ
+   - Scores 8/10 (80%)
+   - Earns 150 XP, 3 stars
+   - Unlocks "Quick Learner" achievement
+   - State: Results synced to Supabase
+
+7. VIEWS RESULTS
+   - Sees detailed breakdown
+   - Reviews incorrect answers
+   - Shares score on social
+   - State: Progress updated, leaderboard refreshed
+
+8. CHECKS LEADERBOARD
+   - Ranks #45 globally
+   - #3 among friends
+   - #12 in JavaScript category
+   - State: Real-time updates via Supabase subscriptions
+
+9. CONTINUES LEARNING
+   - System suggests "Advanced JavaScript"
+   - Difficulty adjusted based on performance
+   - New learning path unlocked
+   - State: Adaptive algorithm updates preferences
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p>This is the COMPLETE technical architecture showing:</p>
+<ul>
+  <li>Full user journey from landing to mastery</li>
+  <li>Complete database schema with RLS</li>
+  <li>State management with Zustand + React Query</li>
+  <li>Caching strategies for optimal performance</li>
+  <li>Authentication flow with Supabase</li>
+  <li>Game mechanics and algorithms</li>
+  <li>Offline support and sync</li>
+  <li>Analytics and monitoring</li>
+  <li>CI/CD deployment pipeline</li>
+</ul>
+
+<p>The app is designed to scale from 1 to 1M+ users with proper caching, state management, and backend architecture.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / USER_JOURNEY_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

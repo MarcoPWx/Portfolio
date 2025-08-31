@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>implementation | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/database/implementation.md</span>
+</div>
+
+<h1>implementation</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<p>Note: Any document not marked CURRENT ARCHITECTURE will be archived in a later cleanup.</p>
+
+<h1 id="devmentor-postgresql-implementation">DevMentor PostgreSQL Implementation</h1>
+
+<p>This document outlines how PostgreSQL is implemented within DevMentor, focusing on our specific use cases and patterns.</p>
+
+<h2 id="database-architecture">Database Architecture</h2>
+
+<h3 id="core-schema">Core Schema</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Users and Authentication</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+    <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">github_username</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="n">full_name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- Learning Paths</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">learning_paths</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+    <span class="n">title</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">difficulty_level</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+    <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- Progress Tracking</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_progress</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+    <span class="n">user_id</span> <span class="nb">INTEGER</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+    <span class="n">learning_path_id</span> <span class="nb">INTEGER</span> <span class="k">REFERENCES</span> <span class="n">learning_paths</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+    <span class="n">completion_percentage</span> <span class="nb">DECIMAL</span><span class="p">,</span>
+    <span class="n">last_activity</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span><span class="p">,</span>
+    <span class="k">UNIQUE</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">learning_path_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Analytics and Metrics</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_metrics</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+    <span class="n">user_id</span> <span class="nb">INTEGER</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+    <span class="n">metric_type</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+    <span class="n">metric_value</span> <span class="n">JSONB</span><span class="p">,</span>
+    <span class="n">recorded_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="sqlalchemy-integration">SQLAlchemy Integration</h2>
+
+<h3 id="models-appmodelspy">Models (<code class="language-plaintext highlighter-rouge">app/models.py</code>)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">,</span> <span class="n">Numeric</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">JSONB</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">relationship</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">'users'</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">github_username</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">created_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="n">timezone</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="p">.</span><span class="n">now</span><span class="p">())</span>
+    
+    <span class="n">progress</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">"UserProgress"</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s">"user"</span><span class="p">)</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">"UserMetrics"</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s">"user"</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">LearningPath</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">'learning_paths'</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">difficulty_level</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">created_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="n">timezone</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="p">.</span><span class="n">now</span><span class="p">())</span>
+    
+    <span class="n">progress</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">"UserProgress"</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s">"learning_path"</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">UserProgress</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">'user_progress'</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">'users.id'</span><span class="p">))</span>
+    <span class="n">learning_path_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">'learning_paths.id'</span><span class="p">))</span>
+    <span class="n">completion_percentage</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Numeric</span><span class="p">)</span>
+    <span class="n">last_activity</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="n">timezone</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+    
+    <span class="n">user</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">"User"</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s">"progress"</span><span class="p">)</span>
+    <span class="n">learning_path</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">"LearningPath"</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s">"progress"</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">UserMetrics</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">'user_metrics'</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">'users.id'</span><span class="p">))</span>
+    <span class="n">metric_type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">metric_value</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">JSONB</span><span class="p">)</span>
+    <span class="n">recorded_at</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="n">timezone</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">server_default</span><span class="o">=</span><span class="n">func</span><span class="p">.</span><span class="n">now</span><span class="p">())</span>
+    
+    <span class="n">user</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">"User"</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s">"metrics"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="database-configuration-appdatabasepy">Database Configuration (<code class="language-plaintext highlighter-rouge">app/database.py</code>)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span>
+    <span class="s">'DATABASE_URL'</span><span class="p">,</span>
+    <span class="s">'postgresql://devmentor_user:password@localhost:5432/devmentor'</span>
+<span class="p">)</span>
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">DATABASE_URL</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_overflow</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">autocommit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">autoflush</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">db</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="repository-pattern-implementation">Repository Pattern Implementation</h2>
+
+<h3 id="base-repository-apprepositoriesbasepy">Base Repository (<code class="language-plaintext highlighter-rouge">app/repositories/base.py</code>)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s">'T'</span><span class="p">)</span>
+<span class="n">CreateSchema</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s">'CreateSchema'</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">BaseModel</span><span class="p">)</span>
+<span class="n">UpdateSchema</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s">'UpdateSchema'</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">BaseModel</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">BaseRepository</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">CreateSchema</span><span class="p">,</span> <span class="n">UpdateSchema</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">obj_in</span><span class="p">:</span> <span class="n">CreateSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="n">obj_in_data</span> <span class="o">=</span> <span class="n">obj_in</span><span class="p">.</span><span class="nb">dict</span><span class="p">()</span>
+        <span class="n">db_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">obj_in_data</span><span class="p">)</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">db_obj</span><span class="p">)</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">db_obj</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">db_obj</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">db</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">).</span><span class="nb">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="nb">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_multi</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">skip</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">db</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">).</span><span class="n">offset</span><span class="p">(</span><span class="n">skip</span><span class="p">).</span><span class="n">limit</span><span class="p">(</span><span class="n">limit</span><span class="p">).</span><span class="nb">all</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">db_obj</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">obj_in</span><span class="p">:</span> <span class="n">UpdateSchema</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="n">obj_data</span> <span class="o">=</span> <span class="n">obj_in</span><span class="p">.</span><span class="nb">dict</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">obj_data</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">db_obj</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">db_obj</span><span class="p">)</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">db_obj</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">db_obj</span>
+
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">).</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+            <span class="n">db</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">obj</span>
+</code></pre></div></div>
+
+<h3 id="user-repository-example-apprepositoriesuserpy">User Repository Example (<code class="language-plaintext highlighter-rouge">app/repositories/user.py</code>)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseRepository</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">..schemas.user</span> <span class="kn">import</span> <span class="n">UserCreate</span><span class="p">,</span> <span class="n">UserUpdate</span>
+
+<span class="k">class</span> <span class="nc">UserRepository</span><span class="p">(</span><span class="n">BaseRepository</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="n">UserCreate</span><span class="p">,</span> <span class="n">UserUpdate</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">get_by_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">db</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">).</span><span class="nb">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_by_github</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">db</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">).</span><span class="nb">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">github_username</span> <span class="o">==</span> <span class="n">username</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="usage-examples">Usage Examples</h2>
+
+<h3 id="creating-a-new-user">Creating a New User</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">app.database</span> <span class="kn">import</span> <span class="n">get_db</span>
+<span class="kn">from</span> <span class="nn">app.repositories.user</span> <span class="kn">import</span> <span class="n">UserRepository</span>
+<span class="kn">from</span> <span class="nn">app.schemas.user</span> <span class="kn">import</span> <span class="n">UserCreate</span>
+
+<span class="n">user_repo</span> <span class="o">=</span> <span class="n">UserRepository</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+
+<span class="n">user_data</span> <span class="o">=</span> <span class="n">UserCreate</span><span class="p">(</span>
+    <span class="n">email</span><span class="o">=</span><span class="s">"user@example.com"</span><span class="p">,</span>
+    <span class="n">github_username</span><span class="o">=</span><span class="s">"devuser"</span><span class="p">,</span>
+    <span class="n">full_name</span><span class="o">=</span><span class="s">"Dev User"</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">get_db</span><span class="p">()</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">user_repo</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">obj_in</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="tracking-learning-progress">Tracking Learning Progress</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">app.repositories.progress</span> <span class="kn">import</span> <span class="n">ProgressRepository</span>
+<span class="kn">from</span> <span class="nn">app.schemas.progress</span> <span class="kn">import</span> <span class="n">ProgressCreate</span>
+
+<span class="n">progress_repo</span> <span class="o">=</span> <span class="n">ProgressRepository</span><span class="p">(</span><span class="n">UserProgress</span><span class="p">)</span>
+
+<span class="n">progress_data</span> <span class="o">=</span> <span class="n">ProgressCreate</span><span class="p">(</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+    <span class="n">learning_path_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">completion_percentage</span><span class="o">=</span><span class="mf">25.0</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">get_db</span><span class="p">()</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+    <span class="n">progress</span> <span class="o">=</span> <span class="n">progress_repo</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">obj_in</span><span class="o">=</span><span class="n">progress_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="recording-metrics">Recording Metrics</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">app.repositories.metrics</span> <span class="kn">import</span> <span class="n">MetricsRepository</span>
+<span class="kn">from</span> <span class="nn">app.schemas.metrics</span> <span class="kn">import</span> <span class="n">MetricCreate</span>
+
+<span class="n">metrics_repo</span> <span class="o">=</span> <span class="n">MetricsRepository</span><span class="p">(</span><span class="n">UserMetrics</span><span class="p">)</span>
+
+<span class="n">metric_data</span> <span class="o">=</span> <span class="n">MetricCreate</span><span class="p">(</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+    <span class="n">metric_type</span><span class="o">=</span><span class="s">"coding_time"</span><span class="p">,</span>
+    <span class="n">metric_value</span><span class="o">=</span><span class="p">{</span><span class="s">"minutes"</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="s">"language"</span><span class="p">:</span> <span class="s">"python"</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">get_db</span><span class="p">()</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="n">metrics_repo</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">obj_in</span><span class="o">=</span><span class="n">metric_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="migration-management">Migration Management</h2>
+
+<p>We use Alembic for database migrations. Migration scripts are stored in <code class="language-plaintext highlighter-rouge">migrations/versions/</code>.</p>
+
+<h3 id="creating-a-new-migration">Creating a New Migration</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Generate migration</span>
+alembic revision <span class="nt">--autogenerate</span> <span class="nt">-m</span> <span class="s2">"Add user metrics table"</span>
+
+<span class="c"># Apply migration</span>
+alembic upgrade <span class="nb">head</span>
+
+<span class="c"># Rollback if needed</span>
+alembic downgrade <span class="nt">-1</span>
+</code></pre></div></div>
+
+<h2 id="environment-configuration">Environment Configuration</h2>
+
+<p>Required environment variables for database connection:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://devmentor_user:password@localhost:5432/devmentor
+<span class="nv">DB_POOL_SIZE</span><span class="o">=</span>5
+<span class="nv">DB_MAX_OVERFLOW</span><span class="o">=</span>10
+</code></pre></div></div>
+
+<h2 id="maintenance-tasks">Maintenance Tasks</h2>
+
+<h3 id="regular-maintenance">Regular Maintenance</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Schedule with your preferred task scheduler
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">perform_maintenance</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">get_db</span><span class="p">()</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="c1"># Clean old metrics
+</span>        <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"""
+            DELETE FROM user_metrics 
+            WHERE recorded_at &lt; NOW() - INTERVAL '90 days'
+        """</span><span class="p">)</span>
+        
+        <span class="c1"># Aggregate statistics
+</span>        <span class="n">db</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"""
+            INSERT INTO aggregated_metrics 
+            SELECT 
+                user_id,
+                DATE_TRUNC('day', recorded_at) as day,
+                metric_type,
+                jsonb_agg(metric_value) as values
+            FROM user_metrics 
+            WHERE recorded_at &gt;= NOW() - INTERVAL '1 day'
+            GROUP BY user_id, DATE_TRUNC('day', recorded_at), metric_type
+        """</span><span class="p">)</span>
+</code></pre></div></div>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/database/implementation.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

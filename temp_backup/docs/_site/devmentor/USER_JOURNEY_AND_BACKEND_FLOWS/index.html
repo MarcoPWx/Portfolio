@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USER JOURNEY AND BACKEND FLOWS | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">USER_JOURNEY_AND_BACKEND_FLOWS.md</span>
+</div>
+
+<h1>USER JOURNEY AND BACKEND FLOWS</h1>
+
+
+<h1 id="-devmentor-user-journeys--backend-flow-architecture">🚀 DevMentor User Journeys &amp; Backend Flow Architecture</h1>
+<h2 id="complete-e2e-flows-with-state-management-caching-and-resilience-patterns">Complete E2E Flows with State Management, Caching, and Resilience Patterns</h2>
+
+<h2 id="why-we-dont-need-istio-now-but-can-add-it-later">Why We Don’t Need Istio Now (But Can Add It Later)</h2>
+
+<h3 id="-what-istio-gives-us-that-we-dont-need-yet">🎯 What Istio Gives Us (That We Don’t Need Yet)</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Istio Features</span><span class="pi">:</span>
+  <span class="na">Traffic Management</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Canary deployments → Use feature flags instead</span>
+    <span class="pi">-</span> <span class="s">Circuit breaking → Implement in code (simpler)</span>
+    <span class="pi">-</span> <span class="s">Retries → Use axios retry or fetch-retry</span>
+    <span class="pi">-</span> <span class="s">Load balancing → Digital Ocean handles this</span>
+    
+  <span class="na">Security</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">mTLS → Supabase RLS is enough for now</span>
+    <span class="pi">-</span> <span class="s">Authorization → JWT validation is sufficient</span>
+    
+  <span class="na">Observability</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Distributed tracing → Sentry APM is enough</span>
+    <span class="pi">-</span> <span class="s">Metrics → Prometheus without Istio works fine</span>
+</code></pre></div></div>
+
+<h3 id="-when-to-add-istio-the-triggers">📊 When to Add Istio (The Triggers)</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Decision matrix for Istio adoption</span>
+<span class="kd">const</span> <span class="nx">shouldUseIstio</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">services</span><span class="p">:</span> <span class="nx">getServiceCount</span><span class="p">(),</span>           <span class="c1">// &gt; 10 services</span>
+    <span class="na">rps</span><span class="p">:</span> <span class="nx">getRequestsPerSecond</span><span class="p">(),</span>          <span class="c1">// &gt; 1000 RPS</span>
+    <span class="na">deployments</span><span class="p">:</span> <span class="nx">getDeploymentsPerDay</span><span class="p">(),</span>  <span class="c1">// &gt; 10/day</span>
+    <span class="na">team_size</span><span class="p">:</span> <span class="nx">getEngineeringTeam</span><span class="p">(),</span>      <span class="c1">// &gt; 20 engineers</span>
+    <span class="na">regions</span><span class="p">:</span> <span class="nx">getDeploymentRegions</span><span class="p">()</span>       <span class="c1">// &gt; 1 region</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="nx">metrics</span><span class="p">.</span><span class="nx">services</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">||</span> 
+         <span class="nx">metrics</span><span class="p">.</span><span class="nx">rps</span> <span class="o">&gt;</span> <span class="mi">1000</span> <span class="o">||</span> 
+         <span class="nx">metrics</span><span class="p">.</span><span class="nx">deployments</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="-how-well-add-istio-later-zero-disruption">🔄 How We’ll Add Istio Later (Zero Disruption)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Step 1: Install Istio alongside existing services</span>
+istioctl <span class="nb">install</span> <span class="nt">--set</span> <span class="nv">profile</span><span class="o">=</span>demo
+
+<span class="c"># Step 2: Gradually enable sidecar injection</span>
+kubectl label namespace devmentor istio-injection<span class="o">=</span>enabled
+
+<span class="c"># Step 3: Services automatically get proxies on next deploy</span>
+kubectl rollout restart deployment/learning-service
+
+<span class="c"># Step 4: Enable features progressively</span>
+kubectl apply <span class="nt">-f</span> istio-traffic-management.yaml
+</code></pre></div></div>
+
+<p><strong>Why it’s NOT hard to add later:</strong></p>
+<ol>
+  <li>Istio is <strong>transparent</strong> - services don’t know it exists</li>
+  <li>Can be enabled <strong>per-service</strong> gradually</li>
+  <li>Existing code continues working</li>
+  <li>Roll back instantly if issues</li>
+</ol>
+
+<h2 id="part-1-complete-user-journeys">Part 1: Complete User Journeys</h2>
+
+<h3 id="-journey-1-first-time-user-onboarding">🎯 Journey 1: First-Time User Onboarding</h3>
+
+<pre><code class="language-mermaid">journey
+    title First-Time User Onboarding Flow
+    
+    section Landing
+      Visit DevMentor: 5: User
+      View Features: 4: User
+      Click "Get Started": 5: User
+    
+    section Authentication
+      GitHub OAuth: 5: User, System
+      Create Profile: 4: System
+      Generate JWT: 5: System
+    
+    section Repository Analysis
+      Select Repository: 5: User
+      Authorize Access: 4: User
+      Analyze Code: 3: System
+      Show Results: 5: System
+    
+    section Learning Path
+      Generate Recommendations: 4: AI
+      Select Learning Track: 5: User
+      Start First Lesson: 5: User
+</code></pre>
+
+<h3 id="backend-flow-for-onboarding">Backend Flow for Onboarding</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. OAuth Flow with GitHub</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AuthFlow</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">githubOAuth</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Step 1: Exchange code for token</span>
+    <span class="kd">const</span> <span class="nx">githubToken</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">exchangeCodeForToken</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+    
+    <span class="c1">// Step 2: Get user profile</span>
+    <span class="kd">const</span> <span class="nx">profile</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getGitHubProfile</span><span class="p">(</span><span class="nx">githubToken</span><span class="p">);</span>
+    
+    <span class="c1">// Step 3: Create/update user in DB</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">upsertUser</span><span class="p">(</span><span class="nx">profile</span><span class="p">);</span>
+    
+    <span class="c1">// Step 4: Generate JWT</span>
+    <span class="kd">const</span> <span class="nx">jwt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateJWT</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+    
+    <span class="c1">// Step 5: Initialize user services</span>
+    <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">initializeLearningProfile</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">),</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">initializePBMLSpace</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">),</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">createDefaultPreferences</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="p">]);</span>
+    
+    <span class="c1">// Step 6: Cache session</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+      <span class="s2">`session:</span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="mi">3600</span><span class="p">,</span>
+      <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">jwt</span><span class="p">,</span> <span class="nx">profile</span> <span class="p">})</span>
+    <span class="p">);</span>
+    
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">jwt</span><span class="p">,</span> <span class="nx">user</span><span class="p">,</span> <span class="na">isNewUser</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">created_at</span> <span class="o">===</span> <span class="nx">user</span><span class="p">.</span><span class="nx">updated_at</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="-journey-2-repository-analysis-flow">🎯 Journey 2: Repository Analysis Flow</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Complete Repository Analysis Pipeline</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">RepositoryAnalysisJourney</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">queue</span><span class="p">:</span> <span class="nx">Bull</span><span class="p">.</span><span class="nx">Queue</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">cache</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">startAnalysis</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">repoUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 1. Check cache first</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkCache</span><span class="p">(</span><span class="nx">repoUrl</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span> <span class="o">&amp;&amp;</span> <span class="nx">cached</span><span class="p">.</span><span class="nx">age</span> <span class="o">&lt;</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{</span> <span class="p">...</span><span class="nx">cached</span><span class="p">,</span> <span class="na">fromCache</span><span class="p">:</span> <span class="kc">true</span> <span class="p">};</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 2. Create analysis job</span>
+    <span class="kd">const</span> <span class="nx">job</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">analyze-repo</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">userId</span><span class="p">,</span>
+      <span class="nx">repoUrl</span><span class="p">,</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="na">attempts</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="na">backoff</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">exponential</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">delay</span><span class="p">:</span> <span class="mi">2000</span>
+      <span class="p">},</span>
+      <span class="na">removeOnComplete</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="na">removeOnFail</span><span class="p">:</span> <span class="kc">false</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// 3. Return job ID for tracking</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">analysisId</span><span class="p">:</span> <span class="nx">job</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">queued</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">estimatedTime</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">estimateAnalysisTime</span><span class="p">(</span><span class="nx">repoUrl</span><span class="p">)</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">processAnalysis</span><span class="p">(</span><span class="nx">job</span><span class="p">:</span> <span class="nx">Bull</span><span class="p">.</span><span class="nx">Job</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">userId</span><span class="p">,</span> <span class="nx">repoUrl</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+    
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Phase 1: Clone and scan</span>
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">files</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cloneAndScan</span><span class="p">(</span><span class="nx">repoUrl</span><span class="p">);</span>
+      
+      <span class="c1">// Phase 2: Language detection</span>
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">languages</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">detectLanguages</span><span class="p">(</span><span class="nx">files</span><span class="p">);</span>
+      
+      <span class="c1">// Phase 3: PBML pattern extraction</span>
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">40</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">patterns</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">extractPatterns</span><span class="p">(</span><span class="nx">files</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+      
+      <span class="c1">// Phase 4: Security scanning</span>
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">security</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">securityScan</span><span class="p">(</span><span class="nx">files</span><span class="p">);</span>
+      
+      <span class="c1">// Phase 5: AI insights</span>
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">80</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">insights</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateInsights</span><span class="p">(</span><span class="nx">files</span><span class="p">,</span> <span class="nx">patterns</span><span class="p">);</span>
+      
+      <span class="c1">// Phase 6: Store results</span>
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">90</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">storeResults</span><span class="p">({</span>
+        <span class="nx">userId</span><span class="p">,</span>
+        <span class="nx">repoUrl</span><span class="p">,</span>
+        <span class="nx">languages</span><span class="p">,</span>
+        <span class="nx">patterns</span><span class="p">,</span>
+        <span class="nx">security</span><span class="p">,</span>
+        <span class="nx">insights</span>
+      <span class="p">});</span>
+      
+      <span class="c1">// Phase 7: Cache results</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+        <span class="s2">`analysis:</span><span class="p">${</span><span class="nx">repoUrl</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+        <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span> <span class="c1">// 24 hours</span>
+        <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">results</span><span class="p">)</span>
+      <span class="p">);</span>
+      
+      <span class="c1">// Phase 8: Notify user</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">notifyUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">results</span><span class="p">);</span>
+      
+      <span class="k">await</span> <span class="nx">job</span><span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">results</span><span class="p">;</span>
+      
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Exponential backoff built into Bull</span>
+      <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Resilience patterns</span>
+  <span class="k">async</span> <span class="nx">cloneAndScan</span><span class="p">(</span><span class="nx">repoUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">withCircuitBreaker</span><span class="p">(</span>
+      <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">withTimeout</span><span class="p">(</span>
+          <span class="mi">30000</span><span class="p">,</span> <span class="c1">// 30 second timeout</span>
+          <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">withRetry</span><span class="p">(</span>
+              <span class="mi">3</span><span class="p">,</span> <span class="c1">// 3 attempts</span>
+              <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="kd">const</span> <span class="nx">tempDir</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">createTempDir</span><span class="p">();</span>
+                <span class="k">await</span> <span class="nx">git</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">repoUrl</span><span class="p">,</span> <span class="nx">tempDir</span><span class="p">);</span>
+                <span class="kd">const</span> <span class="nx">files</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">scanDirectory</span><span class="p">(</span><span class="nx">tempDir</span><span class="p">);</span>
+                <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cleanup</span><span class="p">(</span><span class="nx">tempDir</span><span class="p">);</span>
+                <span class="k">return</span> <span class="nx">files</span><span class="p">;</span>
+              <span class="p">}</span>
+            <span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="-journey-3-learning-session-flow">🎯 Journey 3: Learning Session Flow</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Adaptive Learning Session with State Management</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">LearningSessionJourney</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">startSession</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">topic</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 1. Get user's current level from cache or DB</span>
+    <span class="kd">const</span> <span class="nx">userLevel</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserLevel</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">topic</span><span class="p">);</span>
+    
+    <span class="c1">// 2. Generate personalized content</span>
+    <span class="kd">const</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateContent</span><span class="p">(</span><span class="nx">userLevel</span><span class="p">,</span> <span class="nx">topic</span><span class="p">);</span>
+    
+    <span class="c1">// 3. Create session with state management</span>
+    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">uuid</span><span class="p">(),</span>
+      <span class="nx">userId</span><span class="p">,</span>
+      <span class="nx">topic</span><span class="p">,</span>
+      <span class="na">level</span><span class="p">:</span> <span class="nx">userLevel</span><span class="p">,</span>
+      <span class="na">startTime</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+      <span class="nx">content</span><span class="p">,</span>
+      <span class="na">state</span><span class="p">:</span> <span class="dl">'</span><span class="s1">active</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">checkpoints</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// 4. Store in Redis with TTL</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+      <span class="s2">`session:</span><span class="p">${</span><span class="nx">session</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="mi">3600</span><span class="p">,</span> <span class="c1">// 1 hour TTL</span>
+      <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">session</span><span class="p">)</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// 5. Start heartbeat monitoring</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">startHeartbeat</span><span class="p">(</span><span class="nx">session</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    
+    <span class="c1">// 6. Initialize WebSocket for real-time updates</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">initializeWebSocket</span><span class="p">(</span><span class="nx">session</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">session</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">processUserResponse</span><span class="p">(</span><span class="nx">sessionId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">response</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSession</span><span class="p">(</span><span class="nx">sessionId</span><span class="p">);</span>
+    
+    <span class="c1">// 1. Validate response using Bloom's Taxonomy</span>
+    <span class="kd">const</span> <span class="nx">validation</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">bloomsValidator</span><span class="p">.</span><span class="nx">validate</span><span class="p">(</span>
+      <span class="nx">response</span><span class="p">,</span>
+      <span class="nx">session</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span>
+      <span class="nx">session</span><span class="p">.</span><span class="nx">topic</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// 2. Update user progress</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">validation</span><span class="p">.</span><span class="nx">passed</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateProgress</span><span class="p">(</span><span class="nx">session</span><span class="p">.</span><span class="nx">userId</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">topic</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span>
+        <span class="na">level</span><span class="p">:</span> <span class="nx">validation</span><span class="p">.</span><span class="nx">nextLevel</span><span class="p">,</span>
+        <span class="na">score</span><span class="p">:</span> <span class="nx">validation</span><span class="p">.</span><span class="nx">score</span>
+      <span class="p">});</span>
+      
+      <span class="c1">// 3. Store pattern in PBML</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">pbmlService</span><span class="p">.</span><span class="nx">storePattern</span><span class="p">({</span>
+        <span class="na">userId</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">userId</span><span class="p">,</span>
+        <span class="na">code</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span>
+        <span class="na">context</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">topic</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span>
+          <span class="na">level</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span>
+          <span class="na">success</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 4. Adaptive adjustment</span>
+    <span class="kd">const</span> <span class="nx">nextContent</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">adaptContent</span><span class="p">(</span>
+      <span class="nx">session</span><span class="p">,</span>
+      <span class="nx">validation</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// 5. Update session state</span>
+    <span class="nx">session</span><span class="p">.</span><span class="nx">checkpoints</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+      <span class="na">level</span><span class="p">:</span> <span class="nx">session</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span>
+      <span class="na">score</span><span class="p">:</span> <span class="nx">validation</span><span class="p">.</span><span class="nx">score</span><span class="p">,</span>
+      <span class="na">passed</span><span class="p">:</span> <span class="nx">validation</span><span class="p">.</span><span class="nx">passed</span>
+    <span class="p">});</span>
+    
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateSession</span><span class="p">(</span><span class="nx">session</span><span class="p">);</span>
+    
+    <span class="c1">// 6. Send real-time feedback</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">session</span><span class="p">.</span><span class="nx">userId</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">progress</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">validation</span><span class="p">,</span>
+        <span class="nx">nextContent</span><span class="p">,</span>
+        <span class="na">progress</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">calculateProgress</span><span class="p">(</span><span class="nx">session</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">validation</span><span class="p">,</span> <span class="nx">nextContent</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="part-2-backend-state-management">Part 2: Backend State Management</h2>
+
+<h3 id="-state-synchronization-architecture">🔄 State Synchronization Architecture</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Distributed State Management</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">StateManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">postgres</span><span class="p">:</span> <span class="nx">PostgreSQL</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">eventBus</span><span class="p">:</span> <span class="nx">EventEmitter</span><span class="p">;</span>
+  
+  <span class="c1">// Three-layer state architecture</span>
+  <span class="k">async</span> <span class="nx">getState</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Layer 1: Local memory cache (10ms)</span>
+    <span class="kd">const</span> <span class="nx">memCached</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">memoryCache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">memCached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">memCached</span><span class="p">;</span>
+    
+    <span class="c1">// Layer 2: Redis cache (50ms)</span>
+    <span class="kd">const</span> <span class="nx">redisCached</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">redisCached</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">memoryCache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">redisCached</span><span class="p">,</span> <span class="mi">60000</span><span class="p">);</span> <span class="c1">// 1 min</span>
+      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">redisCached</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Layer 3: PostgreSQL (200ms)</span>
+    <span class="kd">const</span> <span class="nx">dbValue</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">postgres</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+      <span class="dl">'</span><span class="s1">SELECT value FROM state WHERE key = $1</span><span class="dl">'</span><span class="p">,</span>
+      <span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+    <span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">dbValue</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Populate caches</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">dbValue</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">memoryCache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">dbValue</span><span class="p">,</span> <span class="mi">60000</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">dbValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">setState</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Write-through caching</span>
+    <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+      <span class="c1">// Update DB (source of truth)</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">postgres</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+        <span class="dl">'</span><span class="s1">INSERT INTO state (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = $2</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">[</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">]</span>
+      <span class="p">),</span>
+      
+      <span class="c1">// Update Redis</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">value</span><span class="p">)),</span>
+      
+      <span class="c1">// Update local cache</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">memoryCache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="mi">60000</span><span class="p">)</span>
+    <span class="p">]);</span>
+    
+    <span class="c1">// Broadcast state change</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">state:changed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Optimistic concurrency control</span>
+  <span class="k">async</span> <span class="nx">updateState</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">updater</span><span class="p">:</span> <span class="p">(</span><span class="nx">current</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">maxRetries</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">attempt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="k">while</span> <span class="p">(</span><span class="nx">attempt</span> <span class="o">&lt;</span> <span class="nx">maxRetries</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">current</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getState</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">version</span> <span class="o">=</span> <span class="nx">current</span><span class="p">?.</span><span class="nx">version</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kd">const</span> <span class="nx">updated</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">...</span><span class="nx">updater</span><span class="p">(</span><span class="nx">current</span><span class="p">),</span>
+        <span class="na">version</span><span class="p">:</span> <span class="nx">version</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="p">};</span>
+      
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">postgres</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+          <span class="dl">'</span><span class="s1">UPDATE state SET value = $2 WHERE key = $1 AND value-&gt;&gt;</span><span class="se">\'</span><span class="s1">version</span><span class="se">\'</span><span class="s1"> = $3</span><span class="dl">'</span><span class="p">,</span>
+          <span class="p">[</span><span class="nx">key</span><span class="p">,</span> <span class="nx">updated</span><span class="p">,</span> <span class="nx">version</span><span class="p">]</span>
+        <span class="p">);</span>
+        
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">updated</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">updated</span><span class="p">;</span>
+        
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">attempt</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">exponentialBackoff</span><span class="p">(</span><span class="nx">attempt</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Concurrent update conflict</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="-circuit-breaker-pattern">🚦 Circuit Breaker Pattern</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">CircuitBreaker</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">state</span><span class="p">:</span> <span class="dl">'</span><span class="s1">closed</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">open</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">half-open</span><span class="dl">'</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">closed</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">failures</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">successCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">lastFailTime</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">threshold</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">timeout</span> <span class="o">=</span> <span class="mi">60000</span><span class="p">;</span> <span class="c1">// 60 seconds</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">successThreshold</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">execute</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">fn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Check if circuit should be opened</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">open</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastFailTime</span><span class="o">!</span> <span class="o">&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">timeout</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">half-open</span><span class="dl">'</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">successCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Circuit breaker is OPEN</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fn</span><span class="p">();</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">half-open</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">successCount</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">successCount</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">successThreshold</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">closed</span><span class="dl">'</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">failures</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      
+      <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+      
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">failures</span><span class="o">++</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lastFailTime</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">failures</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">threshold</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">open</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">`Circuit breaker opened after </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">failures</span><span class="p">}</span><span class="s2"> failures`</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="-caching-strategy">📦 Caching Strategy</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">CacheStrategy</span> <span class="p">{</span>
+  <span class="c1">// Multi-tier caching with different TTLs</span>
+  <span class="k">private</span> <span class="nx">caches</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">memory</span><span class="p">:</span> <span class="k">new</span> <span class="nx">MemoryCache</span><span class="p">({</span> <span class="na">maxSize</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="na">ttl</span><span class="p">:</span> <span class="mi">60</span> <span class="p">}),</span>    <span class="c1">// 1 min</span>
+    <span class="na">redis</span><span class="p">:</span> <span class="k">new</span> <span class="nx">RedisCache</span><span class="p">({</span> <span class="na">ttl</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">}),</span>                    <span class="c1">// 1 hour</span>
+    <span class="na">cdn</span><span class="p">:</span> <span class="k">new</span> <span class="nx">CDNCache</span><span class="p">({</span> <span class="na">ttl</span><span class="p">:</span> <span class="mi">86400</span> <span class="p">})</span>                        <span class="c1">// 24 hours</span>
+  <span class="p">};</span>
+  
+  <span class="k">async</span> <span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">options</span><span class="p">?:</span> <span class="nx">CacheOptions</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Check caches in order of speed</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="p">[</span><span class="nx">name</span><span class="p">,</span> <span class="nx">cache</span><span class="p">]</span> <span class="k">of</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">caches</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">?.</span><span class="nx">skip</span><span class="p">?.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+      
+      <span class="kd">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Promote to faster caches</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">promote</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Cache miss - fetch and populate</span>
+    <span class="kd">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">fetchValue</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">setAll</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Cache invalidation patterns</span>
+  <span class="k">async</span> <span class="nx">invalidate</span><span class="p">(</span><span class="nx">pattern</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Pattern-based invalidation</span>
+    <span class="kd">const</span> <span class="nx">keys</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">pattern</span><span class="p">);</span>
+    
+    <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+      <span class="c1">// Clear from all cache layers</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="nx">clear</span><span class="p">(</span><span class="nx">pattern</span><span class="p">),</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">del</span><span class="p">(...</span><span class="nx">keys</span><span class="p">),</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">cdn</span><span class="p">.</span><span class="nx">purge</span><span class="p">(</span><span class="nx">pattern</span><span class="p">)</span>
+    <span class="p">]);</span>
+    
+    <span class="c1">// Notify other services</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">pubsub</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">cache:invalidated</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">pattern</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Smart prefetching</span>
+  <span class="k">async</span> <span class="nx">prefetch</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">predictions</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">ml</span><span class="p">.</span><span class="nx">predictNextActions</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">prediction</span> <span class="k">of</span> <span class="nx">predictions</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">prediction</span><span class="p">.</span><span class="nx">probability</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Prefetch in background</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">background</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">fetchValue</span><span class="p">(</span><span class="nx">prediction</span><span class="p">.</span><span class="nx">key</span><span class="p">);</span>
+          <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">setAll</span><span class="p">(</span><span class="nx">prediction</span><span class="p">.</span><span class="nx">key</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="-exponential-backoff--retry">🔄 Exponential Backoff &amp; Retry</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">RetryStrategy</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">withRetry</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nx">fn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nx">options</span><span class="p">:</span> <span class="nx">RetryOptions</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span>
+      <span class="nx">maxAttempts</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">initialDelay</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+      <span class="nx">maxDelay</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">,</span>
+      <span class="nx">factor</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">jitter</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="p">}</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+    
+    <span class="kd">let</span> <span class="na">lastError</span><span class="p">:</span> <span class="nb">Error</span><span class="p">;</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">attempt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">attempt</span> <span class="o">&lt;=</span> <span class="nx">maxAttempts</span><span class="p">;</span> <span class="nx">attempt</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="nx">fn</span><span class="p">();</span>
+        
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">lastError</span> <span class="o">=</span> <span class="nx">error</span><span class="p">;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">attempt</span> <span class="o">===</span> <span class="nx">maxAttempts</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Failed after </span><span class="p">${</span><span class="nx">maxAttempts</span><span class="p">}</span><span class="s2"> attempts: </span><span class="p">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// Calculate delay with exponential backoff</span>
+        <span class="kd">let</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">initialDelay</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">factor</span><span class="p">,</span> <span class="nx">attempt</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="nx">maxDelay</span><span class="p">);</span>
+        
+        <span class="c1">// Add jitter to prevent thundering herd</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">jitter</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">delay</span> <span class="o">=</span> <span class="nx">delay</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Retry attempt </span><span class="p">${</span><span class="nx">attempt</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">maxAttempts</span><span class="p">}</span><span class="s2"> after </span><span class="p">${</span><span class="nx">delay</span><span class="p">}</span><span class="s2">ms`</span><span class="p">);</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sleep</span><span class="p">(</span><span class="nx">delay</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">throw</span> <span class="nx">lastError</span><span class="o">!</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Adaptive retry based on error type</span>
+  <span class="k">async</span> <span class="nx">adaptiveRetry</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">fn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">withRetry</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">maxAttempts</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMaxAttempts</span><span class="p">(),</span>
+      <span class="na">initialDelay</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">getInitialDelay</span><span class="p">(),</span>
+      <span class="na">shouldRetry</span><span class="p">:</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Don't retry client errors</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">400</span> <span class="o">&amp;&amp;</span> <span class="nx">error</span><span class="p">.</span><span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// Retry network and server errors</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">getMaxAttempts</span><span class="p">():</span> <span class="kr">number</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">hour</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getHours</span><span class="p">();</span>
+    
+    <span class="c1">// More retries during business hours</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">hour</span> <span class="o">&gt;=</span> <span class="mi">9</span> <span class="o">&amp;&amp;</span> <span class="nx">hour</span> <span class="o">&lt;=</span> <span class="mi">17</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="part-3-real-time-data-flow">Part 3: Real-Time Data Flow</h2>
+
+<h3 id="-websocket-state-synchronization">🌊 WebSocket State Synchronization</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">RealtimeSync</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">connections</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">WebSocket</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="k">private</span> <span class="nx">subscriptions</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nb">Set</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+  
+  <span class="k">async</span> <span class="nx">handleConnection</span><span class="p">(</span><span class="nx">ws</span><span class="p">:</span> <span class="nx">WebSocket</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">ws</span><span class="p">);</span>
+    
+    <span class="c1">// Send initial state</span>
+    <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserState</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">state:initial</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="nx">state</span>
+    <span class="p">}));</span>
+    
+    <span class="c1">// Set up heartbeat</span>
+    <span class="kd">const</span> <span class="nx">heartbeat</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">ws</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">OPEN</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ws</span><span class="p">.</span><span class="nx">ping</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">heartbeat</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">handleDisconnection</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">},</span> <span class="mi">30000</span><span class="p">);</span>
+    
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleMessage</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">message</span><span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">close</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">handleDisconnection</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">broadcastUpdate</span><span class="p">(</span><span class="nx">channel</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">subscribers</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">channel</span><span class="p">)</span> <span class="o">||</span> <span class="k">new</span> <span class="nb">Set</span><span class="p">();</span>
+    
+    <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">update</span><span class="dl">'</span><span class="p">,</span>
+      <span class="nx">channel</span><span class="p">,</span>
+      <span class="nx">data</span><span class="p">,</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Parallel broadcast with error handling</span>
+    <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span>
+      <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">subscribers</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">userId</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">ws</span><span class="p">?.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">OPEN</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">try</span> <span class="p">{</span>
+            <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">`Failed to send to </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">:`</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">handleDisconnection</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="part-4-complete-e2e-flow-example">Part 4: Complete E2E Flow Example</h2>
+
+<h3 id="-full-learning-session-with-all-patterns">🎯 Full Learning Session with All Patterns</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Complete E2E flow with all resilience patterns</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">CompleteLearningFlow</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">executeFullJourney</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">topic</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 1. Check rate limits</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">.</span><span class="nx">check</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="dl">'</span><span class="s1">learning</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">maxRequests</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="na">window</span><span class="p">:</span> <span class="mi">3600</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// 2. Validate user session</span>
+    <span class="kd">const</span> <span class="nx">session</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sessionManager</span><span class="p">.</span><span class="nx">validate</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">session</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">UnauthorizedError</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid session</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 3. Get user context with caching</span>
+    <span class="kd">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">wrap</span><span class="p">(</span>
+      <span class="s2">`context:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserContext</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="p">{</span> <span class="na">ttl</span><span class="p">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="c1">// 5 minutes</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// 4. Start learning session with circuit breaker</span>
+    <span class="kd">const</span> <span class="nx">learningSession</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">circuitBreaker</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span>
+      <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">learningService</span><span class="p">.</span><span class="nx">createSession</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">topic</span><span class="p">,</span> <span class="nx">context</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// 5. Generate content with retry</span>
+    <span class="kd">const</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">retryStrategy</span><span class="p">.</span><span class="nx">withRetry</span><span class="p">(</span>
+      <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">aiGateway</span><span class="p">.</span><span class="nx">generateContent</span><span class="p">({</span>
+          <span class="nx">topic</span><span class="p">,</span>
+          <span class="na">level</span><span class="p">:</span> <span class="nx">context</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span>
+          <span class="na">style</span><span class="p">:</span> <span class="nx">context</span><span class="p">.</span><span class="nx">learningStyle</span><span class="p">,</span>
+          <span class="na">previousPatterns</span><span class="p">:</span> <span class="nx">context</span><span class="p">.</span><span class="nx">patterns</span>
+        <span class="p">});</span>
+      <span class="p">},</span>
+      <span class="p">{</span> <span class="na">maxAttempts</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="na">initialDelay</span><span class="p">:</span> <span class="mi">1000</span> <span class="p">}</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// 6. Store in PBML with transaction</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">transaction</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">trx</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">pbml</span><span class="p">.</span><span class="nx">storeSession</span><span class="p">(</span><span class="nx">trx</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">userId</span><span class="p">,</span>
+        <span class="na">sessionId</span><span class="p">:</span> <span class="nx">learningSession</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="nx">content</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nx">topic</span><span class="p">,</span>
+          <span class="na">level</span><span class="p">:</span> <span class="nx">context</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span>
+          <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">analytics</span><span class="p">.</span><span class="nx">trackEvent</span><span class="p">(</span><span class="nx">trx</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">userId</span><span class="p">,</span>
+        <span class="na">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">session_started</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nx">topic</span><span class="p">,</span>
+          <span class="na">sessionId</span><span class="p">:</span> <span class="nx">learningSession</span><span class="p">.</span><span class="nx">id</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// 7. Set up real-time monitoring</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">monitoring</span><span class="p">.</span><span class="nx">trackSession</span><span class="p">(</span><span class="nx">learningSession</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">alerts</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">inactivity</span><span class="p">:</span> <span class="mi">300000</span><span class="p">,</span> <span class="c1">// 5 minutes</span>
+        <span class="na">completion</span><span class="p">:</span> <span class="mi">3600000</span>  <span class="c1">// 1 hour</span>
+      <span class="p">},</span>
+      <span class="na">metrics</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">engagement</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">progress</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">errors</span><span class="dl">'</span><span class="p">]</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// 8. Broadcast to connected clients</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">broadcast</span><span class="p">(</span><span class="s2">`user:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">session:started</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">sessionId</span><span class="p">:</span> <span class="nx">learningSession</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="nx">topic</span><span class="p">,</span>
+        <span class="na">estimatedDuration</span><span class="p">:</span> <span class="nx">content</span><span class="p">.</span><span class="nx">estimatedDuration</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// 9. Schedule background jobs</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">process-learning</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">sessionId</span><span class="p">:</span> <span class="nx">learningSession</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="nx">userId</span><span class="p">,</span>
+      <span class="na">scheduledChecks</span><span class="p">:</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">900</span><span class="p">]</span> <span class="c1">// Check at 5, 10, 15 minutes</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// 10. Return enriched response</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">session</span><span class="p">:</span> <span class="nx">learningSession</span><span class="p">,</span>
+      <span class="nx">content</span><span class="p">,</span>
+      <span class="na">nextSteps</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getNextSteps</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">topic</span><span class="p">),</span>
+      <span class="na">relatedTopics</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRelatedTopics</span><span class="p">(</span><span class="nx">topic</span><span class="p">),</span>
+      <span class="na">estimatedCompletion</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">estimateCompletion</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">content</span><span class="p">)</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="part-5-performance-optimization-patterns">Part 5: Performance Optimization Patterns</h2>
+
+<h3 id="-request-deduplication">⚡ Request Deduplication</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">RequestDeduplicator</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">pending</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+  
+  <span class="k">async</span> <span class="nx">deduplicate</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">fn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Check if request is already in flight</span>
+    <span class="kd">const</span> <span class="nx">existing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pending</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">existing</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">existing</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Create new request</span>
+    <span class="kd">const</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">().</span><span class="k">finally</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// Clean up after completion</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pending</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">pending</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">promise</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">promise</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">deduplicator</span><span class="p">.</span><span class="nx">deduplicate</span><span class="p">(</span>
+  <span class="s2">`analyze:</span><span class="p">${</span><span class="nx">repoUrl</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+  <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">analyzeRepository</span><span class="p">(</span><span class="nx">repoUrl</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="-batch-processing">🔄 Batch Processing</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">BatchProcessor</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">batch</span><span class="p">:</span> <span class="kr">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">private</span> <span class="nx">timer</span><span class="p">?:</span> <span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">add</span><span class="p">(</span><span class="nx">item</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+    
+    <span class="c1">// Process when batch is full</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">processBatch</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// Or after timeout</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">scheduleProcess</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="nx">scheduleProcess</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">timer</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">processBatch</span><span class="p">();</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span> <span class="c1">// Process after 1 second</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">processBatch</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">items</span> <span class="o">=</span> <span class="p">[...</span><span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="nx">clearTimeout</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">timer</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">timer</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+    
+    <span class="c1">// Bulk insert for efficiency</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="nx">batchInsert</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">,</span> <span class="nx">items</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="part-6-updated-system-status">Part 6: Updated System Status</h2>
+
+<h3 id="-current-implementation-status">📊 Current Implementation Status</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Core Services</span><span class="pi">:</span>
+  <span class="na">Authentication</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">✅ Ready (Supabase Auth)</span>
+    <span class="na">Next</span><span class="pi">:</span> <span class="s">Add OAuth providers</span>
+    
+  <span class="na">Learning Service</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">🟡 70% Complete</span>
+    <span class="na">Needs</span><span class="pi">:</span> <span class="s">Bloom's validation, WebSocket events</span>
+    
+  <span class="na">PBML Service</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">🟡 60% Complete</span>
+    <span class="na">Needs</span><span class="pi">:</span> <span class="s">Pattern matching algorithms</span>
+    
+  <span class="na">Repository Analyzer</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">✅ 90% Complete</span>
+    <span class="na">Needs</span><span class="pi">:</span> <span class="s">Security scanning integration</span>
+    
+  <span class="na">AI Gateway</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">✅ Ready</span>
+    <span class="na">Next</span><span class="pi">:</span> <span class="s">Add Claude support</span>
+
+<span class="na">Infrastructure</span><span class="pi">:</span>
+  <span class="na">Database</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">✅ Ready (Supabase PostgreSQL)</span>
+    
+  <span class="na">Caching</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">🟡 Basic Redis setup</span>
+    <span class="na">Needs</span><span class="pi">:</span> <span class="s">Multi-tier caching</span>
+    
+  <span class="na">Queue</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">🟡 Bull setup</span>
+    <span class="na">Needs</span><span class="pi">:</span> <span class="s">Dead letter queue</span>
+    
+  <span class="na">WebSocket</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">🔴 Not started</span>
+    <span class="na">Priority</span><span class="pi">:</span> <span class="s">HIGH</span>
+    
+  <span class="na">Monitoring</span><span class="pi">:</span>
+    <span class="na">Status</span><span class="pi">:</span> <span class="s">🟡 Sentry only</span>
+    <span class="na">Needs</span><span class="pi">:</span> <span class="s">Prometheus + Grafana</span>
+
+<span class="na">Resilience Patterns</span><span class="pi">:</span>
+  <span class="na">Circuit Breaker</span><span class="pi">:</span> <span class="s">🔴 Not implemented</span>
+  <span class="na">Retry Logic</span><span class="pi">:</span> <span class="s">🟡 Basic implementation</span>
+  <span class="na">Rate Limiting</span><span class="pi">:</span> <span class="s">🔴 Not implemented</span>
+  <span class="na">Caching</span><span class="pi">:</span> <span class="s">🟡 Single-layer only</span>
+  <span class="na">State Management</span><span class="pi">:</span> <span class="s">🟡 Basic Redis</span>
+</code></pre></div></div>
+
+<h2 id="part-7-implementation-priorities">Part 7: Implementation Priorities</h2>
+
+<h3 id="-week-1-core-flows">🎯 Week 1: Core Flows</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Priority 1: Complete authentication flow</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">GitHub</span> <span class="nx">OAuth</span> <span class="nx">integration</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">JWT</span> <span class="nx">refresh</span> <span class="nx">tokens</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Session</span> <span class="nx">management</span>
+
+<span class="c1">// Priority 2: Basic learning flow</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Create</span> <span class="nx">learning</span> <span class="nx">session</span> <span class="nx">endpoint</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Simple</span> <span class="nx">content</span> <span class="nx">generation</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Progress</span> <span class="nx">tracking</span>
+</code></pre></div></div>
+
+<h3 id="-week-2-resilience">🎯 Week 2: Resilience</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Priority 1: Add resilience patterns</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Circuit</span> <span class="nx">breaker</span> <span class="k">for</span> <span class="nx">AI</span> <span class="nx">calls</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Retry</span> <span class="kd">with</span> <span class="nx">exponential</span> <span class="nx">backoff</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Request</span> <span class="nx">deduplication</span>
+
+<span class="c1">// Priority 2: Caching layer</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Multi</span><span class="o">-</span><span class="nx">tier</span> <span class="nx">cache</span> <span class="nx">setup</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Cache</span> <span class="nx">invalidation</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Prefetching</span>
+</code></pre></div></div>
+
+<h3 id="-week-3-real-time">🎯 Week 3: Real-time</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Priority 1: WebSocket setup</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Connection</span> <span class="nx">management</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">State</span> <span class="nx">synchronization</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Event</span> <span class="nx">broadcasting</span>
+
+<span class="c1">// Priority 2: Background jobs</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Queue</span> <span class="nx">processing</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Scheduled</span> <span class="nx">tasks</span>
+<span class="o">-</span> <span class="p">[</span> <span class="p">]</span> <span class="nx">Dead</span> <span class="nx">letter</span> <span class="nx">handling</span>
+</code></pre></div></div>
+
+<h2 id="summary">Summary</h2>
+
+<h3 id="why-istio-can-wait">Why Istio Can Wait:</h3>
+<ol>
+  <li><strong>Complexity</strong>: Adds 30% operational overhead for &lt;10% benefit at our scale</li>
+  <li><strong>Alternatives</strong>: Feature flags, client-side retries, DO load balancing</li>
+  <li><strong>Easy Addition</strong>: Can add transparently later without code changes</li>
+  <li><strong>Cost</strong>: Extra resources needed for sidecars (~256MB per service)</li>
+</ol>
+
+<h3 id="what-we-need-now">What We Need NOW:</h3>
+<ol>
+  <li><strong>Complete User Journeys</strong> ✅ (documented above)</li>
+  <li><strong>Backend State Management</strong> ✅ (Redis + PostgreSQL patterns)</li>
+  <li><strong>Resilience Patterns</strong> ✅ (Circuit breaker, retry, backoff)</li>
+  <li><strong>Caching Strategy</strong> ✅ (Multi-tier with TTLs)</li>
+  <li><strong>WebSocket Real-time</strong> 🔴 (High priority)</li>
+</ol>
+
+<h3 id="next-steps">Next Steps:</h3>
+<ol>
+  <li>Implement the core authentication flow</li>
+  <li>Add circuit breaker to AI Gateway</li>
+  <li>Set up WebSocket for real-time updates</li>
+  <li>Complete Bloom’s taxonomy validation</li>
+  <li>Add multi-tier caching</li>
+</ol>
+
+<p>The user journeys are now fully documented with complete backend flows, state management, and resilience patterns. We can add Istio later when we actually need its advanced features!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / USER_JOURNEY_AND_BACKEND_FLOWS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

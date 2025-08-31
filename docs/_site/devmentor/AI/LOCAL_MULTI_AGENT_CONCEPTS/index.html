@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCAL MULTI AGENT CONCEPTS</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">AI/LOCAL_MULTI_AGENT_CONCEPTS.md</span>
+</div>
+
+<h1>LOCAL MULTI AGENT CONCEPTS</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="-local-multi-agent-systems-key-concepts-for-devmentor-integration">🤖 Local Multi-Agent Systems: Key Concepts for DevMentor Integration</h1>
+
+<pre><code class="language-ascii">╔════════════════════════════════════════════════════════════════════╗
+║                                                                     ║
+║        LOCAL MULTI-AGENT CONCEPTS FOR DEVMENTOR                    ║
+║          Understanding the Building Blocks                         ║
+║                                                                     ║
+╚════════════════════════════════════════════════════════════════════╝
+</code></pre>
+
+<h2 id="-additional-core-concepts-you-need-to-know">📚 Additional Core Concepts You Need to Know</h2>
+
+<h3 id="1-quantized-models-vs-cloud-models">1. <strong>Quantized Models vs Cloud Models</strong></h3>
+
+<pre><code class="language-ascii">Cloud Model (e.g., GPT-4)           Local Quantized Model
+┌────────────────┐                ┌────────────────┐
+│  175B params   │                │   7B params    │
+│  32-bit float  │      vs        │   4-bit int    │
+│  1.5TB size    │                │   ~4GB size    │
+│  API calls     │                │   Local runs    │
+└────────────────┘                └────────────────┘
+</code></pre>
+
+<p><strong>What is Quantization?</strong></p>
+<ul>
+  <li>Converting 32-bit floating-point weights to smaller integers (like 4-bit)</li>
+  <li>Reduces model size by up to 8x with minimal quality loss</li>
+  <li>Makes running on consumer hardware possible</li>
+</ul>
+
+<p><strong>Why It Matters for DevMentor:</strong></p>
+<ul>
+  <li>Can run Code-Llama and Mistral models locally</li>
+  <li>No API costs or latency</li>
+  <li>Private code analysis</li>
+</ul>
+
+<h3 id="2-ggmlgguf-format">2. <strong>GGML/GGUF Format</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Example: Loading a GGUF model
+</span><span class="kn">from</span> <span class="nn">llama_cpp</span> <span class="kn">import</span> <span class="n">Llama</span>
+
+<span class="c1"># Load 4-bit quantized model
+</span><span class="n">llm</span> <span class="o">=</span> <span class="n">Llama</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span>\<span class="s">"/models/codellama-7b-instruct.gguf</span><span class="se">\"</span><span class="s">,
+    n_ctx=8192,          # Context window
+    n_batch=512,         # Batch size
+    n_threads=8          # CPU threads
+)
+</span></code></pre></div></div>
+
+<p><strong>What is GGML/GGUF?</strong></p>
+<ul>
+  <li>Machine learning framework for local inference</li>
+  <li>Optimized for CPU and consumer GPUs</li>
+  <li>Standard format for quantized models</li>
+</ul>
+
+<p><strong>Why It Matters:</strong></p>
+<ul>
+  <li>Efficient local model running</li>
+  <li>CPU and GPU support</li>
+  <li>Memory-mapped files for fast loading</li>
+</ul>
+
+<h3 id="3-local-vector-databases">3. <strong>Local Vector Databases</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Example: Using Chroma locally
+</span><span class="kn">import</span> <span class="nn">chromadb</span>
+
+<span class="c1"># Create local DB
+</span><span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="p">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span>\<span class="s">"/local/vectors</span><span class="se">\"</span><span class="s">)
+
+# Create collection
+collection = client.create_collection(
+    name=</span><span class="se">\"</span><span class="s">code_embeddings</span><span class="se">\"</span><span class="s">,
+    metadata={</span><span class="se">\"</span><span class="s">hnsw:space</span><span class="se">\"</span><span class="s">: </span><span class="se">\"</span><span class="s">cosine</span><span class="se">\"</span><span class="s">}
+)
+
+# Add code embeddings
+collection.add(
+    documents=[</span><span class="se">\"</span><span class="s">def hello(): print('world')</span><span class="se">\"</span><span class="s">],
+    embeddings=[[0.1, 0.2, 0.3]],
+    ids=[</span><span class="se">\"</span><span class="s">func1</span><span class="se">\"</span><span class="s">]
+)
+</span></code></pre></div></div>
+
+<p><strong>Options for Local Vector Storage:</strong></p>
+<ol>
+  <li><strong>Chroma</strong>
+    <ul>
+      <li>Pure Python, easy setup</li>
+      <li>Good for small-medium datasets</li>
+      <li>Memory-efficient</li>
+    </ul>
+  </li>
+  <li><strong>FAISS</strong>
+    <ul>
+      <li>Facebook’s vector similarity engine</li>
+      <li>Very fast search</li>
+      <li>Higher memory usage</li>
+    </ul>
+  </li>
+  <li><strong>Qdrant</strong>
+    <ul>
+      <li>Rust-based, very efficient</li>
+      <li>Full CRUD operations</li>
+      <li>Production-ready</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="4-model-serving--inference">4. <strong>Model Serving &amp; Inference</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Example: Local model server
+</span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoModelForCausalLM</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="k">class</span> <span class="nc">LocalModelServer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+            \<span class="s">"codellama/CodeLlama-7b-Instruct-hf</span><span class="se">\"</span><span class="s">,
+            torch_dtype=torch.float16,
+            low_cpu_mem_usage=True
+        )
+        self.model.to(</span><span class="se">\"</span><span class="s">cuda</span><span class="se">\"</span><span class="s">)  # If GPU available
+        
+    def generate(self, prompt, max_length=100):
+        inputs = self.tokenizer(prompt, return_tensors=</span><span class="se">\"</span><span class="s">pt</span><span class="se">\"</span><span class="s">)
+        outputs = self.model.generate(
+            inputs[</span><span class="se">\"</span><span class="s">input_ids</span><span class="se">\"</span><span class="s">],
+            max_length=max_length,
+            temperature=0.7
+        )
+        return self.tokenizer.decode(outputs[0])
+</span></code></pre></div></div>
+
+<p><strong>Key Concepts:</strong></p>
+<ul>
+  <li>Batch processing for efficiency</li>
+  <li>Memory management</li>
+  <li>GPU acceleration</li>
+  <li>Caching strategies</li>
+</ul>
+
+<h3 id="5-local-resource-management">5. <strong>Local Resource Management</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Example: Resource monitor
+</span><span class="kn">import</span> <span class="nn">psutil</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="k">class</span> <span class="nc">ResourceMonitor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">check_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            \<span class="s">"cpu_percent</span><span class="se">\"</span><span class="s">: psutil.cpu_percent(),
+            </span><span class="se">\"</span><span class="s">memory_used</span><span class="se">\"</span><span class="s">: psutil.virtual_memory().percent,
+            </span><span class="se">\"</span><span class="s">gpu_memory</span><span class="se">\"</span><span class="s">: torch.cuda.memory_allocated() 
+                          if torch.cuda.is_available() else 0
+        }
+    
+    def can_load_model(self, model_size_gb):
+        free_memory = psutil.virtual_memory().available / (1024**3)
+        return free_memory &gt; model_size_gb * 1.5  # 50% buffer
+</span></code></pre></div></div>
+
+<p><strong>Important Metrics:</strong></p>
+<ul>
+  <li>CPU usage and temperature</li>
+  <li>RAM availability</li>
+  <li>GPU memory allocation</li>
+  <li>Disk I/O</li>
+</ul>
+
+<h3 id="6-local-development-workflow">6. <strong>Local Development Workflow</strong></h3>
+
+<pre><code class="language-ascii">┌─────────────────┐
+│  Code Changes   │
+│                 │
+│  git diff →    │
+│  embeddings →  │
+│  analysis      │
+└────────┬────────┘
+         ↓
+┌────────────────┐
+│  Local Agents  │
+│                │
+│ • Code Review  │
+│ • Suggestions  │
+│ • Documentation│
+└────────┬────────┘
+         ↓
+┌────────────────┐
+│    Results     │
+│                │
+│ • PR Comments  │
+│ • Inline Tips  │
+│ • Doc Updates  │
+└────────────────┘
+</code></pre>
+
+<h3 id="7-integration-points-with-devmentor">7. <strong>Integration Points with DevMentor</strong></h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example: DevMentor agent integration</span>
+<span class="kr">interface</span> <span class="nx">LocalAgent</span> <span class="p">{</span>
+  <span class="nl">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">code</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">cli</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">knowledge</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">modelPath</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">contextSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">maxMemory</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  
+  <span class="nx">initialize</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">process</span><span class="p">(</span><span class="nx">input</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">cleanup</span><span class="p">():</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">DevMentorAgentManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">agents</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">LocalAgent</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">vectorDb</span><span class="p">:</span> <span class="nx">ChromaDB</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">routeRequest</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">agent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">selectAgent</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="kd">type</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">agent</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-implementation-requirements">🔧 Implementation Requirements</h2>
+
+<h3 id="hardware-requirements">Hardware Requirements</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Minimum</span><span class="pi">:</span>
+  <span class="na">CPU</span><span class="pi">:</span> <span class="s">8 cores</span>
+  <span class="na">RAM</span><span class="pi">:</span> <span class="s">16GB</span>
+  <span class="na">Storage</span><span class="pi">:</span> <span class="s">50GB SSD</span>
+  <span class="na">GPU</span><span class="pi">:</span> <span class="s">Optional (8GB+ VRAM)</span>
+
+<span class="na">Recommended</span><span class="pi">:</span>
+  <span class="na">CPU</span><span class="pi">:</span> <span class="s">12+ cores</span>
+  <span class="na">RAM</span><span class="pi">:</span> <span class="s">32GB</span>
+  <span class="na">Storage</span><span class="pi">:</span> <span class="s">100GB NVMe</span>
+  <span class="na">GPU</span><span class="pi">:</span> <span class="s">12GB+ VRAM (RTX 3060 or better)</span>
+</code></pre></div></div>
+
+<h3 id="software-stack">Software Stack</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Core Components</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Python 3.9+</span>
+  <span class="pi">-</span> <span class="s">PyTorch (CPU or CUDA)</span>
+  <span class="pi">-</span> <span class="s">llama.cpp / GGML</span>
+  <span class="pi">-</span> <span class="s">Local vector DB (Chroma/FAISS)</span>
+  <span class="pi">-</span> <span class="s">Node.js backend</span>
+
+<span class="na">Optional Components</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">CUDA Toolkit (for GPU)</span>
+  <span class="pi">-</span> <span class="s">cuBLAS</span>
+  <span class="pi">-</span> <span class="s">OpenBLAS</span>
+</code></pre></div></div>
+
+<h2 id="-integration-strategy">🚀 Integration Strategy</h2>
+
+<h3 id="1-phase-1-local-model-setup">1. <strong>Phase 1: Local Model Setup</strong></h3>
+<ul>
+  <li>Set up quantized CodeLlama/Mistral</li>
+  <li>Configure vector database</li>
+  <li>Implement basic inference</li>
+</ul>
+
+<h3 id="2-phase-2-agent-integration">2. <strong>Phase 2: Agent Integration</strong></h3>
+<ul>
+  <li>Create specialized agents</li>
+  <li>Set up communication protocol</li>
+  <li>Implement resource management</li>
+</ul>
+
+<h3 id="3-phase-3-devmentor-integration">3. <strong>Phase 3: DevMentor Integration</strong></h3>
+<ul>
+  <li>Connect to existing services</li>
+  <li>Add monitoring/logging</li>
+  <li>Implement fallback strategies</li>
+</ul>
+
+<h2 id="-performance-considerations">📊 Performance Considerations</h2>
+
+<h3 id="1-memory-management">1. <strong>Memory Management</strong></h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">manage_memory</span><span class="p">(</span><span class="n">model_size_gb</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="c1"># Clear GPU cache if needed
+</span>    <span class="k">if</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">is_available</span><span class="p">():</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">empty_cache</span><span class="p">()</span>
+    
+    <span class="c1"># Check available memory
+</span>    <span class="n">free_memory</span> <span class="o">=</span> <span class="n">psutil</span><span class="p">.</span><span class="n">virtual_memory</span><span class="p">().</span><span class="n">available</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">free_memory</span> <span class="o">&gt;</span> <span class="n">model_size_gb</span> <span class="o">*</span> <span class="mf">1.5</span>
+</code></pre></div></div>
+
+<h3 id="2-batch-processing">2. <strong>Batch Processing</strong></h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">process_in_batches</span><span class="p">(</span><span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+        <span class="n">results</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="n">batch</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></div>
+
+<h3 id="3-caching-strategy">3. <strong>Caching Strategy</strong></h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+<span class="o">@</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_embeddings</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-success-metrics">🎯 Success Metrics</h2>
+
+<h3 id="performance-goals">Performance Goals</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Latency</span><span class="pi">:</span>
+  <span class="na">Code Completion</span><span class="pi">:</span> <span class="s">&lt; 100ms</span>
+  <span class="na">Code Analysis</span><span class="pi">:</span> <span class="s">&lt; 500ms</span>
+  <span class="na">Documentation</span><span class="pi">:</span> <span class="s">&lt; 1s</span>
+
+<span class="na">Resource Usage</span><span class="pi">:</span>
+  <span class="na">CPU</span><span class="pi">:</span> <span class="s">&lt; 80%</span>
+  <span class="na">RAM</span><span class="pi">:</span> <span class="s">&lt; 70%</span>
+  <span class="na">GPU</span><span class="pi">:</span> <span class="s">&lt; 90%</span>
+
+<span class="na">Quality</span><span class="pi">:</span>
+  <span class="na">Completion Accuracy</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">80%</span>
+  <span class="s">Analysis Accuracy: &gt; 90%</span>
+  <span class="s">Documentation Quality: &gt; 85%</span>
+</code></pre></div></div>
+
+<h2 id="-next-steps">🔄 Next Steps</h2>
+
+<ol>
+  <li><strong>Learn</strong>: Understand GGML/GGUF and model quantization</li>
+  <li><strong>Setup</strong>: Configure local environment with required components</li>
+  <li><strong>Test</strong>: Experiment with different models and configurations</li>
+  <li><strong>Integrate</strong>: Connect with existing DevMentor services</li>
+  <li><strong>Monitor</strong>: Track performance and resource usage</li>
+  <li><strong>Optimize</strong>: Fine-tune based on real usage patterns</li>
+</ol>
+
+<hr />
+
+<h2 id="-additional-resources">📚 Additional Resources</h2>
+
+<ol>
+  <li><strong>GGML/GGUF Documentation</strong>
+    <ul>
+      <li><a href="https://github.com/ggerganov/llama.cpp">llama.cpp GitHub</a></li>
+      <li><a href="https://github.com/ggerganov/ggml/blob/master/docs/format.md">GGML Format Specification</a></li>
+    </ul>
+  </li>
+  <li><strong>Vector Databases</strong>
+    <ul>
+      <li><a href="https://docs.trychroma.com/">Chroma Documentation</a></li>
+      <li><a href="https://github.com/facebookresearch/faiss">FAISS Documentation</a></li>
+      <li><a href="https://qdrant.tech/documentation/">Qdrant Documentation</a></li>
+    </ul>
+  </li>
+  <li><strong>Model Resources</strong>
+    <ul>
+      <li><a href="https://huggingface.co/TheBloke/CodeLlama-7B-Instruct-GGUF">CodeLlama Quantized</a></li>
+      <li><a href="https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF">Mistral Quantized</a></li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<p><em>This guide will help you understand the core concepts needed to implement local multi-agent systems in DevMentor.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / AI/LOCAL_MULTI_AGENT_CONCEPTS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

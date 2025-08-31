@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEPLOYMENT GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">Harvest.ai</span> / 
+  <span style="color: #999;">deployment/DEPLOYMENT_GUIDE.md</span>
+</div>
+
+<h1>DEPLOYMENT GUIDE</h1>
+
+
+<h1 id="-harvestai-deployment-guide">🚀 Harvest.ai Deployment Guide</h1>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<h3 id="required-accounts">Required Accounts</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vercel Account (for frontend)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Railway/Render Account (for backend)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Supabase Account (database)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Upstash Account (Redis)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pinecone Account (vector DB)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cloudflare Account (R2 storage)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GitHub Account</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sentry Account (error tracking)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />PostHog Account (analytics)</li>
+</ul>
+
+<h3 id="required-tools">Required Tools</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Vercel CLI</span>
+npm <span class="nb">install</span> <span class="nt">-g</span> vercel
+
+<span class="c"># Install Railway CLI (macOS)</span>
+brew <span class="nb">install </span>railway
+
+<span class="c"># Python environment</span>
+python <span class="nt">-m</span> venv venv
+<span class="nb">source </span>venv/bin/activate  <span class="c"># On Windows: venv\Scripts\activate</span>
+pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div></div>
+
+<h2 id="-environment-configuration">🌍 Environment Configuration</h2>
+
+<h3 id="1-environment-variables-structure">1. Environment Variables Structure</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">.env.local</code> for development:</p>
+<pre><code class="language-env"># Frontend (.env.local)
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_POSTHOG_KEY=your-posthog-key
+
+# Backend (.env)
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
+PINECONE_API_KEY=your-pinecone-key
+PINECONE_ENV=your-environment
+CLOUDFLARE_ACCOUNT_ID=your-account-id
+CLOUDFLARE_ACCESS_KEY=your-access-key
+CLOUDFLARE_SECRET_KEY=your-secret-key
+SENTRY_DSN=your-sentry-dsn
+JWT_SECRET=your-jwt-secret
+</code></pre>
+
+<h2 id="-frontend-deployment-vercel">🎨 Frontend Deployment (Vercel)</h2>
+
+<h3 id="step-1-prepare-nextjs-app">Step 1: Prepare Next.js App</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>frontend
+
+<span class="c"># Build locally to test</span>
+npm run build
+
+<span class="c"># Test production build</span>
+npm run start
+</code></pre></div></div>
+
+<h3 id="step-2-deploy-to-vercel">Step 2: Deploy to Vercel</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Login to Vercel</span>
+vercel login
+
+<span class="c"># Deploy (first time)</span>
+vercel
+
+<span class="c"># Follow prompts:</span>
+<span class="c"># - Link to existing project? No</span>
+<span class="c"># - Project name: harvest-ai</span>
+<span class="c"># - Directory: ./</span>
+<span class="c"># - Override settings? No</span>
+
+<span class="c"># Production deployment</span>
+vercel <span class="nt">--prod</span>
+</code></pre></div></div>
+
+<h3 id="step-3-configure-domain">Step 3: Configure Domain</h3>
+
+<ol>
+  <li>Go to Vercel Dashboard</li>
+  <li>Settings → Domains</li>
+  <li>Add custom domain: <code class="language-plaintext highlighter-rouge">harvest.ai</code></li>
+  <li>Configure DNS:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A     @     76.76.21.21
+CNAME www   cname.vercel-dns.com
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-4-environment-variables">Step 4: Environment Variables</h3>
+
+<p>In Vercel Dashboard:</p>
+<ol>
+  <li>Settings → Environment Variables</li>
+  <li>Add all <code class="language-plaintext highlighter-rouge">NEXT_PUBLIC_*</code> variables</li>
+  <li>Deploy triggers automatic rebuild</li>
+</ol>
+
+<h2 id="-backend-deployment-railwayrender">🔧 Backend Deployment (Railway/Render)</h2>
+
+<h3 id="option-a-railway-deployment">Option A: Railway Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>backend
+
+<span class="c"># Login to Railway</span>
+railway login
+
+<span class="c"># Initialize new project</span>
+railway init
+
+<span class="c"># Link to GitHub repo</span>
+railway <span class="nb">link</span>
+
+<span class="c"># Deploy</span>
+railway up
+
+<span class="c"># Add environment variables</span>
+railway variables <span class="nb">set </span><span class="nv">DATABASE_URL</span><span class="o">=</span><span class="nv">$DATABASE_URL</span>
+railway variables <span class="nb">set </span><span class="nv">REDIS_URL</span><span class="o">=</span><span class="nv">$REDIS_URL</span>
+<span class="c"># ... add all backend env vars</span>
+
+<span class="c"># Get deployment URL</span>
+railway open
+</code></pre></div></div>
+
+<h3 id="option-b-render-deployment">Option B: Render Deployment</h3>
+
+<ol>
+  <li>Connect GitHub repository</li>
+  <li>Create new Web Service</li>
+  <li>Configuration:
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Build Command</span><span class="pi">:</span> <span class="s">pip install -r requirements.txt</span>
+<span class="na">Start Command</span><span class="pi">:</span> <span class="s">uvicorn main:app --host 0.0.0.0 --port $PORT</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Add environment variables in dashboard</li>
+  <li>Deploy automatically on push</li>
+</ol>
+
+<h3 id="option-c-self-hosted-docker">Option C: Self-Hosted (Docker)</h3>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dockerfile</span>
+<span class="k">FROM</span><span class="s"> python:3.11-slim</span>
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">COPY</span><span class="s"> requirements.txt .</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">--no-cache-dir</span> <span class="nt">-r</span> requirements.txt
+
+<span class="k">COPY</span><span class="s"> . .</span>
+
+<span class="k">CMD</span><span class="s"> ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build and run</span>
+docker build <span class="nt">-t</span> harvest-ai-backend <span class="nb">.</span>
+docker run <span class="nt">-p</span> 8000:8000 <span class="nt">--env-file</span> .env harvest-ai-backend
+</code></pre></div></div>
+
+<h2 id="-database-setup-supabase">💾 Database Setup (Supabase)</h2>
+
+<h3 id="step-1-create-supabase-project">Step 1: Create Supabase Project</h3>
+
+<ol>
+  <li>Go to <a href="https://app.supabase.com">Supabase Dashboard</a></li>
+  <li>New Project → Configure:
+    <ul>
+      <li>Name: <code class="language-plaintext highlighter-rouge">harvest-ai-prod</code></li>
+      <li>Database Password: (save securely)</li>
+      <li>Region: Choose closest to users</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-2-run-migrations">Step 2: Run Migrations</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Create initial schema</span>
+<span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">harvest</span><span class="p">;</span>
+
+<span class="c1">-- Users table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">harvest</span><span class="p">.</span><span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+    <span class="n">api_keys</span> <span class="n">JSONB</span> <span class="k">DEFAULT</span> <span class="s1">'{}'</span><span class="p">,</span>
+    <span class="n">usage_tier</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'free'</span>
+<span class="p">);</span>
+
+<span class="c1">-- Generated content table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">harvest</span><span class="p">.</span><span class="n">generated_content</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">harvest</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+    <span class="n">source_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">output_format</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+    <span class="n">content</span> <span class="n">JSONB</span><span class="p">,</span>
+    <span class="n">cost</span> <span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Usage tracking</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">harvest</span><span class="p">.</span><span class="n">usage_logs</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">BIGSERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+    <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">harvest</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+    <span class="n">endpoint</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+    <span class="n">tokens_used</span> <span class="nb">INTEGER</span><span class="p">,</span>
+    <span class="n">cost</span> <span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Create indexes</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_content_user_created</span> <span class="k">ON</span> <span class="n">harvest</span><span class="p">.</span><span class="n">generated_content</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">created_at</span> <span class="k">DESC</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_usage_user_created</span> <span class="k">ON</span> <span class="n">harvest</span><span class="p">.</span><span class="n">usage_logs</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">created_at</span> <span class="k">DESC</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="step-3-enable-row-level-security">Step 3: Enable Row Level Security</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Enable RLS</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">harvest</span><span class="p">.</span><span class="n">users</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">harvest</span><span class="p">.</span><span class="n">generated_content</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+
+<span class="c1">-- Create policies</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can view own data"</span> <span class="k">ON</span> <span class="n">harvest</span><span class="p">.</span><span class="n">users</span>
+    <span class="k">FOR</span> <span class="k">SELECT</span> <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">id</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can view own content"</span> <span class="k">ON</span> <span class="n">harvest</span><span class="p">.</span><span class="n">generated_content</span>
+    <span class="k">FOR</span> <span class="k">SELECT</span> <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">user_id</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="-redis-setup-upstash">🚦 Redis Setup (Upstash)</h2>
+
+<ol>
+  <li>Create Upstash account</li>
+  <li>Create new Redis database:
+    <ul>
+      <li>Name: <code class="language-plaintext highlighter-rouge">harvest-ai-cache</code></li>
+      <li>Region: Same as backend</li>
+      <li>Eviction: allkeys-lru</li>
+    </ul>
+  </li>
+  <li>Copy connection string</li>
+  <li>Add to environment variables</li>
+</ol>
+
+<h2 id="-vector-database-setup-pinecone">🔍 Vector Database Setup (Pinecone)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Initialize Pinecone index
+</span><span class="kn">import</span> <span class="nn">pinecone</span>
+
+<span class="n">pinecone</span><span class="p">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s">"your-api-key"</span><span class="p">,</span>
+    <span class="n">environment</span><span class="o">=</span><span class="s">"your-environment"</span>
+<span class="p">)</span>
+
+<span class="c1"># Create index
+</span><span class="n">pinecone</span><span class="p">.</span><span class="n">create_index</span><span class="p">(</span>
+    <span class="s">"harvest-content"</span><span class="p">,</span>
+    <span class="n">dimension</span><span class="o">=</span><span class="mi">1536</span><span class="p">,</span>  <span class="c1"># OpenAI embeddings dimension
+</span>    <span class="n">metric</span><span class="o">=</span><span class="s">"cosine"</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-storage-setup-cloudflare-r2">📦 Storage Setup (Cloudflare R2)</h2>
+
+<ol>
+  <li>Create R2 bucket: <code class="language-plaintext highlighter-rouge">harvest-exports</code></li>
+  <li>Generate API tokens</li>
+  <li>Configure CORS:
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"AllowedOrigins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://harvest.ai"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"AllowedMethods"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"GET"</span><span class="p">,</span><span class="w"> </span><span class="s2">"PUT"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"AllowedHeaders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"MaxAgeSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="-cicd-pipeline">🔄 CI/CD Pipeline</h2>
+
+<h3 id="github-actions">GitHub Actions</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">.github/workflows/deploy.yml</code>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Deploy</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">main</span><span class="pi">]</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">test</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-python@v4</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">python-version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.11'</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">pip install -r requirements.txt</span>
+          <span class="s">pytest tests/</span>
+
+  <span class="na">deploy-frontend</span><span class="pi">:</span>
+    <span class="na">needs</span><span class="pi">:</span> <span class="s">test</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">vercel/action@v1</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">vercel-token</span><span class="pi">:</span> <span class="s">${{ secrets.VERCEL_TOKEN }}</span>
+          <span class="na">vercel-org-id</span><span class="pi">:</span> <span class="s">${{ secrets.VERCEL_ORG_ID }}</span>
+          <span class="na">vercel-project-id</span><span class="pi">:</span> <span class="s">${{ secrets.VERCEL_PROJECT_ID }}</span>
+          <span class="na">production</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">deploy-backend</span><span class="pi">:</span>
+    <span class="na">needs</span><span class="pi">:</span> <span class="s">test</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">railway/deploy-action@v1</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">railway-token</span><span class="pi">:</span> <span class="s">${{ secrets.RAILWAY_TOKEN }}</span>
+          <span class="na">service-id</span><span class="pi">:</span> <span class="s">${{ secrets.RAILWAY_SERVICE_ID }}</span>
+</code></pre></div></div>
+
+<h2 id="-monitoring-setup">📊 Monitoring Setup</h2>
+
+<h3 id="sentry-configuration">Sentry Configuration</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span><span class="kn">import</span> <span class="nn">sentry_sdk</span>
+<span class="kn">from</span> <span class="nn">sentry_sdk.integrations.fastapi</span> <span class="kn">import</span> <span class="n">FastApiIntegration</span>
+
+<span class="n">sentry_sdk</span><span class="p">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">dsn</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"SENTRY_DSN"</span><span class="p">),</span>
+    <span class="n">integrations</span><span class="o">=</span><span class="p">[</span><span class="n">FastApiIntegration</span><span class="p">()],</span>
+    <span class="n">traces_sample_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">environment</span><span class="o">=</span><span class="s">"production"</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="posthog-analytics">PostHog Analytics</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// frontend/src/lib/posthog.ts</span>
+<span class="k">import</span> <span class="nx">posthog</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">posthog-js</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nb">window</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">posthog</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_POSTHOG_KEY</span><span class="o">!</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">api_host</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://app.posthog.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">loaded</span><span class="p">:</span> <span class="p">(</span><span class="nx">posthog</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="nx">posthog</span><span class="p">.</span><span class="nx">opt_out_capturing</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-production-checklist">🚀 Production Checklist</h2>
+
+<h3 id="pre-deployment">Pre-Deployment</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />All tests passing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security audit complete</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Environment variables set</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup strategy configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting enabled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CORS configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SSL certificates active</li>
+</ul>
+
+<h3 id="post-deployment">Post-Deployment</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify all endpoints working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check monitoring dashboards</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test user registration flow</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify BYOK functionality</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check cost tracking</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test export features</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor error rates</li>
+</ul>
+
+<h3 id="rollback-plan">Rollback Plan</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Frontend (Vercel)</span>
+vercel rollback
+
+<span class="c"># Backend (Railway)</span>
+railway rollback
+
+<span class="c"># Database (Supabase)</span>
+<span class="c"># Use point-in-time recovery from dashboard</span>
+</code></pre></div></div>
+
+<h2 id="-security-hardening">🔐 Security Hardening</h2>
+
+<h3 id="api-security">API Security</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Rate limiting
+</span><span class="kn">from</span> <span class="nn">slowapi</span> <span class="kn">import</span> <span class="n">Limiter</span>
+<span class="n">limiter</span> <span class="o">=</span> <span class="n">Limiter</span><span class="p">(</span><span class="n">key_func</span><span class="o">=</span><span class="n">get_remote_address</span><span class="p">)</span>
+<span class="n">app</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">limiter</span> <span class="o">=</span> <span class="n">limiter</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"/api/generate"</span><span class="p">)</span>
+<span class="o">@</span><span class="n">limiter</span><span class="p">.</span><span class="n">limit</span><span class="p">(</span><span class="s">"10/minute"</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">generate_content</span><span class="p">():</span>
+    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="cors-configuration">CORS Configuration</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">fastapi.middleware.cors</span> <span class="kn">import</span> <span class="n">CORSMiddleware</span>
+
+<span class="n">app</span><span class="p">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s">"https://harvest.ai"</span><span class="p">],</span>
+    <span class="n">allow_credentials</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"POST"</span><span class="p">],</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s">"*"</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-domain--dns">📱 Domain &amp; DNS</h2>
+
+<h3 id="recommended-dns-configuration">Recommended DNS Configuration</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Type  Name    Value
+A     @       76.76.21.21          # Vercel
+A     api     134.209.28.98        # Backend
+TXT   @       v=spf1 include:_spf.mx.cloudflare.net ~all
+MX    @       route1.mx.cloudflare.net
+</code></pre></div></div>
+
+<h2 id="-go-live-checklist">🎯 Go-Live Checklist</h2>
+
+<h3 id="24-hours-before">24 Hours Before</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Final testing on staging</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup production data</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Notify team of deployment</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prepare rollback plan</li>
+</ul>
+
+<h3 id="launch-day">Launch Day</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy backend first</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run database migrations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy frontend</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update DNS if needed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor error rates</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check performance metrics</li>
+</ul>
+
+<h3 id="post-launch">Post-Launch</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor for 24 hours</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Gather user feedback</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fix critical issues</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Plan next iteration</li>
+</ul>
+
+<hr />
+
+<p><em>For emergencies, see <a href="../runbooks/INCIDENT_RESPONSE.md">INCIDENT_RESPONSE.md</a></em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: Harvest.ai / deployment/DEPLOYMENT_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

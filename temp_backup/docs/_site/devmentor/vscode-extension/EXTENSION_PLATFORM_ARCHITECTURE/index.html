@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EXTENSION PLATFORM ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">vscode-extension/EXTENSION_PLATFORM_ARCHITECTURE.md</span>
+</div>
+
+<h1>EXTENSION PLATFORM ARCHITECTURE</h1>
+
+
+<h1 id="devmentor-vs-code-extension---full-platform-integration-architecture">DevMentor VS Code Extension - Full Platform Integration Architecture</h1>
+
+<h2 id="-vision">🚀 Vision</h2>
+<p>Transform the VS Code extension into a complete DevMentor platform client that brings ALL platform capabilities directly into the IDE - project management, AI assistance, prompt engineering, memory systems, learning paths, and real-time collaboration.</p>
+
+<h2 id="️-platform-integration-architecture">🏗️ Platform Integration Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DevMentor Platform + VS Code Extension Ecosystem
+├── 🎮 VS Code Extension (Platform Gateway)
+│   ├── 🔌 Platform Connection Layer
+│   │   ├── WebSocket Client (Real-time bi-directional)
+│   │   ├── REST API Client (CRUD operations)
+│   │   ├── GraphQL Client (Complex queries)
+│   │   └── Event Stream (SSE for updates)
+│   │
+│   ├── 🎯 Project Management Integration
+│   │   ├── Project Explorer (Full CRUD in IDE)
+│   │   ├── Epic &amp; Task Management (Kanban in VS Code)
+│   │   ├── Sprint Planning (Velocity tracking)
+│   │   ├── Real-time Collaboration (Shared sessions)
+│   │   └── Git Integration (Branch → Task linking)
+│   │
+│   ├── 🤖 AI &amp; Prompt Engineering
+│   │   ├── Prompt Library (Searchable templates)
+│   │   ├── Prompt Builder (Visual prompt crafting)
+│   │   ├── Multi-Model Gateway (GPT/Claude/Llama)
+│   │   ├── Context Injection (Code → Prompt)
+│   │   ├── Response Streaming (Real-time AI)
+│   │   └── Prompt Analytics (Performance tracking)
+│   │
+│   ├── 🧠 Memory &amp; Learning System
+│   │   ├── Code Pattern Recognition
+│   │   ├── Personal Knowledge Base
+│   │   ├── Team Knowledge Sharing
+│   │   ├── Learning Path Progress
+│   │   ├── Skill Assessment
+│   │   └── Contextual Suggestions
+│   │
+│   ├── 📊 Architecture &amp; Analysis
+│   │   ├── Live Architecture Diagrams
+│   │   ├── Dependency Visualization
+│   │   ├── Code Quality Metrics
+│   │   ├── Performance Profiling
+│   │   └── Security Scanning
+│   │
+│   └── 📝 Documentation &amp; Compliance
+│       ├── Auto-Documentation
+│       ├── Runbook Integration
+│       ├── ADR Management
+│       ├── Compliance Checking
+│       └── Audit Trail
+│
+├── 🌐 DevMentor Platform Services
+│   ├── API Gateway (8080)
+│   ├── Auth Service (3002)
+│   ├── Project Service (3004)
+│   ├── AI Gateway (3001)
+│   ├── Memory Service (3003)
+│   ├── Learning Engine (3005)
+│   └── PBML Service (3006)
+│
+└── 💾 Data Synchronization
+    ├── Local Cache (SQLite)
+    ├── Offline Mode Support
+    ├── Conflict Resolution
+    └── Real-time Sync
+</code></pre></div></div>
+
+<h2 id="-core-platform-features-in-vs-code">🔧 Core Platform Features in VS Code</h2>
+
+<h3 id="1-project-management-system">1. Project Management System</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ProjectManagementProvider</span> <span class="p">{</span>
+  <span class="c1">// Project Operations</span>
+  <span class="nx">createProject</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="nx">ProjectInput</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Project</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">getProjects</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Project</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">updateProject</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="nb">Partial</span><span class="o">&lt;</span><span class="nx">Project</span><span class="o">&gt;</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Project</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">deleteProject</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Epic Management</span>
+  <span class="nx">createEpic</span><span class="p">(</span><span class="nx">projectId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">EpicInput</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Epic</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">updateEpicStatus</span><span class="p">(</span><span class="nx">epicId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">status</span><span class="p">:</span> <span class="nx">EpicStatus</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Epic</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">moveEpic</span><span class="p">(</span><span class="nx">epicId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">newProjectId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Epic</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Task Management with Kanban</span>
+  <span class="nx">createTask</span><span class="p">(</span><span class="nx">epicId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">TaskInput</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Task</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">updateTaskStatus</span><span class="p">(</span><span class="nx">taskId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">status</span><span class="p">:</span> <span class="nx">TaskStatus</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Task</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">assignTask</span><span class="p">(</span><span class="nx">taskId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Task</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Sprint Management</span>
+  <span class="nx">createSprint</span><span class="p">(</span><span class="nx">projectId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">SprintInput</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Sprint</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">addTaskToSprint</span><span class="p">(</span><span class="nx">taskId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">sprintId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">startSprint</span><span class="p">(</span><span class="nx">sprintId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Sprint</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">closeSprint</span><span class="p">(</span><span class="nx">sprintId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">SprintReport</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Real-time Collaboration</span>
+  <span class="nx">joinSession</span><span class="p">(</span><span class="nx">projectId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">CollaborationSession</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">broadcastCursorPosition</span><span class="p">(</span><span class="nx">position</span><span class="p">:</span> <span class="nx">Position</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nx">broadcastSelection</span><span class="p">(</span><span class="nx">selection</span><span class="p">:</span> <span class="nx">Selection</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nx">broadcastEdit</span><span class="p">(</span><span class="nx">edit</span><span class="p">:</span> <span class="nx">Edit</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// VS Code UI Components</span>
+<span class="kd">class</span> <span class="nx">ProjectExplorerProvider</span> <span class="k">implements</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">TreeDataProvider</span><span class="o">&lt;</span><span class="nx">ProjectItem</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="c1">// Tree view showing:</span>
+  <span class="c1">// - Projects</span>
+  <span class="c1">//   - Epics</span>
+  <span class="c1">//     - Tasks (with status indicators)</span>
+  <span class="c1">//       - Subtasks</span>
+  <span class="c1">//   - Sprints</span>
+  <span class="c1">//     - Active Sprint</span>
+  <span class="c1">//     - Backlog</span>
+  <span class="c1">//   - Team Members</span>
+  <span class="c1">//   - Recent Activity</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">KanbanViewProvider</span> <span class="k">implements</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">WebviewViewProvider</span> <span class="p">{</span>
+  <span class="c1">// Interactive Kanban board in sidebar</span>
+  <span class="c1">// Drag &amp; drop task management</span>
+  <span class="c1">// Real-time updates via WebSocket</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-ai--prompt-engineering-system">2. AI &amp; Prompt Engineering System</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">AIPromptSystem</span> <span class="p">{</span>
+  <span class="c1">// Prompt Library Management</span>
+  <span class="nx">getPromptTemplates</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">PromptTemplate</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">savePromptTemplate</span><span class="p">(</span><span class="nx">template</span><span class="p">:</span> <span class="nx">PromptTemplate</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">sharePromptTemplate</span><span class="p">(</span><span class="nx">templateId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">teamId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Prompt Builder</span>
+  <span class="nx">buildPrompt</span><span class="p">(</span><span class="nx">components</span><span class="p">:</span> <span class="nx">PromptComponent</span><span class="p">[]):</span> <span class="nx">ComposedPrompt</span><span class="p">;</span>
+  <span class="nx">injectContext</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="nx">CodeContext</span><span class="p">):</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nx">validatePrompt</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">PromptValidation</span><span class="p">;</span>
+  <span class="nx">estimateTokens</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">TokenEstimate</span><span class="p">;</span>
+  
+  <span class="c1">// Multi-Model Execution</span>
+  <span class="nx">executePrompt</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">options</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-4</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">claude-3</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">llama-3</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">qwen-2.5</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">temperature</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">maxTokens</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">streaming</span><span class="p">?:</span> <span class="nx">boolean</span><span class="p">;</span>
+  <span class="p">}):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AIResponse</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Advanced Features</span>
+  <span class="nx">chainPrompts</span><span class="p">(</span><span class="nx">prompts</span><span class="p">:</span> <span class="nx">Prompt</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ChainResult</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">parallelExecute</span><span class="p">(</span><span class="nx">prompts</span><span class="p">:</span> <span class="nx">Prompt</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ParallelResult</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">compareModels</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">models</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Comparison</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Analytics &amp; Optimization</span>
+  <span class="nx">trackPromptPerformance</span><span class="p">(</span><span class="nx">execution</span><span class="p">:</span> <span class="nx">PromptExecution</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span>
+  <span class="nx">getPromptAnalytics</span><span class="p">(</span><span class="nx">timeRange</span><span class="p">:</span> <span class="nx">TimeRange</span><span class="p">):</span> <span class="nx">PromptAnalytics</span><span class="p">;</span>
+  <span class="nx">suggestOptimizations</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">Optimization</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="c1">// VS Code Command Palette Integration</span>
+<span class="kd">class</span> <span class="nx">PromptCommandProvider</span> <span class="p">{</span>
+  <span class="c1">// Quick prompt execution from command palette</span>
+  <span class="nx">registerCommands</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">registerCommand</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor.prompt.quick</span><span class="dl">'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">quickPrompt</span><span class="p">);</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">registerCommand</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor.prompt.fromSelection</span><span class="dl">'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">promptFromSelection</span><span class="p">);</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">registerCommand</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor.prompt.explain</span><span class="dl">'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">explainCode</span><span class="p">);</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">registerCommand</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor.prompt.refactor</span><span class="dl">'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">refactorCode</span><span class="p">);</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">registerCommand</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor.prompt.test</span><span class="dl">'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateTests</span><span class="p">);</span>
+    <span class="nx">vscode</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">registerCommand</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor.prompt.document</span><span class="dl">'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">documentCode</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Interactive Prompt Builder Webview</span>
+<span class="kd">class</span> <span class="nx">PromptBuilderWebview</span> <span class="p">{</span>
+  <span class="c1">// Visual prompt construction with:</span>
+  <span class="c1">// - Drag &amp; drop components</span>
+  <span class="c1">// - Variable injection</span>
+  <span class="c1">// - Context preview</span>
+  <span class="c1">// - Token counter</span>
+  <span class="c1">// - Model selector</span>
+  <span class="c1">// - Response preview</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-memory--learning-integration">3. Memory &amp; Learning Integration</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">MemorySystemIntegration</span> <span class="p">{</span>
+  <span class="c1">// Personal Memory Bank</span>
+  <span class="nx">storeCodePattern</span><span class="p">(</span><span class="nx">pattern</span><span class="p">:</span> <span class="nx">CodePattern</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">retrieveSimilarPatterns</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">CodePattern</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">updatePreference</span><span class="p">(</span><span class="nx">preference</span><span class="p">:</span> <span class="nx">DeveloperPreference</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">getPersonalizedSuggestions</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Suggestion</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Team Knowledge Sharing</span>
+  <span class="nx">shareKnowledge</span><span class="p">(</span><span class="nx">knowledge</span><span class="p">:</span> <span class="nx">Knowledge</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">searchTeamKnowledge</span><span class="p">(</span><span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Knowledge</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">subscribeToExpertise</span><span class="p">(</span><span class="nx">expertise</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Learning Path Integration</span>
+  <span class="nx">getCurrentLearningPath</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">LearningPath</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">updateProgress</span><span class="p">(</span><span class="nx">moduleId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">progress</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">getNextLesson</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Lesson</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">submitQuizAnswer</span><span class="p">(</span><span class="nx">quizId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">answer</span><span class="p">:</span> <span class="nx">Answer</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">QuizResult</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Contextual Intelligence</span>
+  <span class="nx">analyzeCurrentContext</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ContextAnalysis</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">suggestRelevantDocs</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Documentation</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">findSimilarSolutions</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Solution</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">recommendExperts</span><span class="p">(</span><span class="nx">topic</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Expert</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// VS Code Learning Assistant</span>
+<span class="kd">class</span> <span class="nx">LearningAssistantProvider</span> <span class="p">{</span>
+  <span class="c1">// Inline learning suggestions</span>
+  <span class="c1">// Code review based on best practices</span>
+  <span class="c1">// Real-time mentoring</span>
+  <span class="c1">// Skill gap analysis</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4-architecture--analysis-tools">4. Architecture &amp; Analysis Tools</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ArchitectureAnalysisTools</span> <span class="p">{</span>
+  <span class="c1">// Live Visualization</span>
+  <span class="nx">generateArchitectureDiagram</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Diagram</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">visualizeDependencies</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DependencyGraph</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">showDataFlow</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DataFlowDiagram</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">renderSystemMap</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">SystemMap</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Code Analysis</span>
+  <span class="nx">analyzeComplexity</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ComplexityReport</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">detectPatterns</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">PatternReport</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">findAntiPatterns</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AntiPatternReport</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">suggestRefactoring</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">RefactoringPlan</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Performance Profiling</span>
+  <span class="nx">profilePerformance</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">PerformanceReport</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">identifyBottlenecks</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Bottleneck</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">suggestOptimizations</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Optimization</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Security Scanning</span>
+  <span class="nx">scanVulnerabilities</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">SecurityReport</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">checkCompliance</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ComplianceReport</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">auditDependencies</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DependencyAudit</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// VS Code Architecture Panel</span>
+<span class="kd">class</span> <span class="nx">ArchitecturePanel</span> <span class="k">implements</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">WebviewViewProvider</span> <span class="p">{</span>
+  <span class="c1">// Interactive architecture visualization</span>
+  <span class="c1">// Real-time updates as code changes</span>
+  <span class="c1">// Zoom, pan, filter capabilities</span>
+  <span class="c1">// Export to various formats</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="5-platform-configuration--settings">5. Platform Configuration &amp; Settings</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"contributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DevMentor Platform"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Connection</span><span class="w"> </span><span class="err">Settings</span><span class="w">
+        </span><span class="nl">"devmentor.platform.apiUrl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8080"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DevMentor API Gateway URL"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"devmentor.platform.wsUrl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ws://localhost:3001"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WebSocket server URL"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Project</span><span class="w"> </span><span class="err">Management</span><span class="w">
+        </span><span class="nl">"devmentor.projects.autoSync"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Automatically sync projects with platform"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"devmentor.projects.defaultView"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"tree"</span><span class="p">,</span><span class="w"> </span><span class="s2">"kanban"</span><span class="p">,</span><span class="w"> </span><span class="s2">"list"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tree"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Default project view"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        
+        </span><span class="err">//</span><span class="w"> </span><span class="err">AI</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="err">Prompts</span><span class="w">
+        </span><span class="nl">"devmentor.ai.defaultModel"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"gpt-4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"claude-3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"llama-3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"qwen-2.5"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-4"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Default AI model for prompts"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"devmentor.ai.streamResponses"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stream AI responses in real-time"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"devmentor.prompts.library"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Personal prompt library"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Memory</span><span class="w"> </span><span class="err">&amp;</span><span class="w"> </span><span class="err">Learning</span><span class="w">
+        </span><span class="nl">"devmentor.memory.capturePatterns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Automatically capture code patterns"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"devmentor.learning.showInlineSuggestions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Show learning suggestions inline"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Documentation</span><span class="w">
+        </span><span class="nl">"devmentor.docs.autoDocument"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Automatically document development activities"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Collaboration</span><span class="w">
+        </span><span class="nl">"devmentor.collaboration.sharePresence"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Share cursor and selection with team"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="-uiux-design">🎨 UI/UX Design</h2>
+
+<h3 id="integrated-platform-view-in-vs-code">Integrated Platform View in VS Code</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>VS Code Activity Bar
+├── 🚀 DevMentor Platform
+│   ├── 📁 Projects &amp; Tasks
+│   │   ├── My Projects
+│   │   │   ├── Project Alpha [75%]
+│   │   │   │   ├── 📝 Epic: Authentication
+│   │   │   │   │   ├── ✅ Task: Setup OAuth
+│   │   │   │   │   ├── 🔄 Task: JWT Implementation
+│   │   │   │   │   └── ⏳ Task: Testing
+│   │   │   │   └── 📝 Epic: API Development
+│   │   │   └── Project Beta [30%]
+│   │   ├── 🏃 Active Sprint (Day 5/14)
+│   │   │   ├── In Progress (3)
+│   │   │   ├── Review (2)
+│   │   │   └── Done (5)
+│   │   └── 📊 Quick Stats
+│   │       ├── Velocity: 23 pts
+│   │       └── Completion: 67%
+│   │
+│   ├── 🤖 AI Assistant
+│   │   ├── 💬 Quick Prompt
+│   │   ├── 📚 Prompt Library
+│   │   │   ├── Code Explanation
+│   │   │   ├── Refactoring
+│   │   │   ├── Test Generation
+│   │   │   └── + Custom Prompts
+│   │   ├── 🔄 Recent Conversations
+│   │   └── 📊 Token Usage: 1.2k/10k
+│   │
+│   ├── 🧠 Memory &amp; Learning
+│   │   ├── 📐 My Patterns (42)
+│   │   ├── 🎯 Learning Path
+│   │   │   ├── Current: System Design
+│   │   │   └── Progress: 65%
+│   │   ├── 💡 Suggestions
+│   │   └── 🏆 Achievements
+│   │
+│   ├── 🏗️ Architecture
+│   │   ├── 📊 System Overview
+│   │   ├── 🔍 Dependencies
+│   │   ├── ⚡ Performance
+│   │   └── 🔒 Security
+│   │
+│   └── 📝 Documentation
+│       ├── 📖 Runbooks
+│       ├── 📋 ADRs
+│       └── 📊 Reports
+</code></pre></div></div>
+
+<h3 id="command-palette-integration">Command Palette Integration</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl+Shift+P → DevMentor Commands
+
+&gt; DevMentor: Create New Project
+&gt; DevMentor: Quick AI Prompt
+&gt; DevMentor: Generate Tests for Current File
+&gt; DevMentor: Explain Selected Code
+&gt; DevMentor: Start TDD Cycle
+&gt; DevMentor: View Architecture Diagram
+&gt; DevMentor: Search Team Knowledge
+&gt; DevMentor: Start Pair Programming Session
+&gt; DevMentor: Generate Documentation
+&gt; DevMentor: Analyze Performance
+</code></pre></div></div>
+
+<h3 id="status-bar-integration">Status Bar Integration</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[🚀 DevMentor Connected] [📝 Sprint: Day 5/14] [🤖 GPT-4] [🧠 Learning: 65%] [👥 Team: 3 Online]
+</code></pre></div></div>
+
+<h2 id="-data-flow-architecture">🔄 Data Flow Architecture</h2>
+
+<h3 id="real-time-synchronization">Real-time Synchronization</h3>
+
+<pre><code class="language-mermaid">graph TB
+    VSCode[VS Code Extension] &lt;--&gt; WS[WebSocket Server]
+    VSCode &lt;--&gt; API[API Gateway]
+    
+    WS --&gt; Redis[Redis Streams]
+    API --&gt; Services[Platform Services]
+    
+    Services --&gt; PS[Project Service]
+    Services --&gt; AI[AI Gateway]
+    Services --&gt; MS[Memory Service]
+    Services --&gt; LS[Learning Engine]
+    
+    Redis --&gt; Events[Event Bus]
+    Events --&gt; VSCode
+    
+    VSCode --&gt; Cache[Local SQLite]
+    Cache --&gt; Offline[Offline Mode]
+</code></pre>
+
+<h3 id="prompt-execution-flow">Prompt Execution Flow</h3>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant VSCode
+    participant API
+    participant AIGateway
+    participant Model
+    
+    User-&gt;&gt;VSCode: Write prompt
+    VSCode-&gt;&gt;VSCode: Inject context
+    VSCode-&gt;&gt;API: Send prompt request
+    API-&gt;&gt;AIGateway: Route to AI service
+    AIGateway-&gt;&gt;Model: Execute prompt
+    Model--&gt;&gt;AIGateway: Stream response
+    AIGateway--&gt;&gt;API: Forward stream
+    API--&gt;&gt;VSCode: WebSocket stream
+    VSCode--&gt;&gt;User: Display response
+    VSCode-&gt;&gt;VSCode: Store in memory
+</code></pre>
+
+<h2 id="-implementation-roadmap">🚦 Implementation Roadmap</h2>
+
+<h3 id="phase-1-platform-foundation-week-1">Phase 1: Platform Foundation (Week 1)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Establish WebSocket connection to platform</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement authentication flow</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create project tree view provider</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Basic CRUD operations for projects/tasks</li>
+</ul>
+
+<h3 id="phase-2-ai-integration-week-2">Phase 2: AI Integration (Week 2)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prompt library management</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Quick prompt execution</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Context injection system</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Response streaming</li>
+</ul>
+
+<h3 id="phase-3-advanced-features-week-3">Phase 3: Advanced Features (Week 3)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Kanban board webview</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Architecture visualization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Memory pattern capture</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Learning path integration</li>
+</ul>
+
+<h3 id="phase-4-collaboration-week-4">Phase 4: Collaboration (Week 4)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Real-time cursor sharing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pair programming mode</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Team knowledge search</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Shared debugging sessions</li>
+</ul>
+
+<h2 id="-security--authentication">🔐 Security &amp; Authentication</h2>
+
+<h3 id="authentication-flow">Authentication Flow</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">AuthenticationProvider</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">authenticate</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AuthToken</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// 1. Check for existing token</span>
+    <span class="kd">const</span> <span class="nx">stored</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">keytar</span><span class="p">.</span><span class="nx">getPassword</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">token</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">stored</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">isExpired</span><span class="p">(</span><span class="nx">stored</span><span class="p">))</span> <span class="k">return</span> <span class="nx">stored</span><span class="p">;</span>
+    
+    <span class="c1">// 2. OAuth flow via browser</span>
+    <span class="kd">const</span> <span class="nx">authUrl</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">platform</span><span class="p">}</span><span class="s2">/auth/vscode`</span><span class="p">;</span>
+    <span class="k">await</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">openExternal</span><span class="p">(</span><span class="nx">authUrl</span><span class="p">);</span>
+    
+    <span class="c1">// 3. Listen for callback</span>
+    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">waitForCallback</span><span class="p">();</span>
+    
+    <span class="c1">// 4. Store securely</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">keytar</span><span class="p">.</span><span class="nx">setPassword</span><span class="p">(</span><span class="dl">'</span><span class="s1">devmentor</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">token</span><span class="dl">'</span><span class="p">,</span> <span class="nx">token</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">token</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="data-security">Data Security</h3>
+<ul>
+  <li><strong>Token Storage</strong>: OS keychain via Keytar</li>
+  <li><strong>Connection</strong>: TLS/WSS in production</li>
+  <li><strong>Code Context</strong>: Never send sensitive files</li>
+  <li><strong>Prompt Sanitization</strong>: Remove secrets before sending</li>
+</ul>
+
+<h2 id="-analytics--metrics">📊 Analytics &amp; Metrics</h2>
+
+<h3 id="usage-tracking">Usage Tracking</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ExtensionMetrics</span> <span class="p">{</span>
+  <span class="nl">dailyActiveUsers</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">promptsExecuted</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">averageResponseTime</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">taskCompletionRate</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">learningProgress</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">collaborationSessions</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">documentationGenerated</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="performance-monitoring">Performance Monitoring</h3>
+<ul>
+  <li>Command execution time</li>
+  <li>WebSocket latency</li>
+  <li>Cache hit rate</li>
+  <li>Memory usage</li>
+  <li>Extension activation time</li>
+</ul>
+
+<h2 id="-success-criteria">🎯 Success Criteria</h2>
+
+<h3 id="user-experience">User Experience</h3>
+<ul>
+  <li><strong>Seamless Integration</strong>: &lt; 3 clicks to any platform feature</li>
+  <li><strong>Response Time</strong>: &lt; 100ms for local operations</li>
+  <li><strong>AI Response</strong>: &lt; 2s for first token</li>
+  <li><strong>Sync Latency</strong>: &lt; 500ms for real-time updates</li>
+</ul>
+
+<h3 id="platform-adoption">Platform Adoption</h3>
+<ul>
+  <li><strong>Feature Usage</strong>: 80% of platform features accessible</li>
+  <li><strong>Daily Active Usage</strong>: 90% of developers use daily</li>
+  <li><strong>Prompt Library</strong>: 50+ shared team prompts</li>
+  <li><strong>Knowledge Base</strong>: 1000+ captured patterns</li>
+</ul>
+
+<h3 id="developer-productivity">Developer Productivity</h3>
+<ul>
+  <li><strong>Task Completion</strong>: 30% faster with AI assistance</li>
+  <li><strong>Documentation</strong>: 50% reduction in manual documentation</li>
+  <li><strong>Code Quality</strong>: 25% fewer bugs with pattern recognition</li>
+  <li><strong>Learning</strong>: 2x faster skill acquisition</li>
+</ul>
+
+<hr />
+
+<p><em>This architecture transforms the VS Code extension into a complete platform client, bringing the full power of DevMentor directly into the developer’s IDE. Every platform feature is accessible, every AI capability is at their fingertips, and all collaboration happens in real-time.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / vscode-extension/EXTENSION_PLATFORM_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

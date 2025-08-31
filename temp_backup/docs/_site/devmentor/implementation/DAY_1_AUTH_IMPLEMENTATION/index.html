@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAY 1 AUTH IMPLEMENTATION | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">implementation/DAY_1_AUTH_IMPLEMENTATION.md</span>
+</div>
+
+<h1>DAY 1 AUTH IMPLEMENTATION</h1>
+
+
+<h1 id="-day-1-authentication-implementation-plan">📋 Day 1: Authentication Implementation Plan</h1>
+
+<h2 id="current-state-assessment">Current State Assessment</h2>
+
+<h3 id="-what-we-have">✅ What We Have</h3>
+<ul>
+  <li><strong>Backend</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">auth-service/src/github-oauth.ts</code> - GitHub OAuth implementation exists</li>
+      <li><code class="language-plaintext highlighter-rouge">auth-service/src/database.ts</code> - Database connection code</li>
+      <li><code class="language-plaintext highlighter-rouge">auth-service/src/redis.ts</code> - Redis session management</li>
+      <li><code class="language-plaintext highlighter-rouge">auth-service/src/index.ts</code> - Express server setup</li>
+      <li>Swagger documentation started</li>
+    </ul>
+  </li>
+  <li><strong>Frontend</strong>:
+    <ul>
+      <li>LoginPage component with UI</li>
+      <li>GitHub OAuth button component</li>
+      <li>authService.ts with methods defined (but not connected)</li>
+    </ul>
+  </li>
+  <li><strong>Infrastructure</strong>:
+    <ul>
+      <li>PostgreSQL running in cluster</li>
+      <li>Redis running in cluster</li>
+      <li>API Gateway deployed (but not properly configured)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="-whats-missing">❌ What’s Missing</h3>
+<ol>
+  <li><strong>No email/password auth implementation</strong></li>
+  <li><strong>No JWT token generation/validation</strong></li>
+  <li><strong>No refresh token logic</strong></li>
+  <li><strong>No rate limiting</strong></li>
+  <li><strong>No CSRF protection</strong></li>
+  <li><strong>No password hashing</strong></li>
+  <li><strong>No email verification</strong></li>
+  <li><strong>No session management</strong></li>
+  <li><strong>Frontend not connected to backend</strong></li>
+  <li><strong>No tests</strong></li>
+</ol>
+
+<h2 id="-todays-implementation-plan-8-10-hours">🎯 Today’s Implementation Plan (8-10 hours)</h2>
+
+<h3 id="phase-1-backend-foundation-3-4-hours">Phase 1: Backend Foundation (3-4 hours)</h3>
+
+<h4 id="11-fix-and-test-existing-github-oauth-1-hour">1.1 Fix and Test Existing GitHub OAuth (1 hour)</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /Users/betolbook/Documents/github/NatureQuest/devmentor/infrastructure/services/auth-service
+
+<span class="c"># Install dependencies</span>
+npm <span class="nb">install</span>
+
+<span class="c"># Add missing dependencies</span>
+npm <span class="nb">install</span> <span class="nt">--save</span> <span class="se">\</span>
+  bcrypt <span class="se">\</span>
+  jsonwebtoken <span class="se">\</span>
+  express-rate-limit <span class="se">\</span>
+  helmet <span class="se">\</span>
+  cors <span class="se">\</span>
+  express-validator <span class="se">\</span>
+  @types/bcrypt <span class="se">\</span>
+  @types/jsonwebtoken
+
+<span class="c"># Test the server starts</span>
+npm run dev
+</code></pre></div></div>
+
+<h4 id="12-implement-jwt-token-generation-1-hour">1.2 Implement JWT Token Generation (1 hour)</h4>
+<p>Create <code class="language-plaintext highlighter-rouge">src/services/token.service.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">jwt</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">v4</span> <span class="k">as</span> <span class="nx">uuidv4</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">uuid</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">redis</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../redis</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">JWT_SECRET</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">dev-secret-change-in-production</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">JWT_EXPIRES_IN</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">15m</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">REFRESH_TOKEN_EXPIRES_IN</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">7d</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">TokenPayload</span> <span class="p">{</span>
+  <span class="nl">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">roles</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">TokenService</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="nx">generateAccessToken</span><span class="p">(</span><span class="nx">payload</span><span class="p">:</span> <span class="nx">TokenPayload</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">payload</span><span class="p">,</span> <span class="nx">JWT_SECRET</span><span class="p">,</span> <span class="p">{</span> 
+      <span class="na">expiresIn</span><span class="p">:</span> <span class="nx">JWT_EXPIRES_IN</span><span class="p">,</span>
+      <span class="na">issuer</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor</span><span class="dl">'</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">static</span> <span class="nx">generateRefreshToken</span><span class="p">():</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">uuidv4</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">static</span> <span class="k">async</span> <span class="nx">storeRefreshToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`refresh_token:</span><span class="p">${</span><span class="nx">refreshToken</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">expires</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">;</span> <span class="c1">// 7 days</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">expires</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">static</span> <span class="k">async</span> <span class="nx">validateRefreshToken</span><span class="p">(</span><span class="nx">refreshToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`refresh_token:</span><span class="p">${</span><span class="nx">refreshToken</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">static</span> <span class="nx">verifyAccessToken</span><span class="p">(</span><span class="nx">token</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">TokenPayload</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">JWT_SECRET</span><span class="p">)</span> <span class="k">as</span> <span class="nx">TokenPayload</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">static</span> <span class="k">async</span> <span class="nx">revokeRefreshToken</span><span class="p">(</span><span class="nx">refreshToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`refresh_token:</span><span class="p">${</span><span class="nx">refreshToken</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="13-add-emailpassword-authentication-1-hour">1.3 Add Email/Password Authentication (1 hour)</h4>
+<p>Create <code class="language-plaintext highlighter-rouge">src/services/auth.service.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">bcrypt</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">bcrypt</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">db</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../database</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">TokenService</span><span class="p">,</span> <span class="nx">TokenPayload</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./token.service</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">redis</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../redis</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">SALT_ROUNDS</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">MAX_LOGIN_ATTEMPTS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">LOCKOUT_DURATION</span> <span class="o">=</span> <span class="mi">15</span> <span class="o">*</span> <span class="mi">60</span><span class="p">;</span> <span class="c1">// 15 minutes</span>
+
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">RegisterData</span> <span class="p">{</span>
+  <span class="nl">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">LoginData</span> <span class="p">{</span>
+  <span class="nl">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">rememberMe</span><span class="p">?:</span> <span class="nx">boolean</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AuthService</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="k">async</span> <span class="nx">register</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="nx">RegisterData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Check if email exists</span>
+    <span class="kd">const</span> <span class="nx">existingUser</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+      <span class="dl">'</span><span class="s1">SELECT id FROM users WHERE email = $1</span><span class="dl">'</span><span class="p">,</span>
+      <span class="p">[</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">]</span>
+    <span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">existingUser</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Email already registered</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Hash password</span>
+    <span class="kd">const</span> <span class="nx">hashedPassword</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">password</span><span class="p">,</span> <span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+
+    <span class="c1">// Create user</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+      <span class="s2">`INSERT INTO users (email, password_hash, name, created_at, email_verified)
+       VALUES ($1, $2, $3, NOW(), false)
+       RETURNING id, email, name, created_at`</span><span class="p">,</span>
+      <span class="p">[</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span> <span class="nx">hashedPassword</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span>
+    <span class="p">);</span>
+
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="c1">// Generate verification token</span>
+    <span class="kd">const</span> <span class="nx">verificationToken</span> <span class="o">=</span> <span class="nx">uuidv4</span><span class="p">();</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span>
+      <span class="s2">`email_verification:</span><span class="p">${</span><span class="nx">verificationToken</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span> <span class="c1">// 24 hours</span>
+      <span class="nx">user</span><span class="p">.</span><span class="nx">id</span>
+    <span class="p">);</span>
+
+    <span class="c1">// TODO: Send verification email</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">user</span><span class="p">,</span>
+      <span class="nx">verificationToken</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="k">static</span> <span class="k">async</span> <span class="nx">login</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="nx">LoginData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Check rate limiting</span>
+    <span class="kd">const</span> <span class="nx">attemptsKey</span> <span class="o">=</span> <span class="s2">`login_attempts:</span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">attempts</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">attemptsKey</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">attempts</span> <span class="o">&amp;&amp;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">attempts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nx">MAX_LOGIN_ATTEMPTS</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Account locked due to too many failed attempts</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Get user</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+      <span class="dl">'</span><span class="s1">SELECT id, email, password_hash, name, email_verified, roles FROM users WHERE email = $1</span><span class="dl">'</span><span class="p">,</span>
+      <span class="p">[</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">]</span>
+    <span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">incrementLoginAttempts</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">);</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid credentials</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="c1">// Check password</span>
+    <span class="kd">const</span> <span class="nx">validPassword</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">password</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">password_hash</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validPassword</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">incrementLoginAttempts</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">);</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid credentials</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Clear login attempts</span>
+    <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">attemptsKey</span><span class="p">);</span>
+
+    <span class="c1">// Generate tokens</span>
+    <span class="kd">const</span> <span class="nx">payload</span><span class="p">:</span> <span class="nx">TokenPayload</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">userId</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+      <span class="na">roles</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">roles</span> <span class="o">||</span> <span class="p">[</span><span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">]</span>
+    <span class="p">};</span>
+
+    <span class="kd">const</span> <span class="nx">accessToken</span> <span class="o">=</span> <span class="nx">TokenService</span><span class="p">.</span><span class="nx">generateAccessToken</span><span class="p">(</span><span class="nx">payload</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">refreshToken</span> <span class="o">=</span> <span class="nx">TokenService</span><span class="p">.</span><span class="nx">generateRefreshToken</span><span class="p">();</span>
+    
+    <span class="k">await</span> <span class="nx">TokenService</span><span class="p">.</span><span class="nx">storeRefreshToken</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">accessToken</span><span class="p">,</span>
+      <span class="nx">refreshToken</span><span class="p">,</span>
+      <span class="na">expiresIn</span><span class="p">:</span> <span class="mi">900</span><span class="p">,</span> <span class="c1">// 15 minutes</span>
+      <span class="na">user</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+        <span class="na">emailVerified</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email_verified</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="k">static</span> <span class="k">async</span> <span class="nx">incrementLoginAttempts</span><span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`login_attempts:</span><span class="p">${</span><span class="nx">email</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">exists</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">exists</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">incr</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">LOCKOUT_DURATION</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="14-add-security-middleware-30-minutes">1.4 Add Security Middleware (30 minutes)</h4>
+<p>Create <code class="language-plaintext highlighter-rouge">src/middleware/security.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">rateLimit</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express-rate-limit</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">helmet</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">helmet</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">cors</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">cors</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">securityMiddleware</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="nx">helmet</span><span class="p">(),</span>
+  <span class="nx">cors</span><span class="p">({</span>
+    <span class="na">origin</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">FRONTEND_URL</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">http://localhost:3000</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">credentials</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">})</span>
+<span class="p">];</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">loginRateLimit</span> <span class="o">=</span> <span class="nx">rateLimit</span><span class="p">({</span>
+  <span class="na">windowMs</span><span class="p">:</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// 1 minute</span>
+  <span class="na">max</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="c1">// 5 requests per minute</span>
+  <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Too many login attempts, please try again later</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">generalRateLimit</span> <span class="o">=</span> <span class="nx">rateLimit</span><span class="p">({</span>
+  <span class="na">windowMs</span><span class="p">:</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="na">max</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="c1">// 100 requests per minute</span>
+  <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Too many requests, please try again later</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="phase-2-database-setup-1-hour">Phase 2: Database Setup (1 hour)</h3>
+
+<h4 id="21-create-database-schema">2.1 Create Database Schema</h4>
+<p>Create <code class="language-plaintext highlighter-rouge">src/migrations/001_create_users.sql</code>:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Users table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">users</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">password_hash</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">avatar</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span>
+  <span class="n">email_verified</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">roles</span> <span class="nb">TEXT</span><span class="p">[]</span> <span class="k">DEFAULT</span> <span class="n">ARRAY</span><span class="p">[</span><span class="s1">'user'</span><span class="p">],</span>
+  <span class="n">github_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">last_login</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="k">INDEX</span> <span class="n">idx_email</span> <span class="p">(</span><span class="n">email</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="n">idx_github_id</span> <span class="p">(</span><span class="n">github_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Sessions table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">sessions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">refresh_token</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">ip_address</span> <span class="n">INET</span><span class="p">,</span>
+  <span class="n">user_agent</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">expires_at</span> <span class="nb">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">INDEX</span> <span class="n">idx_refresh_token</span> <span class="p">(</span><span class="n">refresh_token</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="n">idx_user_id</span> <span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Login attempts table (for audit)</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">login_attempts</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">ip_address</span> <span class="n">INET</span><span class="p">,</span>
+  <span class="n">success</span> <span class="nb">BOOLEAN</span><span class="p">,</span>
+  <span class="n">reason</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">INDEX</span> <span class="n">idx_email_time</span> <span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">created_at</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Password reset tokens</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">password_resets</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">token</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">expires_at</span> <span class="nb">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">used</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">INDEX</span> <span class="n">idx_token</span> <span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="phase-3-api-routes-implementation-1-hour">Phase 3: API Routes Implementation (1 hour)</h3>
+
+<h4 id="31-update-auth-routes">3.1 Update Auth Routes</h4>
+<p>Update <code class="language-plaintext highlighter-rouge">src/routes/auth.routes.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Router</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">body</span><span class="p">,</span> <span class="nx">validationResult</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express-validator</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">AuthService</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../services/auth.service</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">loginRateLimit</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../middleware/security</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">authenticate</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../middleware/authenticate</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="nx">Router</span><span class="p">();</span>
+
+<span class="c1">// Validation rules</span>
+<span class="kd">const</span> <span class="nx">registerValidation</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="nx">body</span><span class="p">(</span><span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">).</span><span class="nx">isEmail</span><span class="p">().</span><span class="nx">normalizeEmail</span><span class="p">(),</span>
+  <span class="nx">body</span><span class="p">(</span><span class="dl">'</span><span class="s1">password</span><span class="dl">'</span><span class="p">).</span><span class="nx">isLength</span><span class="p">({</span> <span class="na">min</span><span class="p">:</span> <span class="mi">8</span> <span class="p">}).</span><span class="nx">matches</span><span class="p">(</span><span class="sr">/^</span><span class="se">(?=</span><span class="sr">.*</span><span class="se">[</span><span class="sr">A-Za-z</span><span class="se">])(?=</span><span class="sr">.*</span><span class="se">\d)</span><span class="sr">/</span><span class="p">),</span>
+  <span class="nx">body</span><span class="p">(</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">).</span><span class="nx">trim</span><span class="p">().</span><span class="nx">isLength</span><span class="p">({</span> <span class="na">min</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">max</span><span class="p">:</span> <span class="mi">50</span> <span class="p">})</span>
+<span class="p">];</span>
+
+<span class="kd">const</span> <span class="nx">loginValidation</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="nx">body</span><span class="p">(</span><span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">).</span><span class="nx">isEmail</span><span class="p">().</span><span class="nx">normalizeEmail</span><span class="p">(),</span>
+  <span class="nx">body</span><span class="p">(</span><span class="dl">'</span><span class="s1">password</span><span class="dl">'</span><span class="p">).</span><span class="nx">notEmpty</span><span class="p">()</span>
+<span class="p">];</span>
+
+<span class="c1">// Register</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/register</span><span class="dl">'</span><span class="p">,</span> <span class="nx">registerValidation</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">errors</span> <span class="o">=</span> <span class="nx">validationResult</span><span class="p">(</span><span class="nx">req</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">errors</span><span class="p">:</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">array</span><span class="p">()</span> <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AuthService</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">201</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+      <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Registration successful. Please verify your email.</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">userId</span><span class="p">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span>
+    <span class="p">});</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">Email already registered</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">409</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Registration failed</span><span class="dl">'</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Login</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span><span class="p">,</span> <span class="nx">loginRateLimit</span><span class="p">,</span> <span class="nx">loginValidation</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">errors</span> <span class="o">=</span> <span class="nx">validationResult</span><span class="p">(</span><span class="nx">req</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">errors</span><span class="p">:</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">array</span><span class="p">()</span> <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AuthService</span><span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">locked</span><span class="dl">'</span><span class="p">)</span> <span class="o">||</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">Invalid credentials</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Login failed</span><span class="dl">'</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Refresh token</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/refresh</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">refreshToken</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">refreshToken</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Refresh token required</span><span class="dl">'</span> <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">AuthService</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">(</span><span class="nx">refreshToken</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid refresh token</span><span class="dl">'</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Logout</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/logout</span><span class="dl">'</span><span class="p">,</span> <span class="nx">authenticate</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">refreshToken</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">refreshToken</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">TokenService</span><span class="p">.</span><span class="nx">revokeRefreshToken</span><span class="p">(</span><span class="nx">refreshToken</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">204</span><span class="p">).</span><span class="nx">send</span><span class="p">();</span>
+<span class="p">});</span>
+
+<span class="c1">// Get current user</span>
+<span class="nx">router</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/me</span><span class="dl">'</span><span class="p">,</span> <span class="nx">authenticate</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">router</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="phase-4-frontend-integration-2-hours">Phase 4: Frontend Integration (2 hours)</h3>
+
+<h4 id="41-update-frontend-auth-service-1-hour">4.1 Update Frontend Auth Service (1 hour)</h4>
+<p>Update <code class="language-plaintext highlighter-rouge">frontend/devmentor-ui/src/services/authService.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">API_URL</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_API_URL</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">http://localhost:8080</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">AuthService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">accessToken</span><span class="p">:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">refreshToken</span><span class="p">:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">refreshTimer</span><span class="p">:</span> <span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span> <span class="o">|</span> <span class="kc">null</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">loadTokens</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">loadTokens</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nb">window</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">undefined</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">accessToken</span><span class="dl">'</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span> <span class="o">=</span> <span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">refreshToken</span><span class="dl">'</span><span class="p">);</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setupRefreshTimer</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">configureAxiosInterceptor</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">saveTokens</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="nx">accessToken</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span> <span class="o">=</span> <span class="nx">refreshToken</span><span class="p">;</span>
+    
+    <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">accessToken</span><span class="dl">'</span><span class="p">,</span> <span class="nx">accessToken</span><span class="p">);</span>
+    <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">refreshToken</span><span class="dl">'</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">);</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">setupRefreshTimer</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">configureAxiosInterceptor</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">clearTokens</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    
+    <span class="nx">localStorage</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">accessToken</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">localStorage</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">refreshToken</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">clearTimeout</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">setupRefreshTimer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">clearTimeout</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Refresh token 1 minute before expiry</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">refreshTimer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">refreshAccessToken</span><span class="p">();</span>
+    <span class="p">},</span> <span class="mi">14</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span> <span class="c1">// 14 minutes</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">configureAxiosInterceptor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">common</span><span class="p">[</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    
+    <span class="nx">axios</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">response</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
+      <span class="nx">response</span> <span class="o">=&gt;</span> <span class="nx">response</span><span class="p">,</span>
+      <span class="k">async</span> <span class="nx">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">originalRequest</span> <span class="o">=</span> <span class="nx">error</span><span class="p">.</span><span class="nx">config</span><span class="p">;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="p">?.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">401</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">originalRequest</span><span class="p">.</span><span class="nx">_retry</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">originalRequest</span><span class="p">.</span><span class="nx">_retry</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+          
+          <span class="k">try</span> <span class="p">{</span>
+            <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">refreshAccessToken</span><span class="p">();</span>
+            <span class="nx">originalRequest</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nx">axios</span><span class="p">(</span><span class="nx">originalRequest</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">refreshError</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">logout</span><span class="p">();</span>
+            <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">refreshError</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">register</span><span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/api/auth/register`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">password</span><span class="p">,</span>
+      <span class="nx">name</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">login</span><span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">password</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">rememberMe</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/api/auth/login`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">password</span><span class="p">,</span>
+      <span class="nx">rememberMe</span>
+    <span class="p">});</span>
+    
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">,</span> <span class="nx">user</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">saveTokens</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">refreshAccessToken</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">No refresh token</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/api/auth/refresh`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">refreshToken</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span>
+    <span class="p">});</span>
+    
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">saveTokens</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">accessToken</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">logout</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/api/auth/logout`</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">refreshToken</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">refreshToken</span>
+      <span class="p">});</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Logout error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">clearTokens</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">getCurrentUser</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/api/auth/me`</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">isAuthenticated</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">!!</span><span class="k">this</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="k">new</span> <span class="nx">AuthService</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h4 id="42-create-protected-route-component-30-minutes">4.2 Create Protected Route Component (30 minutes)</h4>
+<p>Create <code class="language-plaintext highlighter-rouge">frontend/devmentor-ui/src/components/ProtectedRoute.tsx</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useRouter</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/navigation</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">authService</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/services/authService</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">ProtectedRoute</span><span class="p">({</span> <span class="nx">children</span> <span class="p">}:</span> <span class="p">{</span> <span class="nl">children</span><span class="p">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactNode</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="nx">useRouter</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isAuthenticated</span><span class="p">,</span> <span class="nx">setIsAuthenticated</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isLoading</span><span class="p">,</span> <span class="nx">setIsLoading</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">checkAuth</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">authService</span><span class="p">.</span><span class="nx">isAuthenticated</span><span class="p">())</span> <span class="p">{</span>
+          <span class="nx">router</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span><span class="p">);</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Verify token is valid</span>
+        <span class="k">await</span> <span class="nx">authService</span><span class="p">.</span><span class="nx">getCurrentUser</span><span class="p">();</span>
+        <span class="nx">setIsAuthenticated</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">router</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+        <span class="nx">setIsLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="nx">checkAuth</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">router</span><span class="p">]);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isLoading</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Loading</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span>  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isAuthenticated</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="o">&lt;&gt;</span><span class="p">{</span><span class="nx">children</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="phase-5-testing-1-hour">Phase 5: Testing (1 hour)</h3>
+
+<h4 id="51-create-integration-tests">5.1 Create Integration Tests</h4>
+<p>Create <code class="language-plaintext highlighter-rouge">auth-service/src/__tests__/auth.test.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">request</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">supertest</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">app</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../index</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authentication</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/auth/register</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should register a new user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/register</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test123!</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test User</span><span class="dl">'</span>
+        <span class="p">});</span>
+
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">201</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="dl">'</span><span class="s1">userId</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should reject duplicate email</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// First registration</span>
+      <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/register</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">duplicate@example.com</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test123!</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test User</span><span class="dl">'</span>
+        <span class="p">});</span>
+
+      <span class="c1">// Second registration with same email</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/register</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">duplicate@example.com</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test123!</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Another User</span><span class="dl">'</span>
+        <span class="p">});</span>
+
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">409</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/auth/login</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should login with valid credentials</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/login</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test123!</span><span class="dl">'</span>
+        <span class="p">});</span>
+
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="dl">'</span><span class="s1">accessToken</span><span class="dl">'</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="dl">'</span><span class="s1">refreshToken</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should reject invalid credentials</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/auth/login</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+          <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">WrongPassword</span><span class="dl">'</span>
+        <span class="p">});</span>
+
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">401</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="-checklist-for-day-1">📝 Checklist for Day 1</h2>
+
+<h3 id="morning-4-hours">Morning (4 hours)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up auth-service development environment</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Install all dependencies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create database schema</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement JWT token service</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement auth service with email/password</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add security middleware</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create API routes</li>
+</ul>
+
+<h3 id="afternoon-4-hours">Afternoon (4 hours)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test backend endpoints with Postman/curl</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update frontend auth service</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create protected route component</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Wire up login page to backend</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test complete auth flow</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write integration tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Document API endpoints</li>
+</ul>
+
+<h3 id="end-of-day-success-criteria">End of Day Success Criteria</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User can register with email/password</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User can login and receive JWT</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Protected routes require authentication</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tokens refresh automatically</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting works</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Basic security implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tests pass</li>
+</ul>
+
+<h2 id="-commands-to-run">🚀 Commands to Run</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Backend setup</span>
+<span class="nb">cd </span>infrastructure/services/auth-service
+npm <span class="nb">install
+</span>npm run migrate <span class="c"># Run database migrations</span>
+npm run dev <span class="c"># Start development server</span>
+
+<span class="c"># Frontend setup</span>
+<span class="nb">cd </span>frontend/devmentor-ui
+npm <span class="nb">install
+</span>npm run dev <span class="c"># Start Next.js dev server</span>
+
+<span class="c"># Testing</span>
+<span class="nb">cd </span>infrastructure/services/auth-service
+npm <span class="nb">test</span> <span class="c"># Run tests</span>
+
+<span class="c"># Check everything works</span>
+curl <span class="nt">-X</span> POST http://localhost:8080/api/auth/register <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"email":"test@example.com","password":"Test123!","name":"Test User"}'</span>
+</code></pre></div></div>
+
+<h2 id="-if-time-permits-optional">🔥 If Time Permits (Optional)</h2>
+
+<ol>
+  <li>Add email verification flow</li>
+  <li>Add password reset flow</li>
+  <li>Add OAuth providers beyond GitHub</li>
+  <li>Add 2FA support</li>
+  <li>Add audit logging</li>
+</ol>
+
+<h2 id="-tomorrows-focus">📊 Tomorrow’s Focus</h2>
+
+<p>Once authentication is working:</p>
+<ol>
+  <li>Repository analysis service</li>
+  <li>Connect to GitHub API</li>
+  <li>Implement AST parsing</li>
+  <li>Create analysis pipeline</li>
+</ol>
+
+<hr />
+
+<p><strong>Remember</strong>: We’re building the FOUNDATION today. Every feature after this depends on having solid authentication.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / implementation/DAY_1_AUTH_IMPLEMENTATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

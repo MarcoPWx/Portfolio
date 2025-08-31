@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUNBOOK runtime-control</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/RUNBOOK_runtime-control.md</span>
+</div>
+
+<h1>RUNBOOK runtime-control</h1>
+
+
+<h1 id="runtime-control-runbook">Runtime Control Runbook</h1>
+
+<p>Audience: Platform/DevOps, Backend, Senior Developers
+Scope: Secrets via Vault + External Secrets Operator (ESO), Feature Flags via OpenFeature + self-hosted provider, minimal Remote Config, and Istio traffic management (ingress/egress, canary).</p>
+
+<p>Prerequisites</p>
+<ul>
+  <li>Kubernetes cluster (Kind: devmentor) with Istio installed</li>
+  <li>Vault (or chosen secret store) reachable from the cluster</li>
+  <li>Monitoring stack accessible (Prometheus, Grafana, Kiali)</li>
+  <li>kubectl, istioctl available locally</li>
+</ul>
+
+<p>Concepts (glossary)</p>
+<ul>
+  <li>Idempotency: Running the same operation multiple times results in the same final state. Example: our Unleash seed Job can be applied repeatedly; existing flags are left as-is (HTTP 409 conflicts are ignored) so you won’t create duplicates.</li>
+  <li>Weights (Istio): Percentages attached to multiple destinations for the same route. Example: ai-gateway v1 weight 90 and v2 weight 10 ≈ roughly 90%/10% of requests over time.</li>
+  <li>Quick canary: A small, short-lived traffic shift to a new version (v2) to validate health and error rates before a full rollout. Typical path: 5% → 10% → 25% → 50% → 100% with monitoring between steps.</li>
+</ul>
+
+<p>1) Secrets with Vault + External Secrets Operator (ESO)</p>
+<ul>
+  <li>Install ESO (cluster-scoped) and configure ClusterSecretStore for Vault using Kubernetes auth.</li>
+  <li>Create ExternalSecrets per service to sync secrets into K8s Secrets.</li>
+  <li>Update Deployments to consume env from those Secrets and verify rollout.</li>
+</ul>
+
+<p>Example: ClusterSecretStore + ExternalSecret (adjust host/paths)</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">external-secrets.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterSecretStore</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-vault</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">provider</span><span class="pi">:</span>
+    <span class="na">vault</span><span class="pi">:</span>
+      <span class="na">server</span><span class="pi">:</span> <span class="s">https://vault.example.com</span>
+      <span class="na">path</span><span class="pi">:</span> <span class="s">kv/data</span>
+      <span class="na">version</span><span class="pi">:</span> <span class="s">v2</span>
+      <span class="na">auth</span><span class="pi">:</span>
+        <span class="na">kubernetes</span><span class="pi">:</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">kubernetes</span>
+          <span class="na">role</span><span class="pi">:</span> <span class="s">devmentor</span>
+          <span class="na">serviceAccountRef</span><span class="pi">:</span>
+            <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+            <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor-app</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">external-secrets.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ExternalSecret</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">api-gateway-secrets</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor-app</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">refreshInterval</span><span class="pi">:</span> <span class="s">1h</span>
+  <span class="na">secretStoreRef</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-vault</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterSecretStore</span>
+  <span class="na">target</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">api-gateway-secrets</span>
+    <span class="na">creationPolicy</span><span class="pi">:</span> <span class="s">Owner</span>
+  <span class="na">data</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">secretKey</span><span class="pi">:</span> <span class="s">REDIS_URL</span>
+      <span class="na">remoteRef</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">key</span><span class="pi">:</span> <span class="nv">devmentor/api-gateway</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">REDIS_URL</span> <span class="pi">}</span>
+    <span class="pi">-</span> <span class="na">secretKey</span><span class="pi">:</span> <span class="s">JWT_SECRET</span>
+      <span class="na">remoteRef</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">key</span><span class="pi">:</span> <span class="nv">devmentor/api-gateway</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">JWT_SECRET</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Verification</p>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>kubectl -n devmentor-app get externalsecret,secret</td>
+          <td>grep api-gateway</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Describe ExternalSecret for sync status and errors</li>
+  <li>Restart rollout if needed; confirm pods have env via describe pod</li>
+</ul>
+
+<p>2) Feature Flags with OpenFeature + Provider</p>
+<ul>
+  <li>Chosen provider: Unleash (self-hosted). Alternatives: Flagsmith.</li>
+  <li>Deploy Unleash to devmentor-app; seed initial flags.</li>
+  <li>Integrate OpenFeature SDK in api-gateway and ai-gateway; gate 2–3 features.</li>
+  <li>Recommended Unleash defaults: admin UI on /, API on /api; secure with admin token in K8s Secret; back with Postgres.</li>
+</ul>
+
+<p>Flags to start with</p>
+<ul>
+  <li>new-ui-enabled (boolean): toggles new UI components</li>
+  <li>ai-safety-pii (boolean): enables PII detection pipeline</li>
+  <li>ai-provider-openai-enabled (boolean): enables OpenAI provider in AI gateway</li>
+</ul>
+
+<p>Node integration sketch</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">OpenFeature</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@openfeature/js-sdk</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// const provider = new UnleashProvider({ url, appName: 'devmentor', instanceId });</span>
+<span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">provider</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">(</span><span class="dl">'</span><span class="s1">api-gateway</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">enabled</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="dl">'</span><span class="s1">new-ui-enabled</span><span class="dl">'</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="p">{</span> <span class="na">userId</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">?.</span><span class="nx">id</span> <span class="p">});</span>
+</code></pre></div></div>
+
+<p>Verification</p>
+<ul>
+  <li>Flip new-ui-enabled for a test user in the provider UI and verify behavior changes without restarts.</li>
+  <li>Add a health endpoint to print current evaluated values (non-secret) for debugging.</li>
+</ul>
+
+<p>3) Minimal Remote Config</p>
+<ul>
+  <li>Represent non-secret runtime knobs (timeouts, cache TTLs) as typed flags first.</li>
+  <li>Optional: add a small config-service later for structured config with Redis pub/sub to push updates.</li>
+</ul>
+
+<p>4) Istio Traffic Management</p>
+<ul>
+  <li>Apply Gateway and VirtualService for devmentor.local, with routes to api-gateway, auth-service, ai-gateway, project-service.</li>
+  <li>Add DestinationRules with subsets v1/v2 for canary routing.</li>
+  <li>Add ServiceEntry to allow egress to approved external AI APIs.</li>
+  <li>Start with PeerAuthentication PERMISSIVE in dev; move to STRICT when stable.</li>
+</ul>
+
+<p>Canary example (90/10)</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">VirtualService</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-routes</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor-app</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">devmentor.local</span> <span class="pi">]</span>
+  <span class="na">gateways</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">devmentor-gateway</span> <span class="pi">]</span>
+  <span class="na">http</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span> <span class="pi">[</span> <span class="pi">{</span> <span class="nv">uri</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">prefix</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/api/ai"</span> <span class="pi">}</span> <span class="pi">}</span> <span class="pi">]</span>
+      <span class="na">route</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">destination</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">host</span><span class="pi">:</span> <span class="nv">ai-gateway.devmentor-app.svc.cluster.local</span><span class="pi">,</span> <span class="nv">subset</span><span class="pi">:</span> <span class="nv">v1</span> <span class="pi">}</span>
+          <span class="na">weight</span><span class="pi">:</span> <span class="m">90</span>
+        <span class="pi">-</span> <span class="na">destination</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">host</span><span class="pi">:</span> <span class="nv">ai-gateway.devmentor-app.svc.cluster.local</span><span class="pi">,</span> <span class="nv">subset</span><span class="pi">:</span> <span class="nv">v2</span> <span class="pi">}</span>
+          <span class="na">weight</span><span class="pi">:</span> <span class="m">10</span>
+</code></pre></div></div>
+
+<p>Verification (Traffic)</p>
+<ul>
+  <li>Port-forward ingress gateway (or use existing): kubectl -n istio-system port-forward svc/istio-ingressgateway 8080:80</li>
+  <li>Curl through http://localhost:8080 and confirm route behavior</li>
+  <li>Kiali graph shows requests to v1 and v2 as per weights</li>
+</ul>
+
+<p>Quick Canary Procedure (ai-gateway)
+1) Ensure two Deployments exist: ai-gateway (version: v1) and ai-gateway-v2 (version: v2)
+2) Apply Grafana dashboard: kubectl apply -f infrastructure/k8s/monitoring/grafana-dashboard-canary.yaml
+3) Set VirtualService weights to 95/5 (v1/v2), apply, and monitor 5–10 minutes
+4) Check: error rate &lt; 1%, p95 latency similar, no spike in 5xx
+5) Increase to 90/10, then 75/25 as needed, repeating checks
+6) If stable, proceed to 0/100 (full cutover); otherwise rollback</p>
+
+<p>For detailed steps: See docs/infrastructure/runbooks/RUNBOOK_canary-rollouts.md</p>
+
+<p>Rollback (Traffic)</p>
+<ul>
+  <li>Edit VirtualService to 100% v1; kubectl apply -f manifest.yaml</li>
+  <li>Confirm in Kiali and via curl</li>
+</ul>
+
+<p>5) Observability Hooks</p>
+<ul>
+  <li>Ensure Prometheus is scraping the gateways/services; add ServiceMonitor/PodMonitor as needed.</li>
+  <li>Provision a basic Grafana dashboard: gateway latency, error rate, success rate; flag evaluation counts (if provider exposes metrics).</li>
+</ul>
+
+<p>6) Security and Compliance Notes</p>
+<ul>
+  <li>Secrets: Never expose values in logs or admin UIs. Admin UI may trigger rotations and show status, not values.</li>
+  <li>Flags: Keep defaults safe; production toggles should degrade gracefully if provider is unavailable.</li>
+  <li>Egress: Only allow needed domains via ServiceEntry; prefer TLS origination at egress if required.</li>
+</ul>
+
+<p>7) Troubleshooting</p>
+<ul>
+  <li>ExternalSecret stuck pending: check ClusterSecretStore auth, Vault path/version, ESO logs</li>
+  <li>Flags not toggling: check provider URL, SDK provider registration, network policies</li>
+  <li>Traffic not splitting: verify Deployment labels match DestinationRule subsets (version: v1/v2)</li>
+  <li>Sidecars missing: ensure namespace has istio-injection=enabled; restart pods</li>
+</ul>
+
+<p>8) Run Commands (quick helpers)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ESO resources</span>
+kubectl get clustersecretstores,externalsecrets,secrets <span class="nt">-A</span>
+
+<span class="c"># Kiali, Grafana, Prometheus port-forwards</span>
+kubectl <span class="nt">-n</span> istio-system port-forward svc/kiali 20001:20001 &amp;
+kubectl <span class="nt">-n</span> monitoring port-forward svc/grafana 3000:80 &amp;
+kubectl <span class="nt">-n</span> monitoring port-forward svc/prometheus-k8s 9090:9090 &amp;
+
+<span class="c"># Istio traffic resources</span>
+kubectl <span class="nt">-n</span> devmentor-app get gateway,virtualservice,destinationrule,serviceentry
+</code></pre></div></div>
+
+<p>Change Management</p>
+<ul>
+  <li>All manifests live in version control (infrastructure/k8s/…)</li>
+  <li>Changes PR’d with reviewers from Platform + Security</li>
+  <li>Rollback steps documented for each change</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/RUNBOOK_runtime-control.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBSERVABILITY ARCHITECTURE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/monitoring/OBSERVABILITY_ARCHITECTURE.md</span>
+</div>
+
+<h1>OBSERVABILITY ARCHITECTURE</h1>
+
+
+<h1 id="-devmentor-observability-architecture">🔍 DevMentor Observability Architecture</h1>
+
+<h2 id="-overview---the-three-pillars-of-observability">📚 Overview - The Three Pillars of Observability</h2>
+
+<p>Observability is built on <strong>three fundamental pillars</strong> that work together to give you complete visibility into your system:</p>
+
+<h3 id="1-metrics--numbers">1. <strong>Metrics</strong> 📈 (Numbers)</h3>
+<ul>
+  <li><strong>What</strong>: Numeric measurements over time (CPU usage, request rates, memory consumption)</li>
+  <li><strong>Tool</strong>: <strong>Prometheus</strong> collects and stores metrics</li>
+  <li><strong>Use Case</strong>: “Is my system healthy? What’s the trend?”</li>
+</ul>
+
+<h3 id="2-logs--events">2. <strong>Logs</strong> 📝 (Events)</h3>
+<ul>
+  <li><strong>What</strong>: Detailed text records of what happened (errors, debug info, user actions)</li>
+  <li><strong>Tool</strong>: <strong>Loki</strong> aggregates and indexes logs</li>
+  <li><strong>Use Case</strong>: “What exactly happened when the error occurred?”</li>
+</ul>
+
+<h3 id="3-traces--journeys">3. <strong>Traces</strong> 🔗 (Journeys)</h3>
+<ul>
+  <li><strong>What</strong>: The path of a request through multiple services</li>
+  <li><strong>Tool</strong>: <strong>Jaeger</strong> tracks distributed traces</li>
+  <li><strong>Use Case</strong>: “Why is this request slow? Where’s the bottleneck?”</li>
+</ul>
+
+<h2 id="️-architecture-components">🏗️ Architecture Components</h2>
+
+<pre><code class="language-mermaid">graph TB
+    subgraph "Your Services"
+        MS[Monitoring Service&lt;br/&gt;:3006]
+        AS[Auth Service]
+        PS[Project Service]
+        UI[Frontend UI]
+    end
+    
+    subgraph "Observability Stack"
+        P[Prometheus&lt;br/&gt;:9090&lt;br/&gt;📈 Metrics]
+        G[Grafana&lt;br/&gt;:3007&lt;br/&gt;📊 Dashboards]
+        L[Loki&lt;br/&gt;:3100&lt;br/&gt;📝 Logs]
+        J[Jaeger&lt;br/&gt;:16686&lt;br/&gt;🔗 Traces]
+        K[Kiali&lt;br/&gt;:20001&lt;br/&gt;🕸️ Service Mesh]
+        AM[AlertManager&lt;br/&gt;:9093&lt;br/&gt;🚨 Alerts]
+    end
+    
+    subgraph "Data Collectors"
+        PT[Promtail&lt;br/&gt;Log Shipper]
+        NE[Node Exporter&lt;br/&gt;System Metrics]
+        CA[cAdvisor&lt;br/&gt;Container Metrics]
+    end
+    
+    MS --&gt; P
+    AS --&gt; J
+    PS --&gt; J
+    UI --&gt; MS
+    
+    PT --&gt; L
+    NE --&gt; P
+    CA --&gt; P
+    
+    P --&gt; G
+    L --&gt; G
+    J --&gt; G
+    P --&gt; K
+    J --&gt; K
+    P --&gt; AM
+    AM --&gt; MS
+    
+    MS -.-&gt;|Unified API| UI
+</code></pre>
+
+<h2 id="-tool-responsibilities">🎯 Tool Responsibilities</h2>
+
+<h3 id="prometheus-port-9090"><strong>Prometheus</strong> (Port 9090)</h3>
+<p><strong>Purpose</strong>: Time-series database for metrics</p>
+<ul>
+  <li>Scrapes metrics from services every 15 seconds</li>
+  <li>Stores data efficiently with compression</li>
+  <li>Provides PromQL query language</li>
+  <li><strong>Learning Tip</strong>: Think of it as your system’s “vital signs monitor”</li>
+</ul>
+
+<h3 id="grafana-port-3007"><strong>Grafana</strong> (Port 3007)</h3>
+<p><strong>Purpose</strong>: Visualization platform</p>
+<ul>
+  <li>Creates beautiful dashboards from multiple data sources</li>
+  <li>Combines metrics (Prometheus), logs (Loki), and traces (Jaeger)</li>
+  <li>Provides alerting and annotations</li>
+  <li><strong>Learning Tip</strong>: Your “single pane of glass” for all observability data</li>
+</ul>
+
+<h3 id="loki-port-3100"><strong>Loki</strong> (Port 3100)</h3>
+<p><strong>Purpose</strong>: Log aggregation system</p>
+<ul>
+  <li>Like Prometheus but for logs</li>
+  <li>Indexes metadata, not full text (efficient!)</li>
+  <li>Integrates seamlessly with Grafana</li>
+  <li><strong>Learning Tip</strong>: “grep on steroids” with time-based indexing</li>
+</ul>
+
+<h3 id="jaeger-port-16686"><strong>Jaeger</strong> (Port 16686)</h3>
+<p><strong>Purpose</strong>: Distributed tracing</p>
+<ul>
+  <li>Tracks requests across microservices</li>
+  <li>Shows latency breakdowns</li>
+  <li>Identifies bottlenecks</li>
+  <li><strong>Learning Tip</strong>: Like a “GPS tracker” for your requests</li>
+</ul>
+
+<h3 id="kiali-port-20001"><strong>Kiali</strong> (Port 20001)</h3>
+<p><strong>Purpose</strong>: Service mesh observability (Istio)</p>
+<ul>
+  <li>Visualizes service communication</li>
+  <li>Shows traffic flow and health</li>
+  <li>Integrates with Istio telemetry</li>
+  <li><strong>Learning Tip</strong>: Your microservices “social network” viewer</li>
+</ul>
+
+<h3 id="alertmanager-port-9093"><strong>AlertManager</strong> (Port 9093)</h3>
+<p><strong>Purpose</strong>: Alert routing and management</p>
+<ul>
+  <li>Receives alerts from Prometheus</li>
+  <li>Groups, deduplicates, and routes alerts</li>
+  <li>Sends notifications (webhook, email, Slack)</li>
+  <li><strong>Learning Tip</strong>: Your system’s “911 dispatcher”</li>
+</ul>
+
+<h2 id="-data-flow">🔄 Data Flow</h2>
+
+<h3 id="metrics-collection-flow">Metrics Collection Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Service → Prometheus Exporter → Prometheus → Grafana Dashboard
+                                     ↓
+                                AlertManager → Monitoring Service
+</code></pre></div></div>
+
+<h3 id="log-collection-flow">Log Collection Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Service → Log File → Promtail → Loki → Grafana Dashboard
+                                   ↓
+                            Monitoring Service API
+</code></pre></div></div>
+
+<h3 id="trace-collection-flow">Trace Collection Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Service → OpenTelemetry/Jaeger Client → Jaeger → Grafana Dashboard
+                                            ↓
+                                    Monitoring Service API
+</code></pre></div></div>
+
+<h2 id="-monitoring-service-integration">📊 Monitoring Service Integration</h2>
+
+<p>Your monitoring service (port 3006) acts as a <strong>unified gateway</strong>:</p>
+
+<h3 id="api-endpoints">API Endpoints</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/api/observability/dashboard</code> - Unified dashboard data</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/observability/prometheus/query</code> - Query Prometheus metrics</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/observability/loki/query</code> - Query Loki logs</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/observability/jaeger/traces</code> - Get Jaeger traces</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/observability/kiali/graph</code> - Get service mesh topology</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/observability/alerts</code> - Get active alerts</li>
+</ul>
+
+<h3 id="real-time-updates">Real-time Updates</h3>
+<ul>
+  <li>WebSocket connection for live updates</li>
+  <li>Alert notifications</li>
+  <li>Metric streaming</li>
+  <li>Incident management</li>
+</ul>
+
+<h2 id="-quick-start-guide">🚀 Quick Start Guide</h2>
+
+<h3 id="1-start-the-observability-stack">1. Start the Observability Stack</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start all observability services</span>
+docker-compose <span class="nt">-f</span> docker-compose.observability.yml up <span class="nt">-d</span>
+
+<span class="c"># Verify services are running</span>
+docker-compose <span class="nt">-f</span> docker-compose.observability.yml ps
+</code></pre></div></div>
+
+<h3 id="2-access-the-uis">2. Access the UIs</h3>
+<ul>
+  <li><strong>Grafana</strong>: http://localhost:3007 (admin/devmentor123)</li>
+  <li><strong>Prometheus</strong>: http://localhost:9090</li>
+  <li><strong>Jaeger</strong>: http://localhost:16686</li>
+  <li><strong>Kiali</strong>: http://localhost:20001</li>
+  <li><strong>AlertManager</strong>: http://localhost:9093</li>
+  <li><strong>Monitoring Service</strong>: http://localhost:3006</li>
+</ul>
+
+<h3 id="3-common-queries">3. Common Queries</h3>
+
+<h4 id="prometheus-promql">Prometheus (PromQL)</h4>
+<pre><code class="language-promql"># CPU usage percentage
+100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+# Memory usage percentage
+(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+
+# HTTP request rate
+rate(http_requests_total[5m])
+
+# Container memory usage
+container_memory_usage_bytes{name="devmentor-monitoring-service-1"}
+</code></pre>
+
+<h4 id="loki-logql">Loki (LogQL)</h4>
+<pre><code class="language-logql"># Get all error logs
+{job="devmentor"} |= "error"
+
+# Get logs from specific service
+{container_name="monitoring-service-1"} 
+
+# Parse JSON and filter
+{job="containerlogs"} | json | level="error"
+</code></pre>
+
+<h2 id="-learning-resources">🎓 Learning Resources</h2>
+
+<h3 id="key-concepts-to-master">Key Concepts to Master</h3>
+
+<ol>
+  <li><strong>Time Series Data</strong>: Data points indexed by time</li>
+  <li><strong>Cardinality</strong>: Number of unique label combinations</li>
+  <li><strong>Service Level Indicators (SLIs)</strong>: Metrics that matter</li>
+  <li><strong>Service Level Objectives (SLOs)</strong>: Targets for SLIs</li>
+  <li><strong>RED Method</strong>: Rate, Errors, Duration</li>
+  <li><strong>USE Method</strong>: Utilization, Saturation, Errors</li>
+  <li><strong>Golden Signals</strong>: Latency, Traffic, Errors, Saturation</li>
+</ol>
+
+<h3 id="best-practices">Best Practices</h3>
+
+<ol>
+  <li><strong>Label Carefully</strong>: High cardinality = high storage costs</li>
+  <li><strong>Alert on Symptoms</strong>: Not causes</li>
+  <li><strong>Use Recording Rules</strong>: Pre-compute expensive queries</li>
+  <li><strong>Implement SLOs</strong>: Define what “good” looks like</li>
+  <li><strong>Correlate Signals</strong>: Use all three pillars together</li>
+</ol>
+
+<h2 id="-troubleshooting-guide">🔧 Troubleshooting Guide</h2>
+
+<h3 id="service-not-appearing-in-prometheus">Service Not Appearing in Prometheus</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if service is exposing metrics</span>
+curl http://localhost:3006/metrics
+
+<span class="c"># Check Prometheus targets</span>
+curl http://localhost:9090/api/v1/targets
+</code></pre></div></div>
+
+<h3 id="logs-not-appearing-in-loki">Logs Not Appearing in Loki</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check Promtail status</span>
+docker logs devmentor-promtail
+
+<span class="c"># Verify log path exists</span>
+docker <span class="nb">exec </span>devmentor-promtail <span class="nb">ls</span> <span class="nt">-la</span> /app/logs
+</code></pre></div></div>
+
+<h3 id="traces-not-appearing-in-jaeger">Traces Not Appearing in Jaeger</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if service is sending traces</span>
+docker logs your-service | <span class="nb">grep </span>jaeger
+
+<span class="c"># Verify Jaeger is receiving data</span>
+curl http://localhost:16686/api/services
+</code></pre></div></div>
+
+<h2 id="-monitoring-dashboard-features">📈 Monitoring Dashboard Features</h2>
+
+<h3 id="metrics-tab-">Metrics Tab 📊</h3>
+<ul>
+  <li><strong>System Metrics</strong>: CPU, Memory, Disk, Network</li>
+  <li><strong>Service Health</strong>: Up/Down status, response times</li>
+  <li><strong>Custom Metrics</strong>: Business KPIs, user activity</li>
+  <li><strong>Tooltips</strong>: Hover for explanations of each metric</li>
+</ul>
+
+<h3 id="logs-tab-">Logs Tab 📝</h3>
+<ul>
+  <li><strong>Live Log Stream</strong>: Real-time log viewing</li>
+  <li><strong>Search &amp; Filter</strong>: Query logs by service, level, content</li>
+  <li><strong>Context View</strong>: See logs before/after an event</li>
+  <li><strong>Tooltips</strong>: Understanding log levels and formats</li>
+</ul>
+
+<h3 id="traces-tab-">Traces Tab 🔗</h3>
+<ul>
+  <li><strong>Service Map</strong>: Visual service dependencies</li>
+  <li><strong>Trace Timeline</strong>: Request flow visualization</li>
+  <li><strong>Latency Analysis</strong>: Identify slow services</li>
+  <li><strong>Tooltips</strong>: Learn about spans, traces, and timing</li>
+</ul>
+
+<h3 id="alerts-tab-">Alerts Tab 🚨</h3>
+<ul>
+  <li><strong>Active Alerts</strong>: Current issues</li>
+  <li><strong>Alert History</strong>: Past incidents</li>
+  <li><strong>Silence Management</strong>: Temporarily disable alerts</li>
+  <li><strong>Tooltips</strong>: Alert severity and response procedures</li>
+</ul>
+
+<h3 id="service-mesh-tab-️">Service Mesh Tab 🕸️</h3>
+<ul>
+  <li><strong>Traffic Flow</strong>: Live request routing</li>
+  <li><strong>Service Health</strong>: Error rates, latencies</li>
+  <li><strong>Configuration</strong>: Istio policies and rules</li>
+  <li><strong>Tooltips</strong>: Service mesh concepts explained</li>
+</ul>
+
+<h2 id="-integration-with-devmentor">🎯 Integration with DevMentor</h2>
+
+<p>The monitoring service provides:</p>
+<ol>
+  <li><strong>Unified API</strong>: Single endpoint for all observability data</li>
+  <li><strong>Authentication</strong>: Secure access to metrics</li>
+  <li><strong>Business Logic</strong>: Smart alerting and predictions</li>
+  <li><strong>WebSocket Updates</strong>: Real-time dashboard updates</li>
+  <li><strong>Incident Management</strong>: Track and resolve issues</li>
+</ol>
+
+<h2 id="-further-reading">📚 Further Reading</h2>
+
+<ul>
+  <li><a href="https://prometheus.io/docs/">Prometheus Documentation</a></li>
+  <li><a href="https://grafana.com/tutorials/">Grafana Tutorials</a></li>
+  <li><a href="https://grafana.com/docs/loki/latest/best-practices/">Loki Best Practices</a></li>
+  <li><a href="https://www.jaegertracing.io/docs/">Jaeger Documentation</a></li>
+  <li><a href="https://kiali.io/documentation/">Kiali Documentation</a></li>
+  <li><a href="https://www.weave.works/blog/the-red-method-key-metrics-for-microservices-architecture/">The RED Method</a></li>
+  <li><a href="https://sre.google/sre-book/table-of-contents/">Google SRE Book</a></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/monitoring/OBSERVABILITY_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

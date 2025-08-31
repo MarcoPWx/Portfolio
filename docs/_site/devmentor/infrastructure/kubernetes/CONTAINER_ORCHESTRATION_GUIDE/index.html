@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONTAINER ORCHESTRATION GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/kubernetes/CONTAINER_ORCHESTRATION_GUIDE.md</span>
+</div>
+
+<h1>CONTAINER ORCHESTRATION GUIDE</h1>
+
+
+<h1 id="-container-orchestration-learning-guide">🚀 Container Orchestration Learning Guide</h1>
+<h2 id="from-docker-basics-to-kubernetes-mastery">From Docker Basics to Kubernetes Mastery</h2>
+
+<hr />
+
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<ol>
+  <li><a href="#understanding-containers">Understanding Containers</a></li>
+  <li><a href="#docker-fundamentals">Docker Fundamentals</a></li>
+  <li><a href="#docker-compose">Docker Compose</a></li>
+  <li><a href="#kubernetes-basics">Kubernetes Basics</a></li>
+  <li><a href="#managing-devmentor-stack">Managing Your DevMentor Stack</a></li>
+  <li><a href="#hands-on-exercises">Hands-On Exercises</a></li>
+  <li><a href="#troubleshooting-guide">Troubleshooting Guide</a></li>
+  <li><a href="#best-practices">Best Practices</a></li>
+</ol>
+
+<hr />
+
+<h2 id="-understanding-containers">🎯 Understanding Containers</h2>
+
+<h3 id="what-are-containers">What Are Containers?</h3>
+<p>Containers are lightweight, portable units that package an application with all its dependencies. Think of them as “shipping containers” for software.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Traditional VM:
+┌─────────────────────────┐
+│      Application        │
+│      Guest OS          │  &lt;- Heavy! Each VM needs full OS
+│      Hypervisor        │
+│      Host OS           │
+│      Hardware          │
+└─────────────────────────┘
+
+Container:
+┌─────────────────────────┐
+│      Application        │  &lt;- Lightweight! Shares host OS
+│      Container Runtime  │
+│      Host OS           │
+│      Hardware          │
+└─────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="key-benefits">Key Benefits:</h3>
+<ul>
+  <li><strong>Portability</strong>: Run anywhere (dev laptop → production server)</li>
+  <li><strong>Consistency</strong>: Same environment everywhere</li>
+  <li><strong>Efficiency</strong>: Share OS kernel, use less resources</li>
+  <li><strong>Isolation</strong>: Apps don’t interfere with each other</li>
+  <li><strong>Scalability</strong>: Easy to scale up/down</li>
+</ul>
+
+<hr />
+
+<h2 id="-docker-fundamentals">🐳 Docker Fundamentals</h2>
+
+<h3 id="core-concepts">Core Concepts</h3>
+
+<h4 id="1-images-vs-containers">1. <strong>Images vs Containers</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Image = Blueprint (like a class)</span>
+<span class="c"># Container = Running instance (like an object)</span>
+
+<span class="c"># Pull an image</span>
+docker pull nginx:latest
+
+<span class="c"># Run a container from image</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> my-nginx <span class="nt">-p</span> 8080:80 nginx:latest
+
+<span class="c"># Image is read-only, container has writable layer</span>
+</code></pre></div></div>
+
+<h4 id="2-dockerfile">2. <strong>Dockerfile</strong></h4>
+<p>A recipe for building images:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Example Dockerfile</span>
+<span class="k">FROM</span><span class="s"> node:18-alpine        # Base image</span>
+<span class="k">WORKDIR</span><span class="s"> /app               # Set working directory</span>
+<span class="k">COPY</span><span class="s"> package*.json ./      # Copy dependency files</span>
+<span class="k">RUN </span>npm ci                 <span class="c"># Install dependencies</span>
+<span class="k">COPY</span><span class="s"> . .                   # Copy application code</span>
+<span class="k">EXPOSE</span><span class="s"> 3000                # Document port</span>
+<span class="k">CMD</span><span class="s"> ["npm", "start"]       # Default command</span>
+</code></pre></div></div>
+
+<h4 id="3-essential-docker-commands">3. <strong>Essential Docker Commands</strong></h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># === IMAGES ===</span>
+docker images                      <span class="c"># List all images</span>
+docker build <span class="nt">-t</span> myapp:v1 <span class="nb">.</span>        <span class="c"># Build image from Dockerfile</span>
+docker tag myapp:v1 myapp:latest  <span class="c"># Tag an image</span>
+docker rmi myapp:v1                <span class="c"># Remove image</span>
+docker image prune                 <span class="c"># Remove unused images</span>
+
+<span class="c"># === CONTAINERS ===</span>
+docker ps                          <span class="c"># List running containers</span>
+docker ps <span class="nt">-a</span>                       <span class="c"># List all containers</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> app image    <span class="c"># Run container in background</span>
+docker start/stop/restart app     <span class="c"># Container lifecycle</span>
+docker <span class="nb">rm </span>app                      <span class="c"># Remove container</span>
+docker logs app                    <span class="c"># View container logs</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> app bash          <span class="c"># Enter container shell</span>
+
+<span class="c"># === INSPECTION ===</span>
+docker inspect container_name      <span class="c"># Detailed container info</span>
+docker stats                       <span class="c"># Real-time resource usage</span>
+docker top container_name          <span class="c"># Running processes</span>
+
+<span class="c"># === CLEANUP ===</span>
+docker system prune <span class="nt">-a</span>             <span class="c"># Remove all unused resources</span>
+docker container prune             <span class="c"># Remove stopped containers</span>
+docker volume prune                <span class="c"># Remove unused volumes</span>
+</code></pre></div></div>
+
+<h3 id="understanding-port-mapping">Understanding Port Mapping</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -p HOST_PORT:CONTAINER_PORT</span>
+docker run <span class="nt">-p</span> 3000:80 nginx
+
+<span class="c"># This means:</span>
+<span class="c"># - Container listens on port 80 internally</span>
+<span class="c"># - Accessible on host at port 3000</span>
+<span class="c"># - Access: http://localhost:3000</span>
+</code></pre></div></div>
+
+<h3 id="volume-mounting">Volume Mounting</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Bind mount (dev environment)</span>
+docker run <span class="nt">-v</span> /host/path:/container/path myapp
+
+<span class="c"># Named volume (production)</span>
+docker run <span class="nt">-v</span> mydata:/data myapp
+
+<span class="c"># Read-only mount</span>
+docker run <span class="nt">-v</span> /host/config:/config:ro myapp
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-docker-compose">🎼 Docker Compose</h2>
+
+<h3 id="what-is-docker-compose">What is Docker Compose?</h3>
+<p>Orchestration tool for multi-container applications. Define everything in YAML.</p>
+
+<h3 id="basic-structure">Basic Structure</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">frontend</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./frontend</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">API_URL=http://backend:4000</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">backend</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">myapp-network</span>
+
+  <span class="na">backend</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">node:18</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">npm start</span>
+    <span class="na">working_dir</span><span class="pi">:</span> <span class="s">/app</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./backend:/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">DB_HOST=database</span>
+      <span class="pi">-</span> <span class="s">DB_PORT=5432</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">database</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">myapp-network</span>
+
+  <span class="na">database</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres:15</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_PASSWORD=secret</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">db-data:/var/lib/postgresql/data</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">myapp-network</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">db-data</span><span class="pi">:</span>
+
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">myapp-network</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
+</code></pre></div></div>
+
+<h3 id="docker-compose-commands">Docker Compose Commands</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start services</span>
+docker-compose up <span class="nt">-d</span>
+
+<span class="c"># Stop services</span>
+docker-compose down
+
+<span class="c"># View logs</span>
+docker-compose logs <span class="nt">-f</span> service_name
+
+<span class="c"># Scale service</span>
+docker-compose up <span class="nt">-d</span> <span class="nt">--scale</span> <span class="nv">worker</span><span class="o">=</span>3
+
+<span class="c"># Rebuild and restart</span>
+docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+
+<span class="c"># Use specific file</span>
+docker-compose <span class="nt">-f</span> docker-compose.prod.yml up
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️-kubernetes-basics">☸️ Kubernetes Basics</h2>
+
+<h3 id="core-concepts-1">Core Concepts</h3>
+
+<h4 id="1-architecture">1. <strong>Architecture</strong></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│            Control Plane                 │
+│  ┌──────────┐ ┌──────────┐ ┌─────────┐ │
+│  │ API      │ │Scheduler │ │  etcd   │ │
+│  │ Server   │ │          │ │(storage)│ │
+│  └──────────┘ └──────────┘ └─────────┘ │
+└─────────────────────────────────────────┘
+                    │
+    ┌───────────────┼───────────────┐
+    │               │               │
+┌─────────┐   ┌─────────┐    ┌─────────┐
+│  Node 1 │   │  Node 2 │    │  Node 3 │
+│ ┌─────┐ │   │ ┌─────┐ │    │ ┌─────┐ │
+│ │ Pod │ │   │ │ Pod │ │    │ │ Pod │ │
+│ └─────┘ │   │ └─────┘ │    │ └─────┘ │
+└─────────┘   └─────────┘    └─────────┘
+</code></pre></div></div>
+
+<h4 id="2-key-resources">2. <strong>Key Resources</strong></h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Purpose</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Pod</strong></td>
+      <td>Smallest deployable unit</td>
+      <td>Single container or group</td>
+    </tr>
+    <tr>
+      <td><strong>Deployment</strong></td>
+      <td>Manages replica sets</td>
+      <td>Ensures N pods running</td>
+    </tr>
+    <tr>
+      <td><strong>Service</strong></td>
+      <td>Network endpoint</td>
+      <td>Load balancer for pods</td>
+    </tr>
+    <tr>
+      <td><strong>ConfigMap</strong></td>
+      <td>Configuration data</td>
+      <td>Environment variables</td>
+    </tr>
+    <tr>
+      <td><strong>Secret</strong></td>
+      <td>Sensitive data</td>
+      <td>Passwords, API keys</td>
+    </tr>
+    <tr>
+      <td><strong>Ingress</strong></td>
+      <td>HTTP/S routing</td>
+      <td>External access to services</td>
+    </tr>
+    <tr>
+      <td><strong>Namespace</strong></td>
+      <td>Resource isolation</td>
+      <td>dev, staging, production</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="3-essential-kubectl-commands">3. <strong>Essential kubectl Commands</strong></h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># === CLUSTER INFO ===</span>
+kubectl cluster-info
+kubectl get nodes
+kubectl top nodes                  <span class="c"># Resource usage</span>
+
+<span class="c"># === NAMESPACES ===</span>
+kubectl get namespaces
+kubectl create namespace dev
+kubectl config set-context <span class="nt">--current</span> <span class="nt">--namespace</span><span class="o">=</span>dev
+
+<span class="c"># === PODS ===</span>
+kubectl get pods
+kubectl get pods <span class="nt">-A</span>                <span class="c"># All namespaces</span>
+kubectl describe pod pod-name
+kubectl logs pod-name
+kubectl logs <span class="nt">-f</span> pod-name           <span class="c"># Follow logs</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> pod-name <span class="nt">--</span> bash  <span class="c"># Enter pod</span>
+
+<span class="c"># === DEPLOYMENTS ===</span>
+kubectl get deployments
+kubectl create deployment app <span class="nt">--image</span><span class="o">=</span>nginx
+kubectl scale deployment app <span class="nt">--replicas</span><span class="o">=</span>3
+kubectl rollout status deployment app
+kubectl rollout <span class="nb">history </span>deployment app
+kubectl rollout undo deployment app
+
+<span class="c"># === SERVICES ===</span>
+kubectl get services
+kubectl expose deployment app <span class="nt">--port</span><span class="o">=</span>80 <span class="nt">--type</span><span class="o">=</span>LoadBalancer
+kubectl port-forward svc/app 8080:80
+
+<span class="c"># === CONFIG &amp; SECRETS ===</span>
+kubectl get configmaps
+kubectl get secrets
+kubectl create secret generic mysecret <span class="nt">--from-literal</span><span class="o">=</span><span class="nv">password</span><span class="o">=</span>123
+
+<span class="c"># === DEBUGGING ===</span>
+kubectl describe pod pod-name      <span class="c"># Detailed info</span>
+kubectl get events                 <span class="c"># Cluster events</span>
+kubectl get pod pod-name <span class="nt">-o</span> yaml   <span class="c"># Full YAML output</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-managing-your-devmentor-stack">🔧 Managing Your DevMentor Stack</h2>
+
+<h3 id="current-architecture">Current Architecture</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Setup:
+├── Docker Standalone
+│   ├── monitoring-service (port 3006)
+│   ├── loki (port 3100)
+│   ├── promtail
+│   └── node-exporter (port 9100)
+│
+└── Kubernetes (Kind)
+    ├── devmentor namespace
+    │   ├── ai-gateway
+    │   ├── auth-service (needs fixing)
+    │   └── ollama
+    ├── devmentor-data namespace
+    │   ├── postgresql
+    │   ├── redis
+    │   └── qdrant
+    ├── istio-system namespace
+    │   ├── grafana
+    │   ├── prometheus
+    │   ├── jaeger
+    │   └── kiali
+    └── keycloak namespace
+        └── keycloak
+</code></pre></div></div>
+
+<h3 id="practical-management-tasks">Practical Management Tasks</h3>
+
+<h4 id="1-check-whats-running">1. <strong>Check What’s Running</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Docker containers</span>
+docker ps <span class="nt">--format</span> <span class="s2">"table {{.Names}}</span><span class="se">\t</span><span class="s2">{{.Status}}</span><span class="se">\t</span><span class="s2">{{.Ports}}"</span>
+
+<span class="c"># Kubernetes pods</span>
+kubectl get pods <span class="nt">-A</span> <span class="nt">--field-selector</span><span class="o">=</span>status.phase<span class="o">=</span>Running
+
+<span class="c"># Problem pods</span>
+kubectl get pods <span class="nt">-A</span> <span class="nt">--field-selector</span><span class="o">=</span>status.phase!<span class="o">=</span>Running
+</code></pre></div></div>
+
+<h4 id="2-clean-up-duplicates">2. <strong>Clean Up Duplicates</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Find duplicate services</span>
+<span class="nb">echo</span> <span class="s2">"=== Checking for duplicates ==="</span>
+<span class="k">for </span>service <span class="k">in </span>prometheus grafana redis postgres<span class="p">;</span> <span class="k">do
+  </span><span class="nb">echo</span> <span class="s2">"</span><span class="se">\n</span><span class="nv">$service</span><span class="s2">:"</span>
+  docker ps | <span class="nb">grep</span> <span class="nv">$service</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  Not in Docker ✓"</span>
+  kubectl get pods <span class="nt">-A</span> | <span class="nb">grep</span> <span class="nv">$service</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"  Not in K8s"</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h4 id="3-access-services">3. <strong>Access Services</strong></h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Kubernetes services via port-forward</span>
+kubectl port-forward <span class="nt">-n</span> istio-system svc/grafana 3000:3000
+kubectl port-forward <span class="nt">-n</span> istio-system svc/kiali 20001:20001
+kubectl port-forward <span class="nt">-n</span> devmentor-data svc/postgresql 5432:5432
+
+<span class="c"># Docker services are already exposed on host ports</span>
+<span class="c"># Check docker ps for port mappings</span>
+</code></pre></div></div>
+
+<h4 id="4-update-configurations">4. <strong>Update Configurations</strong></h4>
+
+<p><strong>For Docker Compose:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Edit docker-compose.yml</span>
+vim docker-compose.yml
+
+<span class="c"># Apply changes</span>
+docker-compose down
+docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p><strong>For Kubernetes:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Edit deployment</span>
+kubectl edit deployment <span class="nt">-n</span> devmentor auth-service
+
+<span class="c"># Or apply from file</span>
+kubectl apply <span class="nt">-f</span> k8s/auth-service.yaml
+
+<span class="c"># Force restart</span>
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor auth-service
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-hands-on-exercises">🎮 Hands-On Exercises</h2>
+
+<h3 id="exercise-1-container-lifecycle">Exercise 1: Container Lifecycle</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Run a simple web server</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> myweb <span class="nt">-p</span> 8080:80 nginx
+
+<span class="c"># 2. Check it's running</span>
+curl http://localhost:8080
+
+<span class="c"># 3. View logs</span>
+docker logs myweb
+
+<span class="c"># 4. Enter the container</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> myweb bash
+<span class="c"># Inside: echo "Hello from container" &gt; /usr/share/nginx/html/index.html</span>
+<span class="c"># Exit: exit</span>
+
+<span class="c"># 5. Refresh browser - see your change</span>
+
+<span class="c"># 6. Stop and remove</span>
+docker stop myweb
+docker <span class="nb">rm </span>myweb
+</code></pre></div></div>
+
+<h3 id="exercise-2-build-custom-image">Exercise 2: Build Custom Image</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Create a simple Node.js app</span>
+<span class="nb">mkdir </span>myapp <span class="o">&amp;&amp;</span> <span class="nb">cd </span>myapp
+
+<span class="nb">cat</span> <span class="o">&gt;</span> app.js <span class="o">&lt;&lt;</span> <span class="sh">'</span><span class="no">EOF</span><span class="sh">'
+const express = require('express');
+const app = express();
+app.get('/', (req, res) =&gt; res.send('Hello from Docker!'));
+app.listen(3000, () =&gt; console.log('Server running on port 3000'));
+</span><span class="no">EOF
+
+</span><span class="nb">cat</span> <span class="o">&gt;</span> package.json <span class="o">&lt;&lt;</span> <span class="sh">'</span><span class="no">EOF</span><span class="sh">'
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": { "start": "node app.js" },
+  "dependencies": { "express": "^4.18.0" }
+}
+</span><span class="no">EOF
+
+</span><span class="c"># 2. Create Dockerfile</span>
+<span class="nb">cat</span> <span class="o">&gt;</span> Dockerfile <span class="o">&lt;&lt;</span> <span class="sh">'</span><span class="no">EOF</span><span class="sh">'
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+</span><span class="no">EOF
+
+</span><span class="c"># 3. Build and run</span>
+docker build <span class="nt">-t</span> myapp:v1 <span class="nb">.</span>
+docker run <span class="nt">-d</span> <span class="nt">--name</span> myapp <span class="nt">-p</span> 3000:3000 myapp:v1
+
+<span class="c"># 4. Test</span>
+curl http://localhost:3000
+</code></pre></div></div>
+
+<h3 id="exercise-3-kubernetes-deployment">Exercise 3: Kubernetes Deployment</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Create a deployment</span>
+kubectl create deployment hello <span class="nt">--image</span><span class="o">=</span>nginx <span class="nt">--replicas</span><span class="o">=</span>3
+
+<span class="c"># 2. Expose it</span>
+kubectl expose deployment hello <span class="nt">--port</span><span class="o">=</span>80 <span class="nt">--type</span><span class="o">=</span>NodePort
+
+<span class="c"># 3. Check pods</span>
+kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>hello
+
+<span class="c"># 4. Scale up</span>
+kubectl scale deployment hello <span class="nt">--replicas</span><span class="o">=</span>5
+
+<span class="c"># 5. Watch scaling</span>
+kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>hello <span class="nt">-w</span>
+
+<span class="c"># 6. Clean up</span>
+kubectl delete deployment hello
+kubectl delete service hello
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-troubleshooting-guide">🔍 Troubleshooting Guide</h2>
+
+<h3 id="common-docker-issues">Common Docker Issues</h3>
+
+<h4 id="container-wont-start">Container Won’t Start</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+docker logs container_name
+
+<span class="c"># Check last 50 lines</span>
+docker logs <span class="nt">--tail</span> 50 container_name
+
+<span class="c"># Common fixes:</span>
+<span class="c"># - Port already in use: change host port</span>
+<span class="c"># - Missing environment variable: add to docker-compose</span>
+<span class="c"># - Volume permission: check file ownership</span>
+</code></pre></div></div>
+
+<h4 id="out-of-space">Out of Space</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check disk usage</span>
+docker system <span class="nb">df</span>
+
+<span class="c"># Clean up</span>
+docker system prune <span class="nt">-a</span> <span class="nt">--volumes</span>
+</code></pre></div></div>
+
+<h3 id="common-kubernetes-issues">Common Kubernetes Issues</h3>
+
+<h4 id="pod-stuck-in-pending">Pod Stuck in Pending</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check events</span>
+kubectl describe pod pod-name
+
+<span class="c"># Common causes:</span>
+<span class="c"># - No nodes available</span>
+<span class="c"># - Resource limits too high</span>
+<span class="c"># - PVC not bound</span>
+</code></pre></div></div>
+
+<h4 id="pod-crashloopbackoff">Pod CrashLoopBackOff</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+kubectl logs pod-name
+kubectl logs pod-name <span class="nt">--previous</span>  <span class="c"># Previous crash</span>
+
+<span class="c"># Common fixes:</span>
+<span class="c"># - Fix application error</span>
+<span class="c"># - Add health checks</span>
+<span class="c"># - Increase memory/CPU limits</span>
+</code></pre></div></div>
+
+<h4 id="cant-access-service">Can’t Access Service</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check service endpoints</span>
+kubectl get endpoints service-name
+
+<span class="c"># Check pod labels match service selector</span>
+kubectl get pods <span class="nt">--show-labels</span>
+kubectl get service service-name <span class="nt">-o</span> yaml
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-best-practices">📋 Best Practices</h2>
+
+<h3 id="docker-best-practices">Docker Best Practices</h3>
+
+<ol>
+  <li><strong>Use Specific Tags</strong>
+    <div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Bad</span>
+<span class="k">FROM</span><span class="s"> node:latest</span>
+   
+<span class="c"># Good</span>
+<span class="k">FROM</span><span class="s"> node:18.17.1-alpine</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Multi-stage Builds</strong>
+    <div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build stage</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm run build
+   
+<span class="c"># Runtime stage</span>
+<span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> --from=builder /app/dist ./dist</span>
+<span class="k">COPY</span><span class="s"> --from=builder /app/node_modules ./node_modules</span>
+<span class="k">CMD</span><span class="s"> ["node", "dist/index.js"]</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Layer Caching</strong>
+    <div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Copy dependency files first (changes less often)</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci
+   
+<span class="c"># Then copy source code (changes frequently)</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="kubernetes-best-practices">Kubernetes Best Practices</h3>
+
+<ol>
+  <li><strong>Resource Limits</strong>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+  <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">128Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100m"</span>
+  <span class="na">limits</span><span class="pi">:</span>
+    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">200m"</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Health Checks</strong>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">livenessProbe</span><span class="pi">:</span>
+  <span class="na">httpGet</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">/health</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="m">3000</span>
+  <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">30</span>
+  <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">10</span>
+   
+<span class="na">readinessProbe</span><span class="pi">:</span>
+  <span class="na">httpGet</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">/ready</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="m">3000</span>
+  <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">5</span>
+  <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">5</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Use Namespaces</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Organize by environment</span>
+kubectl create namespace dev
+kubectl create namespace staging
+kubectl create namespace production
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-quick-reference-card">🎯 Quick Reference Card</h2>
+
+<h3 id="docker-compose-to-kubernetes-mapping">Docker Compose to Kubernetes Mapping</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Docker Compose</th>
+      <th>Kubernetes</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">service</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Deployment</code> + <code class="language-plaintext highlighter-rouge">Service</code></td>
+      <td>Application definition</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ports</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Service</code> type LoadBalancer/NodePort</td>
+      <td>Expose to outside</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">environment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ConfigMap</code> or <code class="language-plaintext highlighter-rouge">Secret</code></td>
+      <td>Configuration</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">volumes</code></td>
+      <td><code class="language-plaintext highlighter-rouge">PersistentVolumeClaim</code></td>
+      <td>Storage</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">depends_on</code></td>
+      <td><code class="language-plaintext highlighter-rouge">initContainers</code></td>
+      <td>Startup order</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">replicas</code> (scale)</td>
+      <td><code class="language-plaintext highlighter-rouge">replicas</code> in Deployment</td>
+      <td>Multiple instances</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">networks</code></td>
+      <td><code class="language-plaintext highlighter-rouge">NetworkPolicy</code></td>
+      <td>Network isolation</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="port-management-in-your-stack">Port Management in Your Stack</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Docker Port</th>
+      <th>K8s Access</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Monitoring</td>
+      <td>3006</td>
+      <td>-</td>
+      <td>Monitoring dashboard</td>
+    </tr>
+    <tr>
+      <td>Grafana</td>
+      <td>-</td>
+      <td>port-forward 3000</td>
+      <td>Metrics visualization</td>
+    </tr>
+    <tr>
+      <td>Prometheus</td>
+      <td>-</td>
+      <td>port-forward 9090</td>
+      <td>Metrics storage</td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td>-</td>
+      <td>port-forward 5432</td>
+      <td>Database</td>
+    </tr>
+    <tr>
+      <td>Redis</td>
+      <td>-</td>
+      <td>port-forward 6379</td>
+      <td>Cache</td>
+    </tr>
+    <tr>
+      <td>Loki</td>
+      <td>3100</td>
+      <td>-</td>
+      <td>Log aggregation</td>
+    </tr>
+    <tr>
+      <td>Kiali</td>
+      <td>-</td>
+      <td>port-forward 20001</td>
+      <td>Service mesh viz</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-learning-path">📚 Learning Path</h2>
+
+<h3 id="week-1-docker-fundamentals">Week 1: Docker Fundamentals</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run your first container</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Build custom images</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Understand volumes and networking</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write docker-compose files</li>
+</ul>
+
+<h3 id="week-2-kubernetes-basics">Week 2: Kubernetes Basics</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Understand pods, deployments, services</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy simple applications</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Use kubectl effectively</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Understand namespaces</li>
+</ul>
+
+<h3 id="week-3-advanced-topics">Week 3: Advanced Topics</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />ConfigMaps and Secrets</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Persistent storage</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ingress controllers</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Service mesh (Istio)</li>
+</ul>
+
+<h3 id="week-4-production-skills">Week 4: Production Skills</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitoring and logging</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security best practices</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CI/CD integration</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Troubleshooting skills</li>
+</ul>
+
+<hr />
+
+<h2 id="-useful-resources">🔗 Useful Resources</h2>
+
+<h3 id="documentation">Documentation</h3>
+<ul>
+  <li><a href="https://docs.docker.com/">Docker Official Docs</a></li>
+  <li><a href="https://kubernetes.io/docs/">Kubernetes Official Docs</a></li>
+  <li><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">kubectl Cheat Sheet</a></li>
+</ul>
+
+<h3 id="interactive-learning">Interactive Learning</h3>
+<ul>
+  <li><a href="https://labs.play-with-docker.com/">Play with Docker</a></li>
+  <li><a href="https://labs.play-with-k8s.com/">Play with Kubernetes</a></li>
+  <li><a href="https://www.katacoda.com/">Katacoda Scenarios</a></li>
+</ul>
+
+<h3 id="tools">Tools</h3>
+<ul>
+  <li><a href="https://k9scli.io/">k9s</a> - Terminal UI for Kubernetes</li>
+  <li><a href="https://k8slens.dev/">Lens</a> - Kubernetes IDE</li>
+  <li><a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a></li>
+  <li><a href="https://kind.sigs.k8s.io/">Kind</a> - Kubernetes in Docker</li>
+</ul>
+
+<hr />
+
+<h2 id="-pro-tips">💡 Pro Tips</h2>
+
+<ol>
+  <li><strong>Always use version control for configs</strong> - Track changes in Git</li>
+  <li><strong>Start small</strong> - Don’t try to containerize everything at once</li>
+  <li><strong>Monitor from day one</strong> - Set up logging and metrics early</li>
+  <li><strong>Automate repetitive tasks</strong> - Create scripts for common operations</li>
+  <li><strong>Learn by breaking things</strong> - Use a dev environment to experiment</li>
+  <li><strong>Read error messages carefully</strong> - They usually tell you exactly what’s wrong</li>
+  <li><strong>Use aliases</strong> - <code class="language-plaintext highlighter-rouge">alias k=kubectl</code> saves lots of typing</li>
+</ol>
+
+<hr />
+
+<h2 id="-congratulations">🎉 Congratulations!</h2>
+
+<p>You now have a solid foundation in container orchestration. Remember:</p>
+<ul>
+  <li><strong>Practice regularly</strong> - Hands-on experience is key</li>
+  <li><strong>Build projects</strong> - Apply what you learn</li>
+  <li><strong>Join communities</strong> - Learn from others</li>
+  <li><strong>Stay updated</strong> - Technology evolves quickly</li>
+</ul>
+
+<p>Happy containerizing! 🚀</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/kubernetes/CONTAINER_ORCHESTRATION_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

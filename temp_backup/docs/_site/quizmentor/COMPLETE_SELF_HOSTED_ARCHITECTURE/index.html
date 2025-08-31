@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COMPLETE SELF HOSTED ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">COMPLETE_SELF_HOSTED_ARCHITECTURE.md</span>
+</div>
+
+<h1>COMPLETE SELF HOSTED ARCHITECTURE</h1>
+
+
+<h1 id="quizmentor-complete-self-hosted-architecture">QuizMentor Complete Self-Hosted Architecture</h1>
+
+<h2 id="-why-self-host-everything">🎯 Why Self-Host Everything?</h2>
+
+<p>If we’re using Kubernetes, let’s maximize value:</p>
+<ul>
+  <li><strong>PostgreSQL</strong>: Save $25/month from Supabase</li>
+  <li><strong>Auth (Keycloak/Ory)</strong>: Full control, SSO, enterprise features</li>
+  <li><strong>Notifications</strong>: Push, SMS, Email all integrated</li>
+  <li><strong>Offline</strong>: Local-first with sync</li>
+  <li><strong>Analytics</strong>: Own your data with PostHog/Plausible</li>
+  <li><strong>Mobile</strong>: React Native + Push notifications</li>
+</ul>
+
+<hr />
+
+<h2 id="️-complete-architecture">🏗️ Complete Architecture</h2>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">┌──────────────────────────────────────────────────────────┐</span>
+<span class="s">│                    CloudFlare (CDN + DDoS)                │</span>
+<span class="s">└──────────────────────────────────────────────────────────┘</span>
+                              <span class="s">│</span>
+<span class="s">┌──────────────────────────────────────────────────────────┐</span>
+<span class="s">│                 Kubernetes Cluster (3-5 nodes)            │</span>
+<span class="s">│                                                           │</span>
+<span class="s">│  ┌─────────────────────────────────────────────────────┐ │</span>
+<span class="s">│  │                  Ingress Layer                       │ │</span>
+<span class="s">│  │  - Traefik/NGINX (Load balancing, SSL)             │ │</span>
+<span class="s">│  │  - Rate limiting, WAF                              │ │</span>
+<span class="s">│  └─────────────────────────────────────────────────────┘ │</span>
+<span class="s">│                                                           │</span>
+<span class="s">│  ┌─────────────────────────────────────────────────────┐ │</span>
+<span class="s">│  │                Frontend Services                     │ │</span>
+<span class="s">│  │  - Next.js Web App (SSR + PWA)                     │ │</span>
+<span class="s">│  │  - React Native API (Mobile backend)                │ │</span>
+<span class="s">│  │  - Admin Dashboard                                  │ │</span>
+<span class="s">│  └─────────────────────────────────────────────────────┘ │</span>
+<span class="s">│                                                           │</span>
+<span class="s">│  ┌─────────────────────────────────────────────────────┐ │</span>
+<span class="s">│  │              Core Services (Your Engines)            │ │</span>
+<span class="s">│  │  - API Gateway (Kong/Tyk)                          │ │</span>
+<span class="s">│  │  - Bloom Validator (NLP models in memory)          │ │</span>
+<span class="s">│  │  - Adaptive Engine (ML algorithms)                 │ │</span>
+<span class="s">│  │  - Learning Orchestrator                           │ │</span>
+<span class="s">│  └─────────────────────────────────────────────────────┘ │</span>
+<span class="s">│                                                           │</span>
+<span class="s">│  ┌─────────────────────────────────────────────────────┐ │</span>
+<span class="s">│  │                 Platform Services                    │ │</span>
+<span class="s">│  │  - Keycloak (Auth, SSO, OAuth, 2FA)               │ │</span>
+<span class="s">│  │  - Novu/Knock (Notifications orchestrator)         │ │</span>
+<span class="s">│  │  - PostHog (Analytics + Feature flags)             │ │</span>
+<span class="s">│  │  - Temporal (Workflow orchestration)               │ │</span>
+<span class="s">│  └─────────────────────────────────────────────────────┘ │</span>
+<span class="s">│                                                           │</span>
+<span class="s">│  ┌─────────────────────────────────────────────────────┐ │</span>
+<span class="s">│  │                   Data Layer                         │ │</span>
+<span class="s">│  │  - PostgreSQL (Primary DB + TimescaleDB)           │ │</span>
+<span class="s">│  │  - Redis (Cache + Pub/Sub + Queues)               │ │</span>
+<span class="s">│  │  - Qdrant (Vector search)                          │ │</span>
+<span class="s">│  │  - MinIO (S3-compatible object storage)            │ │</span>
+<span class="s">│  │  - ClickHouse (Analytics DB)                       │ │</span>
+<span class="s">│  └─────────────────────────────────────────────────────┘ │</span>
+<span class="s">│                                                           │</span>
+<span class="s">│  ┌─────────────────────────────────────────────────────┐ │</span>
+<span class="s">│  │              Background Services                     │ │</span>
+<span class="s">│  │  - Scrapers (CronJobs)                             │ │</span>
+<span class="s">│  │  - Email workers (SMTP)                            │ │</span>
+<span class="s">│  │  - Push notification service                       │ │</span>
+<span class="s">│  │  - Sync service (Offline support)                  │ │</span>
+<span class="s">│  └─────────────────────────────────────────────────────┘ │</span>
+<span class="s">└──────────────────────────────────────────────────────────┘</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="1️⃣-self-hosted-auth-keycloak-vs-ory-vs-zitadel">1️⃣ Self-Hosted Auth (Keycloak vs Ory vs Zitadel)</h2>
+
+<h3 id="keycloak-enterprise-grade-feature-rich">Keycloak (Enterprise-grade, Feature-rich)</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># keycloak-deployment.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">quay.io/keycloak/keycloak:22.0</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgres</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB_URL_HOST</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgresql</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB_URL_DATABASE</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">keycloak</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB_USERNAME</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">keycloak</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_HOSTNAME</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">auth.quizmentor.app</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_PROXY</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">edge</span>
+        <span class="na">command</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">/opt/keycloak/bin/kc.sh</span>
+        <span class="pi">-</span> <span class="s">start</span>
+        <span class="pi">-</span> <span class="s">--optimized</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">resources</span><span class="pi">:</span>
+          <span class="na">requests</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+          <span class="na">limits</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+</code></pre></div></div>
+
+<h3 id="features-you-get">Features You Get:</h3>
+<ul>
+  <li>GitHub/Google/Social OAuth</li>
+  <li>SAML, LDAP (enterprise)</li>
+  <li>2FA/MFA with TOTP</li>
+  <li>User federation</li>
+  <li>Fine-grained permissions</li>
+  <li>Password policies</li>
+  <li>Session management</li>
+  <li>Admin UI included</li>
+</ul>
+
+<hr />
+
+<h2 id="2️⃣-self-hosted-postgresql-with-ha">2️⃣ Self-Hosted PostgreSQL with HA</h2>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># postgres-ha.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">postgresql.cnpg.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Cluster</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">postgres-cluster</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">instances</span><span class="pi">:</span> <span class="m">3</span>  <span class="c1"># 1 primary, 2 replicas</span>
+  
+  <span class="na">postgresql</span><span class="pi">:</span>
+    <span class="na">parameters</span><span class="pi">:</span>
+      <span class="na">max_connections</span><span class="pi">:</span> <span class="s2">"</span><span class="s">200"</span>
+      <span class="na">shared_buffers</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256MB"</span>
+      <span class="na">effective_cache_size</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1GB"</span>
+      <span class="c1"># Performance tuning</span>
+      <span class="na">random_page_cost</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1.1"</span>
+      <span class="na">effective_io_concurrency</span><span class="pi">:</span> <span class="s2">"</span><span class="s">200"</span>
+      
+  <span class="na">bootstrap</span><span class="pi">:</span>
+    <span class="na">initdb</span><span class="pi">:</span>
+      <span class="na">database</span><span class="pi">:</span> <span class="s">quizmentor</span>
+      <span class="na">owner</span><span class="pi">:</span> <span class="s">quizmentor</span>
+      
+  <span class="na">storage</span><span class="pi">:</span>
+    <span class="na">size</span><span class="pi">:</span> <span class="s">10Gi</span>
+    <span class="na">storageClass</span><span class="pi">:</span> <span class="s">fast-ssd</span>
+    
+  <span class="na">monitoring</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    
+  <span class="na">backup</span><span class="pi">:</span>
+    <span class="na">retentionPolicy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">30d"</span>
+    <span class="na">target</span><span class="pi">:</span> <span class="s2">"</span><span class="s">s3://backups/postgres"</span>
+    
+<span class="nn">---</span>
+<span class="c1"># TimescaleDB for time-series data (events, analytics)</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">timescale-init</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">init.sql</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">CREATE EXTENSION IF NOT EXISTS timescaledb;</span>
+    
+    <span class="s">-- Events table for analytics</span>
+    <span class="s">CREATE TABLE events (</span>
+      <span class="s">id BIGSERIAL,</span>
+      <span class="s">user_id UUID,</span>
+      <span class="s">event_type TEXT,</span>
+      <span class="s">properties JSONB,</span>
+      <span class="s">timestamp TIMESTAMPTZ NOT NULL</span>
+    <span class="s">);</span>
+    
+    <span class="s">-- Convert to hypertable</span>
+    <span class="s">SELECT create_hypertable('events', 'timestamp');</span>
+    
+    <span class="s">-- Compression policy (compress data older than 7 days)</span>
+    <span class="s">ALTER TABLE events SET (</span>
+      <span class="s">timescaledb.compress,</span>
+      <span class="s">timescaledb.compress_segmentby = 'user_id'</span>
+    <span class="s">);</span>
+    
+    <span class="s">SELECT add_compression_policy('events', INTERVAL '7 days');</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3️⃣-notification-system-multi-channel">3️⃣ Notification System (Multi-channel)</h2>
+
+<h3 id="novu---open-source-notification-infrastructure">Novu - Open Source Notification Infrastructure</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># novu-deployment.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">novu</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">novu-api</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/novuhq/novu/api:latest</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">NODE_ENV</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">production</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">DATABASE_URL</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgresql://novu:pass@postgresql/novu</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">REDIS_URL</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">redis://redis:6379</span>
+        
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">novu-worker</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/novuhq/novu/worker:latest</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="c1"># Email providers</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">SENDGRID_API_KEY</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">novu-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">sendgrid-key</span>
+        <span class="c1"># SMS providers  </span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">TWILIO_ACCOUNT_SID</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">novu-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">twilio-sid</span>
+        <span class="c1"># Push notifications</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">FCM_KEY</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">novu-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">fcm-key</span>
+</code></pre></div></div>
+
+<h3 id="notification-workflows">Notification Workflows</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/notifications/workflows.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Novu</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@novu/node</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">novu</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Novu</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NOVU_API_KEY</span><span class="p">);</span>
+
+<span class="c1">// Multi-channel notification workflow</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">notifyLearningMilestone</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">milestone</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">novu</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="dl">'</span><span class="s1">learning-milestone</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">to</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">subscriberId</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span>
+      <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+      <span class="na">phone</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">phone</span>
+    <span class="p">},</span>
+    <span class="na">payload</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">milestone</span><span class="p">:</span> <span class="nx">milestone</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      <span class="na">points</span><span class="p">:</span> <span class="nx">milestone</span><span class="p">.</span><span class="nx">points</span><span class="p">,</span>
+      <span class="na">nextGoal</span><span class="p">:</span> <span class="nx">milestone</span><span class="p">.</span><span class="nx">next</span>
+    <span class="p">},</span>
+    <span class="c1">// Channel fallback strategy</span>
+    <span class="na">overrides</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">email</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">from</span><span class="p">:</span> <span class="dl">'</span><span class="s1">QuizMentor &lt;achievements@quizmentor.app&gt;</span><span class="dl">'</span>
+      <span class="p">},</span>
+      <span class="na">sms</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// Only send SMS for important milestones</span>
+        <span class="na">condition</span><span class="p">:</span> <span class="nx">milestone</span><span class="p">.</span><span class="nx">points</span> <span class="o">&gt;</span> <span class="mi">100</span>
+      <span class="p">},</span>
+      <span class="na">push</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// Always send push if app installed</span>
+        <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">🎉 Achievement Unlocked!</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">body</span><span class="p">:</span> <span class="s2">`You've earned </span><span class="p">${</span><span class="nx">milestone</span><span class="p">.</span><span class="nx">points</span><span class="p">}</span><span class="s2"> points!`</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">deepLink</span><span class="p">:</span> <span class="s2">`/achievements/</span><span class="p">${</span><span class="nx">milestone</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="na">inApp</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// Always store in-app</span>
+        <span class="na">persist</span><span class="p">:</span> <span class="kc">true</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// Scheduled notifications (reminders)</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">scheduleStudyReminder</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">time</span><span class="p">:</span> <span class="nb">Date</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">novu</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="dl">'</span><span class="s1">study-reminder</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">to</span><span class="p">:</span> <span class="p">{</span> <span class="na">subscriberId</span><span class="p">:</span> <span class="nx">userId</span> <span class="p">},</span>
+    <span class="na">payload</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">scheduledTime</span><span class="p">:</span> <span class="nx">time</span><span class="p">,</span>
+      <span class="na">preferences</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getUserPreferences</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="c1">// Respect user's quiet hours</span>
+    <span class="na">respectQuietHours</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="c1">// Batch if multiple reminders</span>
+    <span class="na">batch</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4️⃣-offline-first-architecture">4️⃣ Offline-First Architecture</h2>
+
+<h3 id="local-first-database-sync-rxdb--pouchdb">Local-First Database Sync (RxDB + PouchDB)</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/offline/database.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createRxDatabase</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">rxdb</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getRxStorageDexie</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">rxdb/plugins/storage-dexie</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Client-side database</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">setupOfflineDB</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">createRxDatabase</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">quizmentor</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">storage</span><span class="p">:</span> <span class="nx">getRxStorageDexie</span><span class="p">(),</span>
+    <span class="na">multiInstance</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Questions collection (synced)</span>
+  <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">addCollections</span><span class="p">({</span>
+    <span class="na">questions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">schema</span><span class="p">:</span> <span class="nx">questionSchema</span><span class="p">,</span>
+      <span class="na">sync</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">remote</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/sync/questions`</span><span class="p">,</span>
+        <span class="na">waitForLeadership</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">direction</span><span class="p">:</span> <span class="dl">'</span><span class="s1">pull</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">live</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+          <span class="na">retry</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    
+    <span class="c1">// User progress (bidirectional sync)</span>
+    <span class="na">progress</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">schema</span><span class="p">:</span> <span class="nx">progressSchema</span><span class="p">,</span>
+      <span class="na">sync</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">remote</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/sync/progress`</span><span class="p">,</span>
+        <span class="na">direction</span><span class="p">:</span> <span class="dl">'</span><span class="s1">both</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">conflictHandler</span><span class="p">:</span> <span class="dl">'</span><span class="s1">last-write-wins</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    
+    <span class="c1">// Offline sessions (sync when online)</span>
+    <span class="na">sessions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">schema</span><span class="p">:</span> <span class="nx">sessionSchema</span><span class="p">,</span>
+      <span class="na">sync</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">remote</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">API_URL</span><span class="p">}</span><span class="s2">/sync/sessions`</span><span class="p">,</span>
+        <span class="na">direction</span><span class="p">:</span> <span class="dl">'</span><span class="s1">push</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">batchSize</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="c1">// Queue changes when offline</span>
+        <span class="na">offlineQueue</span><span class="p">:</span> <span class="kc">true</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Sync status monitoring</span>
+  <span class="nx">db</span><span class="p">.</span><span class="nx">questions</span><span class="p">.</span><span class="nx">sync$</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">state</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">active</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nb">navigator</span><span class="p">.</span><span class="nx">onLine</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">showOfflineIndicator</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">db</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Service Worker for offline support</span>
+<span class="c1">// sw.js</span>
+<span class="nb">self</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">fetch</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/questions</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">respondWith</span><span class="p">(</span>
+      <span class="nx">caches</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="c1">// Return cached version when offline</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">response</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nb">navigator</span><span class="p">.</span><span class="nx">onLine</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
+          <span class="p">}</span>
+          
+          <span class="c1">// Fetch and update cache</span>
+          <span class="k">return</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">responseClone</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">clone</span><span class="p">();</span>
+            <span class="nx">caches</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="dl">'</span><span class="s1">quiz-data-v1</span><span class="dl">'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">cache</span> <span class="o">=&gt;</span> <span class="p">{</span>
+              <span class="nx">cache</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">,</span> <span class="nx">responseClone</span><span class="p">);</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
+          <span class="p">});</span>
+        <span class="p">})</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="conflict-resolution">Conflict Resolution</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/sync/conflict-resolver.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">ConflictResolver</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">resolve</span><span class="p">(</span><span class="nx">local</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">remote</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// For quiz answers - local wins (user's device is truth)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">local</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">quiz_answer</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">local</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// For progress - merge strategy</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">local</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">progress</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="p">...</span><span class="nx">remote</span><span class="p">,</span>
+        <span class="p">...</span><span class="nx">local</span><span class="p">,</span>
+        <span class="na">score</span><span class="p">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">local</span><span class="p">.</span><span class="nx">score</span><span class="p">,</span> <span class="nx">remote</span><span class="p">.</span><span class="nx">score</span><span class="p">),</span>
+        <span class="na">updatedAt</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Default: last-write-wins</span>
+    <span class="k">return</span> <span class="nx">local</span><span class="p">.</span><span class="nx">updatedAt</span> <span class="o">&gt;</span> <span class="nx">remote</span><span class="p">.</span><span class="nx">updatedAt</span> <span class="p">?</span> <span class="nx">local</span> <span class="p">:</span> <span class="nx">remote</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5️⃣-mobile-app-architecture">5️⃣ Mobile App Architecture</h2>
+
+<h3 id="react-native--native-modules">React Native + Native Modules</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// mobile/src/services/native-features.ts</span>
+<span class="k">import</span> <span class="p">{</span>
+  <span class="nx">requestNotifications</span><span class="p">,</span>
+  <span class="nx">scheduleNotification</span><span class="p">,</span>
+  <span class="nx">getBatteryLevel</span><span class="p">,</span>
+  <span class="nx">getNetworkState</span>
+<span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-native-permissions</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">BackgroundFetch</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-native-background-fetch</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PushNotification</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-native-push-notification</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Background sync for mobile</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">setupBackgroundSync</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">BackgroundFetch</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span>
+    <span class="na">minimumFetchInterval</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="c1">// 15 minutes</span>
+    <span class="na">forceAlarmManager</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">stopOnTerminate</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">startOnBoot</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">enableHeadless</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span> <span class="k">async</span> <span class="p">(</span><span class="nx">taskId</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Sync offline data</span>
+    <span class="k">await</span> <span class="nx">syncOfflineData</span><span class="p">();</span>
+    
+    <span class="c1">// Pre-fetch next questions</span>
+    <span class="k">await</span> <span class="nx">prefetchQuestions</span><span class="p">();</span>
+    
+    <span class="c1">// Update notifications</span>
+    <span class="k">await</span> <span class="nx">updateStudyReminders</span><span class="p">();</span>
+    
+    <span class="nx">BackgroundFetch</span><span class="p">.</span><span class="nx">finish</span><span class="p">(</span><span class="nx">taskId</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// Push notifications</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">setupPushNotifications</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">PushNotification</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span>
+    <span class="na">onRegister</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">registerDevice</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+    <span class="p">},</span>
+    
+    <span class="na">onNotification</span><span class="p">:</span> <span class="p">(</span><span class="nx">notification</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// Handle deep linking</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">notification</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">deepLink</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">notification</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">deepLink</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    
+    <span class="c1">// iOS specific</span>
+    <span class="na">permissions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">alert</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">badge</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">sound</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    
+    <span class="c1">// Android specific</span>
+    <span class="na">channelId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">quizmentor</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">channelName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">QuizMentor Notifications</span><span class="dl">'</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// Biometric authentication</span>
+<span class="k">import</span> <span class="nx">TouchID</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react-native-touch-id</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">authenticateWithBiometrics</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">biometryType</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">TouchID</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">();</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">biometryType</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">TouchID</span><span class="p">.</span><span class="nx">authenticate</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unlock QuizMentor</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Authentication Required</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">fallbackLabel</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Use Passcode</span><span class="dl">'</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Fall back to password</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="mobile-specific-features">Mobile-Specific Features</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Features matrix</span>
+<span class="na">Mobile Features</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Offline mode with sync</span>
+  <span class="pi">-</span> <span class="s">Push notifications (FCM/APNS)</span>
+  <span class="pi">-</span> <span class="s">Biometric auth (Face ID/Touch ID)</span>
+  <span class="pi">-</span> <span class="s">Background sync</span>
+  <span class="pi">-</span> <span class="s">App shortcuts</span>
+  <span class="pi">-</span> <span class="s">Widgets (iOS 14+, Android 12+)</span>
+  <span class="pi">-</span> <span class="s">Deep linking</span>
+  <span class="pi">-</span> <span class="s">Share sheet integration</span>
+  <span class="pi">-</span> <span class="s">Haptic feedback</span>
+  <span class="pi">-</span> <span class="s">AR mode for visual questions</span>
+  <span class="pi">-</span> <span class="s">Voice input for answers</span>
+  <span class="pi">-</span> <span class="s">Handwriting recognition</span>
+  <span class="pi">-</span> <span class="s">Screen time tracking</span>
+  <span class="pi">-</span> <span class="s">Parental controls</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="6️⃣-event-tracking--analytics">6️⃣ Event Tracking &amp; Analytics</h2>
+
+<h3 id="posthog-self-hosted-product-analytics">PostHog (Self-Hosted Product Analytics)</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># posthog-deployment.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">posthog</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">posthog</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">posthog/posthog:latest</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">DATABASE_URL</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgresql://posthog:pass@postgresql/posthog</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">REDIS_URL</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">redis://redis:6379</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">CLICKHOUSE_HOST</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">clickhouse</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">CLICKHOUSE_DATABASE</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">posthog</span>
+</code></pre></div></div>
+
+<h3 id="event-tracking-implementation">Event Tracking Implementation</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/analytics/tracker.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">PostHog</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">posthog-node</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ClickHouse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">clickhouse</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">AnalyticsTracker</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">posthog</span><span class="p">:</span> <span class="nx">PostHog</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">clickhouse</span><span class="p">:</span> <span class="nx">ClickHouse</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">trackEvent</span><span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="nx">AnalyticsEvent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Real-time to PostHog</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">posthog</span><span class="p">.</span><span class="nx">capture</span><span class="p">({</span>
+      <span class="na">distinctId</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">userId</span><span class="p">,</span>
+      <span class="na">event</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span><span class="nx">event</span><span class="p">.</span><span class="nx">properties</span><span class="p">,</span>
+        <span class="c1">// Automatic context</span>
+        <span class="na">device</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">device</span><span class="p">,</span>
+        <span class="na">location</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">location</span><span class="p">,</span>
+        <span class="na">sessionId</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">sessionId</span><span class="p">,</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Batch to ClickHouse for analysis</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">clickhouse</span><span class="p">.</span><span class="nx">insert</span><span class="p">({</span>
+      <span class="na">table</span><span class="p">:</span> <span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">values</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">user_id</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">userId</span><span class="p">,</span>
+        <span class="na">event_type</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+        <span class="na">properties</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">properties</span><span class="p">),</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">}],</span>
+      <span class="c1">// Batch insert for performance</span>
+      <span class="na">clickhouse_settings</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">async_insert</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="na">wait_for_async_insert</span><span class="p">:</span> <span class="mi">0</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Pre-computed metrics</span>
+  <span class="k">async</span> <span class="nx">getUserMetrics</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">query</span> <span class="o">=</span> <span class="s2">`
+      SELECT
+        COUNT(*) as total_events,
+        COUNT(DISTINCT session_id) as sessions,
+        AVG(quiz_score) as avg_score,
+        quantile(0.5)(response_time) as median_response_time,
+        dateDiff('day', MIN(timestamp), MAX(timestamp)) as days_active
+      FROM events
+      WHERE user_id = {userId:UUID}
+        AND timestamp &gt; now() - INTERVAL 30 DAY
+    `</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">clickhouse</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="p">{</span> <span class="nx">userId</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Feature flags with PostHog</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">checkFeatureFlag</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">flag</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">posthog</span><span class="p">.</span><span class="nx">isFeatureEnabled</span><span class="p">(</span><span class="nx">flag</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// A/B Testing</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">getExperiment</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">experiment</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">variant</span> <span class="o">=</span> <span class="nx">posthog</span><span class="p">.</span><span class="nx">getFeatureFlag</span><span class="p">(</span><span class="nx">experiment</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+  
+  <span class="c1">// Track exposure</span>
+  <span class="nx">posthog</span><span class="p">.</span><span class="nx">capture</span><span class="p">({</span>
+    <span class="na">distinctId</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span>
+    <span class="na">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">$feature_flag_called</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">$feature_flag</span><span class="p">:</span> <span class="nx">experiment</span><span class="p">,</span>
+      <span class="na">$feature_flag_response</span><span class="p">:</span> <span class="nx">variant</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="nx">variant</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="7️⃣-complete-kubernetes-manifests">7️⃣ Complete Kubernetes Manifests</h2>
+
+<h3 id="cluster-setup">Cluster Setup</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create cluster on Digital Ocean</span>
+doctl kubernetes cluster create quizmentor <span class="se">\</span>
+  <span class="nt">--node-pool</span> <span class="s2">"name=system;size=s-2vcpu-4gb;count=2"</span> <span class="se">\</span>
+  <span class="nt">--node-pool</span> <span class="s2">"name=compute;size=s-4vcpu-8gb;count=3"</span> <span class="se">\</span>
+  <span class="nt">--region</span> nyc1
+
+<span class="c"># Total: 5 nodes = ~$150/month</span>
+</code></pre></div></div>
+
+<h3 id="resource-allocation">Resource Allocation</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># resource-quotas.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ResourceQuota</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">compute-quota</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">hard</span><span class="pi">:</span>
+    <span class="na">requests.cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">20"</span>      <span class="c1"># 20 cores total</span>
+    <span class="na">requests.memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">40Gi"</span>  <span class="c1"># 40GB total</span>
+    <span class="na">persistentvolumeclaims</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10"</span>
+    
+<span class="nn">---</span>
+<span class="c1"># Pod distribution</span>
+<span class="na">Services</span><span class="pi">:</span>
+  <span class="na">Frontend</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">Next.js</span><span class="pi">:</span> <span class="s">2 replicas × 512MB = 1GB</span>
+    <span class="pi">-</span> <span class="na">Admin</span><span class="pi">:</span> <span class="s">1 replica × 256MB = 256MB</span>
+    
+  <span class="na">AI Engines</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">Bloom</span><span class="pi">:</span> <span class="s">2 replicas × 2GB = 4GB</span>
+    <span class="pi">-</span> <span class="na">Adaptive</span><span class="pi">:</span> <span class="s">2 replicas × 2GB = 4GB</span>
+    <span class="pi">-</span> <span class="na">Orchestrator</span><span class="pi">:</span> <span class="s">2 replicas × 1GB = 2GB</span>
+    
+  <span class="na">Platform</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">Keycloak</span><span class="pi">:</span> <span class="s">2 replicas × 512MB = 1GB</span>
+    <span class="pi">-</span> <span class="na">Novu</span><span class="pi">:</span> <span class="s">2 replicas × 512MB = 1GB</span>
+    <span class="pi">-</span> <span class="na">PostHog</span><span class="pi">:</span> <span class="s">2 replicas × 1GB = 2GB</span>
+    
+  <span class="na">Databases</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">PostgreSQL</span><span class="pi">:</span> <span class="s">3 replicas × 2GB = 6GB</span>
+    <span class="pi">-</span> <span class="na">Redis</span><span class="pi">:</span> <span class="s">1 replica × 512MB = 512MB</span>
+    <span class="pi">-</span> <span class="na">Qdrant</span><span class="pi">:</span> <span class="s">1 replica × 2GB = 2GB</span>
+    <span class="pi">-</span> <span class="na">ClickHouse</span><span class="pi">:</span> <span class="s">1 replica × 2GB = 2GB</span>
+    
+  <span class="na">Background</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">Scrapers</span><span class="pi">:</span> <span class="s">1GB (burst)</span>
+    <span class="pi">-</span> <span class="na">Workers</span><span class="pi">:</span> <span class="s">2GB (burst)</span>
+    
+<span class="na">Total</span><span class="pi">:</span> <span class="s">~28GB RAM, ~15 CPUs used</span>
+<span class="na">Available</span><span class="pi">:</span> <span class="s">40GB RAM, 20 CPUs</span>
+<span class="na">Buffer</span><span class="pi">:</span> <span class="s">30% headroom</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-cost-breakdown">💰 Cost Breakdown</h2>
+
+<h3 id="self-hosted-everything">Self-Hosted Everything</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Digital Ocean K8s (5 nodes):    $150/month
+CloudFlare Pro:                 $20/month
+Domain:                          $1/month
+Email (SendGrid):                $10/month
+SMS (Twilio):                    $10/month
+Backups (B2):                    $5/month
+Monitoring (Free tier):          $0
+--------------------------------
+Total:                           $196/month
+
+What You Get:
+- Unlimited users
+- Full data ownership  
+- No vendor lock-in
+- Complete feature control
+- GDPR compliance easy
+- Can sell to enterprises
+</code></pre></div></div>
+
+<h3 id="comparison-with-managed-services">Comparison with Managed Services</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Supabase:                        $25/month
+Auth0:                           $23/month
+Vercel Pro:                      $20/month
+Qdrant Cloud:                    $69/month
+SendGrid:                        $15/month
+Analytics (Mixpanel):            $25/month
+Novu Cloud:                      $50/month
+--------------------------------
+Total:                           $227/month
+
+Plus:
+- Limited by quotas
+- Data in multiple places
+- Vendor lock-in
+- Less control
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-implementation-roadmap">🚀 Implementation Roadmap</h2>
+
+<h3 id="phase-1-week-1-core-infrastructure">Phase 1 (Week 1): Core Infrastructure</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Setup cluster</span>
+./scripts/setup-cluster.sh
+
+<span class="c"># 2. Install operators</span>
+kubectl apply <span class="nt">-f</span> k8s/operators/
+
+<span class="c"># 3. Deploy databases</span>
+kubectl apply <span class="nt">-f</span> k8s/databases/
+
+<span class="c"># 4. Deploy auth (Keycloak)</span>
+kubectl apply <span class="nt">-f</span> k8s/auth/
+</code></pre></div></div>
+
+<h3 id="phase-2-week-2-services">Phase 2 (Week 2): Services</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Deploy AI engines</span>
+kubectl apply <span class="nt">-f</span> k8s/engines/
+
+<span class="c"># 2. Deploy API gateway</span>
+kubectl apply <span class="nt">-f</span> k8s/gateway/
+
+<span class="c"># 3. Deploy frontend</span>
+kubectl apply <span class="nt">-f</span> k8s/frontend/
+</code></pre></div></div>
+
+<h3 id="phase-3-week-3-platform-features">Phase 3 (Week 3): Platform Features</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Setup notifications</span>
+kubectl apply <span class="nt">-f</span> k8s/notifications/
+
+<span class="c"># 2. Setup analytics</span>
+kubectl apply <span class="nt">-f</span> k8s/analytics/
+
+<span class="c"># 3. Setup monitoring</span>
+kubectl apply <span class="nt">-f</span> k8s/monitoring/
+</code></pre></div></div>
+
+<h3 id="phase-4-week-4-mobile--offline">Phase 4 (Week 4): Mobile &amp; Offline</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Deploy sync service</span>
+kubectl apply <span class="nt">-f</span> k8s/sync/
+
+<span class="c"># 2. Setup push notifications</span>
+kubectl apply <span class="nt">-f</span> k8s/push/
+
+<span class="c"># 3. Deploy mobile API</span>
+kubectl apply <span class="nt">-f</span> k8s/mobile/
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-benefits-of-this-architecture">✅ Benefits of This Architecture</h2>
+
+<ol>
+  <li><strong>Complete Control</strong>: Every piece self-hosted</li>
+  <li><strong>Cost Effective</strong>: $196/mo for unlimited scale</li>
+  <li><strong>Feature Rich</strong>: Notifications, offline, mobile, analytics</li>
+  <li><strong>Performance</strong>: Sub-100ms response times</li>
+  <li><strong>Scalability</strong>: Can handle 1M+ users</li>
+  <li><strong>Compliance</strong>: GDPR, HIPAA ready</li>
+  <li><strong>Monetization</strong>: Can white-label or enterprise sell</li>
+</ol>
+
+<hr />
+
+<h2 id="-final-decision">🎯 Final Decision</h2>
+
+<p><strong>Go with full self-hosted Kubernetes because:</strong></p>
+<ul>
+  <li>You need complex AI processing (requires K8s)</li>
+  <li>You want offline &amp; mobile (requires control)</li>
+  <li>You need notifications (cheaper self-hosted)</li>
+  <li>Total cost is actually LOWER ($196 vs $227)</li>
+  <li>You get 10x more features and control</li>
+</ul>
+
+<p><strong>This is the right architecture for a serious learning platform!</strong></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / COMPLETE_SELF_HOSTED_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

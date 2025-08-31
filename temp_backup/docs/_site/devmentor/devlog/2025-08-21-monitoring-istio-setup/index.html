@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-08-21-monitoring-istio-setup | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">devlog/2025-08-21-monitoring-istio-setup.md</span>
+</div>
+
+<h1>2025-08-21-monitoring-istio-setup</h1>
+
+
+<h1 id="devlog-monitoring-stack--istio-setup">DevLog: Monitoring Stack &amp; Istio Setup</h1>
+<p>Date: 2025-08-21
+Author: Development Team</p>
+
+<h2 id="summary">Summary</h2>
+<p>Set up comprehensive Kubernetes monitoring with kube-prometheus-stack and standardized Istio installation for the DevMentor project.</p>
+
+<h2 id="work-completed">Work Completed</h2>
+
+<h3 id="1-monitoring-stack-documentation--setup">1. Monitoring Stack Documentation &amp; Setup</h3>
+
+<h4 id="created-runbook">Created Runbook</h4>
+<ul>
+  <li><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">docs/infrastructure/monitoring/kube-prometheus-stack-runbook.md</code></li>
+  <li><strong>Purpose</strong>: Complete operational guide for installing and managing kube-prometheus-stack</li>
+  <li><strong>Contents</strong>:
+    <ul>
+      <li>Installation instructions for Helm-based deployment</li>
+      <li>Port-forwarding commands for local access</li>
+      <li>Grafana credential retrieval (macOS and Linux)</li>
+      <li>Custom values.yaml examples</li>
+      <li>Istio/Kiali integration guidance</li>
+      <li>Troubleshooting section</li>
+      <li>Uninstall procedures</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="documentation-structure-fix">Documentation Structure Fix</h4>
+<ul>
+  <li><strong>Issue</strong>: Initial runbook was placed in wrong directory (<code class="language-plaintext highlighter-rouge">docs/runbooks/</code>)</li>
+  <li><strong>Resolution</strong>: Moved to <code class="language-plaintext highlighter-rouge">docs/infrastructure/monitoring/</code> to align with existing observability docs</li>
+  <li><strong>Updated</strong>: <code class="language-plaintext highlighter-rouge">docs/monitoring/README.md</code> to reference the new runbook location</li>
+</ul>
+
+<h4 id="key-commands-documented">Key Commands Documented</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install monitoring stack</span>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm upgrade <span class="nt">--install</span> monitoring prometheus-community/kube-prometheus-stack <span class="se">\</span>
+  <span class="nt">-n</span> monitoring <span class="nt">--create-namespace</span>
+
+<span class="c"># Access services</span>
+kubectl <span class="nt">-n</span> monitoring port-forward svc/monitoring-kube-prometheus-stack-prometheus 9090:9090
+kubectl <span class="nt">-n</span> monitoring port-forward svc/monitoring-grafana 3000:80
+kubectl <span class="nt">-n</span> monitoring port-forward svc/monitoring-kube-prometheus-stack-alertmanager 9093:9093
+
+<span class="c"># Get Grafana password (macOS)</span>
+<span class="nv">GRAFANA_PASS</span><span class="o">=</span><span class="si">$(</span>kubectl <span class="nt">-n</span> monitoring get secret monitoring-grafana <span class="nt">-o</span> <span class="se">\</span>
+  <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.admin-password}'</span> | <span class="nb">base64</span> <span class="nt">-D</span><span class="si">)</span>
+</code></pre></div></div>
+
+<h3 id="2-istio-version-management">2. Istio Version Management</h3>
+
+<h4 id="problem-identified">Problem Identified</h4>
+<ul>
+  <li>Two Istio versions in repository root: <code class="language-plaintext highlighter-rouge">istio-1.22.3</code> and <code class="language-plaintext highlighter-rouge">istio-1.23.2</code></li>
+  <li>No standardized access pattern</li>
+  <li>Potential confusion for development team</li>
+</ul>
+
+<h4 id="solution-implemented">Solution Implemented</h4>
+
+<h5 id="version-selection">Version Selection</h5>
+<ul>
+  <li><strong>Chosen</strong>: Istio 1.23.2 (newer, compatible with kubectl v1.32.2)</li>
+  <li><strong>Archived</strong>: Istio 1.22.3 moved to <code class="language-plaintext highlighter-rouge">.archive/2025-08-21-istio-cleanup/</code></li>
+</ul>
+
+<h5 id="symlink-strategy">Symlink Strategy</h5>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ln</span> <span class="nt">-sfn</span> istio-1.23.2 istio
+</code></pre></div></div>
+<ul>
+  <li>Creates version-agnostic reference</li>
+  <li>Simplifies future upgrades (just update symlink)</li>
+  <li>No hardcoded version paths in scripts</li>
+</ul>
+
+<h5 id="environment-script-created">Environment Script Created</h5>
+<ul>
+  <li><strong>File</strong>: <code class="language-plaintext highlighter-rouge">env.sh</code> (executable, in project root)</li>
+  <li><strong>Features</strong>:
+    <ul>
+      <li>Sets up ISTIO_HOME and PATH</li>
+      <li>Verifies Istio availability</li>
+      <li>Checks Docker status</li>
+      <li>Checks kind cluster existence</li>
+      <li>Provides quick environment health check</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c"># Usage: source env.sh</span>
+<span class="nv">DEVMENTOR_ROOT</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span><span class="nb">cd</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">dirname</span> <span class="s2">"</span><span class="k">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="k">}</span><span class="s2">"</span><span class="si">)</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="si">)</span><span class="s2">"</span>
+<span class="nb">export </span><span class="nv">ISTIO_HOME</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">DEVMENTOR_ROOT</span><span class="k">}</span><span class="s2">/istio"</span>
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">ISTIO_HOME</span><span class="k">}</span><span class="s2">/bin:</span><span class="k">${</span><span class="nv">PATH</span><span class="k">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<h4 id="verification-results">Verification Results</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>✓ Istio client version: 1.23.2 configured
+✓ Docker is running
+✓ Kind cluster 'devmentor' exists
+DevMentor environment ready
+</code></pre></div></div>
+
+<h2 id="technical-decisions">Technical Decisions</h2>
+
+<h3 id="why-kube-prometheus-stack">Why kube-prometheus-stack?</h3>
+<ul>
+  <li><strong>Comprehensive</strong>: Includes Prometheus, Grafana, Alertmanager in one package</li>
+  <li><strong>Production-ready</strong>: Used widely in production environments</li>
+  <li><strong>Operator-based</strong>: Simplifies configuration via CRDs</li>
+  <li><strong>Integration</strong>: Works seamlessly with Istio metrics</li>
+</ul>
+
+<h3 id="why-istio-1232">Why Istio 1.23.2?</h3>
+<ul>
+  <li><strong>Compatibility</strong>: Better support for Kubernetes 1.30+</li>
+  <li><strong>Features</strong>: Latest stability improvements</li>
+  <li><strong>Support</strong>: More recent release with active maintenance</li>
+</ul>
+
+<h3 id="documentation-philosophy">Documentation Philosophy</h3>
+<ul>
+  <li><strong>Runbooks in infrastructure/</strong>: Operational guides belong with infrastructure docs</li>
+  <li><strong>README files for overview</strong>: High-level summaries in category roots</li>
+  <li><strong>Code blocks for commands</strong>: All commands in markdown code fences for safe copy/paste</li>
+  <li><strong>Platform considerations</strong>: Separate instructions for macOS vs Linux where needed</li>
+</ul>
+
+<h2 id="files-changed">Files Changed</h2>
+
+<h3 id="created">Created</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/infrastructure/monitoring/kube-prometheus-stack-runbook.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">env.sh</code> (project root)</li>
+  <li><code class="language-plaintext highlighter-rouge">istio</code> (symlink to istio-1.23.2)</li>
+</ul>
+
+<h3 id="modified">Modified</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/monitoring/README.md</code> (added runbook reference)</li>
+</ul>
+
+<h3 id="archived">Archived</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">istio-1.22.3/</code> → <code class="language-plaintext highlighter-rouge">.archive/2025-08-21-istio-cleanup/</code></li>
+</ul>
+
+<h3 id="removed">Removed</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/runbooks/kube-prometheus-stack.md</code> (moved to correct location)</li>
+</ul>
+
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+<ol>
+  <li><strong>Documentation Structure Matters</strong>: Important to check existing documentation patterns before creating new files</li>
+  <li><strong>Version Management Strategy</strong>: Symlinks provide flexibility for tool versions without hardcoding</li>
+  <li><strong>Environment Scripts</strong>: Project-specific env setup scripts improve developer experience</li>
+  <li><strong>Secret Handling</strong>: Never echo secrets; store in variables for use</li>
+  <li><strong>Platform Differences</strong>: macOS uses <code class="language-plaintext highlighter-rouge">base64 -D</code> while Linux uses <code class="language-plaintext highlighter-rouge">base64 -d</code></li>
+</ol>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+  <li><strong>Test Monitoring Stack</strong>: Deploy to kind cluster and verify all dashboards</li>
+  <li><strong>Configure Alerting</strong>: Set up Alertmanager receivers for team notifications</li>
+  <li><strong>Service Monitors</strong>: Add monitoring for DevMentor services</li>
+  <li><strong>Documentation Review</strong>: Ensure all team members can follow runbooks</li>
+  <li><strong>Automation</strong>: Consider adding monitoring setup to CI/CD pipeline</li>
+</ol>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack">kube-prometheus-stack Helm Chart</a></li>
+  <li><a href="https://istio.io/latest/news/releases/1.23.x/">Istio 1.23 Release Notes</a></li>
+  <li><a href="docs/infrastructure/monitoring/OBSERVABILITY_ARCHITECTURE.md">Monitoring Architecture Docs</a></li>
+</ul>
+
+<h2 id="commands-for-quick-reference">Commands for Quick Reference</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start work session</span>
+<span class="nb">source </span>env.sh
+
+<span class="c"># Check Istio version</span>
+istioctl version
+
+<span class="c"># View monitoring runbook</span>
+<span class="nb">cat </span>docs/infrastructure/monitoring/kube-prometheus-stack-runbook.md
+
+<span class="c"># Access Grafana (after install)</span>
+kubectl <span class="nt">-n</span> monitoring port-forward svc/monitoring-grafana 3000:80
+<span class="c"># Browse to http://localhost:3000</span>
+</code></pre></div></div>
+
+<hr />
+<p>End of DevLog Entry</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / devlog/2025-08-21-monitoring-istio-setup.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

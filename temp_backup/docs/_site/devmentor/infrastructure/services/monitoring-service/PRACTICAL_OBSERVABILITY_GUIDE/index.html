@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRACTICAL OBSERVABILITY GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/monitoring-service/PRACTICAL_OBSERVABILITY_GUIDE.md</span>
+</div>
+
+<h1>PRACTICAL OBSERVABILITY GUIDE</h1>
+
+
+<h1 id="-practical-observability-guide---simplified">🎯 Practical Observability Guide - Simplified</h1>
+
+<h2 id="current-setup-what-you-actually-need">Current Setup (What You Actually Need)</h2>
+
+<h3 id="essential-tools-only">Essential Tools Only:</h3>
+<ol>
+  <li><strong>Prometheus</strong> (Port 9090) - Collects metrics</li>
+  <li><strong>Grafana</strong> (Port 3007) - Visualizes data</li>
+  <li><strong>Jaeger</strong> (Port 16686) - Traces requests</li>
+  <li><strong>Loki</strong> (Port 3100) - Aggregates logs</li>
+  <li><strong>Your Monitoring Service</strong> (Port 3006) - Central hub</li>
+</ol>
+
+<h3 id="tools-you-can-remove">Tools You Can Remove:</h3>
+<ul>
+  <li><strong>AlertManager</strong> - Redundant for development</li>
+  <li><strong>cAdvisor</strong> - Node exporter gives enough info</li>
+  <li><strong>Kiali</strong> - Only needed with service mesh</li>
+</ul>
+
+<h2 id="-quick-access-urls">🚀 Quick Access URLs</h2>
+
+<ol>
+  <li><strong>Grafana Dashboard</strong>: http://localhost:3007
+    <ul>
+      <li>Login: <code class="language-plaintext highlighter-rouge">admin</code> / <code class="language-plaintext highlighter-rouge">devmentor123</code></li>
+      <li>Your custom dashboard: http://localhost:3007/d/6b05a080-3b70-440d-a085-9d5128ea5940/devmentor-system-overview</li>
+    </ul>
+  </li>
+  <li><strong>Prometheus</strong>: http://localhost:9090
+    <ul>
+      <li>No login required</li>
+      <li>Direct query interface</li>
+    </ul>
+  </li>
+  <li><strong>Jaeger</strong>: http://localhost:16686
+    <ul>
+      <li>No login required</li>
+      <li>Trace viewer</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="-how-to-actually-use-grafana">📊 How to Actually Use Grafana</h2>
+
+<h3 id="step-1-access-your-dashboard">Step 1: Access Your Dashboard</h3>
+<ol>
+  <li>Go to http://localhost:3007</li>
+  <li>Login with <code class="language-plaintext highlighter-rouge">admin</code> / <code class="language-plaintext highlighter-rouge">devmentor123</code></li>
+  <li>Click “Dashboards” in left menu</li>
+  <li>Select “DevMentor System Overview”</li>
+</ol>
+
+<h3 id="step-2-what-youll-see">Step 2: What You’ll See</h3>
+<ul>
+  <li><strong>Service Health</strong>: Green = Running, Red = Down</li>
+  <li><strong>Memory Usage</strong>: How much RAM each container uses</li>
+  <li><strong>CPU Usage</strong>: Processing power consumption</li>
+  <li><strong>HTTP Requests</strong>: Traffic to your services</li>
+  <li><strong>Recent Logs</strong>: Live log stream</li>
+</ul>
+
+<h3 id="step-3-create-your-own-panels">Step 3: Create Your Own Panels</h3>
+
+<h4 id="example-1-see-which-containers-are-running">Example 1: See Which Containers Are Running</h4>
+<ol>
+  <li>Click “+” → “Dashboard” → “Add Panel”</li>
+  <li>Select “Prometheus” data source</li>
+  <li>Enter query: <code class="language-plaintext highlighter-rouge">up</code></li>
+  <li>Change visualization to “Stat”</li>
+  <li>Apply</li>
+</ol>
+
+<h4 id="example-2-monitor-memory-usage">Example 2: Monitor Memory Usage</h4>
+<ol>
+  <li>Add new panel</li>
+  <li>Query: <code class="language-plaintext highlighter-rouge">container_memory_usage_bytes{name=~"devmentor.*"}/1024/1024/1024</code></li>
+  <li>Visualization: “Time series”</li>
+  <li>Unit: GB</li>
+  <li>Apply</li>
+</ol>
+
+<h4 id="example-3-count-errors-in-logs">Example 3: Count Errors in Logs</h4>
+<ol>
+  <li>Add new panel</li>
+  <li>Change data source to “Loki”</li>
+  <li>Query: <code class="language-plaintext highlighter-rouge">{container_name=~"devmentor.*"} |= "error"</code></li>
+  <li>Visualization: “Logs”</li>
+  <li>Apply</li>
+</ol>
+
+<h2 id="-useful-prometheus-queries">🔍 Useful Prometheus Queries</h2>
+
+<p>Open http://localhost:9090 and try these:</p>
+
+<h3 id="basic-health-checks">Basic Health Checks</h3>
+<pre><code class="language-promql"># Which services are up?
+up
+
+# Only DevMentor services
+up{job=~".*devmentor.*"}
+
+# Services that are DOWN
+up == 0
+</code></pre>
+
+<h3 id="resource-usage">Resource Usage</h3>
+<pre><code class="language-promql"># Memory usage in GB
+container_memory_usage_bytes{name=~"devmentor.*"}/1024/1024/1024
+
+# CPU percentage
+rate(container_cpu_usage_seconds_total{name=~"devmentor.*"}[5m]) * 100
+
+# Network traffic
+rate(container_network_receive_bytes_total[5m])
+</code></pre>
+
+<h3 id="performance-metrics">Performance Metrics</h3>
+<pre><code class="language-promql"># HTTP request rate
+rate(http_requests_total[5m])
+
+# Response time (if instrumented)
+http_request_duration_seconds
+
+# Error rate
+rate(http_requests_total{status=~"5.."}[5m])
+</code></pre>
+
+<h2 id="-how-to-view-logs-in-grafana">📝 How to View Logs in Grafana</h2>
+
+<ol>
+  <li>Go to Grafana → Explore (compass icon)</li>
+  <li>Select “Loki” from dropdown</li>
+  <li>Use these queries:</li>
+</ol>
+
+<pre><code class="language-logql"># All logs from DevMentor services
+{container_name=~"devmentor.*"}
+
+# Only errors
+{container_name=~"devmentor.*"} |= "error"
+
+# Specific service
+{container_name="devmentor-monitoring-service-1"}
+
+# JSON parsing (if logs are JSON)
+{container_name=~"devmentor.*"} | json | level="error"
+</code></pre>
+
+<h2 id="-simplified-docker-compose">🔧 Simplified Docker Compose</h2>
+
+<p>To remove redundant services, create this simplified version:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.observability-simple.yml</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">prometheus</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">prom/prometheus:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">9090:9090"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./configs/prometheus.yml:/etc/prometheus/prometheus.yml</span>
+    <span class="na">command</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">--config.file=/etc/prometheus/prometheus.yml'</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">--storage.tsdb.path=/prometheus'</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">devmentor-network</span>
+
+  <span class="na">grafana</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">grafana/grafana:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3007:3000"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">GF_SECURITY_ADMIN_PASSWORD=devmentor123</span>
+      <span class="pi">-</span> <span class="s">GF_INSTALL_PLUGINS=redis-datasource</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./configs/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">devmentor-network</span>
+
+  <span class="na">loki</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">grafana/loki:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3100:3100"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./configs/loki-config.yml:/etc/loki/config.yml</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">-config.file=/etc/loki/config.yml</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">devmentor-network</span>
+
+  <span class="na">jaeger</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">jaegertracing/all-in-one:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">16686:16686"</span>  <span class="c1"># UI</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6831:6831/udp"</span> <span class="c1"># Accept traces</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">COLLECTOR_OTLP_ENABLED=true</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">devmentor-network</span>
+
+  <span class="na">node-exporter</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">prom/node-exporter:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">9100:9100"</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">devmentor-network</span>
+
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">devmentor-network</span><span class="pi">:</span>
+    <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<h2 id="-5-minute-practical-exercises">🎯 5-Minute Practical Exercises</h2>
+
+<h3 id="exercise-1-find-the-biggest-memory-user">Exercise 1: Find the Biggest Memory User</h3>
+<ol>
+  <li>Go to Prometheus: http://localhost:9090</li>
+  <li>Query: <code class="language-plaintext highlighter-rouge">topk(3, container_memory_usage_bytes{name=~"devmentor.*"})</code></li>
+  <li>This shows top 3 memory consumers</li>
+</ol>
+
+<h3 id="exercise-2-create-an-alert-like-query">Exercise 2: Create an Alert-like Query</h3>
+<ol>
+  <li>In Prometheus, query: <code class="language-plaintext highlighter-rouge">container_memory_usage_bytes{name=~"devmentor.*"} &gt; 500000000</code></li>
+  <li>This shows containers using more than 500MB</li>
+</ol>
+
+<h3 id="exercise-3-find-recent-errors">Exercise 3: Find Recent Errors</h3>
+<ol>
+  <li>In Grafana → Explore → Loki</li>
+  <li>Query: <code class="language-plaintext highlighter-rouge">{container_name=~"devmentor.*"} |= "error" | json</code></li>
+  <li>See all recent errors across services</li>
+</ol>
+
+<h3 id="exercise-4-monitor-your-monitoring">Exercise 4: Monitor Your Monitoring</h3>
+<ol>
+  <li>Query in Prometheus: <code class="language-plaintext highlighter-rouge">up{job="monitoring-service"}</code></li>
+  <li>Should show 1 if monitoring service is healthy</li>
+</ol>
+
+<h2 id="-common-issues--solutions">🚨 Common Issues &amp; Solutions</h2>
+
+<h3 id="no-data-in-grafana">“No Data” in Grafana</h3>
+<ul>
+  <li>Check Prometheus is running: <code class="language-plaintext highlighter-rouge">curl http://localhost:9090/-/healthy</code></li>
+  <li>Verify data source in Grafana settings</li>
+  <li>Ensure time range is correct (top right)</li>
+</ul>
+
+<h3 id="cant-see-container-metrics">Can’t See Container Metrics</h3>
+<ul>
+  <li>Node exporter doesn’t show container metrics</li>
+  <li>Use: <code class="language-plaintext highlighter-rouge">docker stats</code> for quick check</li>
+  <li>Or query monitoring service: <code class="language-plaintext highlighter-rouge">curl http://localhost:3006/api/metrics</code></li>
+</ul>
+
+<h3 id="loki-not-showing-logs">Loki Not Showing Logs</h3>
+<ul>
+  <li>Check Promtail is running: <code class="language-plaintext highlighter-rouge">docker ps | grep promtail</code></li>
+  <li>Verify containers have labels</li>
+  <li>Try broader query: <code class="language-plaintext highlighter-rouge">{container_name=~".+"}</code></li>
+</ul>
+
+<h2 id="-pro-tips">💡 Pro Tips</h2>
+
+<ol>
+  <li><strong>Start Simple</strong>: Use existing metrics before adding custom ones</li>
+  <li><strong>Time Ranges Matter</strong>: Adjust time range in top-right of Grafana</li>
+  <li><strong>Use Labels</strong>: Filter by labels like <code class="language-plaintext highlighter-rouge">{service="frontend"}</code></li>
+  <li><strong>Rate vs Gauge</strong>: Use <code class="language-plaintext highlighter-rouge">rate()</code> for counters, direct value for gauges</li>
+  <li><strong>Refresh Rate</strong>: Set appropriate refresh (5s for dev, 30s for prod)</li>
+</ol>
+
+<h2 id="-what-to-learn-next">🎓 What to Learn Next</h2>
+
+<ol>
+  <li><strong>Week 1</strong>: Master these 5 queries in Prometheus</li>
+  <li><strong>Week 2</strong>: Build one dashboard in Grafana</li>
+  <li><strong>Week 3</strong>: Add custom metrics to one service</li>
+  <li><strong>Week 4</strong>: Set up one alert rule</li>
+  <li><strong>Week 5</strong>: Implement distributed tracing</li>
+</ol>
+
+<h2 id="-quick-commands">📞 Quick Commands</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check what's running</span>
+docker ps <span class="nt">--format</span> <span class="s2">"table {{.Names}}</span><span class="se">\t</span><span class="s2">{{.Status}}</span><span class="se">\t</span><span class="s2">{{.Ports}}"</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"(prometheus|grafana|jaeger|loki)"</span>
+
+<span class="c"># View monitoring service health</span>
+curl http://localhost:3006/health
+
+<span class="c"># Get all metrics</span>
+curl http://localhost:3006/api/metrics
+
+<span class="c"># Restart observability stack</span>
+docker-compose <span class="nt">-f</span> docker-compose.observability.yml restart prometheus grafana loki jaeger
+
+<span class="c"># Stop redundant services</span>
+docker stop devmentor-alertmanager devmentor-cadvisor devmentor-kiali
+</code></pre></div></div>
+
+<h2 id="-direct-links-to-your-data">🔗 Direct Links to Your Data</h2>
+
+<ul>
+  <li><strong>Your Dashboard</strong>: http://localhost:3007/d/6b05a080-3b70-440d-a085-9d5128ea5940/devmentor-system-overview</li>
+  <li><strong>Explore Metrics</strong>: http://localhost:3007/explore?left=%5B%22now-1h%22,%22now%22,%22Prometheus%22,%7B%7D%5D</li>
+  <li><strong>Explore Logs</strong>: http://localhost:3007/explore?left=%5B%22now-1h%22,%22now%22,%22Loki%22,%7B%7D%5D</li>
+  <li><strong>Prometheus Targets</strong>: http://localhost:9090/targets</li>
+  <li><strong>Jaeger Search</strong>: http://localhost:16686/search</li>
+</ul>
+
+<p>Remember: The goal is to understand your system better, not to have the fanciest dashboards!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/monitoring-service/PRACTICAL_OBSERVABILITY_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

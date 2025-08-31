@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRODUCTION READINESS RUNBOOK</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">PRODUCTION_READINESS_RUNBOOK.md</span>
+</div>
+
+<h1>PRODUCTION READINESS RUNBOOK</h1>
+
+
+<h1 id="-quizmentor-production-readiness-runbook">🚨 QuizMentor Production Readiness Runbook</h1>
+<p><em>Last Updated: December 26, 2024</em></p>
+
+<h2 id="️-overall-readiness-0---not-production-ready">⚠️ OVERALL READINESS: 0% - NOT PRODUCTION READY</h2>
+
+<h2 id="-service-readiness-table">📊 Service Readiness Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Created</th>
+      <th>Connected</th>
+      <th>Error Handling</th>
+      <th>Caching</th>
+      <th>Monitoring</th>
+      <th>Tests</th>
+      <th>Auth</th>
+      <th>PRODUCTION READY</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Authentication</strong></td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>gamification.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>questionDelivery.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>featureFlags.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>supabaseAnalytics.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>animations.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>quizService.ts</strong></td>
+      <td>✅</td>
+      <td>⚠️</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>⚠️</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>unifiedQuizData.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>skillProgression.ts</strong></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Supabase</strong></td>
+      <td>⚠️</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td>❌</td>
+      <td><strong>❌ NO</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Legend:</strong></p>
+<ul>
+  <li>✅ = Complete</li>
+  <li>⚠️ = Partial</li>
+  <li>❌ = Not Done</li>
+  <li><strong>PRODUCTION READY</strong> = Meets ALL requirements below</li>
+</ul>
+
+<h2 id="-definition-of-done---production-requirements">📝 Definition of “DONE” - Production Requirements</h2>
+
+<h3 id="for-every-featureservice-to-be-production-ready">For EVERY feature/service to be production-ready:</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Requirement</th>
+      <th>Current Status</th>
+      <th>What’s Missing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>User Story with acceptance criteria</strong></td>
+      <td>❌</td>
+      <td>No stories written</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>API Documentation (OpenAPI)</strong></td>
+      <td>❌</td>
+      <td>No API specs</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Error Handling</strong></td>
+      <td>❌</td>
+      <td>No retry, backoff, circuit breakers</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>Caching Strategy</strong></td>
+      <td>❌</td>
+      <td>No Redis, no cache headers</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>Tests (Unit 80%, Integration 60%, E2E)</strong></td>
+      <td>❌</td>
+      <td>~5% coverage</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong>Monitoring (metrics, logs, traces)</strong></td>
+      <td>❌</td>
+      <td>No observability</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong>Performance meets SLA</strong></td>
+      <td>❌</td>
+      <td>No SLAs defined</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><strong>Security (auth, authz, audit)</strong></td>
+      <td>❌</td>
+      <td>No security layer</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><strong>Documentation</strong></td>
+      <td>⚠️</td>
+      <td>Only design docs</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><strong>Automated deployment with rollback</strong></td>
+      <td>❌</td>
+      <td>No CI/CD</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-critical-requirements-by-service">🔥 Critical Requirements by Service</h2>
+
+<h3 id="authentication-service-doesnt-exist">Authentication Service (DOESN’T EXIST)</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Required</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">JWT token management</span>
+  <span class="pi">-</span> <span class="s">Session handling</span>  
+  <span class="pi">-</span> <span class="s">OAuth integration (GitHub)</span>
+  <span class="pi">-</span> <span class="s">Password reset flow</span>
+  <span class="pi">-</span> <span class="s">MFA support</span>
+  <span class="pi">-</span> <span class="s">Rate limiting</span>
+  <span class="pi">-</span> <span class="s">Audit logging</span>
+  
+<span class="na">Current</span><span class="pi">:</span> <span class="s">NOTHING EXISTS</span>
+</code></pre></div></div>
+
+<h3 id="gamification-service">Gamification Service</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Required</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Database persistence</span>
+  <span class="pi">-</span> <span class="s">Transaction support</span>
+  <span class="pi">-</span> <span class="s">Idempotency keys</span>
+  <span class="pi">-</span> <span class="s">Event sourcing</span>
+  <span class="pi">-</span> <span class="s">Cache invalidation</span>
+  <span class="pi">-</span> <span class="s">Webhook delivery</span>
+  <span class="pi">-</span> <span class="s">Background jobs</span>
+  
+<span class="na">Current</span><span class="pi">:</span> <span class="s">TypeScript file with no connections</span>
+</code></pre></div></div>
+
+<h3 id="question-delivery-service">Question Delivery Service</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Required</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">CDN integration</span>
+  <span class="pi">-</span> <span class="s">Cache warming</span>
+  <span class="pi">-</span> <span class="s">Batch fetching</span>
+  <span class="pi">-</span> <span class="s">Offline support</span>
+  <span class="pi">-</span> <span class="s">Version control</span>
+  <span class="pi">-</span> <span class="s">A/B testing</span>
+  <span class="pi">-</span> <span class="s">Performance metrics</span>
+  
+<span class="na">Current</span><span class="pi">:</span> <span class="s">Mock data only</span>
+</code></pre></div></div>
+
+<h3 id="analytics-service">Analytics Service</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Required</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Event batching</span>
+  <span class="pi">-</span> <span class="s">Data retention policies</span>
+  <span class="pi">-</span> <span class="s">GDPR compliance</span>
+  <span class="pi">-</span> <span class="s">Real-time processing</span>
+  <span class="pi">-</span> <span class="s">Dashboard integration</span>
+  <span class="pi">-</span> <span class="s">Alert rules</span>
+  <span class="pi">-</span> <span class="s">Export capabilities</span>
+  
+<span class="na">Current</span><span class="pi">:</span> <span class="s">Console.log statements</span>
+</code></pre></div></div>
+
+<h2 id="-production-deployment-requirements">🚀 Production Deployment Requirements</h2>
+
+<h3 id="infrastructure-requirements">Infrastructure Requirements</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Compute</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Load balancer with health checks</span>
+  <span class="pi">-</span> <span class="na">Auto-scaling groups (min</span><span class="pi">:</span> <span class="s">3, max</span><span class="err">:</span> <span class="s">10)</span>
+  <span class="pi">-</span> <span class="s">Multi-AZ deployment</span>
+  <span class="pi">-</span> <span class="s">Container orchestration (K8s/ECS)</span>
+  
+<span class="na">Database</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Primary-replica setup</span>
+  <span class="pi">-</span> <span class="s">Automated backups (daily)</span>
+  <span class="pi">-</span> <span class="s">Point-in-time recovery</span>
+  <span class="pi">-</span> <span class="s">Connection pooling</span>
+  <span class="pi">-</span> <span class="s">Query optimization</span>
+  
+<span class="na">Caching</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Redis cluster (3 nodes minimum)</span>
+  <span class="pi">-</span> <span class="s">Cache invalidation strategy</span>
+  <span class="pi">-</span> <span class="s">TTL policies</span>
+  <span class="pi">-</span> <span class="s">Eviction policies</span>
+  
+<span class="na">Storage</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">CDN for static assets</span>
+  <span class="pi">-</span> <span class="s">S3 for user uploads</span>
+  <span class="pi">-</span> <span class="s">Backup retention (30 days)</span>
+  
+<span class="na">Monitoring</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">APM (Datadog/New Relic)</span>
+  <span class="pi">-</span> <span class="s">Log aggregation (ELK/CloudWatch)</span>
+  <span class="pi">-</span> <span class="s">Synthetic monitoring</span>
+  <span class="pi">-</span> <span class="s">Custom dashboards</span>
+  <span class="pi">-</span> <span class="s">Alert escalation</span>
+</code></pre></div></div>
+
+<h3 id="security-requirements">Security Requirements</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Authentication</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">MFA enforcement for admin</span>
+  <span class="pi">-</span> <span class="s">Session timeout (30 min)</span>
+  <span class="pi">-</span> <span class="s">Password complexity rules</span>
+  <span class="pi">-</span> <span class="s">Account lockout policy</span>
+  
+<span class="na">Authorization</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Role-based access control</span>
+  <span class="pi">-</span> <span class="s">Resource-level permissions</span>
+  <span class="pi">-</span> <span class="s">API key management</span>
+  <span class="pi">-</span> <span class="s">OAuth scopes</span>
+  
+<span class="na">Data Protection</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Encryption at rest (AES-256)</span>
+  <span class="pi">-</span> <span class="s">Encryption in transit (TLS 1.3)</span>
+  <span class="pi">-</span> <span class="s">PII masking in logs</span>
+  <span class="pi">-</span> <span class="s">Secrets management (Vault/KMS)</span>
+  
+<span class="na">Compliance</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">GDPR data handling</span>
+  <span class="pi">-</span> <span class="s">CCPA compliance</span>
+  <span class="pi">-</span> <span class="s">SOC 2 controls</span>
+  <span class="pi">-</span> <span class="s">Audit logging</span>
+</code></pre></div></div>
+
+<h3 id="performance-requirements">Performance Requirements</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">API Response Times</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">P50</span><span class="pi">:</span> <span class="s">&lt; 100ms</span>
+  <span class="pi">-</span> <span class="na">P95</span><span class="pi">:</span> <span class="s">&lt; 500ms</span>
+  <span class="pi">-</span> <span class="na">P99</span><span class="pi">:</span> <span class="s">&lt; 1000ms</span>
+  
+<span class="na">Availability</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">99.9% uptime SLA</span>
+  <span class="pi">-</span> <span class="s">&lt; 5 min recovery time</span>
+  <span class="pi">-</span> <span class="s">Zero-downtime deployments</span>
+  
+<span class="na">Scalability</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Handle 10,000 concurrent users</span>
+  <span class="pi">-</span> <span class="s">1M requests/day capacity</span>
+  <span class="pi">-</span> <span class="s">&lt; 3s page load time</span>
+  <span class="pi">-</span> <span class="s">Database query &lt; 100ms</span>
+</code></pre></div></div>
+
+<h2 id="-production-readiness-checklist">📋 Production Readiness Checklist</h2>
+
+<h3 id="pre-production-gate-1-foundation">Pre-Production Gate 1: Foundation</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Authentication system operational</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Database migrations executed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Basic error handling implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logging configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Health checks working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Environment variables secured</li>
+</ul>
+
+<h3 id="pre-production-gate-2-integration">Pre-Production Gate 2: Integration</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />All services connected</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />End-to-end flows tested</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cache layer operational</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Background jobs running</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Webhooks delivering</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Analytics tracking</li>
+</ul>
+
+<h3 id="pre-production-gate-3-reliability">Pre-Production Gate 3: Reliability</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Auto-scaling configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup/restore tested</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Disaster recovery plan</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitoring alerts working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance benchmarks met</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security scan passed</li>
+</ul>
+
+<h3 id="pre-production-gate-4-compliance">Pre-Production Gate 4: Compliance</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Privacy policy implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Terms of service displayed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GDPR compliance verified</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Data retention automated</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Audit logs operational</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security review completed</li>
+</ul>
+
+<h2 id="️-realistic-timeline-to-production">🗓️ Realistic Timeline to Production</h2>
+
+<h3 id="week-1-requirements--planning-stop-coding">Week 1: Requirements &amp; Planning (STOP CODING)</h3>
+<ul>
+  <li>Define ALL user stories</li>
+  <li>Write acceptance criteria</li>
+  <li>Create API specifications</li>
+  <li>Design database schema</li>
+  <li>Plan infrastructure</li>
+  <li>Security threat modeling</li>
+</ul>
+
+<h3 id="week-2-foundation-authentication--database">Week 2: Foundation (Authentication + Database)</h3>
+<ul>
+  <li>Implement authentication</li>
+  <li>Connect Supabase</li>
+  <li>Create migrations</li>
+  <li>Basic CRUD operations</li>
+  <li>Error handling patterns</li>
+  <li>Logging setup</li>
+</ul>
+
+<h3 id="week-3-core-services-integration">Week 3: Core Services Integration</h3>
+<ul>
+  <li>Wire gamification service</li>
+  <li>Connect question delivery</li>
+  <li>Implement caching</li>
+  <li>Add monitoring</li>
+  <li>Background jobs</li>
+  <li>WebSocket connections</li>
+</ul>
+
+<h3 id="week-4-testing--hardening">Week 4: Testing &amp; Hardening</h3>
+<ul>
+  <li>Unit test coverage &gt; 80%</li>
+  <li>Integration tests</li>
+  <li>Load testing</li>
+  <li>Security testing</li>
+  <li>Performance optimization</li>
+  <li>Bug fixes</li>
+</ul>
+
+<h3 id="week-5-infrastructure--deployment">Week 5: Infrastructure &amp; Deployment</h3>
+<ul>
+  <li>CI/CD pipeline</li>
+  <li>Container setup</li>
+  <li>Load balancer config</li>
+  <li>Auto-scaling rules</li>
+  <li>Monitoring dashboards</li>
+  <li>Alert rules</li>
+</ul>
+
+<h3 id="week-6-beta--polish">Week 6: Beta &amp; Polish</h3>
+<ul>
+  <li>Beta deployment</li>
+  <li>User acceptance testing</li>
+  <li>Performance tuning</li>
+  <li>Documentation</li>
+  <li>Training materials</li>
+  <li>Launch preparation</li>
+</ul>
+
+<h2 id="-current-reality-check">🚨 Current Reality Check</h2>
+
+<h3 id="what-works-now">What Works Now</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>✅ npm install
+✅ npm run dev  
+✅ See mock data
+❌ Everything else
+</code></pre></div></div>
+
+<h3 id="actual-production-readiness-by-component">Actual Production Readiness by Component</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Readiness</th>
+      <th>Time to Ready</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Authentication</td>
+      <td>0%</td>
+      <td>1 week</td>
+    </tr>
+    <tr>
+      <td>Database</td>
+      <td>0%</td>
+      <td>3 days</td>
+    </tr>
+    <tr>
+      <td>Services</td>
+      <td>10%</td>
+      <td>2 weeks</td>
+    </tr>
+    <tr>
+      <td>UI/UX</td>
+      <td>40%</td>
+      <td>1 week</td>
+    </tr>
+    <tr>
+      <td>Testing</td>
+      <td>5%</td>
+      <td>2 weeks</td>
+    </tr>
+    <tr>
+      <td>Infrastructure</td>
+      <td>0%</td>
+      <td>1 week</td>
+    </tr>
+    <tr>
+      <td>Security</td>
+      <td>0%</td>
+      <td>1 week</td>
+    </tr>
+    <tr>
+      <td>Monitoring</td>
+      <td>0%</td>
+      <td>3 days</td>
+    </tr>
+    <tr>
+      <td>Documentation</td>
+      <td>30%</td>
+      <td>3 days</td>
+    </tr>
+    <tr>
+      <td><strong>TOTAL</strong></td>
+      <td><strong>~10%</strong></td>
+      <td><strong>4-6 weeks</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-stopstart-actions">🛑 STOP/START Actions</h2>
+
+<h3 id="stop-immediately">STOP Immediately</h3>
+<ol>
+  <li>Creating new features</li>
+  <li>Writing disconnected services</li>
+  <li>Adding more TypeScript files</li>
+  <li>Writing tests for mock data</li>
+  <li>Claiming things are “done”</li>
+</ol>
+
+<h3 id="start-immediately">START Immediately</h3>
+<ol>
+  <li>Defining requirements</li>
+  <li>Connecting ONE service end-to-end</li>
+  <li>Implementing error handling</li>
+  <li>Adding real tests</li>
+  <li>Being honest about readiness</li>
+</ol>
+
+<h2 id="-success-metrics-for-production">📊 Success Metrics for Production</h2>
+
+<h3 id="technical-metrics">Technical Metrics</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Zero critical security vulnerabilities</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />&lt; 0.1% error rate</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />&gt; 99.9% uptime</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />&lt; 500ms P95 latency</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />&gt; 80% test coverage</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Zero data loss incidents</li>
+</ul>
+
+<h3 id="business-metrics">Business Metrics</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User registration working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Quiz completion rate &gt; 80%</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Data persistence verified</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Analytics tracking confirmed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Payment processing (if applicable)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Support ticket system ready</li>
+</ul>
+
+<h2 id="-final-verdict">🔴 Final Verdict</h2>
+
+<p><strong>PRODUCTION READY: ❌ ABSOLUTELY NOT</strong></p>
+
+<p><strong>Estimated Time to Production: 4-6 weeks with 3-4 developers</strong></p>
+
+<p><strong>Next Action: STOP building features, START connecting what exists</strong></p>
+
+<hr />
+
+<p><em>This runbook represents the ACTUAL requirements for production readiness.</em>
+<em>Nothing currently meets these standards.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / PRODUCTION_READINESS_RUNBOOK.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

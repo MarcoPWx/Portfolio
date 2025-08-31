@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌐 Hosting &amp; DNS Architecture Guide | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <h1 id="-hosting--dns-architecture-guide">🌐 Hosting &amp; DNS Architecture Guide</h1>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+  <li><a href="#dns-fundamentals">DNS Fundamentals</a></li>
+  <li><a href="#our-ecosystem-architecture">Our Ecosystem Architecture</a></li>
+  <li><a href="#hosting-strategy">Hosting Strategy</a></li>
+  <li><a href="#implementation-steps">Implementation Steps</a></li>
+  <li><a href="#cost-analysis">Cost Analysis</a></li>
+</ol>
+
+<hr />
+
+<h2 id="dns-fundamentals">DNS Fundamentals</h2>
+
+<h3 id="what-is-dns">What is DNS?</h3>
+<p>DNS (Domain Name System) is like the internet’s phone book. It translates human-readable domain names into IP addresses that computers use.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User types: naturequest.dev
+DNS returns: 104.21.45.123 (Cloudflare's IP)
+Browser connects to: 104.21.45.123
+</code></pre></div></div>
+
+<h3 id="dns-record-types-you-need-to-know">DNS Record Types You Need to Know</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Record Type</th>
+      <th>Purpose</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>A</strong></td>
+      <td>Points domain to IPv4 address</td>
+      <td><code class="language-plaintext highlighter-rouge">naturequest.dev → 104.21.45.123</code></td>
+    </tr>
+    <tr>
+      <td><strong>AAAA</strong></td>
+      <td>Points domain to IPv6 address</td>
+      <td><code class="language-plaintext highlighter-rouge">naturequest.dev → 2606:4700::6815:2d7b</code></td>
+    </tr>
+    <tr>
+      <td><strong>CNAME</strong></td>
+      <td>Alias one domain to another</td>
+      <td><code class="language-plaintext highlighter-rouge">www.naturequest.dev → naturequest.dev</code></td>
+    </tr>
+    <tr>
+      <td><strong>MX</strong></td>
+      <td>Mail server routing</td>
+      <td><code class="language-plaintext highlighter-rouge">mail.naturequest.dev → gmail-smtp-in.l.google.com</code></td>
+    </tr>
+    <tr>
+      <td><strong>TXT</strong></td>
+      <td>Text data (verification, SPF)</td>
+      <td><code class="language-plaintext highlighter-rouge">"v=spf1 include:_spf.google.com ~all"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="our-ecosystem-architecture">Our Ecosystem Architecture</h2>
+
+<h3 id="domain-structure">Domain Structure</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>naturequest.dev (Main Domain)
+├── www.naturequest.dev          → Portfolio/Landing (CNAME)
+├── accounts.naturequest.dev     → Account Dashboard (A Record)
+├── api.naturequest.dev          → Central API (A Record)
+├── devmentor.naturequest.dev    → DevMentor App (A Record)
+├── quizmentor.naturequest.dev   → QuizMentor App (A Record)
+├── harvest.naturequest.dev      → Harvest.ai App (A Record)
+└── omni.naturequest.dev         → Omni Documentation (CNAME → GitHub Pages)
+</code></pre></div></div>
+
+<h3 id="visual-architecture">Visual Architecture</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                            [Cloudflare DNS]
+                                   |
+                    ┌──────────────┴──────────────┐
+                    |                              |
+              [CDN Layer]                    [SSL/Security]
+                    |                              |
+    ┌───────────────┴───────────────┬──────────────────────────┐
+    |               |               |                           |
+[Vercel]        [Vercel]       [Vercel/Railway]          [GitHub Pages]
+Portfolio      Accounts       QuizMentor/DevMentor         Omni Docs
+www.nq.dev    accounts.nq.dev  *.nq.dev                  omni.nq.dev
+    |               |               |
+    └───────────────┴───────────────┴──────────┐
+                                                |
+                                         [Supabase Cloud]
+                                      Database &amp; Auth API
+                                    (NOT a hosting service)
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="hosting-strategy">Hosting Strategy</h2>
+
+<h3 id="1-vercel-primary-platform">1. <strong>Vercel</strong> (Primary Platform)</h3>
+<p><strong>Why Vercel?</strong></p>
+<ul>
+  <li>Automatic deployments from GitHub</li>
+  <li>Edge functions for API routes</li>
+  <li>Built-in analytics</li>
+  <li>Excellent Next.js support</li>
+  <li>Free tier: 100GB bandwidth/month</li>
+</ul>
+
+<p><strong>What We Host:</strong></p>
+<ul>
+  <li>Portfolio (www.naturequest.dev)</li>
+  <li>Account Dashboard (accounts.naturequest.dev)</li>
+  <li>DevMentor (devmentor.naturequest.dev)</li>
+</ul>
+
+<p><strong>Configuration:</strong></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">vercel.json</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">portfolio</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"rewrites"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/auth/:path*"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"destination"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.naturequest.dev/auth/:path*"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/(.*)"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"X-Frame-Options"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DENY"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Content-Security-Policy"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.naturequest.dev"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="2-railway-alternative-for-quizmentor">2. <strong>Railway</strong> (Alternative for QuizMentor)</h3>
+<p><strong>Why Railway?</strong></p>
+<ul>
+  <li>Docker support</li>
+  <li>Database hosting</li>
+  <li>Background jobs</li>
+  <li>$5/month includes 8GB RAM, 100GB bandwidth</li>
+</ul>
+
+<p><strong>What We Host:</strong></p>
+<ul>
+  <li>QuizMentor (quizmentor.naturequest.dev)</li>
+  <li>Could move here if Vercel limits hit</li>
+</ul>
+
+<h3 id="3-github-pages-free-for-omni">3. <strong>GitHub Pages</strong> (Free for Omni)</h3>
+<p><strong>Why GitHub Pages?</strong></p>
+<ul>
+  <li>Free for open source</li>
+  <li>Automatic deployments</li>
+  <li>Great for documentation</li>
+</ul>
+
+<p><strong>Configuration:</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .github/workflows/deploy-omni.yml</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">Deploy Omni Documentation</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">main</span><span class="pi">]</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">deploy</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-node@v2</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm ci &amp;&amp; npm run build</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">peaceiris/actions-gh-pages@v3</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">github_token</span><span class="pi">:</span> <span class="s">$</span>
+          <span class="na">publish_dir</span><span class="pi">:</span> <span class="s">./build</span>
+          <span class="na">cname</span><span class="pi">:</span> <span class="s">omni.naturequest.dev</span>
+</code></pre></div></div>
+
+<h3 id="4-supabase-backend--auth">4. <strong>Supabase</strong> (Backend &amp; Auth)</h3>
+<p><strong>Why Supabase?</strong></p>
+<ul>
+  <li>Postgres database</li>
+  <li>Real-time subscriptions</li>
+  <li>Built-in auth</li>
+  <li>Storage for files</li>
+  <li>Free tier: 500MB database, 2GB storage</li>
+</ul>
+
+<hr />
+
+<h2 id="implementation-steps">Implementation Steps</h2>
+
+<h3 id="step-1-register-domain">Step 1: Register Domain</h3>
+<p><strong>Option A: Namecheap</strong> (~$10/year for .dev)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Go to namecheap.com
+2. Search <span class="k">for</span> <span class="s2">"naturequest.dev"</span>
+3. Purchase with privacy protection
+4. Point nameservers to Cloudflare
+</code></pre></div></div>
+
+<p><strong>Option B: Cloudflare Registrar</strong> (At cost, ~$10/year)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Transfer domain to Cloudflare
+2. No markup pricing
+3. Automatic Cloudflare integration
+</code></pre></div></div>
+
+<h3 id="step-2-configure-cloudflare-dns">Step 2: Configure Cloudflare DNS</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Main domain</span>
+A     @                    76.76.21.21      <span class="o">(</span>Vercel IP<span class="o">)</span>
+AAAA  @                    2606:4700::6815  <span class="o">(</span>Vercel IPv6<span class="o">)</span>
+
+<span class="c"># Subdomains</span>
+CNAME www                  cname.vercel-dns.com
+A     accounts             76.76.21.21
+A     devmentor            76.76.21.21
+A     quizmentor           192.168.1.1      <span class="o">(</span>Railway IP<span class="o">)</span>
+CNAME harvest              cname.vercel-dns.com
+CNAME omni                 yourusername.github.io
+A     api                  YOUR_SUPABASE_IP
+
+<span class="c"># Email (if using Google Workspace)</span>
+MX    @                    1  aspmx.l.google.com
+MX    @                    5  alt1.aspmx.l.google.com
+TXT   @                    <span class="s2">"v=spf1 include:_spf.google.com ~all"</span>
+TXT   _dmarc               <span class="s2">"v=DMARC1; p=none; rua=mailto:admin@naturequest.dev"</span>
+</code></pre></div></div>
+
+<h3 id="step-3-sslsecurity-setup">Step 3: SSL/Security Setup</h3>
+
+<p><strong>Cloudflare SSL Settings:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSL/TLS Mode: Full (Strict)
+Always Use HTTPS: On
+Automatic HTTPS Rewrites: On
+Min TLS Version: 1.2
+</code></pre></div></div>
+
+<p><strong>Security Headers (via Cloudflare Workers):</strong></p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// security-headers.js</span>
+<span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">fetch</span><span class="dl">'</span><span class="p">,</span> <span class="nx">event</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">respondWith</span><span class="p">(</span><span class="nx">handleRequest</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">request</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">handleRequest</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">newHeaders</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Headers</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">)</span>
+  
+  <span class="c1">// Security headers</span>
+  <span class="nx">newHeaders</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">X-Content-Type-Options</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">nosniff</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">newHeaders</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">X-Frame-Options</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">DENY</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">newHeaders</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">X-XSS-Protection</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1; mode=block</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">newHeaders</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Referrer-Policy</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">strict-origin-when-cross-origin</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">newHeaders</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Permissions-Policy</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">geolocation=(), microphone=(), camera=()</span><span class="dl">'</span><span class="p">)</span>
+  
+  <span class="c1">// HSTS</span>
+  <span class="nx">newHeaders</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Strict-Transport-Security</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">max-age=31536000; includeSubDomains; preload</span><span class="dl">'</span><span class="p">)</span>
+  
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">status</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span>
+    <span class="na">statusText</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusText</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="nx">newHeaders</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-4-deploy-each-product">Step 4: Deploy Each Product</h3>
+
+<p><strong>Portfolio &amp; Accounts (Vercel):</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Vercel CLI</span>
+npm i <span class="nt">-g</span> vercel
+
+<span class="c"># Deploy portfolio</span>
+<span class="nb">cd </span>portfolio
+vercel <span class="nt">--prod</span>
+
+<span class="c"># Link domain in Vercel Dashboard</span>
+<span class="c"># accounts.naturequest.dev → portfolio-accounts.vercel.app</span>
+</code></pre></div></div>
+
+<p><strong>QuizMentor (Railway):</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Railway CLI</span>
+npm i <span class="nt">-g</span> @railway/cli
+
+<span class="c"># Deploy</span>
+<span class="nb">cd </span>QuizMentor
+railway login
+railway up
+
+<span class="c"># Link domain in Railway Dashboard</span>
+</code></pre></div></div>
+
+<p><strong>Omni (GitHub Pages):</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># In Omni repository settings</span>
+<span class="c"># Pages → Source: Deploy from branch</span>
+<span class="c"># Custom domain: omni.naturequest.dev</span>
+<span class="c"># Enforce HTTPS: ✓</span>
+</code></pre></div></div>
+
+<h3 id="step-5-configure-cross-domain-authentication">Step 5: Configure Cross-Domain Authentication</h3>
+
+<p><strong>Shared Cookie Domain:</strong></p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In auth configuration</span>
+<span class="kd">const</span> <span class="nx">cookieOptions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">domain</span><span class="p">:</span> <span class="dl">'</span><span class="s1">.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// Note the dot - allows all subdomains</span>
+  <span class="na">secure</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="na">sameSite</span><span class="p">:</span> <span class="dl">'</span><span class="s1">lax</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="na">maxAge</span><span class="p">:</span> <span class="mi">30</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span> <span class="c1">// 30 days</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>CORS Configuration:</strong></p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// api.naturequest.dev CORS settings</span>
+<span class="kd">const</span> <span class="nx">allowedOrigins</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="dl">'</span><span class="s1">https://naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://www.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://accounts.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://devmentor.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://quizmentor.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://harvest.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://omni.naturequest.dev</span><span class="dl">'</span>
+<span class="p">]</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">({</span>
+  <span class="na">origin</span><span class="p">:</span> <span class="p">(</span><span class="nx">origin</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">origin</span> <span class="o">||</span> <span class="nx">allowedOrigins</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">origin</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Not allowed by CORS</span><span class="dl">'</span><span class="p">))</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">credentials</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}))</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="cost-analysis">Cost Analysis</h2>
+
+<h3 id="monthly-costs-starting">Monthly Costs (Starting)</h3>
+<p>| Service | Free Tier | Paid Tier | Our Usage |
+|———|———–|———–|———–|
+| <strong>Domain</strong> | - | $0.83/mo | $0.83 |
+| <strong>Cloudflare</strong> | Unlimited | $20/mo Pro | Free |
+| <strong>Vercel</strong> | 100GB | $20/mo Pro | Free initially |
+| <strong>Railway</strong> | - | $5/mo | $5 (QuizMentor) |
+| <strong>Supabase</strong> | 500MB DB | $25/mo | Free initially |
+| <strong>GitHub</strong> | Unlimited public | $4/mo Pro | Free (Omni) |
+| <strong>Total</strong> | - | - | <strong>$5.83/mo</strong> |</p>
+
+<h3 id="scaling-costs-1000-users">Scaling Costs (1000+ users)</h3>
+<ul>
+  <li>Vercel Pro: $20/mo</li>
+  <li>Supabase Pro: $25/mo</li>
+  <li>Cloudflare Pro: $20/mo</li>
+  <li><strong>Total: ~$70/mo</strong></li>
+</ul>
+
+<h3 id="enterprise-10000-users">Enterprise (10,000+ users)</h3>
+<ul>
+  <li>Vercel Enterprise: Custom</li>
+  <li>Supabase Scale: $500/mo</li>
+  <li>Cloudflare Business: $200/mo</li>
+  <li>Railway Scale: $20/mo</li>
+  <li><strong>Total: ~$720/mo+</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="monitoring--analytics">Monitoring &amp; Analytics</h2>
+
+<h3 id="1-cloudflare-analytics-free">1. <strong>Cloudflare Analytics</strong> (Free)</h3>
+<ul>
+  <li>Traffic analytics</li>
+  <li>Performance metrics</li>
+  <li>Security events</li>
+  <li>Bot detection</li>
+</ul>
+
+<h3 id="2-vercel-analytics-10mo">2. <strong>Vercel Analytics</strong> ($10/mo)</h3>
+<ul>
+  <li>Core Web Vitals</li>
+  <li>Real user metrics</li>
+  <li>Performance insights</li>
+</ul>
+
+<h3 id="3-uptime-monitoring">3. <strong>Uptime Monitoring</strong></h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Use UptimeRobot (free for 50 monitors)</span>
+<span class="kd">const</span> <span class="nx">monitors</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="dl">'</span><span class="s1">https://naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://accounts.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://api.naturequest.dev/health</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://devmentor.naturequest.dev</span><span class="dl">'</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">https://quizmentor.naturequest.dev</span><span class="dl">'</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="4-error-tracking-sentry">4. <strong>Error Tracking (Sentry)</strong></h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// sentry.config.js</span>
+<span class="nx">Sentry</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+  <span class="na">dsn</span><span class="p">:</span> <span class="dl">"</span><span class="s2">YOUR_SENTRY_DSN</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">environment</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">,</span>
+  <span class="na">integrations</span><span class="p">:</span> <span class="p">[</span>
+    <span class="k">new</span> <span class="nx">Sentry</span><span class="p">.</span><span class="nx">BrowserTracing</span><span class="p">(),</span>
+  <span class="p">],</span>
+  <span class="na">tracesSampleRate</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="c1">// 10% of transactions</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="security-best-practices">Security Best Practices</h2>
+
+<h3 id="1-api-rate-limiting">1. <strong>API Rate Limiting</strong></h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Using express-rate-limit</span>
+<span class="kd">const</span> <span class="nx">limiter</span> <span class="o">=</span> <span class="nx">rateLimit</span><span class="p">({</span>
+  <span class="na">windowMs</span><span class="p">:</span> <span class="mi">15</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// 15 minutes</span>
+  <span class="na">max</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="c1">// limit each IP to 100 requests per windowMs</span>
+  <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Too many requests from this IP</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h3 id="2-environment-variables">2. <strong>Environment Variables</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.production</span>
+<span class="nv">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">=</span>https://xxx.supabase.co
+<span class="nv">SUPABASE_SERVICE_KEY</span><span class="o">=</span>eyJhbGc... <span class="c"># Never expose this</span>
+<span class="nv">STRIPE_SECRET_KEY</span><span class="o">=</span>sk_live_...
+<span class="nv">CLOUDFLARE_API_TOKEN</span><span class="o">=</span>...
+</code></pre></div></div>
+
+<h3 id="3-backup-strategy">3. <strong>Backup Strategy</strong></h3>
+<ul>
+  <li>Database: Daily automated backups (Supabase)</li>
+  <li>Code: GitHub (version control)</li>
+  <li>Assets: Cloudflare R2 or AWS S3</li>
+  <li>Configs: Encrypted in 1Password/Bitwarden</li>
+</ul>
+
+<hr />
+
+<h2 id="troubleshooting-common-issues">Troubleshooting Common Issues</h2>
+
+<h3 id="dns-not-propagating">DNS Not Propagating</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check DNS propagation</span>
+dig naturequest.dev
+nslookup naturequest.dev 8.8.8.8
+
+<span class="c"># Flush DNS cache (Mac)</span>
+<span class="nb">sudo </span>dscacheutil <span class="nt">-flushcache</span>
+</code></pre></div></div>
+
+<h3 id="ssl-certificate-issues">SSL Certificate Issues</h3>
+<ol>
+  <li>Check Cloudflare SSL mode is “Full (Strict)”</li>
+  <li>Wait 24 hours for certificate generation</li>
+  <li>Clear browser cache</li>
+</ol>
+
+<h3 id="cors-errors">CORS Errors</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Debug CORS</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Origin:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">origin</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Credentials:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">.</span><span class="nx">credentials</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="subdomain-cookie-issues">Subdomain Cookie Issues</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Ensure cookie domain starts with dot</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">auth=token; domain=.naturequest.dev; secure; samesite=lax</span><span class="dl">"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="next-steps-checklist">Next Steps Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Purchase naturequest.dev domain</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up Cloudflare account</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure DNS records</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy portfolio to Vercel</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy accounts dashboard</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up Supabase project</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure authentication</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy each product</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up monitoring</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test cross-domain auth</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure backups</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Document API endpoints</li>
+</ul>
+
+<hr />
+
+<h2 id="questions--answers">Questions &amp; Answers</h2>
+
+<p><strong>Q: Why not use a single server for everything?</strong>
+A: Microservices architecture allows independent scaling, deployment, and failure isolation. If QuizMentor goes down, DevMentor still works.</p>
+
+<p><strong>Q: Can I use AWS/GCP instead?</strong>
+A: Yes, but it’s more complex and expensive for starting. Our stack is optimized for developer experience and cost.</p>
+
+<p><strong>Q: How do I handle EU users (GDPR)?</strong>
+A: Cloudflare has EU points of presence. Supabase can be deployed in EU regions. Add cookie consent banner.</p>
+
+<p><strong>Q: What about mobile apps?</strong>
+A: Same auth system works. Use deep linking: <code class="language-plaintext highlighter-rouge">devmentor://auth?token=xxx</code></p>
+
+<hr />
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://vercel.com/docs">Vercel Docs</a></li>
+  <li><a href="https://developers.cloudflare.com">Cloudflare Docs</a></li>
+  <li><a href="https://supabase.com/docs">Supabase Docs</a></li>
+  <li><a href="https://docs.railway.app">Railway Docs</a></li>
+  <li><a href="https://dnschecker.org">DNS Checker</a></li>
+  <li><a href="https://www.ssllabs.com/ssltest">SSL Test</a></li>
+</ul>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

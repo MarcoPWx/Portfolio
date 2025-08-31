@@ -1,0 +1,109 @@
+import { Meta, Title, Subtitle, Description, ArgsTable, Source, Canvas, Controls } from '@storybook/blocks';
+import { Input, Textarea } from './Input';
+import * as InputStories from './Input.stories';
+import { Search, Mail, AlertCircle } from 'lucide-react';
+
+<Meta of={Input} title="UI/Input/Docs" tags={['docs']} />
+
+<Title>Input & Textarea</Title>
+
+<Subtitle>Text inputs with labels, icons, error states, and accessibility patterns</Subtitle>
+
+<Description>
+Inputs and textareas provide consistent styling and behaviors for text entry. They accept all native
+attributes and support optional label, icon (left/right), and error messaging out of the box.
+</Description>
+
+## Live examples
+
+<Canvas of={InputStories.Default} />
+<Controls of={InputStories.Default} />
+<Source of={InputStories.Default} />
+<Canvas of={InputStories.WithLeftIcon} />
+<Source of={InputStories.WithLeftIcon} />
+<Canvas of={InputStories.WithRightIcon} />
+<Source of={InputStories.WithRightIcon} />
+<Canvas of={InputStories.WithError} />
+<Source of={InputStories.WithError} />
+<Canvas of={InputStories.TextareaExample} />
+<Source of={InputStories.TextareaExample} />
+
+## Usage
+
+<Source
+  code={`import { Input, Textarea } from '@/components/ui/Input';
+import { Search, Mail } from 'lucide-react';
+
+export function Examples() {
+  return (
+    <div className="space-y-4">
+      <Input label="Your name" placeholder="Type here..." />
+      <Input label="Search" icon={Search} iconPosition="left" placeholder="Find something..." />
+      <Input label="Email" icon={Mail} iconPosition="right" placeholder="you@example.com" />
+      <Input label="Username" error="This field is required" placeholder="Enter username" aria-invalid />
+      <Textarea label="Message" rows={4} placeholder="Write your message..." />
+    </div>
+  );
+}`} language="tsx" />
+
+## Error messaging and accessibility
+
+- When showing an error, set `aria-invalid` on the control and connect the message via `aria-describedby`.
+- You can pass `id` to the input and an `id` to the error element to link them.
+
+<Source
+  code={`export function FormField() {
+  const id = 'email';
+  const errorId = id + '-error';
+  const hasError = true;
+
+  return (
+    <div className="space-y-1">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-300">Email</label>
+      <div className="relative">
+        <Input
+          id={id}
+          type="email"
+          placeholder="you@example.com"
+          aria-invalid={hasError}
+          aria-describedby={hasError ? errorId : undefined}
+        />
+        {hasError && (
+          <div id={errorId} className="mt-1 flex items-center gap-1 text-sm text-red-400">
+            <AlertCircle size={14} /> <span>Enter a valid email.</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}`} language="tsx" />
+
+## Icons
+
+Pass a Lucide icon component via the `icon` prop and choose placement with `iconPosition`.
+
+<Source
+  code={`<div className="space-y-3">
+  <Input label="Search" icon={Search} iconPosition="left" placeholder="Search docs" />
+  <Input label="Email" icon={Mail} iconPosition="right" placeholder="you@example.com" />
+</div>`}
+  language="tsx"
+/>
+
+## Textarea
+
+The `Textarea` component mirrors Input styles and accepts native textarea attributes.
+
+<Source
+  code={`<Textarea label="Message" rows={6} placeholder="Tell us more..." />`}
+  language="tsx"
+/>
+
+## Props
+
+- Input
+<ArgsTable of={Input} />
+
+- Textarea
+<ArgsTable of={Textarea} />
+

@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POSTGRES MIGRATION GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/database/POSTGRES_MIGRATION_GUIDE.md</span>
+</div>
+
+<h1>POSTGRES MIGRATION GUIDE</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="postgresql-migration-strategy-for-devmentor">PostgreSQL Migration Strategy for DevMentor</h1>
+
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This document outlines the strategy to standardize all DevMentor services on PostgreSQL for persistent storage, while maintaining Qdrant for vector operations. The migration will consolidate scattered persistence approaches into a unified, scalable architecture.</p>
+
+<h2 id="current-state-analysis">Current State Analysis</h2>
+
+<h3 id="service-persistence-overview">Service Persistence Overview</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Current Storage</th>
+      <th>Status</th>
+      <th>Issues</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Auth Service</strong></td>
+      <td>PostgreSQL (pg)</td>
+      <td>✅ Partial</td>
+      <td>Dual schema paths, inconsistent table definitions</td>
+    </tr>
+    <tr>
+      <td><strong>Project Service</strong></td>
+      <td>PostgreSQL + Filesystem</td>
+      <td>✅ Working</td>
+      <td>Files on disk, metadata in DB</td>
+    </tr>
+    <tr>
+      <td><strong>Memory Service</strong></td>
+      <td>Qdrant only</td>
+      <td>⚠️ Limited</td>
+      <td>No relational metadata, demo writes to JSON</td>
+    </tr>
+    <tr>
+      <td><strong>AI Gateway</strong></td>
+      <td>None</td>
+      <td>❌ Stateless</td>
+      <td>No persistence layer</td>
+    </tr>
+    <tr>
+      <td><strong>API Gateway</strong></td>
+      <td>Redis (cache only)</td>
+      <td>✅ Stateless</td>
+      <td>Cache-only, no issues</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="identified-issues">Identified Issues</h3>
+
+<ol>
+  <li><strong>Schema Duplication in Auth Service</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">services/auth-service/src/index.ts</code>: Creates tables with SERIAL IDs in public schema</li>
+      <li><code class="language-plaintext highlighter-rouge">services/auth-service/src/database.ts</code>: Defines auth.* schema with UUIDs and RLS</li>
+      <li>No canonical migrations checked into repository</li>
+    </ul>
+  </li>
+  <li><strong>Missing Infrastructure</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">services/database/docker-compose.yml</code> references non-existent <code class="language-plaintext highlighter-rouge">schema.sql</code> and <code class="language-plaintext highlighter-rouge">seed-data.sql</code></li>
+      <li>No migration framework or versioning system</li>
+      <li>Inconsistent ID types (SERIAL vs UUID)</li>
+    </ul>
+  </li>
+  <li><strong>Memory Service Gaps</strong>
+    <ul>
+      <li>No PostgreSQL integration for document metadata</li>
+      <li>Demo endpoint writes to local JSON file</li>
+      <li>No stable IDs for retrieval operations</li>
+    </ul>
+  </li>
+  <li><strong>File Storage Inconsistency</strong>
+    <ul>
+      <li>Project Service stores files on disk with metadata in PostgreSQL</li>
+      <li>No clear strategy for scaling or backup</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="target-architecture">Target Architecture</h2>
+
+<h3 id="database-schema-organization">Database Schema Organization</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PostgreSQL Database: devmentor
+├── Schema: auth
+│   ├── users (UUID PK)
+│   ├── user_sessions (UUID PK)
+│   └── audit_log (UUID PK)
+├── Schema: projects
+│   ├── projects (UUID PK)
+│   ├── epics (UUID PK)
+│   ├── tasks (UUID PK)
+│   ├── project_files (UUID PK)
+│   └── project_activity (UUID PK)
+└── Schema: memory
+    ├── documents (UUID PK)
+    └── chunks (UUID PK, links to Qdrant)
+</code></pre></div></div>
+
+<h3 id="storage-strategy">Storage Strategy</h3>
+
+<ul>
+  <li><strong>PostgreSQL</strong>: All relational data, metadata, audit trails</li>
+  <li><strong>Qdrant</strong>: Vector embeddings for RAG/search</li>
+  <li><strong>Filesystem/S3</strong>: Binary files (with metadata in PostgreSQL)</li>
+  <li><strong>Redis</strong>: Session cache, rate limiting, temporary data</li>
+</ul>
+
+<h2 id="implementation-plan">Implementation Plan</h2>
+
+<h3 id="phase-1-schema-definition-and-migrations-week-1">Phase 1: Schema Definition and Migrations (Week 1)</h3>
+
+<h4 id="11-choose-migration-tool">1.1 Choose Migration Tool</h4>
+<p><strong>Options:</strong></p>
+<ul>
+  <li><strong>Recommended</strong>: node-pg-migrate (simple, SQL-based)</li>
+  <li>Alternative 1: Prisma (ORM with migrations)</li>
+  <li>Alternative 2: Knex.js migrations</li>
+  <li>Alternative 3: Plain SQL with version table</li>
+</ul>
+
+<h4 id="12-create-canonical-schema">1.2 Create Canonical Schema</h4>
+
+<p><strong>File Structure:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>database/
+├── migrations/
+│   ├── 001_enable_extensions.sql
+│   ├── 002_create_auth_schema.sql
+│   ├── 003_create_projects_schema.sql
+│   ├── 004_create_memory_schema.sql
+│   └── 005_seed_initial_data.sql
+├── seeds/
+│   └── development.sql
+└── docker-compose.yml
+</code></pre></div></div>
+
+<p><strong>Core Schema Definitions:</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 001_enable_extensions.sql</span>
+<span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="nv">"uuid-ossp"</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="nv">"pgcrypto"</span><span class="p">;</span>
+
+<span class="c1">-- 002_create_auth_schema.sql</span>
+<span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">auth</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">username</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">full_name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">password_hash</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">role</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'user'</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">is_active</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+    <span class="n">is_verified</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+    <span class="n">github_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+    <span class="n">avatar_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">last_login_at</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+    <span class="n">failed_login_attempts</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">locked_until</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+    <span class="n">updated_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">auth</span><span class="p">.</span><span class="n">user_sessions</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+    <span class="n">session_token</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">refresh_token</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">ip_address</span> <span class="n">INET</span><span class="p">,</span>
+    <span class="n">user_agent</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">expires_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">auth</span><span class="p">.</span><span class="n">audit_log</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">SET</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">action</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">ip_address</span> <span class="n">INET</span><span class="p">,</span>
+    <span class="n">user_agent</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">success</span> <span class="nb">BOOLEAN</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">details</span> <span class="n">JSONB</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Indexes</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_auth_users_email</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_auth_users_username</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">username</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_auth_sessions_user_id</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">user_sessions</span><span class="p">(</span><span class="n">user_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_auth_sessions_token</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">user_sessions</span><span class="p">(</span><span class="n">session_token</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_auth_audit_user_id</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">audit_log</span><span class="p">(</span><span class="n">user_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_auth_audit_created_at</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">audit_log</span><span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="phase-2-unify-auth-service-week-1-2">Phase 2: Unify Auth Service (Week 1-2)</h3>
+
+<h4 id="tasks">Tasks:</h4>
+<ol>
+  <li>Remove embedded CREATE TABLE statements from <code class="language-plaintext highlighter-rouge">services/auth-service/src/index.ts</code></li>
+  <li>Standardize on <code class="language-plaintext highlighter-rouge">services/auth-service/src/database.ts</code> approach with UUID</li>
+  <li>Update all queries to use <code class="language-plaintext highlighter-rouge">auth.*</code> schema</li>
+  <li>Add migration runner on service startup</li>
+  <li>Test all auth endpoints with new schema</li>
+</ol>
+
+<h4 id="code-changes">Code Changes:</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/auth-service/src/index.ts</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">initializeDatabase</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Just verify schema exists, don't create tables</span>
+    <span class="k">await</span> <span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="dl">"</span><span class="s2">SELECT 1 FROM auth.users LIMIT 1</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Database schema verified</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Database schema not found. Run migrations first.</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="phase-3-enhance-project-service-week-2">Phase 3: Enhance Project Service (Week 2)</h3>
+
+<h4 id="file-storage-decision">File Storage Decision:</h4>
+
+<p><strong>Option A: Keep Filesystem (Recommended for MVP)</strong></p>
+<ul>
+  <li>Store files on disk at <code class="language-plaintext highlighter-rouge">PROJECTS_DIR</code></li>
+  <li>Keep metadata and text content in PostgreSQL</li>
+  <li>Use shared volumes in production</li>
+</ul>
+
+<p><strong>Option B: Move to Object Storage (Future)</strong></p>
+<ul>
+  <li>Integrate MinIO/S3</li>
+  <li>Store only metadata and signed URLs in PostgreSQL</li>
+  <li>Better for multi-region deployments</li>
+</ul>
+
+<h4 id="tasks-1">Tasks:</h4>
+<ol>
+  <li>Ensure all routes use PostgreSQL (remove any in-memory arrays)</li>
+  <li>Add proper transaction handling for multi-table operations</li>
+  <li>Implement file cleanup on project deletion</li>
+  <li>Add file versioning support in schema</li>
+</ol>
+
+<h3 id="phase-4-add-postgresql-to-memory-service-week-2-3">Phase 4: Add PostgreSQL to Memory Service (Week 2-3)</h3>
+
+<h4 id="schema-integration">Schema Integration:</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 004_create_memory_schema.sql</span>
+<span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">memory</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memory</span><span class="p">.</span><span class="n">documents</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">external_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+    <span class="k">source</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">type</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'document'</span><span class="p">,</span>
+    <span class="n">path</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">tags</span> <span class="nb">TEXT</span><span class="p">[]</span> <span class="k">DEFAULT</span> <span class="s1">'{}'</span><span class="p">,</span>
+    <span class="n">metadata</span> <span class="n">JSONB</span> <span class="k">DEFAULT</span> <span class="s1">'{}'</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+    <span class="n">updated_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memory</span><span class="p">.</span><span class="n">chunks</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">document_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">memory</span><span class="p">.</span><span class="n">documents</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+    <span class="n">chunk_index</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">content</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">qdrant_point_id</span> <span class="n">UUID</span><span class="p">,</span>
+    <span class="n">embedding_model</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="n">score</span> <span class="nb">FLOAT</span><span class="p">,</span>
+    <span class="n">metadata</span> <span class="n">JSONB</span> <span class="k">DEFAULT</span> <span class="s1">'{}'</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_memory_documents_source</span> <span class="k">ON</span> <span class="n">memory</span><span class="p">.</span><span class="n">documents</span><span class="p">(</span><span class="k">source</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_memory_documents_type</span> <span class="k">ON</span> <span class="n">memory</span><span class="p">.</span><span class="n">documents</span><span class="p">(</span><span class="k">type</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_memory_chunks_document_id</span> <span class="k">ON</span> <span class="n">memory</span><span class="p">.</span><span class="n">chunks</span><span class="p">(</span><span class="n">document_id</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_memory_chunks_qdrant_id</span> <span class="k">ON</span> <span class="n">memory</span><span class="p">.</span><span class="n">chunks</span><span class="p">(</span><span class="n">qdrant_point_id</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="implementation-tasks">Implementation Tasks:</h4>
+<ol>
+  <li>Add PostgreSQL client to Memory Service</li>
+  <li>On document ingestion:
+    <ul>
+      <li>Create <code class="language-plaintext highlighter-rouge">memory.documents</code> record</li>
+      <li>Split into chunks, create <code class="language-plaintext highlighter-rouge">memory.chunks</code> records</li>
+      <li>Store embeddings in Qdrant with chunk IDs</li>
+    </ul>
+  </li>
+  <li>On search:
+    <ul>
+      <li>Query Qdrant for similar vectors</li>
+      <li>Join with PostgreSQL for full metadata</li>
+      <li>Return enriched results</li>
+    </ul>
+  </li>
+  <li>Remove JSON file writing from demo endpoint</li>
+</ol>
+
+<h3 id="phase-5-infrastructure-setup-week-3">Phase 5: Infrastructure Setup (Week 3)</h3>
+
+<h4 id="docker-compose-configuration">Docker Compose Configuration:</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">postgres</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres:15-alpine</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">POSTGRES_DB</span><span class="pi">:</span> <span class="s">devmentor</span>
+      <span class="na">POSTGRES_USER</span><span class="pi">:</span> <span class="s">devmentor</span>
+      <span class="na">POSTGRES_PASSWORD</span><span class="pi">:</span> <span class="s">${DB_PASSWORD}</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">postgres_data:/var/lib/postgresql/data</span>
+      <span class="pi">-</span> <span class="s">./database/migrations:/migrations:ro</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5432:5432"</span>
+    <span class="na">healthcheck</span><span class="pi">:</span>
+      <span class="na">test</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">CMD-SHELL"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">devmentor"</span><span class="pi">]</span>
+      <span class="na">interval</span><span class="pi">:</span> <span class="s">10s</span>
+      <span class="na">timeout</span><span class="pi">:</span> <span class="s">5s</span>
+      <span class="na">retries</span><span class="pi">:</span> <span class="m">5</span>
+
+  <span class="na">migrator</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">node:18-alpine</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="na">postgres</span><span class="pi">:</span>
+        <span class="na">condition</span><span class="pi">:</span> <span class="s">service_healthy</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./database:/database</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">DATABASE_URL</span><span class="pi">:</span> <span class="s">postgresql://devmentor:${DB_PASSWORD}@postgres:5432/devmentor</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">|</span>
+      <span class="s">sh -c "</span>
+        <span class="s">npm install -g node-pg-migrate</span>
+        <span class="s">pg-migrate up -m /database/migrations</span>
+      <span class="s">"</span>
+
+  <span class="na">qdrant</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">qdrant/qdrant</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6333:6333"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">qdrant_data:/qdrant/storage</span>
+
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:7-alpine</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6379:6379"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis_data:/data</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">postgres_data</span><span class="pi">:</span>
+  <span class="na">qdrant_data</span><span class="pi">:</span>
+  <span class="na">redis_data</span><span class="pi">:</span>
+</code></pre></div></div>
+
+<h3 id="phase-6-data-migration-week-3-4">Phase 6: Data Migration (Week 3-4)</h3>
+
+<h4 id="migration-scripts">Migration Scripts:</h4>
+
+<ol>
+  <li><strong>Auth Data Migration</strong>
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Migrate existing users from SERIAL to UUID</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">password_hash</span><span class="p">,</span> <span class="k">role</span><span class="p">,</span> <span class="n">created_at</span><span class="p">)</span>
+<span class="k">SELECT</span> 
+ <span class="n">gen_random_uuid</span><span class="p">(),</span>
+ <span class="n">email</span><span class="p">,</span>
+ <span class="n">COALESCE</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">email</span><span class="p">),</span>
+ <span class="n">COALESCE</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="n">first_name</span> <span class="o">||</span> <span class="s1">' '</span> <span class="o">||</span> <span class="n">last_name</span><span class="p">),</span>
+ <span class="n">password_hash</span><span class="p">,</span>
+ <span class="k">role</span><span class="p">,</span>
+ <span class="n">created_at</span>
+<span class="k">FROM</span> <span class="k">public</span><span class="p">.</span><span class="n">users</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Project Data Verification</strong>
+    <ul>
+      <li>Ensure all projects have valid UUIDs</li>
+      <li>Verify file references are correct</li>
+      <li>Clean up orphaned files</li>
+    </ul>
+  </li>
+  <li><strong>Memory Data Import</strong>
+    <ul>
+      <li>Index existing documents into PostgreSQL</li>
+      <li>Backfill Qdrant point IDs</li>
+      <li>Remove legacy JSON files</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="phase-7-testing-and-validation-week-4">Phase 7: Testing and Validation (Week 4)</h3>
+
+<h4 id="test-checklist">Test Checklist:</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />All services start without creating tables</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Migrations run idempotently</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Auth flow works end-to-end</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Project CRUD operations complete successfully</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />File upload/download works</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Memory ingestion creates both PostgreSQL and Qdrant entries</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Search returns enriched results</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Health checks pass for all services</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Swagger aggregation works</li>
+</ul>
+
+<h4 id="performance-tests">Performance Tests:</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Auth: 100 concurrent login attempts</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Projects: Create 1000 projects with files</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Memory: Ingest 10,000 documents</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Search: 100 concurrent RAG queries</li>
+</ul>
+
+<h3 id="phase-8-documentation-update-week-4">Phase 8: Documentation Update (Week 4)</h3>
+
+<h4 id="required-updates">Required Updates:</h4>
+<ol>
+  <li>Update <code class="language-plaintext highlighter-rouge">docs/db/ERD.md</code> with actual schema</li>
+  <li>Generate OpenAPI specs for all services</li>
+  <li>Update API contracts documentation</li>
+  <li>Create runbook for migrations</li>
+  <li>Document backup/restore procedures</li>
+</ol>
+
+<h2 id="rollback-plan">Rollback Plan</h2>
+
+<h3 id="database-rollback">Database Rollback:</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Rollback last migration</span>
+pg-migrate down
+
+<span class="c"># Rollback to specific migration</span>
+pg-migrate down <span class="nt">--to</span> 002_create_auth_schema
+
+<span class="c"># Full reset (development only)</span>
+pg-migrate reset
+</code></pre></div></div>
+
+<h3 id="service-rollback">Service Rollback:</h3>
+<ol>
+  <li>Stop affected service</li>
+  <li>Rollback database migrations</li>
+  <li>Deploy previous service version</li>
+  <li>Restore from backup if needed</li>
+</ol>
+
+<h2 id="success-metrics">Success Metrics</h2>
+
+<h3 id="technical-metrics">Technical Metrics:</h3>
+<ul>
+  <li>Zero data loss during migration</li>
+  <li>&lt; 5 minute downtime per service</li>
+  <li>All tests passing</li>
+  <li>&lt; 100ms query response time for 95th percentile</li>
+</ul>
+
+<h3 id="business-metrics">Business Metrics:</h3>
+<ul>
+  <li>No user-facing errors</li>
+  <li>Maintained API compatibility</li>
+  <li>Improved query performance</li>
+  <li>Reduced operational complexity</li>
+</ul>
+
+<h2 id="timeline-summary">Timeline Summary</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th>Phase</th>
+      <th>Deliverables</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Schema &amp; Auth</td>
+      <td>Migrations created, Auth service unified</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Projects &amp; Memory Planning</td>
+      <td>Project service verified, Memory schema designed</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Memory &amp; Infrastructure</td>
+      <td>Memory service integrated, Docker setup complete</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Testing &amp; Documentation</td>
+      <td>All tests passing, documentation updated</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="risk-mitigation">Risk Mitigation</h2>
+
+<h3 id="high-risks">High Risks:</h3>
+<ol>
+  <li><strong>Data Loss</strong>: Mitigate with comprehensive backups before each phase</li>
+  <li><strong>Schema Conflicts</strong>: Use namespaces to avoid collisions</li>
+  <li><strong>Performance Degradation</strong>: Load test each phase before proceeding</li>
+</ol>
+
+<h3 id="medium-risks">Medium Risks:</h3>
+<ol>
+  <li><strong>Service Dependencies</strong>: Use feature flags for gradual rollout</li>
+  <li><strong>Migration Failures</strong>: Test in staging environment first</li>
+  <li><strong>Team Knowledge Gaps</strong>: Provide training on new schema</li>
+</ol>
+
+<h2 id="appendix-a-sql-migration-examples">Appendix A: SQL Migration Examples</h2>
+
+<h3 id="complete-auth-schema-migration">Complete Auth Schema Migration:</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">BEGIN</span><span class="p">;</span>
+
+<span class="c1">-- Create schema</span>
+<span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">auth</span><span class="p">;</span>
+
+<span class="c1">-- Create users table with all fields</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+    <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">username</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">full_name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">password_hash</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">role</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'user'</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">CHECK</span> <span class="p">(</span><span class="k">role</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'user'</span><span class="p">,</span> <span class="s1">'admin'</span><span class="p">,</span> <span class="s1">'super_admin'</span><span class="p">)),</span>
+    <span class="n">is_active</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+    <span class="n">is_verified</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+    <span class="n">github_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">UNIQUE</span><span class="p">,</span>
+    <span class="n">avatar_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">last_login_at</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+    <span class="n">failed_login_attempts</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">locked_until</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+    <span class="n">updated_at</span> <span class="n">TIMESTAMPTZ</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Add update trigger</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">update_updated_at_column</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+    <span class="k">NEW</span><span class="p">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">NOW</span><span class="p">();</span>
+    <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span> <span class="k">language</span> <span class="s1">'plpgsql'</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">update_auth_users_updated_at</span> 
+    <span class="k">BEFORE</span> <span class="k">UPDATE</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span> 
+    <span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span> 
+    <span class="k">EXECUTE</span> <span class="k">FUNCTION</span> <span class="n">update_updated_at_column</span><span class="p">();</span>
+
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="appendix-b-service-configuration-templates">Appendix B: Service Configuration Templates</h2>
+
+<h3 id="environment-variables-template">Environment Variables Template:</h3>
+<pre><code class="language-env"># Database
+DATABASE_URL=postgresql://devmentor:password@localhost:5432/devmentor
+DB_POOL_SIZE=20
+DB_SSL_MODE=prefer
+
+# Qdrant
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+QDRANT_API_KEY=
+
+# Redis
+REDIS_URL=redis://localhost:6379
+REDIS_LEARNING_URL=redis://localhost:6379/1
+
+# File Storage
+PROJECTS_DIR=/data/projects
+MAX_FILE_SIZE=10485760
+
+# Services
+AUTH_SERVICE_URL=http://localhost:3002
+PROJECT_SERVICE_URL=http://localhost:3005
+MEMORY_SERVICE_URL=http://localhost:3003
+AI_GATEWAY_URL=http://localhost:3001
+</code></pre>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+  <li><strong>Immediate Actions:</strong>
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review and approve this strategy</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up development PostgreSQL instance</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create migration framework scaffolding</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Begin Phase 1 implementation</li>
+    </ul>
+  </li>
+  <li><strong>Team Assignments:</strong>
+    <ul>
+      <li>Auth Service: [Assignee]</li>
+      <li>Project Service: [Assignee]</li>
+      <li>Memory Service: [Assignee]</li>
+      <li>Infrastructure: [Assignee]</li>
+      <li>Testing: [Assignee]</li>
+    </ul>
+  </li>
+  <li><strong>Communication Plan:</strong>
+    <ul>
+      <li>Weekly sync meetings</li>
+      <li>Daily status updates in Slack</li>
+      <li>Migration progress dashboard</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<p><strong>Document Version:</strong> 1.0.0<br />
+<strong>Last Updated:</strong> 2025-01-15<br />
+<strong>Status:</strong> DRAFT - Pending Review<br />
+<strong>Owner:</strong> DevMentor Platform Team</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/database/POSTGRES_MIGRATION_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUNBOOK istio-gateway-setup | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/RUNBOOK_istio-gateway-setup.md</span>
+</div>
+
+<h1>RUNBOOK istio-gateway-setup</h1>
+
+
+<h1 id="istio-gateway--service-deployment-runbook">Istio Gateway &amp; Service Deployment Runbook</h1>
+
+<h2 id="overview">Overview</h2>
+<p>This runbook documents how to set up Istio Gateway, VirtualService, and deploy core services for DevMentor.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+  <li>Kind cluster running with Istio installed</li>
+  <li>Docker images built locally</li>
+  <li>kubectl configured to access the cluster</li>
+</ul>
+
+<h2 id="quick-status-check">Quick Status Check</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check current status</span>
+kubectl get pods <span class="nt">-n</span> devmentor-app
+kubectl get pods <span class="nt">-n</span> devmentor-data
+kubectl get gateway,virtualservice <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h2 id="step-1-apply-istio-configuration">Step 1: Apply Istio Configuration</h2>
+
+<h3 id="what-it-does">What it does</h3>
+<ul>
+  <li>Creates Gateway on port 80 for host <code class="language-plaintext highlighter-rouge">devmentor.local</code></li>
+  <li>Sets up VirtualService routing rules</li>
+  <li>Configures DestinationRules for canary deployments</li>
+  <li>Enables external API access via ServiceEntry</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> infrastructure/k8s/istio/devmentor-traffic.yaml
+</code></pre></div></div>
+
+<h3 id="verify">Verify</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get gateway,virtualservice <span class="nt">-n</span> devmentor-app
+<span class="c"># Expected: devmentor-gateway and devmentor-routes</span>
+</code></pre></div></div>
+
+<h2 id="step-2-create-required-secrets">Step 2: Create Required Secrets</h2>
+
+<h3 id="create-basic-secrets-for-services">Create basic secrets for services</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> - <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+apiVersion: v1
+kind: Secret
+metadata:
+  name: auth-service-secrets
+  namespace: devmentor-app
+type: Opaque
+stringData:
+  JWT_SECRET: "dev-jwt-secret-change-in-production"
+  GITHUB_CLIENT_ID: "placeholder"
+  GITHUB_CLIENT_SECRET: "placeholder"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-conn
+  namespace: devmentor-app
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://postgres:postgres@postgresql.devmentor-data.svc.cluster.local:5432/devmentor"
+  POSTGRES_HOST: "postgresql.devmentor-data.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "devmentor"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: redis-conn
+  namespace: devmentor-app
+type: Opaque
+stringData:
+  REDIS_URL: "redis://redis.devmentor-data.svc.cluster.local:6379"
+  REDIS_HOST: "redis.devmentor-data.svc.cluster.local"
+  REDIS_PORT: "6379"
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h2 id="step-3-load-docker-images-into-kind">Step 3: Load Docker Images into Kind</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build images if needed</span>
+docker build <span class="nt">-t</span> devmentor/api-gateway:latest infrastructure/services/api-gateway/
+docker build <span class="nt">-t</span> devmentor/auth-service:latest infrastructure/services/auth-service/
+
+<span class="c"># Load into Kind cluster</span>
+kind load docker-image devmentor/api-gateway:latest devmentor/auth-service:latest <span class="nt">--name</span> devmentor
+</code></pre></div></div>
+
+<h2 id="step-4-deploy-services">Step 4: Deploy Services</h2>
+
+<h3 id="api-gateway">API Gateway</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> infrastructure/k8s/deployments/api-gateway.yaml
+</code></pre></div></div>
+
+<h3 id="auth-service">Auth Service</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> infrastructure/k8s/deployments/auth-service.yaml
+</code></pre></div></div>
+
+<h3 id="other-services-when-ready">Other services (when ready)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># kubectl apply -f infrastructure/k8s/deployments/ai-gateway.yaml</span>
+<span class="c"># kubectl apply -f infrastructure/k8s/deployments/memory-service.yaml</span>
+<span class="c"># kubectl apply -f infrastructure/k8s/deployments/project-service.yaml</span>
+</code></pre></div></div>
+
+<h2 id="step-5-verify-services-are-running">Step 5: Verify Services are Running</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check pod status</span>
+kubectl get pods <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Wait for pods to be ready</span>
+kubectl <span class="nb">wait</span> <span class="nt">--for</span><span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready pod <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>api-gateway <span class="nt">-n</span> devmentor-app <span class="nt">--timeout</span><span class="o">=</span>60s
+kubectl <span class="nb">wait</span> <span class="nt">--for</span><span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready pod <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>auth-service <span class="nt">-n</span> devmentor-app <span class="nt">--timeout</span><span class="o">=</span>60s
+</code></pre></div></div>
+
+<h2 id="step-6-test-the-setup">Step 6: Test the Setup</h2>
+
+<h3 id="direct-port-forward-test">Direct port-forward test</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Port forward to API Gateway</span>
+kubectl port-forward <span class="nt">-n</span> devmentor-app svc/api-gateway 8080:8080 &amp;
+
+<span class="c"># Test health endpoint</span>
+curl http://localhost:8080/health | jq
+
+<span class="c"># Expected output shows service status</span>
+</code></pre></div></div>
+
+<h3 id="via-istio-gateway-if-configured">Via Istio Gateway (if configured)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add host entry (if not already added)</span>
+<span class="nb">echo</span> <span class="s2">"127.0.0.1 devmentor.local"</span> | <span class="nb">sudo tee</span> <span class="nt">-a</span> /etc/hosts
+
+<span class="c"># Test via Istio</span>
+curl <span class="nt">-H</span> <span class="s2">"Host: devmentor.local"</span> http://localhost/api/health
+</code></pre></div></div>
+
+<h2 id="architecture-explained">Architecture Explained</h2>
+
+<h3 id="service-types-in-kubernetes">Service Types in Kubernetes</h3>
+<ul>
+  <li><strong>ClusterIP</strong>: Internal-only access (what we use)</li>
+  <li><strong>NodePort</strong>: Exposes on node IP (30000-32767)</li>
+  <li><strong>LoadBalancer</strong>: External LB (pending in local)</li>
+  <li><strong>Ingress/Gateway</strong>: L7 routing (Istio)</li>
+</ul>
+
+<h3 id="traffic-flow">Traffic Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>External Request → Istio Ingress Gateway → 
+Gateway (devmentor-gateway) → VirtualService (devmentor-routes) → 
+Backend Services (ClusterIP)
+</code></pre></div></div>
+
+<h3 id="routing-rules">Routing Rules</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/api/ai/*</code> → ai-gateway:3001</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/auth/*</code> → auth-service:3002</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/memory/*</code> → memory-service:3003</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/projects/*</code> → project-service:3004</li>
+  <li><code class="language-plaintext highlighter-rouge">/api/*</code> → api-gateway:8080</li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="pod-not-starting---imagepullbackoff">Pod not starting - ImagePullBackOff</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if image exists locally</span>
+docker images | <span class="nb">grep </span>devmentor
+
+<span class="c"># Load image into Kind</span>
+kind load docker-image &lt;image-name&gt; <span class="nt">--name</span> devmentor
+</code></pre></div></div>
+
+<h3 id="pod-not-starting---createcontainerconfigerror">Pod not starting - CreateContainerConfigError</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Usually missing secret</span>
+kubectl get secrets <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Check what secret is needed</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="service-returning-503">Service returning 503</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if health checks are failing</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Temporarily disable health checks in deployment</span>
+<span class="c"># Edit deployment and comment out readinessProbe/livenessProbe</span>
+</code></pre></div></div>
+
+<h3 id="port-mismatch">Port mismatch</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check what port the container is actually using</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> devmentor-app | <span class="nb">grep</span> <span class="nt">-i</span> port
+
+<span class="c"># Update deployment ENV PORT and service targetPort accordingly</span>
+</code></pre></div></div>
+
+<h2 id="current-status-as-of-2025-08-25">Current Status (as of 2025-08-25)</h2>
+
+<p>✅ <strong>Working:</strong></p>
+<ul>
+  <li>API Gateway: Running on port 8000, service exposes 8080</li>
+  <li>Auth Service: Healthy and responding</li>
+  <li>PostgreSQL, Redis, Qdrant: All running</li>
+  <li>Istio Gateway &amp; VirtualService: Configured</li>
+</ul>
+
+<p>⚠️ <strong>Not Deployed Yet:</strong></p>
+<ul>
+  <li>AI Gateway: Needs deployment</li>
+  <li>Memory Service: Needs deployment</li>
+  <li>Project Service: Needs deployment</li>
+  <li>Frontend: Build issues, needs fixing</li>
+</ul>
+
+<h2 id="next-steps-for-development">Next Steps for Development</h2>
+
+<ol>
+  <li><strong>Deploy remaining services</strong> when ready:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> infrastructure/k8s/deployments/ai-gateway.yaml
+kubectl apply <span class="nt">-f</span> infrastructure/k8s/deployments/memory-service.yaml
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Fix frontend build issues</strong>:
+    <ul>
+      <li>Missing components need to be created or imports fixed</li>
+      <li>Consider using dev mode for now</li>
+    </ul>
+  </li>
+  <li><strong>Set up proper secrets</strong>:
+    <ul>
+      <li>Replace placeholder secrets with real values</li>
+      <li>Consider using External Secrets Operator</li>
+    </ul>
+  </li>
+  <li><strong>Enable health checks</strong>:
+    <ul>
+      <li>Once services are stable, re-enable health checks</li>
+      <li>Configure appropriate timeouts and thresholds</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="quick-commands-reference">Quick Commands Reference</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Status check</span>
+kubectl get all <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Logs</span>
+kubectl logs <span class="nt">-f</span> deployment/api-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Port forwards</span>
+kubectl port-forward <span class="nt">-n</span> devmentor-app svc/api-gateway 8080:8080 &amp;
+kubectl port-forward <span class="nt">-n</span> devmentor-data svc/postgresql 5432:5432 &amp;
+kubectl port-forward <span class="nt">-n</span> devmentor-data svc/redis 6379:6379 &amp;
+
+<span class="c"># Restart deployment</span>
+kubectl rollout restart deployment api-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Delete and recreate</span>
+kubectl delete <span class="nt">-f</span> infrastructure/k8s/deployments/api-gateway.yaml
+kubectl apply <span class="nt">-f</span> infrastructure/k8s/deployments/api-gateway.yaml
+</code></pre></div></div>
+
+<h2 id="resources">Resources</h2>
+<ul>
+  <li>Istio Docs: https://istio.io/latest/docs/</li>
+  <li>Kind Docs: https://kind.sigs.k8s.io/</li>
+  <li>Kubernetes Service Types: https://kubernetes.io/docs/concepts/services-networking/service/</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/RUNBOOK_istio-gateway-setup.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K8S DEPLOYMENT STATUS | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/K8S_DEPLOYMENT_STATUS.md</span>
+</div>
+
+<h1>K8S DEPLOYMENT STATUS</h1>
+
+
+<h1 id="kubernetes-deployment-status">Kubernetes Deployment Status</h1>
+<p><strong>Date</strong>: August 20, 2024<br />
+<strong>Time</strong>: 11:25 AM PST<br />
+<strong>Cluster</strong>: Kind (Kubernetes in Docker) - <code class="language-plaintext highlighter-rouge">devmentor</code></p>
+
+<h2 id="-overall-status-partially-operational">🚀 Overall Status: PARTIALLY OPERATIONAL</h2>
+
+<h3 id="-successfully-running-services">✅ Successfully Running Services</h3>
+
+<h4 id="kubernetes-services-in-cluster">Kubernetes Services (In Cluster)</h4>
+<p>| Service | Namespace | Status | Notes |
+|———|———–|——–|——-|
+| PostgreSQL | devmentor-data | ✅ Running | 2/2 Ready |
+| Redis | devmentor-data | ✅ Running | 2/2 Ready |
+| Qdrant | devmentor-data | ✅ Running | 2/2 Ready |
+| Ollama (GPT-OSS) | devmentor | ✅ Running | 2/2 Ready - Now with OpenAI’s GPT-OSS model |
+| AI Gateway | devmentor | ✅ Running | Fixed WebSocket dependency |
+| Keycloak | keycloak | ⚠️ Running | 34 restarts, but operational |</p>
+
+<h4 id="istio-service-mesh">Istio Service Mesh</h4>
+<p>| Component | Status | Port | Purpose |
+|———–|——–|——|———|
+| Istiod | ✅ Running | - | Control plane |
+| Ingress Gateway | ✅ Running | 80/443 | Traffic entry |
+| Grafana | ✅ Running | - | Dashboards (Istio) |
+| Prometheus | ✅ Running | - | Metrics (Istio) |
+| Kiali | ✅ Running | - | Service mesh viz |</p>
+
+<h4 id="standalone-docker-services">Standalone Docker Services</h4>
+<p>| Service | Status | Port | Notes |
+|———|——–|——|——-|
+| Prometheus | ✅ Running | 9090 | Standalone metrics |
+| Grafana | ✅ Running | 3007 | Standalone dashboards |
+| Loki | ✅ Running | 3100 | Log aggregation |
+| Promtail | ✅ Running | - | Log shipping |
+| Node Exporter | ✅ Running | 9100 | System metrics |
+| Monitoring Service | ✅ Running | 3006 | Custom monitoring |</p>
+
+<h3 id="️-services-with-issues">⚠️ Services with Issues</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Issue</th>
+      <th>Action Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Auth Service</td>
+      <td>Build fails - missing dependencies</td>
+      <td>Fixed package.json, removed tracing preload</td>
+    </tr>
+    <tr>
+      <td>Auth Service</td>
+      <td>Multiple pods in CrashLoopBackOff</td>
+      <td>Need to rebuild and deploy image</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-not-deployed-to-k8s-yet">🚫 Not Deployed to K8s Yet</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Current State</th>
+      <th>Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>API Gateway</td>
+      <td>Code exists</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Agent Service</td>
+      <td>Code exists</td>
+      <td>Medium</td>
+    </tr>
+    <tr>
+      <td>Memory Service</td>
+      <td>Code exists</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <td>Project Service</td>
+      <td>Code exists</td>
+      <td>Medium</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="️-removed-services-not-needed">🗑️ Removed Services (Not Needed)</h3>
+
+<ul>
+  <li><strong>Jaeger</strong>: Distributed tracing - removed from docker-compose</li>
+  <li><strong>cAdvisor</strong>: Container metrics - redundant with K8s metrics</li>
+  <li><strong>AlertManager</strong>: Alert routing - not needed at this stage</li>
+</ul>
+
+<h2 id="-resource-usage">📊 Resource Usage</h2>
+
+<h3 id="cluster-resources">Cluster Resources</h3>
+<ul>
+  <li><strong>Nodes</strong>: 3 (1 control-plane, 2 workers)</li>
+  <li><strong>Pods Running</strong>: 35+</li>
+  <li><strong>Namespaces</strong>: 7 active</li>
+</ul>
+
+<h3 id="docker-resources">Docker Resources</h3>
+<ul>
+  <li><strong>Containers</strong>: 15 (reduced from 18)</li>
+  <li><strong>Memory Usage</strong>: ~7.5GB</li>
+  <li><strong>CPU Usage</strong>: ~35%</li>
+</ul>
+
+<h2 id="-recent-fixes-applied">🔧 Recent Fixes Applied</h2>
+
+<h3 id="1-ai-gateway-websocket-issue">1. AI Gateway WebSocket Issue</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Added 'ws' dependency to package.json</span>
+<span class="c"># Rebuilt image</span>
+docker build <span class="nt">-t</span> devmentor/ai-gateway:latest <span class="nb">.</span>
+kind load docker-image devmentor/ai-gateway:latest <span class="nt">--name</span> devmentor
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor ai-gateway
+</code></pre></div></div>
+
+<h3 id="2-auth-service-secrets-issue">2. Auth Service Secrets Issue</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Added lowercase keys to match deployment expectations</span>
+kubectl patch secret devmentor-secrets <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="se">\</span>
+  <span class="nt">-p</span><span class="o">=</span><span class="s1">'[{"op": "add", "path": "/data/database-url", "value": "..."}]'</span>
+
+<span class="c"># Created missing ConfigMap</span>
+kubectl create configmap devmentor-config <span class="nt">-n</span> devmentor <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span>redis-url<span class="o">=</span><span class="s2">"redis://redis.devmentor-data:6379"</span>
+</code></pre></div></div>
+
+<h3 id="3-auth-service-packagejson-fix">3. Auth Service Package.json Fix</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">Changed</span><span class="w"> </span><span class="err">from:</span><span class="w">
+</span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node -r ./dist/tracing.js dist/index.js"</span><span class="w">
+</span><span class="err">//</span><span class="w"> </span><span class="err">To:</span><span class="w">
+</span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node dist/index.js"</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="-immediate-next-steps">📋 Immediate Next Steps</h2>
+
+<ol>
+  <li><strong>Complete Auth Service Fix</strong>
+    <ul>
+      <li>Rebuild Docker image with fixed dependencies</li>
+      <li>Load to Kind cluster</li>
+      <li>Deploy and verify</li>
+    </ul>
+  </li>
+  <li><strong>Deploy Remaining Services</strong>
+    <ul>
+      <li>API Gateway deployment</li>
+      <li>Memory Service deployment</li>
+      <li>Agent Service deployment</li>
+    </ul>
+  </li>
+  <li><strong>Consolidate Infrastructure</strong>
+    <ul>
+      <li>Migrate monitoring service to K8s</li>
+      <li>Remove duplicate observability stack</li>
+      <li>Use either Istio’s or standalone, not both</li>
+    </ul>
+  </li>
+  <li><strong>Documentation Updates</strong>
+    <ul>
+      <li>Update architecture diagrams</li>
+      <li>Complete service documentation</li>
+      <li>Update deployment guides</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="-target-state">🎯 Target State</h2>
+
+<h3 id="short-term-this-week">Short Term (This Week)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />All core services running in K8s</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Auth service fully operational</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Single observability stack</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Complete documentation</li>
+</ul>
+
+<h3 id="medium-term-next-2-weeks">Medium Term (Next 2 Weeks)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Production-ready configurations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Automated CI/CD pipeline</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance optimization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security hardening</li>
+</ul>
+
+<h2 id="-documentation-created">📚 Documentation Created</h2>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">/docs/devlog/2024-08-20-k8s-deployment-fixes.md</code> - Detailed fix log</li>
+  <li><code class="language-plaintext highlighter-rouge">/docs/debugging/k8s-debugging.md</code> - Comprehensive debugging guide</li>
+  <li><code class="language-plaintext highlighter-rouge">/docs/status/K8S_DEPLOYMENT_STATUS.md</code> - This status report</li>
+</ol>
+
+<h2 id="-quick-access">🔗 Quick Access</h2>
+
+<h3 id="dashboards">Dashboards</h3>
+<ul>
+  <li>Grafana: http://localhost:3007 (admin/devmentor123)</li>
+  <li>Prometheus: http://localhost:9090</li>
+  <li>Monitoring Service: http://localhost:3006</li>
+</ul>
+
+<h3 id="kubernetes-commands">Kubernetes Commands</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check all pods</span>
+kubectl get pods <span class="nt">--all-namespaces</span>
+
+<span class="c"># Check problem pods</span>
+kubectl get pods <span class="nt">--all-namespaces</span> | <span class="nb">grep</span> <span class="nt">-v</span> Running
+
+<span class="c"># View logs</span>
+kubectl logs <span class="nt">-n</span> &lt;namespace&gt; &lt;pod-name&gt; <span class="nt">--tail</span><span class="o">=</span>50
+
+<span class="c"># Restart deployment</span>
+kubectl rollout restart deployment <span class="nt">-n</span> &lt;namespace&gt; &lt;deployment&gt;
+</code></pre></div></div>
+
+<h2 id="-known-issues">🚨 Known Issues</h2>
+
+<ol>
+  <li><strong>Duplicate Observability Stack</strong>: Running both Istio and standalone versions</li>
+  <li><strong>Auth Service Build</strong>: Still needs proper TypeScript compilation</li>
+  <li><strong>Keycloak Restarts</strong>: Experiencing frequent restarts (needs investigation)</li>
+  <li><strong>Service Discovery</strong>: Some services using wrong DNS names</li>
+</ol>
+
+<h2 id="-completed-today">✅ Completed Today</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Removed unnecessary containers (Jaeger, AlertManager, cAdvisor)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Fixed AI Gateway WebSocket dependency</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Created comprehensive debugging documentation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Updated docker-compose.observability.yml</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Fixed Auth Service configuration issues</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Created devlog for fixes</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/K8S_DEPLOYMENT_STATUS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2024-08-20-k8s-deployment-fixes | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">devlog/2024-08-20-k8s-deployment-fixes.md</span>
+</div>
+
+<h1>2024-08-20-k8s-deployment-fixes</h1>
+
+
+<h1 id="devlog-kubernetes-deployment-fixes">DevLog: Kubernetes Deployment Fixes</h1>
+<p><strong>Date</strong>: August 20, 2024
+<strong>Author</strong>: DevMentor Team
+<strong>Category</strong>: Infrastructure, Kubernetes, Debugging</p>
+
+<h2 id="overview">Overview</h2>
+<p>This devlog documents the process of fixing critical Kubernetes deployment issues in the DevMentor platform, including Auth Service configuration errors, AI Gateway module dependencies, and consolidating duplicate services.</p>
+
+<h2 id="-service-architecture-diagrams">📐 Service Architecture Diagrams</h2>
+<p>Each service now has detailed architecture documentation in DesignGurus.io format:</p>
+<ul>
+  <li><strong><a href="../../services/ai-gateway/docs/ai-gateway-architecture.md">AI Gateway Architecture</a></strong> - Port 3001</li>
+  <li><strong><a href="../../services/auth-service/docs/auth-service-architecture.md">Auth Service Architecture</a></strong> - Port 3002</li>
+  <li><strong><a href="../../services/memory-service/docs/memory-service-architecture.md">Memory Service Architecture</a></strong> - Port 3003</li>
+  <li><strong><a href="../../services/project-service/docs/project-service-architecture.md">Project Service Architecture</a></strong> - Port 3004</li>
+</ul>
+
+<h2 id="initial-state">Initial State</h2>
+<ul>
+  <li><strong>Cluster</strong>: Kind (Kubernetes in Docker) with 3 nodes</li>
+  <li><strong>Issues Found</strong>:
+    <ul>
+      <li>Auth Service: <code class="language-plaintext highlighter-rouge">CreateContainerConfigError</code> - missing secrets</li>
+      <li>AI Gateway: <code class="language-plaintext highlighter-rouge">CrashLoopBackOff</code> - missing npm modules</li>
+      <li>Duplicate services running in both K8s and standalone Docker</li>
+      <li>Keycloak: Frequent restarts (34 times)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="issues-and-resolutions">Issues and Resolutions</h2>
+
+<h3 id="1-auth-service-configuration-issues">1. Auth Service Configuration Issues</h3>
+
+<h4 id="problem">Problem</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: couldn't find key database-url in Secret devmentor/devmentor-secrets
+</code></pre></div></div>
+
+<h4 id="root-cause">Root Cause</h4>
+<ul>
+  <li>Deployment expected lowercase keys (<code class="language-plaintext highlighter-rouge">database-url</code>, <code class="language-plaintext highlighter-rouge">jwt-secret</code>)</li>
+  <li>Secret contained uppercase keys (<code class="language-plaintext highlighter-rouge">DATABASE_URL</code>, <code class="language-plaintext highlighter-rouge">JWT_SECRET</code>)</li>
+  <li>Missing ConfigMap <code class="language-plaintext highlighter-rouge">devmentor-config</code></li>
+  <li>Missing <code class="language-plaintext highlighter-rouge">vault-token</code> secret</li>
+</ul>
+
+<h4 id="solution">Solution</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Added lowercase keys to existing secret</span>
+kubectl patch secret devmentor-secrets <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="se">\</span>
+  <span class="nt">-p</span><span class="o">=</span><span class="s1">'[{"op": "add", "path": "/data/database-url", "value": "..."}, 
+       {"op": "add", "path": "/data/jwt-secret", "value": "..."}]'</span>
+
+<span class="c"># Created missing ConfigMap</span>
+kubectl create configmap devmentor-config <span class="nt">-n</span> devmentor <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span>redis-url<span class="o">=</span><span class="s2">"redis://redis.devmentor-data:6379"</span>
+
+<span class="c"># Created vault-token secret</span>
+kubectl create secret generic vault-token <span class="nt">-n</span> devmentor <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span><span class="nv">token</span><span class="o">=</span><span class="s2">"dummy-vault-token"</span>
+</code></pre></div></div>
+
+<h3 id="2-ai-gateway-module-dependencies">2. AI Gateway Module Dependencies</h3>
+
+<h4 id="problem-1">Problem</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: Cannot find module 'ws'
+Require stack:
+- /app/src/index.ts
+</code></pre></div></div>
+
+<h4 id="root-cause-1">Root Cause</h4>
+<ul>
+  <li>Missing WebSocket (<code class="language-plaintext highlighter-rouge">ws</code>) package in package.json</li>
+  <li>Docker image built without required dependency</li>
+</ul>
+
+<h4 id="solution-1">Solution</h4>
+<ol>
+  <li>Updated <code class="language-plaintext highlighter-rouge">services/ai-gateway/package.json</code>:
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">existing</span><span class="w"> </span><span class="err">deps</span><span class="w">
+  </span><span class="nl">"ws"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^8.14.2"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>Rebuilt and loaded image:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>services/ai-gateway
+docker build <span class="nt">-t</span> devmentor/ai-gateway:latest <span class="nb">.</span>
+kind load docker-image devmentor/ai-gateway:latest <span class="nt">--name</span> devmentor
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor ai-gateway
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="3-service-architecture-analysis">3. Service Architecture Analysis</h3>
+
+<h4 id="current-hybrid-setup">Current Hybrid Setup</h4>
+<p><strong>Kubernetes Services</strong>:</p>
+<ul>
+  <li>PostgreSQL, Redis, Qdrant (devmentor-data namespace)</li>
+  <li>Ollama, AI Gateway (devmentor namespace)</li>
+  <li>Full Istio service mesh with observability</li>
+  <li>Keycloak for authentication</li>
+</ul>
+
+<p><strong>Standalone Docker Containers</strong>:</p>
+<ul>
+  <li>Duplicate PostgreSQL (postgres-1)</li>
+  <li>Duplicate Redis (redis-1)</li>
+  <li>Custom monitoring-service</li>
+  <li>Duplicate observability stack (Prometheus, Grafana, Loki, etc.)</li>
+</ul>
+
+<h2 id="debugging-commands-used">Debugging Commands Used</h2>
+
+<h3 id="pod-status-checks">Pod Status Checks</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get pods <span class="nt">--all-namespaces</span>
+kubectl get pods <span class="nt">-n</span> devmentor | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"NAME|ai-gateway|auth-service"</span>
+</code></pre></div></div>
+
+<h3 id="log-investigation">Log Investigation</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl logs <span class="nt">-n</span> devmentor &lt;pod-name&gt; <span class="nt">--tail</span><span class="o">=</span>30
+kubectl describe pod <span class="nt">-n</span> devmentor &lt;pod-name&gt;
+</code></pre></div></div>
+
+<h3 id="secretconfigmap-debugging">Secret/ConfigMap Debugging</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get secret <span class="nt">-n</span> devmentor devmentor-secrets <span class="nt">-o</span> yaml
+kubectl get configmap <span class="nt">-n</span> devmentor devmentor-config <span class="nt">-o</span> yaml
+</code></pre></div></div>
+
+<h3 id="service-discovery">Service Discovery</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get services <span class="nt">--all-namespaces</span>
+kubectl get deployments <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h2 id="current-status">Current Status</h2>
+
+<h3 id="-fixed">✅ Fixed</h3>
+<ul>
+  <li>AI Gateway: Now running with all dependencies</li>
+  <li>ConfigMaps and Secrets: All required keys added</li>
+  <li>Basic connectivity established</li>
+</ul>
+
+<h3 id="️-pending-issues">⚠️ Pending Issues</h3>
+<ul>
+  <li>Auth Service: Still needs proper Docker image build</li>
+  <li>Duplicate services need consolidation</li>
+  <li>Monitoring service needs K8s deployment</li>
+</ul>
+
+<h3 id="-next-steps">🔄 Next Steps</h3>
+<ol>
+  <li>Build proper auth-service Docker image</li>
+  <li>Create K8s deployment for monitoring-service</li>
+  <li>Clean up duplicate Docker containers</li>
+  <li>Update system documentation</li>
+</ol>
+
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+<ol>
+  <li><strong>Secret Key Format</strong>: Always verify the exact key names expected by deployments</li>
+  <li><strong>Module Dependencies</strong>: Ensure all npm packages are listed in package.json before building</li>
+  <li><strong>Image Loading</strong>: Use <code class="language-plaintext highlighter-rouge">kind load docker-image</code> after every rebuild for local clusters</li>
+  <li><strong>Service Discovery</strong>: Use full DNS names (e.g., <code class="language-plaintext highlighter-rouge">service.namespace.svc.cluster.local</code>)</li>
+  <li><strong>Debugging Order</strong>: Check Events → Logs → Describe → ConfigMaps/Secrets</li>
+</ol>
+
+<h2 id="performance-impact">Performance Impact</h2>
+<ul>
+  <li>Reduced resource usage by identifying duplicate services</li>
+  <li>Improved startup time with proper dependency management</li>
+  <li>Better error visibility through structured logging</li>
+</ul>
+
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://kubernetes.io/docs/tasks/debug/">Kubernetes Debugging Guide</a></li>
+  <li><a href="https://kind.sigs.k8s.io/">Kind Documentation</a></li>
+  <li><a href="https://istio.io/">Istio Service Mesh</a></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / devlog/2024-08-20-k8s-deployment-fixes.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

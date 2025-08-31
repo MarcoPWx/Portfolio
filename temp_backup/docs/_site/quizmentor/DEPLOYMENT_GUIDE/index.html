@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEPLOYMENT GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">DEPLOYMENT_GUIDE.md</span>
+</div>
+
+<h1>DEPLOYMENT GUIDE</h1>
+
+
+<h1 id="quizmentor-deployment-guide">QuizMentor Deployment Guide</h1>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<h3 id="required-accounts">Required Accounts</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Apple Developer Account ($99/year)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Google Play Developer Account ($25 one-time)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Expo Account (free)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Supabase Account</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GitHub Account</li>
+</ul>
+
+<h3 id="required-tools">Required Tools</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install EAS CLI globally</span>
+npm <span class="nb">install</span> <span class="nt">-g</span> eas-cli
+
+<span class="c"># Install Expo CLI</span>
+npm <span class="nb">install</span> <span class="nt">-g</span> expo
+
+<span class="c"># Login to Expo</span>
+expo login
+eas login
+
+<span class="c"># Link project to EAS</span>
+eas init <span class="nt">--id</span> your-project-id
+</code></pre></div></div>
+
+<h2 id="environment-setup">Environment Setup</h2>
+
+<h3 id="1-configure-environment-variables">1. Configure Environment Variables</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">.env.production</code>:</p>
+<pre><code class="language-env">EXPO_PUBLIC_ENV=production
+EXPO_PUBLIC_SUPABASE_URL=https://your-prod.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-production-anon-key
+EXPO_PUBLIC_API_URL=https://api.quizmentor.app
+</code></pre>
+
+<h3 id="2-update-appjson">2. Update app.json</h3>
+<ul>
+  <li>Set proper bundle identifiers</li>
+  <li>Update version numbers</li>
+  <li>Configure app icons and splash screens</li>
+</ul>
+
+<h2 id="ios-deployment">iOS Deployment</h2>
+
+<h3 id="step-1-apple-developer-setup">Step 1: Apple Developer Setup</h3>
+
+<ol>
+  <li><strong>Create App ID</strong>
+    <ul>
+      <li>Sign in to <a href="https://developer.apple.com">Apple Developer</a></li>
+      <li>Certificates, Identifiers &amp; Profiles → Identifiers</li>
+      <li>Create new App ID with bundle ID: <code class="language-plaintext highlighter-rouge">com.quizmentor.app</code></li>
+      <li>Enable capabilities:
+        <ul>
+          <li>Push Notifications</li>
+          <li>Sign In with Apple</li>
+          <li>Associated Domains</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Create App in App Store Connect</strong>
+    <ul>
+      <li>Go to <a href="https://appstoreconnect.apple.com">App Store Connect</a></li>
+      <li>My Apps → Create New App</li>
+      <li>Select iOS platform</li>
+      <li>Enter app information from <code class="language-plaintext highlighter-rouge">store/APP_STORE_LISTING.md</code></li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-2-configure-eas-for-ios">Step 2: Configure EAS for iOS</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Configure iOS credentials</span>
+eas credentials
+
+<span class="c"># Select iOS platform</span>
+<span class="c"># Choose "Set up a new ad hoc provisioning profile"</span>
+<span class="c"># Or "Set up a new App Store distribution profile"</span>
+</code></pre></div></div>
+
+<h3 id="step-3-build-ios-app">Step 3: Build iOS App</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development build for testing</span>
+eas build <span class="nt">--platform</span> ios <span class="nt">--profile</span> development
+
+<span class="c"># Preview build for TestFlight</span>
+eas build <span class="nt">--platform</span> ios <span class="nt">--profile</span> preview
+
+<span class="c"># Production build for App Store</span>
+eas build <span class="nt">--platform</span> ios <span class="nt">--profile</span> production
+</code></pre></div></div>
+
+<h3 id="step-4-submit-to-app-store">Step 4: Submit to App Store</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Automatic submission</span>
+eas submit <span class="nt">--platform</span> ios <span class="nt">--latest</span>
+
+<span class="c"># Or manual submission with specific build</span>
+eas submit <span class="nt">--platform</span> ios <span class="nt">--id</span><span class="o">=</span>build-id
+</code></pre></div></div>
+
+<h3 id="step-5-testflight-setup">Step 5: TestFlight Setup</h3>
+<ol>
+  <li>Wait for build processing (15-30 minutes)</li>
+  <li>Add internal testers in App Store Connect</li>
+  <li>Submit for external testing (requires review)</li>
+  <li>Share TestFlight link with beta testers</li>
+</ol>
+
+<h2 id="android-deployment">Android Deployment</h2>
+
+<h3 id="step-1-google-play-setup">Step 1: Google Play Setup</h3>
+
+<ol>
+  <li><strong>Create App in Google Play Console</strong>
+    <ul>
+      <li>Go to <a href="https://play.google.com/console">Google Play Console</a></li>
+      <li>Create app → New app</li>
+      <li>Enter app details from <code class="language-plaintext highlighter-rouge">store/APP_STORE_LISTING.md</code></li>
+      <li>Set up store listing</li>
+    </ul>
+  </li>
+  <li><strong>Configure App Signing</strong>
+    <ul>
+      <li>Google Play Console → Setup → App signing</li>
+      <li>Let Google manage signing key (recommended)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-2-build-android-app">Step 2: Build Android App</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development APK</span>
+eas build <span class="nt">--platform</span> android <span class="nt">--profile</span> development
+
+<span class="c"># Preview APK for testing</span>
+eas build <span class="nt">--platform</span> android <span class="nt">--profile</span> preview
+
+<span class="c"># Production AAB for Play Store</span>
+eas build <span class="nt">--platform</span> android <span class="nt">--profile</span> production
+</code></pre></div></div>
+
+<h3 id="step-3-submit-to-google-play">Step 3: Submit to Google Play</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Automatic submission</span>
+eas submit <span class="nt">--platform</span> android <span class="nt">--latest</span>
+
+<span class="c"># Manual submission</span>
+eas submit <span class="nt">--platform</span> android <span class="nt">--id</span><span class="o">=</span>build-id
+</code></pre></div></div>
+
+<h3 id="step-4-release-management">Step 4: Release Management</h3>
+<ol>
+  <li>Upload AAB to internal testing track</li>
+  <li>Run closed alpha/beta testing</li>
+  <li>Gradual rollout to production (10% → 50% → 100%)</li>
+</ol>
+
+<h2 id="cicd-with-eas-build">CI/CD with EAS Build</h2>
+
+<h3 id="github-actions-integration">GitHub Actions Integration</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">.github/workflows/eas-build.yml</code>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">EAS Build</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">main</span><span class="pi">]</span>
+  <span class="na">pull_request</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">main</span><span class="pi">]</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+      
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-node@v3</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">node-version</span><span class="pi">:</span> <span class="m">18</span>
+          
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">expo/expo-github-action@v8</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">eas-version</span><span class="pi">:</span> <span class="s">latest</span>
+          <span class="na">token</span><span class="pi">:</span> <span class="s">${{ secrets.EXPO_TOKEN }}</span>
+          
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">npm ci</span>
+      
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span> <span class="s">eas build --platform all --non-interactive</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">EXPO_TOKEN</span><span class="pi">:</span> <span class="s">${{ secrets.EXPO_TOKEN }}</span>
+</code></pre></div></div>
+
+<h3 id="automatic-builds-on-push">Automatic Builds on Push</h3>
+
+<p>Configure in <code class="language-plaintext highlighter-rouge">eas.json</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"production"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"autoIncrement"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"EXPO_PUBLIC_ENV"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="over-the-air-ota-updates">Over-The-Air (OTA) Updates</h2>
+
+<h3 id="configure-ota-updates">Configure OTA Updates</h3>
+
+<p>In <code class="language-plaintext highlighter-rouge">app.json</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"expo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"updates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"checkAutomatically"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ON_LOAD"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fallbackToCacheTimeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">30000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="publish-ota-update">Publish OTA Update</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Publish update to production</span>
+eas update <span class="nt">--branch</span> production <span class="nt">--message</span> <span class="s2">"Bug fixes and improvements"</span>
+
+<span class="c"># Publish with specific platform</span>
+eas update <span class="nt">--platform</span> ios <span class="nt">--branch</span> production
+</code></pre></div></div>
+
+<h2 id="monitoring--analytics">Monitoring &amp; Analytics</h2>
+
+<h3 id="crash-reporting-with-sentry">Crash Reporting with Sentry</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Sentry</span>
+npx expo <span class="nb">install </span>sentry-expo
+
+<span class="c"># Configure in app.json</span>
+<span class="o">{</span>
+  <span class="s2">"expo"</span>: <span class="o">{</span>
+    <span class="s2">"plugins"</span>: <span class="o">[</span>
+      <span class="o">[</span>
+        <span class="s2">"sentry-expo"</span>,
+        <span class="o">{</span>
+          <span class="s2">"dsn"</span>: <span class="s2">"YOUR_SENTRY_DSN"</span>,
+          <span class="s2">"enableInExpoDevelopment"</span>: <span class="nb">true</span>,
+          <span class="s2">"debug"</span>: <span class="nb">false</span>
+        <span class="o">}</span>
+      <span class="o">]</span>
+    <span class="o">]</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="analytics-setup">Analytics Setup</h3>
+
+<p>Configure Firebase Analytics or Amplitude for user tracking.</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<ol>
+  <li><strong>iOS Build Failures</strong>
+    <ul>
+      <li>Check provisioning profiles: <code class="language-plaintext highlighter-rouge">eas credentials</code></li>
+      <li>Verify bundle identifier matches</li>
+      <li>Ensure all capabilities are enabled</li>
+    </ul>
+  </li>
+  <li><strong>Android Build Failures</strong>
+    <ul>
+      <li>Check package name consistency</li>
+      <li>Verify keystore configuration</li>
+      <li>Check gradle version compatibility</li>
+    </ul>
+  </li>
+  <li><strong>Submission Failures</strong>
+    <ul>
+      <li>Ensure all metadata is complete</li>
+      <li>Check screenshot dimensions</li>
+      <li>Verify age ratings and content descriptions</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="debug-commands">Debug Commands</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View build logs</span>
+eas build:list <span class="nt">--platform</span> ios <span class="nt">--limit</span> 5
+
+<span class="c"># Check build status</span>
+eas build:view <span class="o">[</span>build-id]
+
+<span class="c"># Download build artifact</span>
+eas build:download <span class="o">[</span>build-id]
+
+<span class="c"># Clear credentials</span>
+eas credentials <span class="nt">--clear-cache</span>
+</code></pre></div></div>
+
+<h2 id="release-checklist">Release Checklist</h2>
+
+<h3 id="pre-release">Pre-Release</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update version in app.json</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update CHANGELOG.md</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run all tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test on physical devices</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update store listings</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prepare marketing materials</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Schedule social media posts</li>
+</ul>
+
+<h3 id="release">Release</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Build production versions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Submit to stores</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create GitHub release</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy web landing page updates</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Send release notes to team</li>
+</ul>
+
+<h3 id="post-release">Post-Release</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor crash reports</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check user reviews</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Respond to support emails</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Plan hotfix if needed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update roadmap</li>
+</ul>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<h3 id="api-keys">API Keys</h3>
+<ul>
+  <li>Never commit production keys</li>
+  <li>Use EAS Secrets for sensitive data</li>
+  <li>Rotate keys regularly</li>
+</ul>
+
+<h3 id="code-signing">Code Signing</h3>
+<ul>
+  <li>Keep certificates secure</li>
+  <li>Use separate keys for dev/prod</li>
+  <li>Enable two-factor authentication</li>
+</ul>
+
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+  <li>Implement certificate pinning</li>
+  <li>Use secure storage for tokens</li>
+  <li>Encrypt sensitive local data</li>
+</ul>
+
+<h2 id="app-store-optimization-aso">App Store Optimization (ASO)</h2>
+
+<h3 id="keywords-research">Keywords Research</h3>
+<ul>
+  <li>Use App Annie or Sensor Tower</li>
+  <li>Monitor competitor keywords</li>
+  <li>A/B test descriptions</li>
+</ul>
+
+<h3 id="screenshots">Screenshots</h3>
+<ul>
+  <li>Highlight key features</li>
+  <li>Use device frames</li>
+  <li>Include captions</li>
+</ul>
+
+<h3 id="reviews-management">Reviews Management</h3>
+<ul>
+  <li>Respond to all reviews</li>
+  <li>Address negative feedback</li>
+  <li>Encourage positive reviews</li>
+</ul>
+
+<h2 id="cost-optimization">Cost Optimization</h2>
+
+<h3 id="eas-build-minutes">EAS Build Minutes</h3>
+<ul>
+  <li>Use local builds for development</li>
+  <li>Cache dependencies</li>
+  <li>Optimize build times</li>
+</ul>
+
+<h3 id="infrastructure">Infrastructure</h3>
+<ul>
+  <li>Monitor Supabase usage</li>
+  <li>Implement caching strategies</li>
+  <li>Use CDN for assets</li>
+</ul>
+
+<h2 id="support--resources">Support &amp; Resources</h2>
+
+<ul>
+  <li><a href="https://docs.expo.dev/eas/">EAS Documentation</a></li>
+  <li><a href="https://developer.apple.com/app-store/guidelines/">App Store Guidelines</a></li>
+  <li><a href="https://play.google.com/console/about/policy/">Google Play Policies</a></li>
+  <li><a href="https://forums.expo.dev/">Expo Forums</a></li>
+  <li>QuizMentor Team: team@quizmentor.app</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / DEPLOYMENT_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

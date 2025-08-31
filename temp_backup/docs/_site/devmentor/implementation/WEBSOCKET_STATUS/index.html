@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBSOCKET STATUS | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">implementation/WEBSOCKET_STATUS.md</span>
+</div>
+
+<h1>WEBSOCKET STATUS</h1>
+
+
+<h1 id="websocket-implementation-status">WebSocket Implementation Status</h1>
+
+<h2 id="-correction-websocket-code-exists">✅ CORRECTION: WebSocket Code EXISTS!</h2>
+
+<p><strong>Previous Assessment</strong>: WebSocket doesn’t exist ❌ WRONG
+<strong>Actual Status</strong>: WebSocket implementations exist in frontend, need to be deployed ✅</p>
+
+<hr />
+
+<h2 id="what-we-have">What We Have</h2>
+
+<h3 id="1-client-side-websocket-srcserviceswebsocketservicets">1. Client-Side WebSocket (<code class="language-plaintext highlighter-rouge">src/services/websocket.service.ts</code>)</h3>
+<p><strong>Status</strong>: ✅ Complete and ready
+<strong>Features</strong>:</p>
+<ul>
+  <li>Socket.io client implementation</li>
+  <li>Connects to <code class="language-plaintext highlighter-rouge">localhost:8002</code></li>
+  <li>Event handlers for:
+    <ul>
+      <li>Tasks (created, updated, deleted, status_changed)</li>
+      <li>Epics (created, updated, deleted)</li>
+      <li>Projects (created, updated)</li>
+      <li>Sprints (started, completed)</li>
+      <li>System notifications</li>
+    </ul>
+  </li>
+  <li>Auto-reconnection with exponential backoff</li>
+  <li>Event subscription/unsubscription system</li>
+</ul>
+
+<h3 id="2-server-side-websocket-srclibserviceswebsocketserverts">2. Server-Side WebSocket (<code class="language-plaintext highlighter-rouge">src/lib/services/websocketServer.ts</code>)</h3>
+<p><strong>Status</strong>: ✅ Implemented but not deployed
+<strong>Features</strong>:</p>
+<ul>
+  <li>Native WebSocket server using <code class="language-plaintext highlighter-rouge">ws</code> library</li>
+  <li>Handles VS Code extension connections</li>
+  <li>Message handlers for:
+    <ul>
+      <li>Code context analysis</li>
+      <li>TDD cycle management</li>
+      <li>AI suggestions</li>
+      <li>Memory updates</li>
+    </ul>
+  </li>
+  <li>Client management with unique IDs</li>
+  <li>Error handling and heartbeat</li>
+</ul>
+
+<hr />
+
+<h2 id="the-problem">The Problem</h2>
+
+<p>The WebSocket server code exists but it’s in the <strong>frontend directory</strong> and not running as a separate service. It needs to be:</p>
+
+<ol>
+  <li>Either integrated with Next.js server</li>
+  <li>Or extracted to a standalone service</li>
+</ol>
+
+<hr />
+
+<h2 id="how-to-deploy-websocket-server">How to Deploy WebSocket Server</h2>
+
+<h3 id="option-1-integrate-with-nextjs-quick-solution">Option 1: Integrate with Next.js (Quick Solution)</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">src/app/api/socketio/route.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Server</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">socket.io</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createServer</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">io</span><span class="p">:</span> <span class="nx">Server</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">GET</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">httpServer</span> <span class="o">=</span> <span class="nx">createServer</span><span class="p">();</span>
+    <span class="nx">io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Server</span><span class="p">(</span><span class="nx">httpServer</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">cors</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">origin</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://localhost:3001</span><span class="dl">"</span><span class="p">,</span>
+        <span class="na">methods</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="nx">io</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">connection</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Client connected:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+      
+      <span class="c1">// Add your event handlers here</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:update</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">socket</span><span class="p">.</span><span class="nx">broadcast</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:updated</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">httpServer</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8002</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket server running on port 8002</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket server running</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">status</span><span class="p">:</span> <span class="mi">200</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then visit <code class="language-plaintext highlighter-rouge">http://localhost:3001/api/socketio</code> once to start it.</p>
+
+<h3 id="option-2-create-standalone-service-proper-solution">Option 2: Create Standalone Service (Proper Solution)</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">infrastructure/services/websocket-service/</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ../../infrastructure/services/websocket-service/src
+<span class="nb">cd</span> ../../infrastructure/services/websocket-service
+npm init <span class="nt">-y</span>
+npm <span class="nb">install </span>socket.io express cors
+</code></pre></div></div>
+
+<p>Create <code class="language-plaintext highlighter-rouge">infrastructure/services/websocket-service/src/index.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Server</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">socket.io</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createServer</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">cors</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">cors</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">());</span>
+
+<span class="kd">const</span> <span class="nx">httpServer</span> <span class="o">=</span> <span class="nx">createServer</span><span class="p">(</span><span class="nx">app</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Server</span><span class="p">(</span><span class="nx">httpServer</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">cors</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">origin</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">FRONTEND_URL</span> <span class="o">||</span> <span class="dl">"</span><span class="s2">http://localhost:3001</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">methods</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Health check</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/health</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">healthy</span><span class="dl">'</span><span class="p">,</span> <span class="na">connections</span><span class="p">:</span> <span class="nx">io</span><span class="p">.</span><span class="nx">sockets</span><span class="p">.</span><span class="nx">sockets</span><span class="p">.</span><span class="nx">size</span> <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="c1">// WebSocket handling</span>
+<span class="nx">io</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">connection</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">New client connected:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+  
+  <span class="c1">// Join rooms</span>
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">join:project</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">projectId</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">`project:</span><span class="p">${</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Socket </span><span class="p">${</span><span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2"> joined project:</span><span class="p">${</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Task events</span>
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:update</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">io</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="s2">`project:</span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span><span class="p">).</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:updated</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:create</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">io</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="s2">`project:</span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span><span class="p">).</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:created</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Epic events</span>
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">epic:update</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">io</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="s2">`project:</span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">projectId</span><span class="p">}</span><span class="s2">`</span><span class="p">).</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">epic:updated</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Disconnect</span>
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">disconnect</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Client disconnected:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="mi">8002</span><span class="p">;</span>
+<span class="nx">httpServer</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`🚀 WebSocket server running on port </span><span class="p">${</span><span class="nx">PORT</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="how-to-use-websocket-in-frontend">How to Use WebSocket in Frontend</h2>
+
+<h3 id="connect-to-websocket">Connect to WebSocket:</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">WebSocketService</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/services/websocket.service</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocketService</span><span class="p">();</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="c1">// Subscribe to events</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:updated</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Task updated:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="c1">// Update your UI state</span>
+<span class="p">});</span>
+
+<span class="c1">// Send events</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:update</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">projectId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">taskId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">456</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">completed</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="in-react-component">In React Component:</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">WebSocketService</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/services/websocket.service</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">TaskBoard</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocketService</span><span class="p">();</span>
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+    <span class="kd">const</span> <span class="nx">unsubscribe</span> <span class="o">=</span> <span class="nx">ws</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:updated</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">task</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// Update your state</span>
+      <span class="nx">updateTask</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">unsubscribe</span><span class="p">();</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+
+  <span class="c1">// Rest of component</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="action-items">Action Items</h2>
+
+<h3 id="immediate-today">Immediate (Today):</h3>
+<ol>
+  <li><strong>Choose deployment option</strong> (Next.js integration vs standalone)</li>
+  <li><strong>Start WebSocket server</strong> on port 8002</li>
+  <li><strong>Test connection</strong> from frontend</li>
+</ol>
+
+<h3 id="implementation-steps">Implementation Steps:</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Quick test with standalone service</span>
+<span class="nb">cd </span>infrastructure/services
+<span class="nb">mkdir </span>websocket-service
+<span class="nb">cd </span>websocket-service
+npm init <span class="nt">-y</span>
+npm <span class="nb">install </span>socket.io express cors typescript @types/node
+
+<span class="c"># Copy the server code</span>
+<span class="nb">cp</span> ../../../frontend/devmentor-ui/src/lib/services/websocketServer.ts src/
+
+<span class="c"># Adapt it to run standalone</span>
+<span class="c"># Start the server</span>
+npm run dev
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p>✅ <strong>WebSocket code exists and is well-implemented</strong>
+❌ <strong>It’s just not deployed as a service</strong>
+🔧 <strong>Can be operational in 30 minutes</strong></p>
+
+<p>The WebSocket implementation is actually one of the more complete parts of the system! It just needs to be properly deployed.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / implementation/WEBSOCKET_STATUS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEBSOCKET BETA READINESS</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">api/WEBSOCKET_BETA_READINESS.md</span>
+</div>
+
+<h1>WEBSOCKET BETA READINESS</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="websocket--events-system---beta-production-guide">WebSocket &amp; Events System - Beta Production Guide</h1>
+
+<h2 id="-overview">🎯 Overview</h2>
+
+<p>DevMentor uses a dual real-time communication strategy:</p>
+<ul>
+  <li><strong>WebSockets</strong>: Bidirectional communication between IDE extensions and the dashboard</li>
+  <li><strong>Server-Sent Events (SSE)</strong>: One-way streaming from backend services to the UI</li>
+</ul>
+
+<p>This guide will teach you how to make this system production-ready for beta users.</p>
+
+<h2 id="-architecture">📐 Architecture</h2>
+
+<h3 id="current-system-design">Current System Design</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────┐     WebSocket      ┌─────────────┐     Redis PubSub    ┌──────────────┐
+│ IDE/Editor   │ ←─────────────────→ │  Dashboard  │ ←─────────────────→ │ Backend Jobs │
+│  Extension   │    (port 8080)      │  (port 3000)│                     │   Workers    │
+└──────────────┘                     └─────────────┘                     └──────────────┘
+                                            │
+                                            │ SSE
+                                            ↓
+                                     ┌─────────────┐
+                                     │   Browser   │
+                                     │     UI      │
+                                     └─────────────┘
+</code></pre></div></div>
+
+<h3 id="two-websocket-services">Two WebSocket Services</h3>
+
+<ol>
+  <li><strong>WebSocket Server</strong> (<code class="language-plaintext highlighter-rouge">websocketServer.ts</code>)
+    <ul>
+      <li>Runs on the dashboard at <code class="language-plaintext highlighter-rouge">/ws</code></li>
+      <li>Accepts connections from IDE extensions</li>
+      <li>Handles: handshake, codeContext, startTDD, analyzeCode, ping</li>
+    </ul>
+  </li>
+  <li><strong>WebSocket Client</strong> (<code class="language-plaintext highlighter-rouge">websocketService.ts</code>)
+    <ul>
+      <li>Connects FROM dashboard TO IDE extension at <code class="language-plaintext highlighter-rouge">ws://localhost:8080/devmentor</code></li>
+      <li>Handles: context_update, file_changed, selection_changed, suggestion_request, tdd_action</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="event-streaming-sse">Event Streaming (SSE)</h3>
+
+<ul>
+  <li><strong>Endpoint</strong>: <code class="language-plaintext highlighter-rouge">/api/events</code></li>
+  <li><strong>Channels</strong>: ui:activity, ai:jobs:status, sse:progress:scraper, memory:new-items</li>
+  <li><strong>Transport</strong>: Redis Pub/Sub → SSE → Browser EventSource</li>
+</ul>
+
+<h2 id="-making-it-beta-ready">🚀 Making It Beta-Ready</h2>
+
+<h3 id="step-1-understanding-the-flow">Step 1: Understanding the Flow</h3>
+
+<h4 id="ide--dashboard-flow">IDE → Dashboard Flow</h4>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// IDE sends code context</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">codeContext</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">data</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">file</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">src/utils.ts</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">language</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">typescript</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">function add(a, b) { return a + b; }</span><span class="dl">"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Dashboard analyzes and responds</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">suggestions</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">data</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">uuid</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">test</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">title</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Add unit test</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This function needs tests</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.75</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="backend--ui-flow-via-redissse">Backend → UI Flow (via Redis/SSE)</h4>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Backend publishes to Redis</span>
+<span class="nx">redis</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">ai:jobs:status</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="na">jobId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">job_123</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">completed</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">result</span><span class="p">:</span> <span class="p">{</span> <span class="na">suggestions</span><span class="p">:</span> <span class="mi">5</span> <span class="p">}</span>
+<span class="p">}));</span>
+
+<span class="c1">// UI receives via EventSource</span>
+<span class="nx">eventSource</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">message</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+  <span class="c1">// Update UI based on channel and message</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="step-2-production-requirements">Step 2: Production Requirements</h3>
+
+<h4 id="-beta-readiness-checklist">✅ Beta Readiness Checklist</h4>
+
+<h5 id="infrastructure">Infrastructure</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Redis instance running and accessible</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />WebSocket server properly initialized</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SSL/TLS for secure WebSocket connections (wss://)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CORS headers configured correctly</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Connection pooling for Redis</li>
+</ul>
+
+<h5 id="reliability">Reliability</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Automatic reconnection logic</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Message queuing for offline clients</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Heartbeat/ping mechanism</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Graceful degradation when services unavailable</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Circuit breaker pattern for external services</li>
+</ul>
+
+<h5 id="security">Security</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Authentication for WebSocket connections</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Message validation and sanitization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting per client</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />DDoS protection</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Secure Redis configuration</li>
+</ul>
+
+<h5 id="monitoring">Monitoring</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Connection metrics (active, total, failed)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Message throughput tracking</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Error logging and alerting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance metrics (latency, queue size)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Client version tracking</li>
+</ul>
+
+<h5 id="developer-experience">Developer Experience</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clear documentation for IDE extension developers</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SDK/client libraries</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Example implementations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Debugging tools</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Event replay capability</li>
+</ul>
+
+<h2 id="-implementation-steps">💻 Implementation Steps</h2>
+
+<h3 id="step-1-set-up-custom-server-with-websocket-support">Step 1: Set Up Custom Server with WebSocket Support</h3>
+
+<p>Next.js doesn’t natively support WebSocket servers, so we need a custom server:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// server.js</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">createServer</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">parse</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">url</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">next</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">next</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">websocketService</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./dist/lib/services/websocketServer</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">dev</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">next</span><span class="p">({</span> <span class="nx">dev</span> <span class="p">});</span>
+<span class="kd">const</span> <span class="nx">handle</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">getRequestHandler</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">prepare</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">parsedUrl</span> <span class="o">=</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="nx">handle</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">parsedUrl</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Initialize WebSocket server</span>
+  <span class="nx">websocketService</span><span class="p">.</span><span class="nx">initialize</span><span class="p">(</span><span class="nx">server</span><span class="p">);</span>
+
+  <span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">&gt; Ready on http://localhost:3000</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">&gt; WebSocket ready on ws://localhost:3000/ws</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="step-2-add-authentication">Step 2: Add Authentication</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Enhanced WebSocket authentication</span>
+<span class="kr">interface</span> <span class="nx">AuthenticatedClient</span> <span class="kd">extends</span> <span class="nx">ExtensionClient</span> <span class="p">{</span>
+  <span class="nl">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">permissions</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="k">private</span> <span class="k">async</span> <span class="nx">handleHandshake</span><span class="p">(</span><span class="nx">client</span><span class="p">:</span> <span class="nx">ExtensionClient</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="c1">// Validate API key</span>
+  <span class="kd">const</span> <span class="nx">apiKey</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">apiKey</span> <span class="o">||</span> <span class="o">!</span><span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateApiKey</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sendError</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Invalid API key</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">ws</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Set authenticated client data</span>
+  <span class="kd">const</span> <span class="nx">authClient</span> <span class="o">=</span> <span class="nx">client</span> <span class="k">as</span> <span class="nx">AuthenticatedClient</span><span class="p">;</span>
+  <span class="nx">authClient</span><span class="p">.</span><span class="nx">apiKey</span> <span class="o">=</span> <span class="nx">apiKey</span><span class="p">;</span>
+  <span class="nx">authClient</span><span class="p">.</span><span class="nx">userId</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserIdFromApiKey</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">);</span>
+  <span class="nx">authClient</span><span class="p">.</span><span class="nx">permissions</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPermissions</span><span class="p">(</span><span class="nx">authClient</span><span class="p">.</span><span class="nx">userId</span><span class="p">);</span>
+
+  <span class="c1">// Continue with normal handshake...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-3-implement-message-queue">Step 3: Implement Message Queue</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Redis-backed message queue for reliability</span>
+<span class="kd">class</span> <span class="nx">MessageQueue</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">queueMessage</span><span class="p">(</span><span class="nx">clientId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">message</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`queue:</span><span class="p">${</span><span class="nx">clientId</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">rpush</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">message</span><span class="p">));</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">expire</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">86400</span><span class="p">);</span> <span class="c1">// 24 hour TTL</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">getQueuedMessages</span><span class="p">(</span><span class="nx">clientId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`queue:</span><span class="p">${</span><span class="nx">clientId</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">messages</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">lrange</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">m</span> <span class="o">=&gt;</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">m</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-4-add-monitoring">Step 4: Add Monitoring</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Metrics collection</span>
+<span class="kd">class</span> <span class="nx">WebSocketMetrics</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">connections</span><span class="p">:</span> <span class="p">{</span> <span class="na">active</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">total</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">failed</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">{</span> <span class="na">sent</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">received</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">errors</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+    <span class="na">latency</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">};</span>
+
+  <span class="nx">trackConnection</span><span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">connect</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">disconnect</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">connect</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">active</span><span class="o">++</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">total</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">disconnect</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">active</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">failed</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">publishMetrics</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">publishMetrics</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="nx">redis</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">metrics:websocket</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-5-client-side-implementation">Step 5: Client-Side Implementation</h3>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// React hook for WebSocket connection</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useRef</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useWebSocket</span><span class="p">(</span><span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">WebSocket</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isConnected</span><span class="p">,</span> <span class="nx">setIsConnected</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">lastMessage</span><span class="p">,</span> <span class="nx">setLastMessage</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">reconnectTimeoutRef</span> <span class="o">=</span> <span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">reconnectAttempts</span> <span class="o">=</span> <span class="nx">useRef</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">connect</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket connected</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">};</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+        <span class="nx">setLastMessage</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+      <span class="p">};</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">handleReconnect</span><span class="p">();</span>
+      <span class="p">};</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to create WebSocket:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="nx">handleReconnect</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">const</span> <span class="nx">handleReconnect</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span><span class="p">),</span> <span class="mi">30000</span><span class="p">);</span>
+      <span class="nx">reconnectTimeoutRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span><span class="o">++</span><span class="p">;</span>
+        <span class="nx">connect</span><span class="p">();</span>
+      <span class="p">},</span> <span class="nx">delay</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">const</span> <span class="nx">sendMessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">message</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">?.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">OPEN</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">message</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">connect</span><span class="p">();</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">reconnectTimeoutRef</span><span class="p">.</span><span class="nx">current</span><span class="p">);</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">?.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">url</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">{</span> <span class="nx">isConnected</span><span class="p">,</span> <span class="nx">lastMessage</span><span class="p">,</span> <span class="nx">sendMessage</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-6-sse-client-implementation">Step 6: SSE Client Implementation</h3>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// React hook for Server-Sent Events</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useRef</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useEventSource</span><span class="p">(</span><span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">EventSource</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isConnected</span><span class="p">,</span> <span class="nx">setIsConnected</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">events</span><span class="p">,</span> <span class="nx">setEvents</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">any</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">SSE connected</span><span class="dl">'</span><span class="p">);</span>
+      <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+      <span class="nx">setEvents</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">99</span><span class="p">),</span> <span class="nx">data</span><span class="p">]);</span> <span class="c1">// Keep last 100</span>
+    <span class="p">};</span>
+
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">SSE error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">?.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">url</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">{</span> <span class="nx">isConnected</span><span class="p">,</span> <span class="nx">events</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-testing-strategy">🧪 Testing Strategy</h2>
+
+<h3 id="unit-tests">Unit Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// websocket.test.ts</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket Server</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should handle handshake</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">connectClient</span><span class="p">();</span>
+    <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">handshake</span><span class="dl">'</span><span class="p">,</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span> <span class="p">});</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">receive</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="kd">type</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">welcome</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should queue messages for offline clients</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Test message queuing logic</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="integration-tests">Integration Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// e2e.test.ts</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">End-to-End Flow</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should process IDE context and return suggestions</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Connect WebSocket</span>
+    <span class="c1">// Send code context</span>
+    <span class="c1">// Verify suggestions received</span>
+    <span class="c1">// Check Redis for events</span>
+    <span class="c1">// Verify SSE delivers events</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="load-testing">Load Testing</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// load-test.js</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">Worker</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">worker_threads</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Spawn multiple WebSocket clients</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="dl">'</span><span class="s1">./websocket-client-worker.js</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Monitor metrics</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">metrics:websocket</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Current metrics:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">metrics</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="-debugging-tools">🔍 Debugging Tools</h2>
+
+<h3 id="websocket-inspector">WebSocket Inspector</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add to your dashboard</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">WebSocketInspector</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">clients</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useWebSocketAdmin</span><span class="p">();</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="nx">Connected</span> <span class="nx">Clients</span><span class="p">:</span> <span class="p">{</span><span class="nx">clients</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>      <span class="p">{</span><span class="nx">clients</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">client</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">ID</span><span class="p">:</span> <span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Type</span><span class="p">:</span> <span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="kd">type</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Last</span> <span class="nx">Activity</span><span class="p">:</span> <span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="nx">lastActivity</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="event-stream-monitor">Event Stream Monitor</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">EventMonitor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">events</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useEventSource</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/events</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="nx">Recent</span> <span class="nx">Events</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>      <span class="p">{</span><span class="nx">events</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">event</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">event</span><span class="p">.</span><span class="nx">channel</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/pre</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-production-deployment">🚦 Production Deployment</h2>
+
+<h3 id="environment-variables">Environment Variables</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.production</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://production-redis:6379
+<span class="nv">WS_PORT</span><span class="o">=</span>3000
+<span class="nv">WS_PATH</span><span class="o">=</span>/ws
+<span class="nv">ENABLE_METRICS</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">MAX_CONNECTIONS</span><span class="o">=</span>1000
+<span class="nv">AUTH_REQUIRED</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="docker-configuration">Docker Configuration</h3>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dockerfile</span>
+<span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm ci <span class="nt">--only</span><span class="o">=</span>production
+<span class="k">RUN </span>npm run build
+
+<span class="k">EXPOSE</span><span class="s"> 3000</span>
+<span class="k">CMD</span><span class="s"> ["node", "server.js"]</span>
+</code></pre></div></div>
+
+<h3 id="nginx-configuration-for-websocket-proxy">Nginx Configuration (for WebSocket proxy)</h3>
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">location</span> <span class="n">/ws</span> <span class="p">{</span>
+    <span class="kn">proxy_pass</span> <span class="s">http://localhost:3000</span><span class="p">;</span>
+    <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">"upgrade"</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+    <span class="kn">proxy_read_timeout</span> <span class="mi">86400</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">location</span> <span class="n">/api/events</span> <span class="p">{</span>
+    <span class="kn">proxy_pass</span> <span class="s">http://localhost:3000</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">''</span><span class="p">;</span>
+    <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+    <span class="kn">chunked_transfer_encoding</span> <span class="no">off</span><span class="p">;</span>
+    <span class="kn">proxy_buffering</span> <span class="no">off</span><span class="p">;</span>
+    <span class="kn">proxy_cache</span> <span class="no">off</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-monitoring-dashboard">📊 Monitoring Dashboard</h2>
+
+<p>Create a real-time monitoring dashboard:</p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">RealtimeMonitor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">wsMetrics</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useWebSocketMetrics</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">sseMetrics</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useSSEMetrics</span><span class="p">();</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">Dashboard</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span> 
+        <span class="na">title</span><span class="p">=</span><span class="s">"WebSocket Connections"</span>
+        <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">active</span><span class="si">}</span>
+        <span class="na">total</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">total</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span> 
+        <span class="na">title</span><span class="p">=</span><span class="s">"Messages/sec"</span>
+        <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">throughput</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span> 
+        <span class="na">title</span><span class="p">=</span><span class="s">"SSE Subscribers"</span>
+        <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">sseMetrics</span><span class="p">.</span><span class="nx">subscribers</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">LatencyChart</span> <span class="na">data</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">latency</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">ErrorLog</span> <span class="na">errors</span><span class="p">=</span><span class="si">{</span><span class="p">[...</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">errors</span><span class="p">,</span> <span class="p">...</span><span class="nx">sseMetrics</span><span class="p">.</span><span class="nx">errors</span><span class="p">]</span><span class="si">}</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">Dashboard</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-beta-launch-checklist">🎯 Beta Launch Checklist</h2>
+
+<h3 id="week-1-infrastructure">Week 1: Infrastructure</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up production Redis with persistence</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure SSL certificates for wss://</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy custom Next.js server</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up monitoring infrastructure</li>
+</ul>
+
+<h3 id="week-2-security--reliability">Week 2: Security &amp; Reliability</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement authentication system</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add rate limiting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up message queuing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement circuit breakers</li>
+</ul>
+
+<h3 id="week-3-testing">Week 3: Testing</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run load tests (target: 100 concurrent connections)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test failover scenarios</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify message delivery guarantees</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test reconnection logic</li>
+</ul>
+
+<h3 id="week-4-documentation--tools">Week 4: Documentation &amp; Tools</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write IDE extension integration guide</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create example client implementations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Build debugging dashboard</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prepare beta user onboarding</li>
+</ul>
+
+<h2 id="-common-issues--solutions">🆘 Common Issues &amp; Solutions</h2>
+
+<h3 id="issue-websocket-connections-dropping">Issue: WebSocket connections dropping</h3>
+<p><strong>Solution</strong>: Implement heartbeat/ping mechanism and aggressive reconnection</p>
+
+<h3 id="issue-messages-lost-during-disconnection">Issue: Messages lost during disconnection</h3>
+<p><strong>Solution</strong>: Queue messages in Redis with TTL</p>
+
+<h3 id="issue-sse-connections-timing-out">Issue: SSE connections timing out</h3>
+<p><strong>Solution</strong>: Send periodic keep-alive comments, configure proxy timeouts</p>
+
+<h3 id="issue-high-memory-usage-with-many-connections">Issue: High memory usage with many connections</h3>
+<p><strong>Solution</strong>: Implement connection pooling and client limits</p>
+
+<h2 id="-next-steps">📚 Next Steps</h2>
+
+<ol>
+  <li><strong>Implement the custom server</strong> (server.js)</li>
+  <li><strong>Add authentication layer</strong></li>
+  <li><strong>Set up Redis with proper configuration</strong></li>
+  <li><strong>Create monitoring dashboard</strong></li>
+  <li><strong>Write comprehensive tests</strong></li>
+  <li><strong>Document for beta users</strong></li>
+</ol>
+
+<p>This system is the nervous system of DevMentor - it enables real-time collaboration between the IDE and the AI-powered dashboard. Getting it right is crucial for a smooth beta experience.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / api/WEBSOCKET_BETA_READINESS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

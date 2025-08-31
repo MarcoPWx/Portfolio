@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPABASE SETUP GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">SUPABASE_SETUP_GUIDE.md</span>
+</div>
+
+<h1>SUPABASE SETUP GUIDE</h1>
+
+
+<h1 id="supabase-setup-guide-for-quizmentor">Supabase Setup Guide for QuizMentor</h1>
+<p><em>Last Updated: December 26, 2024</em></p>
+
+<h2 id="-prerequisites">📋 Prerequisites</h2>
+<ul>
+  <li>Supabase account created</li>
+  <li>Project created in Supabase dashboard</li>
+  <li>Access to project settings</li>
+</ul>
+
+<hr />
+
+<h2 id="-step-by-step-setup">🚀 Step-by-Step Setup</h2>
+
+<h3 id="step-1-get-your-project-credentials">Step 1: Get Your Project Credentials</h3>
+
+<ol>
+  <li>Go to your <a href="https://app.supabase.com">Supabase Dashboard</a></li>
+  <li>Select your project</li>
+  <li>Navigate to <strong>Settings &gt; API</strong></li>
+  <li>Copy these values:
+    <ul>
+      <li><strong>Project URL</strong>: <code class="language-plaintext highlighter-rouge">https://YOUR_PROJECT_ID.supabase.co</code></li>
+      <li><strong>anon public key</strong>: (safe to expose in client)</li>
+      <li><strong>service_role key</strong>: (NEVER expose, server-only)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-2-configure-environment-variables">Step 2: Configure Environment Variables</h3>
+
+<ol>
+  <li>Copy <code class="language-plaintext highlighter-rouge">.env.example</code> to <code class="language-plaintext highlighter-rouge">.env.local</code>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> .env.example .env.local
+</code></pre></div>    </div>
+  </li>
+  <li>Update <code class="language-plaintext highlighter-rouge">.env.local</code> with your Supabase credentials:
+    <pre><code class="language-env">NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+</code></pre>
+  </li>
+</ol>
+
+<h3 id="step-3-run-database-migrations">Step 3: Run Database Migrations</h3>
+
+<h4 id="option-a-using-supabase-dashboard-easiest">Option A: Using Supabase Dashboard (Easiest)</h4>
+<ol>
+  <li>Go to <strong>SQL Editor</strong> in Supabase dashboard</li>
+  <li>Click “New Query”</li>
+  <li>Copy the entire contents of <code class="language-plaintext highlighter-rouge">supabase/migrations/001_initial_schema.sql</code></li>
+  <li>Paste into the SQL editor</li>
+  <li>Click “Run” to execute</li>
+</ol>
+
+<h4 id="option-b-using-supabase-cli">Option B: Using Supabase CLI</h4>
+<ol>
+  <li>Install Supabase CLI:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> <span class="nt">-g</span> supabase
+</code></pre></div>    </div>
+  </li>
+  <li>Link your project:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase <span class="nb">link</span> <span class="nt">--project-ref</span> YOUR_PROJECT_ID
+</code></pre></div>    </div>
+  </li>
+  <li>Run migrations:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase db push
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-4-configure-authentication">Step 4: Configure Authentication</h3>
+
+<ol>
+  <li>
+    <p>In Supabase Dashboard, go to <strong>Authentication &gt; Providers</strong></p>
+  </li>
+  <li><strong>Enable Email Authentication</strong>:
+    <ul>
+      <li>Toggle “Enable Email” ON</li>
+      <li>Configure email templates if needed</li>
+      <li>Set redirect URLs:
+        <ul>
+          <li>Development: <code class="language-plaintext highlighter-rouge">http://localhost:3000/auth/callback</code></li>
+          <li>Production: <code class="language-plaintext highlighter-rouge">https://yourdomain.com/auth/callback</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Configure Password Requirements</strong>:
+    <ul>
+      <li>Go to <strong>Authentication &gt; Policies</strong></li>
+      <li>Set minimum password length: 8</li>
+      <li>Require uppercase: Yes</li>
+      <li>Require numbers: Yes</li>
+    </ul>
+  </li>
+  <li><strong>(Optional) Enable OAuth Providers</strong>:
+    <ul>
+      <li><strong>GitHub OAuth</strong>:
+        <ol>
+          <li>Toggle GitHub ON</li>
+          <li>Add GitHub OAuth App credentials</li>
+          <li>Set callback URL: <code class="language-plaintext highlighter-rouge">https://YOUR_PROJECT_ID.supabase.co/auth/v1/callback</code></li>
+        </ol>
+      </li>
+      <li><strong>Google OAuth</strong>:
+        <ol>
+          <li>Toggle Google ON</li>
+          <li>Add Google OAuth credentials</li>
+          <li>Configure consent screen</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-5-set-up-row-level-security-rls">Step 5: Set Up Row Level Security (RLS)</h3>
+
+<p>The migration script already includes RLS policies, but verify they’re enabled:</p>
+
+<ol>
+  <li>Go to <strong>Database &gt; Tables</strong></li>
+  <li>For each table, ensure the shield icon is GREEN (RLS enabled)</li>
+  <li>Click on the table &gt; Policies to view/edit policies</li>
+</ol>
+
+<h3 id="step-6-configure-storage-for-avatars">Step 6: Configure Storage (for avatars)</h3>
+
+<ol>
+  <li>Go to <strong>Storage</strong> in dashboard</li>
+  <li>Create a new bucket called <code class="language-plaintext highlighter-rouge">avatars</code></li>
+  <li>Set it as PUBLIC bucket</li>
+  <li>Add policies:</li>
+</ol>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Allow users to upload their own avatar</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can upload own avatar"</span> <span class="k">ON</span> <span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<span class="k">FOR</span> <span class="k">INSERT</span> <span class="k">TO</span> <span class="n">authenticated</span>
+<span class="k">WITH</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">bucket_id</span> <span class="o">=</span> <span class="s1">'avatars'</span> <span class="k">AND</span> <span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()::</span><span class="nb">text</span> <span class="o">=</span> <span class="p">(</span><span class="k">storage</span><span class="p">.</span><span class="n">foldername</span><span class="p">(</span><span class="n">name</span><span class="p">))[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="c1">-- Allow users to update their own avatar</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can update own avatar"</span> <span class="k">ON</span> <span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<span class="k">FOR</span> <span class="k">UPDATE</span> <span class="k">TO</span> <span class="n">authenticated</span>
+<span class="k">USING</span> <span class="p">(</span><span class="n">bucket_id</span> <span class="o">=</span> <span class="s1">'avatars'</span> <span class="k">AND</span> <span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()::</span><span class="nb">text</span> <span class="o">=</span> <span class="p">(</span><span class="k">storage</span><span class="p">.</span><span class="n">foldername</span><span class="p">(</span><span class="n">name</span><span class="p">))[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="c1">-- Allow public to view avatars</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Anyone can view avatars"</span> <span class="k">ON</span> <span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<span class="k">FOR</span> <span class="k">SELECT</span> <span class="k">TO</span> <span class="k">public</span>
+<span class="k">USING</span> <span class="p">(</span><span class="n">bucket_id</span> <span class="o">=</span> <span class="s1">'avatars'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="step-7-set-up-edge-functions-optional">Step 7: Set Up Edge Functions (Optional)</h3>
+
+<p>For advanced features like webhooks and background jobs:</p>
+
+<ol>
+  <li>Install Supabase CLI (if not already installed)</li>
+  <li>Create edge functions:</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase functions new send-achievement-notification
+supabase functions new update-leaderboard
+</code></pre></div></div>
+
+<ol>
+  <li>Deploy functions:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase functions deploy send-achievement-notification
+supabase functions deploy update-leaderboard
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-8-configure-email-templates">Step 8: Configure Email Templates</h3>
+
+<ol>
+  <li>Go to <strong>Authentication &gt; Email Templates</strong></li>
+  <li>Customize templates for:
+    <ul>
+      <li>Confirm signup</li>
+      <li>Reset password</li>
+      <li>Magic link</li>
+      <li>Invite user</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Example confirmation template:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h2&gt;</span>Welcome to QuizMentor!<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;p&gt;</span>Thanks for signing up. Please confirm your email:<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"{{ .ConfirmationURL }}"</span><span class="nt">&gt;</span>Confirm Email<span class="nt">&lt;/a&gt;</span>
+</code></pre></div></div>
+
+<h3 id="step-9-set-up-database-webhooks-optional">Step 9: Set Up Database Webhooks (Optional)</h3>
+
+<p>For real-time features:</p>
+
+<ol>
+  <li>Go to <strong>Database &gt; Webhooks</strong></li>
+  <li>Create webhook for quiz completion:
+    <ul>
+      <li>Table: <code class="language-plaintext highlighter-rouge">quiz_sessions</code></li>
+      <li>Events: UPDATE</li>
+      <li>Conditions: <code class="language-plaintext highlighter-rouge">status = 'completed'</code></li>
+      <li>URL: Your backend webhook endpoint</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-10-configure-realtime-subscriptions">Step 10: Configure Realtime Subscriptions</h3>
+
+<p>Enable realtime for specific tables:</p>
+
+<ol>
+  <li>Go to <strong>Database &gt; Replication</strong></li>
+  <li>Toggle ON for tables:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">leaderboard</code> (for live updates)</li>
+      <li><code class="language-plaintext highlighter-rouge">quiz_sessions</code> (for multiplayer features)</li>
+      <li><code class="language-plaintext highlighter-rouge">user_achievements</code> (for notifications)</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-testing-your-setup">🧪 Testing Your Setup</h2>
+
+<h3 id="test-1-database-connection">Test 1: Database Connection</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// test-connection.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/supabase-js</span><span class="dl">'</span>
+
+<span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">(</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span>
+<span class="p">)</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">testConnection</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+    <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">categories</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Connection failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Connection successful! Categories:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">testConnection</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="test-2-authentication">Test 2: Authentication</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">testAuth</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Sign up</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">signUpData</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">signUpError</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signUp</span><span class="p">({</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">TestPass123!</span><span class="dl">'</span>
+  <span class="p">})</span>
+  
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sign up:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">signUpData</span><span class="p">,</span> <span class="nx">signUpError</span><span class="p">)</span>
+  
+  <span class="c1">// Sign in</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">signInData</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">signInError</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">TestPass123!</span><span class="dl">'</span>
+  <span class="p">})</span>
+  
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sign in:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">signInData</span><span class="p">,</span> <span class="nx">signInError</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="test-3-create-profile">Test 3: Create Profile</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">createProfile</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+    <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">profiles</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">insert</span><span class="p">({</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span>
+      <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">testuser</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">display_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test User</span><span class="dl">'</span>
+    <span class="p">})</span>
+  
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Profile created:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-troubleshooting">🔍 Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues:</h3>
+
+<ol>
+  <li><strong>“relation does not exist” error</strong>
+    <ul>
+      <li>Run the migration script again</li>
+      <li>Check if you’re in the right schema (public)</li>
+    </ul>
+  </li>
+  <li><strong>Authentication not working</strong>
+    <ul>
+      <li>Verify redirect URLs are correct</li>
+      <li>Check if email confirmations are enabled</li>
+      <li>Ensure RLS policies are correct</li>
+    </ul>
+  </li>
+  <li><strong>RLS blocking queries</strong>
+    <ul>
+      <li>Temporarily disable RLS to test</li>
+      <li>Check auth.uid() is being passed correctly</li>
+      <li>Review policy conditions</li>
+    </ul>
+  </li>
+  <li><strong>CORS errors</strong>
+    <ul>
+      <li>Add your domain to allowed origins</li>
+      <li>Check API URL is correct</li>
+    </ul>
+  </li>
+  <li><strong>Email not sending</strong>
+    <ul>
+      <li>Check email settings in dashboard</li>
+      <li>Verify SMTP configuration</li>
+      <li>Check rate limits</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-monitoring">📊 Monitoring</h2>
+
+<h3 id="enable-logging">Enable Logging:</h3>
+<ol>
+  <li>Go to <strong>Logs</strong> in dashboard</li>
+  <li>View different log types:
+    <ul>
+      <li>API logs</li>
+      <li>Database logs</li>
+      <li>Auth logs</li>
+      <li>Function logs</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="set-up-alerts">Set Up Alerts:</h3>
+<ol>
+  <li>Go to <strong>Reports</strong></li>
+  <li>Create custom queries</li>
+  <li>Set up email alerts for:
+    <ul>
+      <li>High error rates</li>
+      <li>Slow queries</li>
+      <li>Failed auth attempts</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-security-checklist">🚨 Security Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />RLS enabled on all tables</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Service role key NOT exposed in client</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Environment variables properly configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Email verification enabled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Password requirements configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting enabled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CORS properly configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SSL enforced</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup strategy in place</li>
+</ul>
+
+<hr />
+
+<h2 id="-next-steps">📚 Next Steps</h2>
+
+<ol>
+  <li><strong>Install Supabase client library</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> @supabase/supabase-js
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Create Supabase client singleton</strong>:
+```typescript
+// lib/supabase.ts
+import { createClient } from ‘@supabase/supabase-js’</li>
+</ol>
+
+<p>export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+```</p>
+
+<ol>
+  <li><strong>Implement authentication service</strong>:
+    <ul>
+      <li>See <code class="language-plaintext highlighter-rouge">services/auth/authService.ts</code></li>
+    </ul>
+  </li>
+  <li><strong>Start building features</strong>:
+    <ul>
+      <li>User registration</li>
+      <li>Quiz sessions</li>
+      <li>Leaderboard</li>
+      <li>Achievements</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-resources">📖 Resources</h2>
+
+<ul>
+  <li><a href="https://supabase.com/docs">Supabase Documentation</a></li>
+  <li><a href="https://supabase.com/docs/reference/javascript/introduction">Supabase JavaScript Client</a></li>
+  <li><a href="https://supabase.com/docs/guides/auth/row-level-security">Row Level Security Guide</a></li>
+  <li><a href="https://supabase.com/docs/guides/auth">Authentication Guide</a></li>
+  <li><a href="https://supabase.com/docs/guides/storage">Storage Guide</a></li>
+</ul>
+
+<hr />
+
+<p><em>Need help? Check the <a href="https://discord.supabase.com">Supabase Discord</a> or <a href="https://github.com/supabase/supabase/discussions">GitHub Discussions</a></em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / SUPABASE_SETUP_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

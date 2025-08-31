@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUNBOOK frontend operations</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/RUNBOOK_frontend_operations.md</span>
+</div>
+
+<h1>RUNBOOK frontend operations</h1>
+
+
+<h1 id="runbook-frontend-operations">Runbook: Frontend Operations</h1>
+
+<p><strong>Service</strong>: DevMentor Frontend (Next.js Application)<br />
+<strong>Last Updated</strong>: 2025-08-25<br />
+<strong>Criticality</strong>: HIGH<br />
+<strong>On-call Team</strong>: Frontend Team</p>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+  <li><a href="#quick-start">Quick Start</a></li>
+  <li><a href="#development-operations">Development Operations</a></li>
+  <li><a href="#build--deployment">Build &amp; Deployment</a></li>
+  <li><a href="#testing-procedures">Testing Procedures</a></li>
+  <li><a href="#performance-optimization">Performance Optimization</a></li>
+  <li><a href="#incident-response">Incident Response</a></li>
+  <li><a href="#feature-flags--rollout">Feature Flags &amp; Rollout</a></li>
+</ol>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<h3 id="essential-commands">Essential Commands</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start development server</span>
+npm run dev
+
+<span class="c"># Build for production</span>
+npm run build
+
+<span class="c"># Run tests</span>
+npm run <span class="nb">test</span>:unit
+npm run <span class="nb">test</span>:e2e
+
+<span class="c"># Type checking</span>
+npm run type-check
+
+<span class="c"># Verify integration</span>
+./scripts/verify-integration.sh
+</code></pre></div></div>
+
+<h3 id="health-checks">Health Checks</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Local development</span>
+curl http://localhost:3001/api/health
+
+<span class="c"># Production</span>
+curl https://devmentor.io/api/health
+
+<span class="c"># WebSocket status</span>
+curl http://localhost:8002/health
+</code></pre></div></div>
+
+<h2 id="development-operations">Development Operations</h2>
+
+<h3 id="1-setting-up-local-environment">1. Setting Up Local Environment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone and setup</span>
+git clone https://github.com/devmentor/frontend.git
+<span class="nb">cd </span>frontend/devmentor-ui
+npm <span class="nb">install</span>
+
+<span class="c"># Configure environment</span>
+<span class="nb">cp</span> .env.example .env.local
+<span class="c"># Edit .env.local with your values</span>
+
+<span class="c"># Required environment variables</span>
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh"> &gt; .env.local
+NEXT_PUBLIC_API_GATEWAY_URL=http://localhost:8080
+NEXT_PUBLIC_AI_GATEWAY_URL=http://localhost:3001
+NEXT_PUBLIC_AUTH_SERVICE_URL=http://localhost:3002
+NEXT_PUBLIC_MEMORY_SERVICE_URL=http://localhost:3003
+NEXT_PUBLIC_PROJECT_SERVICE_URL=http://localhost:3004
+NEXT_PUBLIC_WEBSOCKET_URL=http://localhost:8002
+NEXT_PUBLIC_ENABLE_REALTIME=true
+NEXT_PUBLIC_MOCK_MODE=false
+</span><span class="no">EOF
+
+</span><span class="c"># Start development</span>
+npm run dev
+</code></pre></div></div>
+
+<h3 id="2-working-with-mock-data">2. Working with Mock Data</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable mock mode for development without backend</span>
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_MOCK_MODE</span><span class="o">=</span><span class="nb">true
+</span>npm run dev:mock
+
+<span class="c"># Test with mock data</span>
+<span class="c"># 1. Visit http://localhost:3001/projects</span>
+<span class="c"># 2. Look for "Mock Data" yellow badge</span>
+<span class="c"># 3. All features work with simulated data</span>
+</code></pre></div></div>
+
+<h3 id="3-real-time-features-development">3. Real-time Features Development</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable WebSocket for real-time</span>
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">true</span>
+
+<span class="c"># Disable for polling mode</span>
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">false</span>
+
+<span class="c"># Test real-time updates</span>
+<span class="c"># 1. Open two browser windows</span>
+<span class="c"># 2. Make changes in one</span>
+<span class="c"># 3. See updates in other</span>
+</code></pre></div></div>
+
+<h3 id="4-component-development-workflow">4. Component Development Workflow</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create new component</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> src/features/new-feature
+<span class="nb">touch </span>src/features/new-feature/NewComponent.tsx
+
+<span class="c"># Component template</span>
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="sh">'</span><span class="no">EOF</span><span class="sh">' &gt; src/features/new-feature/NewComponent.tsx
+'use client';
+
+import React from 'react';
+
+interface NewComponentProps {
+  // Props
+}
+
+export default function NewComponent(props: NewComponentProps) {
+  return (
+    &lt;div&gt;
+      {/* Component content */}
+    &lt;/div&gt;
+  );
+}
+</span><span class="no">EOF
+
+</span><span class="c"># Create test file</span>
+<span class="nb">touch </span>src/features/new-feature/NewComponent.test.tsx
+
+<span class="c"># Run type check</span>
+npm run type-check
+</code></pre></div></div>
+
+<h2 id="build--deployment">Build &amp; Deployment</h2>
+
+<h3 id="1-pre-deployment-checklist">1. Pre-deployment Checklist</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">echo</span> <span class="s2">"=== Pre-deployment Checklist ==="</span>
+
+<span class="c"># 1. Check for TypeScript errors</span>
+<span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"TypeScript check... "</span>
+npm run type-check 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-q</span> <span class="s2">"error"</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"❌ FAILED"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"✅ PASSED"</span>
+
+<span class="c"># 2. Run unit tests</span>
+<span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"Unit tests... "</span>
+npm run <span class="nb">test</span>:unit 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">-q</span> <span class="s2">"FAIL"</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"❌ FAILED"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"✅ PASSED"</span>
+
+<span class="c"># 3. Check bundle size</span>
+<span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"Bundle size check... "</span>
+npm run build 2&gt;&amp;1 | <span class="nb">tee </span>build.log
+<span class="nb">cat </span>build.log | <span class="nb">grep</span> <span class="s2">"First Load JS"</span> | <span class="nb">awk</span> <span class="s1">'{print $4}'</span>
+
+<span class="c"># 4. Verify environment variables</span>
+<span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"Environment check... "</span>
+<span class="nb">grep</span> <span class="nt">-q</span> <span class="s2">"NEXT_PUBLIC_API_GATEWAY_URL"</span> .env.production <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"✅ CONFIGURED"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"❌ MISSING"</span>
+
+<span class="c"># 5. Check for console.log statements</span>
+<span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"Console.log check... "</span>
+<span class="nb">grep</span> <span class="nt">-r</span> <span class="s2">"console.log"</span> src/ <span class="nt">--exclude-dir</span><span class="o">=</span>node_modules | <span class="nb">wc</span> <span class="nt">-l</span> | <span class="nb">read </span>count
+<span class="o">[</span> <span class="s2">"</span><span class="nv">$count</span><span class="s2">"</span> <span class="nt">-gt</span> 0 <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"⚠️  Found </span><span class="nv">$count</span><span class="s2"> console.log statements"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"✅ CLEAN"</span>
+</code></pre></div></div>
+
+<h3 id="2-production-build">2. Production Build</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clean previous build</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> .next
+
+<span class="c"># Build with production config</span>
+<span class="nv">NODE_ENV</span><span class="o">=</span>production npm run build
+
+<span class="c"># Analyze bundle</span>
+npm run build <span class="nt">--</span> <span class="nt">--analyze</span>
+
+<span class="c"># Test production build locally</span>
+npm run start
+
+<span class="c"># Verify build</span>
+curl http://localhost:3001
+</code></pre></div></div>
+
+<h3 id="3-docker-deployment">3. Docker Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build Docker image</span>
+docker build <span class="nt">-t</span> devmentor/frontend:latest <span class="nb">.</span>
+
+<span class="c"># Test locally</span>
+docker run <span class="nt">-p</span> 3001:3001 <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">NEXT_PUBLIC_API_GATEWAY_URL</span><span class="o">=</span>http://api.devmentor.io <span class="se">\</span>
+  devmentor/frontend:latest
+
+<span class="c"># Push to registry</span>
+docker tag devmentor/frontend:latest registry.devmentor.io/frontend:v1.0.0
+docker push registry.devmentor.io/frontend:v1.0.0
+
+<span class="c"># Deploy to Kubernetes</span>
+kubectl <span class="nb">set </span>image deployment/frontend <span class="se">\</span>
+  <span class="nv">frontend</span><span class="o">=</span>registry.devmentor.io/frontend:v1.0.0 <span class="se">\</span>
+  <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Monitor rollout</span>
+kubectl rollout status deployment/frontend <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="4-vercel-deployment-alternative">4. Vercel Deployment (Alternative)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Vercel CLI</span>
+npm i <span class="nt">-g</span> vercel
+
+<span class="c"># Deploy to preview</span>
+vercel
+
+<span class="c"># Deploy to production</span>
+vercel <span class="nt">--prod</span>
+
+<span class="c"># Set environment variables</span>
+vercel <span class="nb">env </span>add NEXT_PUBLIC_API_GATEWAY_URL production
+</code></pre></div></div>
+
+<h2 id="testing-procedures">Testing Procedures</h2>
+
+<h3 id="1-unit-testing">1. Unit Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run all unit tests</span>
+npm run <span class="nb">test</span>:unit
+
+<span class="c"># Test specific component</span>
+npm run <span class="nb">test</span>:unit <span class="nt">--</span> ProjectTasksWidget
+
+<span class="c"># Test with coverage</span>
+npm run <span class="nb">test</span>:unit:coverage
+
+<span class="c"># Watch mode for development</span>
+npm run <span class="nb">test</span>:unit:watch
+</code></pre></div></div>
+
+<h3 id="2-e2e-testing">2. E2E Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Playwright browsers</span>
+npx playwright <span class="nb">install</span>
+
+<span class="c"># Run all E2E tests</span>
+npm run <span class="nb">test</span>:e2e
+
+<span class="c"># Run specific test</span>
+npx playwright <span class="nb">test </span>realtime-updates.spec.ts
+
+<span class="c"># Run in headed mode (see browser)</span>
+npm run <span class="nb">test</span>:e2e <span class="nt">--</span> <span class="nt">--headed</span>
+
+<span class="c"># Run specific browser</span>
+npm run <span class="nb">test</span>:e2e <span class="nt">--</span> <span class="nt">--project</span><span class="o">=</span>chromium
+
+<span class="c"># Debug mode</span>
+npm run <span class="nb">test</span>:e2e <span class="nt">--</span> <span class="nt">--debug</span>
+</code></pre></div></div>
+
+<h3 id="3-integration-testing">3. Integration Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Test with real backend</span>
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_MOCK_MODE</span><span class="o">=</span><span class="nb">false
+</span>npm run dev
+
+<span class="c"># Run integration tests</span>
+npm run <span class="nb">test</span>:integration
+
+<span class="c"># Test WebSocket integration</span>
+npm run <span class="nb">test</span>:integration <span class="nt">--</span> websocket
+
+<span class="c"># Test API integration</span>
+npm run <span class="nb">test</span>:integration <span class="nt">--</span> api
+</code></pre></div></div>
+
+<h3 id="4-performance-testing">4. Performance Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Lighthouse CI</span>
+npm <span class="nb">install</span> <span class="nt">-g</span> @lhci/cli
+lhci autorun
+
+<span class="c"># Bundle analysis</span>
+npm run build <span class="nt">--</span> <span class="nt">--analyze</span>
+
+<span class="c"># Runtime performance</span>
+<span class="c"># 1. Open Chrome DevTools</span>
+<span class="c"># 2. Performance tab</span>
+<span class="c"># 3. Record interaction</span>
+<span class="c"># 4. Check for:</span>
+<span class="c">#    - Long tasks &gt; 50ms</span>
+<span class="c">#    - FPS drops</span>
+<span class="c">#    - Memory leaks</span>
+</code></pre></div></div>
+
+<h2 id="performance-optimization">Performance Optimization</h2>
+
+<h3 id="1-bundle-size-optimization">1. Bundle Size Optimization</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check current bundle size</span>
+npm run build | <span class="nb">grep</span> <span class="s2">"First Load"</span>
+
+<span class="c"># Find large dependencies</span>
+npm run analyze
+
+<span class="c"># Common optimizations:</span>
+<span class="c"># 1. Dynamic imports</span>
+const HeavyComponent <span class="o">=</span> dynamic<span class="o">(()</span> <span class="o">=&gt;</span> import<span class="o">(</span><span class="s1">'./HeavyComponent'</span><span class="o">))</span>
+
+<span class="c"># 2. Tree shaking</span>
+import <span class="o">{</span> specific <span class="o">}</span> from <span class="s1">'library'</span>  // Good
+import <span class="k">*</span> as all from <span class="s1">'library'</span>      // Bad
+
+<span class="c"># 3. Image optimization</span>
+import Image from <span class="s1">'next/image'</span>
+&lt;Image <span class="nv">src</span><span class="o">=</span><span class="s2">"/image.jpg"</span> <span class="nv">width</span><span class="o">={</span>500<span class="o">}</span> <span class="nv">height</span><span class="o">={</span>300<span class="o">}</span> /&gt;
+</code></pre></div></div>
+
+<h3 id="2-runtime-performance">2. Runtime Performance</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable React Profiler</span>
+<span class="c"># In browser: React DevTools → Profiler → Start recording</span>
+
+<span class="c"># Check for unnecessary re-renders</span>
+<span class="c"># Add React.memo to components</span>
+const MemoizedComponent <span class="o">=</span> React.memo<span class="o">(</span>Component<span class="o">)</span>
+
+<span class="c"># Use callbacks for event handlers</span>
+const handleClick <span class="o">=</span> useCallback<span class="o">(()</span> <span class="o">=&gt;</span> <span class="o">{</span>
+  // handler
+<span class="o">}</span>, <span class="o">[</span>dependencies]<span class="o">)</span>
+
+<span class="c"># Optimize state updates</span>
+// Batch updates
+unstable_batchedUpdates<span class="o">(()</span> <span class="o">=&gt;</span> <span class="o">{</span>
+  setState1<span class="o">(</span>value1<span class="o">)</span>
+  setState2<span class="o">(</span>value2<span class="o">)</span>
+<span class="o">})</span>
+</code></pre></div></div>
+
+<h3 id="3-websocket-performance">3. WebSocket Performance</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Monitor WebSocket metrics</span>
+<span class="c"># In browser console:</span>
+websocketService.getConnectionStatus<span class="o">()</span>
+
+<span class="c"># Check message frequency</span>
+localStorage.setItem<span class="o">(</span><span class="s1">'DEBUG'</span>, <span class="s1">'socket.io-client:*'</span><span class="o">)</span>
+
+<span class="c"># Optimize event handling</span>
+// Debounce rapid updates
+const debouncedUpdate <span class="o">=</span> useMemo<span class="o">(</span>
+  <span class="o">()</span> <span class="o">=&gt;</span> debounce<span class="o">(</span>handleUpdate, 100<span class="o">)</span>,
+  <span class="o">[]</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="incident-response">Incident Response</h2>
+
+<h3 id="1-frontend-not-loading">1. Frontend Not Loading</h3>
+
+<p><strong>Immediate Actions</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Check deployment status</span>
+kubectl get pods <span class="nt">-n</span> devmentor-app | <span class="nb">grep </span>frontend
+
+<span class="c"># 2. Check logs</span>
+kubectl logs deployment/frontend <span class="nt">-n</span> devmentor-app <span class="nt">--tail</span><span class="o">=</span>100
+
+<span class="c"># 3. Rollback if needed</span>
+kubectl rollout undo deployment/frontend <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 4. Switch to maintenance mode</span>
+kubectl apply <span class="nt">-f</span> maintenance-page.yaml
+</code></pre></div></div>
+
+<h3 id="2-websocket-connection-issues">2. WebSocket Connection Issues</h3>
+
+<p><strong>Quick Fix</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Disable WebSocket globally</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">false</span> <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 2. Restart frontend pods</span>
+kubectl rollout restart deployment/frontend <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 3. Notify users about degraded mode</span>
+<span class="c"># Banner will automatically show "Polling" mode</span>
+</code></pre></div></div>
+
+<h3 id="3-high-error-rate">3. High Error Rate</h3>
+
+<p><strong>Investigation</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Check error logs</span>
+kubectl logs deployment/frontend <span class="nt">-n</span> devmentor-app | <span class="nb">grep </span>ERROR
+
+<span class="c"># 2. Check browser errors (Sentry/LogRocket)</span>
+curl https://sentry.io/api/projects/devmentor/issues/
+
+<span class="c"># 3. Enable debug mode</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_DEBUG</span><span class="o">=</span><span class="nb">true</span> <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 4. Check specific component errors</span>
+<span class="nb">grep</span> <span class="nt">-r</span> <span class="s2">"throw new Error"</span> src/
+</code></pre></div></div>
+
+<h3 id="4-performance-degradation">4. Performance Degradation</h3>
+
+<p><strong>Response</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Scale up pods</span>
+kubectl scale deployment/frontend <span class="nt">--replicas</span><span class="o">=</span>5 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 2. Clear CDN cache</span>
+curl <span class="nt">-X</span> POST https://api.cloudflare.com/client/v4/zones/ZONE_ID/purge_cache <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer TOKEN"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">--data</span> <span class="s1">'{"purge_everything":true}'</span>
+
+<span class="c"># 3. Enable performance mode</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_PERFORMANCE_MODE</span><span class="o">=</span><span class="nb">true</span> <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 4. Disable heavy features temporarily</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_DISABLE_ANIMATIONS</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_DISABLE_REALTIME</span><span class="o">=</span><span class="nb">true</span> <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h2 id="feature-flags--rollout">Feature Flags &amp; Rollout</h2>
+
+<h3 id="1-feature-flag-setup">1. Feature Flag Setup</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add feature flag to .env</span>
+<span class="nb">echo</span> <span class="s2">"NEXT_PUBLIC_FEATURE_NEW_DASHBOARD=false"</span> <span class="o">&gt;&gt;</span> .env.local
+
+<span class="c"># Use in code</span>
+<span class="k">if</span> <span class="o">(</span>process.env.NEXT_PUBLIC_FEATURE_NEW_DASHBOARD <span class="o">===</span> <span class="s1">'true'</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> &lt;NewDashboard /&gt;
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+  <span class="k">return</span> &lt;OldDashboard /&gt;
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="2-gradual-rollout">2. Gradual Rollout</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 10% rollout</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_FEATURE_ROLLOUT_PERCENTAGE</span><span class="o">=</span>10 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Check in code</span>
+const isEnabled <span class="o">=</span> Math.random<span class="o">()</span> <span class="k">*</span> 100 &lt; rolloutPercentage
+
+<span class="c"># 50% rollout</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_FEATURE_ROLLOUT_PERCENTAGE</span><span class="o">=</span>50 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 100% rollout</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_FEATURE_ROLLOUT_PERCENTAGE</span><span class="o">=</span>100 <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="3-ab-testing">3. A/B Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Configure A/B test</span>
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_AB_TEST_ENABLED</span><span class="o">=</span><span class="nb">true
+export </span><span class="nv">NEXT_PUBLIC_AB_TEST_VARIANT</span><span class="o">=</span>B
+
+<span class="c"># Track metrics</span>
+<span class="k">if</span> <span class="o">(</span>variant <span class="o">===</span> <span class="s1">'B'</span><span class="o">)</span> <span class="o">{</span>
+  analytics.track<span class="o">(</span><span class="s1">'feature_b_usage'</span>, <span class="o">{</span>
+    user: userId,
+    timestamp: Date.now<span class="o">()</span>
+  <span class="o">})</span>
+<span class="o">}</span>
+
+<span class="c"># Analyze results</span>
+curl https://analytics.devmentor.io/api/ab-test/results
+</code></pre></div></div>
+
+<h3 id="4-quick-rollback">4. Quick Rollback</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Disable feature immediately</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_FEATURE_NEW_DASHBOARD</span><span class="o">=</span><span class="nb">false</span> <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Full rollback</span>
+kubectl rollout undo deployment/frontend <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Verify rollback</span>
+kubectl rollout status deployment/frontend <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h2 id="monitoring--alerts">Monitoring &amp; Alerts</h2>
+
+<h3 id="key-metrics-to-track">Key Metrics to Track</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Frontend metrics</span>
+<span class="pi">-</span> <span class="na">Page Load Time</span><span class="pi">:</span> <span class="s">&lt; 3s</span>
+<span class="pi">-</span> <span class="na">Time to Interactive</span><span class="pi">:</span> <span class="s">&lt; 5s</span>
+<span class="pi">-</span> <span class="na">First Contentful Paint</span><span class="pi">:</span> <span class="s">&lt; 1.5s</span>
+<span class="pi">-</span> <span class="na">WebSocket Connection Rate</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">95%</span>
+<span class="pi">-</span> <span class="na">Error Rate</span><span class="pi">:</span> <span class="s">&lt; 1%</span>
+<span class="pi">-</span> <span class="na">Bounce Rate</span><span class="pi">:</span> <span class="s">&lt; 30%</span>
+</code></pre></div></div>
+
+<h3 id="useful-commands">Useful Commands</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check frontend health</span>
+curl https://devmentor.io/api/health
+
+<span class="c"># Monitor real-time connections</span>
+watch <span class="nt">-n</span> 1 <span class="s1">'curl -s http://localhost:8002/metrics | grep websocket'</span>
+
+<span class="c"># Check error logs</span>
+kubectl logs deployment/frontend <span class="nt">-n</span> devmentor-app | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"ERROR|WARN"</span>
+
+<span class="c"># Performance metrics</span>
+lighthouse https://devmentor.io <span class="nt">--output</span><span class="o">=</span>json <span class="nt">--output-path</span><span class="o">=</span>./report.json
+</code></pre></div></div>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TypeScript errors</td>
+      <td><code class="language-plaintext highlighter-rouge">npm run type-check</code> then fix errors</td>
+    </tr>
+    <tr>
+      <td>Build fails</td>
+      <td>Clear <code class="language-plaintext highlighter-rouge">.next</code> folder and rebuild</td>
+    </tr>
+    <tr>
+      <td>WebSocket not connecting</td>
+      <td>Check <code class="language-plaintext highlighter-rouge">NEXT_PUBLIC_WEBSOCKET_URL</code></td>
+    </tr>
+    <tr>
+      <td>Slow performance</td>
+      <td>Run bundle analyzer, check for large deps</td>
+    </tr>
+    <tr>
+      <td>Tests failing</td>
+      <td>Update snapshots: <code class="language-plaintext highlighter-rouge">npm run test:unit -- -u</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="environment-variables">Environment Variables</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Complete list for production</span>
+<span class="nv">NEXT_PUBLIC_API_GATEWAY_URL</span><span class="o">=</span>https://api.devmentor.io
+<span class="nv">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="o">=</span>wss://ws.devmentor.io
+<span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">NEXT_PUBLIC_MOCK_MODE</span><span class="o">=</span><span class="nb">false
+</span><span class="nv">NEXT_PUBLIC_SENTRY_DSN</span><span class="o">=</span>https://sentry.io/...
+<span class="nv">NEXT_PUBLIC_GA_ID</span><span class="o">=</span>G-XXXXXXXXXX
+</code></pre></div></div>
+
+<h3 id="contact-information">Contact Information</h3>
+
+<ul>
+  <li><strong>Frontend Team Lead</strong>: frontend-lead@devmentor.io</li>
+  <li><strong>On-call Engineer</strong>: Use PagerDuty</li>
+  <li><strong>Slack Channel</strong>: #frontend-oncall</li>
+  <li><strong>Documentation</strong>: https://docs.devmentor.io/frontend</li>
+</ul>
+
+<hr />
+
+<p><strong>Golden Rule</strong>: Always verify in staging before production deployment.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Last reviewed: 2025-08-25</td>
+      <td>Next review: 2025-09-25</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/RUNBOOK_frontend_operations.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

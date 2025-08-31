@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NatureQuest Documentation Hub</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+    /* Clean Enhanced Variables - Subtle improvements */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+      --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Subtle Enhanced Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    
+    .nav-logo {
+      width: 24px;
+      height: 24px;
+      background: var(--accent-gradient);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Enhanced Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+      position: relative;
+    }
+    
+    h2::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: var(--accent-gradient);
+      border-radius: 1px;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Enhanced Cards - Subtle improvements */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .card p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Subtle animations */
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .container {
+        padding: 0 16px;
+      }
+    }
+    
+    /* Utility classes for special sections */
+    .highlight-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .success-box {
+      background: rgba(52, 199, 89, 0.1);
+      border: 1px solid var(--success);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: var(--success);
+    }
+    
+    .warning-box {
+      background: rgba(255, 149, 0, 0.1);
+      border: 1px solid var(--warning);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: var(--warning);
+    }
+    </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <a href="/learning-roadmap/" class="nav-brand">
+          <div class="nav-logo">🌟</div>
+          <span>NatureQuest</span>
+        </a>
+        
+        <ul>
+          <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+        </ul>
+        
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container fade-in">
+    <h1 id="-naturequest-documentation-hub">🌟 NatureQuest Documentation Hub</h1>
+
+<p>Welcome to the comprehensive documentation center for the NatureQuest ecosystem - a suite of AI-powered development and learning tools.</p>
+
+<div class="highlight-box">
+  <p><strong>Quick Navigation:</strong> 
+    <a href="/learning-roadmap/">📚 Learning Roadmap</a> • 
+    <a href="/architecture/">🏗️ Architecture</a> • 
+    <a href="/all-docs/">📖 All Documentation</a>
+  </p>
+</div>
+
+<h2 id="-product-ecosystem">🎯 Product Ecosystem</h2>
+
+<div class="grid">
+  <a href="/devmentor/" class="card">
+    <h3>🧠 DevMentor</h3>
+    <p><strong>AI Development Assistant</strong> with pattern learning capabilities. Features infrastructure automation, Kubernetes management, and intelligent code analysis.</p>
+    <div class="success-box">
+      <strong>Status:</strong> Beta - 200+ documentation files
+    </div>
+  </a>
+  
+  <a href="/quizmentor/" class="card">
+    <h3>🎓 QuizMentor</h3>
+    <p><strong>Adaptive Learning Platform</strong> that personalizes education through AI-driven quizzes and gamification systems.</p>
+    <div class="success-box">
+      <strong>Status:</strong> Live - 70+ documentation files
+    </div>
+  </a>
+  
+  <a href="/harvest/" class="card">
+    <h3>🌾 Harvest.ai</h3>
+    <p><strong>Content Intelligence Platform</strong> for smart time tracking, project management, and developer productivity analytics.</p>
+    <div class="warning-box">
+      <strong>Status:</strong> Development - 15+ documentation files
+    </div>
+  </a>
+  
+  <a href="/naturequest-auth/" class="card">
+    <h3>🔐 NatureQuest Auth</h3>
+    <p><strong>Unified Authentication</strong> system providing single sign-on across the entire ecosystem with advanced security features.</p>
+    <div class="success-box">
+      <strong>Status:</strong> Beta - Unified SSO
+    </div>
+  </a>
+  
+  <a href="/infrastructure/" class="card">
+    <h3>🏗️ Infrastructure</h3>
+    <p><strong>System Architecture</strong> documentation covering Kubernetes, service mesh, monitoring, and deployment patterns.</p>
+    <div class="success-box">
+      <strong>Focus:</strong> Kubernetes, Istio, Observability
+    </div>
+  </a>
+  
+  <a href="/all-docs/" class="card">
+    <h3>📚 All Documentation</h3>
+    <p><strong>Complete Index</strong> of all 256+ documentation files across products, organized by category and searchable.</p>
+    <div class="success-box">
+      <strong>Total:</strong> 256+ files across 4 products
+    </div>
+  </a>
+</div>
+
+<h2 id="-start-here">🚀 Start Here</h2>
+
+<h3 id="for-new-developers">For New Developers</h3>
+<ol>
+  <li><strong><a href="/learning-roadmap#quick-start">4-Hour Quick Start</a></strong> - Get operational fast</li>
+  <li><strong><a href="/setup">Environment Setup</a></strong> - Configure your development environment</li>
+  <li><strong><a href="/ecosystem">Ecosystem Overview</a></strong> - Understand how products connect</li>
+</ol>
+
+<h3 id="for-specific-roles">For Specific Roles</h3>
+<ul>
+  <li><strong><a href="/tracks/frontend">Frontend Developers</a></strong> - React, Next.js, UI patterns</li>
+  <li><strong><a href="/tracks/backend">Backend Engineers</a></strong> - APIs, microservices, databases</li>
+  <li><strong><a href="/tracks/devops">DevOps/SRE</a></strong> - Kubernetes, monitoring, scaling</li>
+  <li><strong><a href="/tracks/ai-ml">AI/ML Engineers</a></strong> - LLMs, vector DBs, ML patterns</li>
+</ul>
+
+<h2 id="-documentation-stats">📊 Documentation Stats</h2>
+<ul>
+  <li><strong>Total Documents</strong>: 256+ markdown files</li>
+  <li><strong>Products Covered</strong>: 4 major platforms</li>
+  <li><strong>Learning Paths</strong>: 30+ structured guides</li>
+  <li><strong>Code Examples</strong>: 100+ practical samples</li>
+</ul>
+
+<h2 id="-search-documentation">🔍 Search Documentation</h2>
+
+<div class="search-container">
+  <input type="text" id="search" placeholder="Search all documentation..." />
+  <div id="search-results"></div>
+</div>
+
+<h2 id="-latest-updates">📈 Latest Updates</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Update</th>
+      <th>Product</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2024-12-26</td>
+      <td>Comprehensive learning roadmap created</td>
+      <td>All</td>
+    </tr>
+    <tr>
+      <td>2024-12-25</td>
+      <td>DevMentor system audit completed</td>
+      <td>DevMentor</td>
+    </tr>
+    <tr>
+      <td>2024-12-24</td>
+      <td>Authentication architecture updated</td>
+      <td>DevMentor</td>
+    </tr>
+    <tr>
+      <td>2024-12-23</td>
+      <td>QuizMentor testing guide enhanced</td>
+      <td>QuizMentor</td>
+    </tr>
+    <tr>
+      <td>2024-12-22</td>
+      <td>Harvest.ai competitive analysis</td>
+      <td>Harvest.ai</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-learning-tracks">🎓 Learning Tracks</h2>
+
+<h3 id="week-1-foundation">Week 1: Foundation</h3>
+<ul>
+  <li><a href="/architecture/overview">System Architecture</a></li>
+  <li><a href="/setup/environment">Development Environment</a></li>
+  <li><a href="/devops/kubernetes">Container Orchestration</a></li>
+</ul>
+
+<h3 id="week-2-services">Week 2: Services</h3>
+<ul>
+  <li><a href="/services/auth">Authentication</a></li>
+  <li><a href="/services/ai">AI Integration</a></li>
+  <li><a href="/services/websocket">Real-time Features</a></li>
+</ul>
+
+<h3 id="week-3-operations">Week 3: Operations</h3>
+<ul>
+  <li><a href="/operations/monitoring">Monitoring</a></li>
+  <li><a href="/operations/security">Security</a></li>
+  <li><a href="/operations/deployment">Production Deployment</a></li>
+</ul>
+
+<h3 id="week-4-advanced">Week 4: Advanced</h3>
+<ul>
+  <li><a href="/testing/strategies">Testing Strategies</a></li>
+  <li><a href="/cicd/pipeline">CI/CD Pipeline</a></li>
+  <li><a href="/business/strategy">Business Strategy</a></li>
+</ul>
+
+<h2 id="️-tools--resources">🛠️ Tools &amp; Resources</h2>
+
+<h3 id="development-tools">Development Tools</h3>
+<ul>
+  <li><a href="/tools/vscode">VS Code Extensions</a></li>
+  <li><a href="/tools/cli">CLI Commands</a></li>
+  <li><a href="/tools/docker">Docker Compose Files</a></li>
+</ul>
+
+<h3 id="monitoring-dashboards">Monitoring Dashboards</h3>
+<ul>
+  <li><a href="/monitoring/grafana">Grafana Templates</a></li>
+  <li><a href="/monitoring/prometheus">Prometheus Queries</a></li>
+  <li><a href="/monitoring/kiali">Kiali Service Mesh</a></li>
+</ul>
+
+<h3 id="testing-resources">Testing Resources</h3>
+<ul>
+  <li><a href="/testing/e2e">E2E Test Suites</a></li>
+  <li><a href="/testing/unit">Unit Test Examples</a></li>
+  <li><a href="/testing/load">Load Testing Scripts</a></li>
+</ul>
+
+<h2 id="-documentation-by-category">📚 Documentation by Category</h2>
+
+<h3 id="architecture--design">Architecture &amp; Design</h3>
+<ul>
+  <li><a href="/architecture/system">System Architecture</a></li>
+  <li><a href="/architecture/patterns">Design Patterns</a></li>
+  <li><a href="/architecture/api">API Design</a></li>
+  <li><a href="/architecture/database">Database Schema</a></li>
+</ul>
+
+<h3 id="development">Development</h3>
+<ul>
+  <li><a href="/development/quickstart">Getting Started</a></li>
+  <li><a href="/development/standards">Code Standards</a></li>
+  <li><a href="/development/best-practices">Best Practices</a></li>
+  <li><a href="/development/troubleshooting">Troubleshooting</a></li>
+</ul>
+
+<h3 id="operations">Operations</h3>
+<ul>
+  <li><a href="/operations/deployment">Deployment Guide</a></li>
+  <li><a href="/operations/scaling">Scaling Strategies</a></li>
+  <li><a href="/operations/incidents">Incident Response</a></li>
+  <li><a href="/operations/runbooks">Runbooks</a></li>
+</ul>
+
+<h3 id="business">Business</h3>
+<ul>
+  <li><a href="/business/strategy">Product Strategy</a></li>
+  <li><a href="/business/competition">Competitive Analysis</a></li>
+  <li><a href="/business/monetization">Monetization</a></li>
+  <li><a href="/business/roadmap">Roadmap</a></li>
+</ul>
+
+<h2 id="-contributing">🤝 Contributing</h2>
+
+<p>We welcome contributions! See our <a href="/contributing">Contributing Guide</a> for:</p>
+<ul>
+  <li>Documentation standards</li>
+  <li>How to submit updates</li>
+  <li>Style guidelines</li>
+  <li>Review process</li>
+</ul>
+
+<h2 id="-support">📞 Support</h2>
+
+<ul>
+  <li><strong>GitHub Issues</strong>: <a href="https://github.com/NatureQuest">Report problems</a></li>
+  <li><strong>Discussions</strong>: <a href="https://github.com/NatureQuest/discussions">Ask questions</a></li>
+  <li><strong>Email</strong>: support@naturequest.ai</li>
+  <li><strong>Discord</strong>: <a href="https://discord.gg/naturequest">Join our community</a></li>
+</ul>
+
+<hr />
+
+<style>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.card {
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  background: white;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #0969da;
+}
+
+.search-container {
+  margin: 2rem 0;
+}
+
+#search {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 2px solid #e1e4e8;
+  border-radius: 6px;
+}
+
+#search-results {
+  margin-top: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+</style>
+
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v2.0.0 - Enhanced</p>
+  </footer>
+
+  <script>
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+    
+    // Theme switcher
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

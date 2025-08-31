@@ -1,0 +1,80 @@
+import { Meta, Title, Subtitle, Description, Source } from '@storybook/blocks';
+
+<Meta title="Guides/Accessibility & Testing" tags={['docs']} />
+
+<Title>Accessibility & Testing</Title>
+
+<Subtitle>Keyboard navigation, ARIA patterns, and automated checks</Subtitle>
+
+<Description>
+This guide summarizes practical a11y techniques used across the portfolio, along with testing patterns
+using Testing Library and jest-axe.
+</Description>
+
+## Keyboard navigation
+
+- Ensure all interactive elements (buttons, links, inputs) are reachable via Tab.
+- Avoid divs with click handlers for interactions; use semantic elements (button, a).
+- Maintain visible focus outlines; avoid removing focus rings without a visible replacement.
+
+## ARIA patterns
+
+- Inputs with errors: set `aria-invalid` and connect the error message via `aria-describedby`.
+- Toggle buttons: use `aria-pressed` when representing on/off state.
+- Modals: trap focus and set `aria-modal="true"` on the dialog container.
+
+## Testing Library basics
+
+Prefer role-based queries for resilience.
+
+<Source
+  code={`import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Button } from '@/components/ui/Button';
+
+test('button triggers callback', async () => {
+  const user = userEvent.setup();
+  const onClick = jest.fn();
+  render(<Button onClick={onClick}>Save</Button>);
+
+  await user.click(screen.getByRole('button', { name: /save/i }));
+  expect(onClick).toHaveBeenCalled();
+});`}
+  language="ts"
+/>
+
+## Automated accessibility checks (jest-axe)
+
+Install and configure:
+
+<Source code={`npm i -D jest-axe @types/jest-axe`} language="bash" />
+
+Extend your Jest setup to include jest-axe matchers:
+
+<Source
+  code={`// jest.setup.js or setupTests.ts
+import 'jest-axe/extend-expect';`}
+  language="ts"
+/>
+
+Example test:
+
+<Source
+  code={`import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
+import { Card } from '@/components/ui/Card';
+
+test('card has no a11y violations', async () => {
+  const { container } = render(<Card><div>Content</div></Card>);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});`}
+  language="ts"
+/>
+
+## Tips
+
+- Run aXe checks on stable states; await async UI before asserting.
+- Prefer semantic HTML first; add ARIA only when necessary.
+- Test keyboard flows: Tab, Shift+Tab, Enter/Space for buttons, and Escape for dialogs.
+

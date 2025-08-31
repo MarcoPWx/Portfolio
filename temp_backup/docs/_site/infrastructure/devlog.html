@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevLog - NatureQuest Ecosystem Infrastructure | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <h1 id="devlog---naturequest-ecosystem-infrastructure">DevLog - NatureQuest Ecosystem Infrastructure</h1>
+
+<h2 id="2024-01-26-unified-authentication-system-implementation">2024-01-26: Unified Authentication System Implementation</h2>
+
+<h3 id="architecture-decision-centralized-auth-with-sso">Architecture Decision: Centralized Auth with SSO</h3>
+
+<p><strong>Problem</strong>:</p>
+<ul>
+  <li>Multiple products (DevMentor, QuizMentor, Harvest.ai, Omni.ai) with separate authentication</li>
+  <li>User friction from multiple accounts</li>
+  <li>No unified billing or subscription management</li>
+  <li>GDPR compliance needed across all products</li>
+</ul>
+
+<p><strong>Solution</strong>:
+Implemented a centralized authentication system with the following architecture:</p>
+
+<h4 id="1-central-account-dashboard-portfolioecosystem_centraldashboard">1. Central Account Dashboard (<code class="language-plaintext highlighter-rouge">/portfolio/ecosystem_central/dashboard/</code>)</h4>
+<ul>
+  <li><strong>AccountDashboard.tsx</strong>: Main user dashboard with tabs for:
+    <ul>
+      <li>Overview: Product access, usage metrics, subscription status</li>
+      <li>Billing: Subscription tiers, payment methods, invoices</li>
+      <li>Security: 2FA, API keys, session management, security events</li>
+      <li>Privacy &amp; GDPR: Data export, account deletion, sharing preferences</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Key Features</strong>:</p>
+<ul>
+  <li>Real-time usage tracking across all products</li>
+  <li>Product access based on subscription tier</li>
+  <li>GDPR-compliant data management tools</li>
+  <li>Security event logging</li>
+  <li>API key generation and management</li>
+</ul>
+
+<h4 id="2-unified-auth-store-portfolioecosystem_centralauthauthstorets">2. Unified Auth Store (<code class="language-plaintext highlighter-rouge">/portfolio/ecosystem_central/auth/authStore.ts</code>)</h4>
+<ul>
+  <li>Zustand-based state management with persistence</li>
+  <li>Supabase integration for authentication</li>
+  <li>SSO token generation and validation</li>
+  <li>Product access control based on subscription tiers:
+    <ul>
+      <li><strong>Free</strong>: QuizMentor only</li>
+      <li><strong>Pro</strong>: QuizMentor, DevMentor, Harvest.ai</li>
+      <li><strong>Team</strong>: All products including Omni.ai</li>
+      <li><strong>Enterprise</strong>: All products with unlimited access</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="3-shared-auth-package-portfoliopackagesunified-auth">3. Shared Auth Package (<code class="language-plaintext highlighter-rouge">/portfolio/packages/unified-auth/</code>)</h4>
+<ul>
+  <li>Reusable authentication library</li>
+  <li>Can be imported by all products via <code class="language-plaintext highlighter-rouge">@naturequest/unified-auth</code></li>
+  <li>Handles cross-domain session management</li>
+  <li>Token refresh logic</li>
+</ul>
+
+<h3 id="implementation-status">Implementation Status</h3>
+
+<p>✅ <strong>Completed</strong>:</p>
+<ul>
+  <li>Central authentication infrastructure setup</li>
+  <li>Account dashboard with full GDPR compliance</li>
+  <li>Shared auth library structure</li>
+  <li>Zustand store with Supabase integration</li>
+</ul>
+
+<p>🔄 <strong>In Progress</strong>:</p>
+<ul>
+  <li>SSO flow implementation</li>
+  <li>Product integration guides</li>
+</ul>
+
+<p>📋 <strong>Next Steps</strong>:</p>
+<ol>
+  <li>Set up Supabase project with required tables</li>
+  <li>Implement SSO endpoints</li>
+  <li>Create migration scripts for existing users</li>
+  <li>Deploy central auth service to accounts.naturequest.dev</li>
+</ol>
+
+<h3 id="technical-stack">Technical Stack</h3>
+<ul>
+  <li><strong>Frontend</strong>: Next.js 14, React 18, TypeScript</li>
+  <li><strong>State Management</strong>: Zustand with persistence</li>
+  <li><strong>Auth Provider</strong>: Supabase Auth</li>
+  <li><strong>UI Components</strong>: Tremor, Framer Motion, Lucide Icons</li>
+  <li><strong>Styling</strong>: Tailwind CSS</li>
+</ul>
+
+<h3 id="database-schema-supabase">Database Schema (Supabase)</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- profiles table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">profiles</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">email</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">avatar</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">two_factor_enabled</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- subscriptions table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">subscriptions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">tier</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">tier</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'free'</span><span class="p">,</span> <span class="s1">'pro'</span><span class="p">,</span> <span class="s1">'team'</span><span class="p">,</span> <span class="s1">'enterprise'</span><span class="p">)),</span>
+  <span class="n">status</span> <span class="nb">TEXT</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">status</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'active'</span><span class="p">,</span> <span class="s1">'canceled'</span><span class="p">,</span> <span class="s1">'past_due'</span><span class="p">)),</span>
+  <span class="n">current_period_end</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">cancel_at_period_end</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">team_members</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">team_limit</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">api_calls_used</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">api_calls_limit</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="n">products</span> <span class="nb">TEXT</span><span class="p">[]</span> <span class="k">DEFAULT</span> <span class="n">ARRAY</span><span class="p">[</span><span class="s1">'quizmentor'</span><span class="p">],</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- security_events table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">security_events</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="k">type</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">metadata</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- api_keys table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">api_keys</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">(),</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">profiles</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">key_hash</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">last_used</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">revoked_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="benefits-achieved">Benefits Achieved</h3>
+
+<ol>
+  <li><strong>User Experience</strong>:
+    <ul>
+      <li>Single sign-on across all products</li>
+      <li>One subscription for entire ecosystem</li>
+      <li>Unified billing and invoicing</li>
+    </ul>
+  </li>
+  <li><strong>Business Intelligence</strong>:
+    <ul>
+      <li>Complete user journey tracking</li>
+      <li>Cross-product analytics</li>
+      <li>Better conversion metrics</li>
+    </ul>
+  </li>
+  <li><strong>Security</strong>:
+    <ul>
+      <li>Centralized security management</li>
+      <li>Consistent authentication standards</li>
+      <li>Audit trail for all auth events</li>
+    </ul>
+  </li>
+  <li><strong>Compliance</strong>:
+    <ul>
+      <li>GDPR-compliant data management</li>
+      <li>Single point for data requests</li>
+      <li>Automated data export/deletion</li>
+    </ul>
+  </li>
+  <li><strong>Development Efficiency</strong>:
+    <ul>
+      <li>Shared authentication logic</li>
+      <li>Reduced code duplication</li>
+      <li>Easier to maintain</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="migration-strategy">Migration Strategy</h3>
+
+<p>For existing users in DevMentor and QuizMentor:</p>
+<ol>
+  <li>Export user data from individual products</li>
+  <li>Create accounts in central auth system</li>
+  <li>Send migration emails with password reset links</li>
+  <li>Maintain backward compatibility for 30 days</li>
+  <li>Deprecate old auth systems</li>
+</ol>
+
+<hr />
+
+<h2 id="next-entry-date---sso-implementation">Next Entry: [Date] - SSO Implementation</h2>
+<p>[To be documented after implementation]</p>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

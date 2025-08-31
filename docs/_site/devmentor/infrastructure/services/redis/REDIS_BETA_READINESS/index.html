@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REDIS BETA READINESS</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/redis/REDIS_BETA_READINESS.md</span>
+</div>
+
+<h1>REDIS BETA READINESS</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="redis-integration-a-beginners-guide">Redis Integration: A Beginner’s Guide</h1>
+
+<p><strong>Document ID:</strong> BETA-REDIS-001<br />
+<strong>Created:</strong> 2025-08-16<br />
+<strong>Last Updated:</strong> 2025-08-18<br />
+<strong>Status:</strong> 🟡 PARTIALLY READY FOR BETA</p>
+
+<hr />
+
+<h2 id="1-what-is-redis-and-why-do-we-need-it-">1. What is Redis and Why Do We Need It? 🤔</h2>
+
+<p>Imagine you’re working at a desk. You have:</p>
+<ul>
+  <li>A filing cabinet (like a traditional database) where you store important documents permanently</li>
+  <li>Sticky notes on your desk (like Redis) for quick reminders and temporary information</li>
+</ul>
+
+<p>Redis is exactly like those sticky notes, but for your application! It’s a special type of database that:</p>
+<ul>
+  <li>Lives in your computer’s memory (RAM) instead of on the hard drive</li>
+  <li>Is incredibly fast (like grabbing a sticky note vs. walking to the filing cabinet)</li>
+  <li>Works best for temporary data that needs quick access</li>
+</ul>
+
+<h3 id="key-benefits-of-redis-">Key Benefits of Redis 🌟</h3>
+
+<ol>
+  <li><strong>Lightning Fast Speed</strong> ⚡
+    <ul>
+      <li>Reading/writing data happens in microseconds</li>
+      <li>Perfect for real-time features</li>
+    </ul>
+  </li>
+  <li><strong>Simple to Use</strong> 🎯
+    <ul>
+      <li>Works like a key-value store (like a dictionary)</li>
+      <li>Easy to understand and debug</li>
+    </ul>
+  </li>
+  <li><strong>Versatile</strong> 🛠️
+    <ul>
+      <li>Can handle different types of data</li>
+      <li>Supports various patterns (we’ll explore these below)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="when-do-we-use-redis-">When Do We Use Redis? 🎯</h3>
+
+<p>We use Redis in four main ways in our application:</p>
+
+<ol>
+  <li><strong>User Sessions</strong> 👤
+    <ul>
+      <li>Keeps track of who is logged in</li>
+      <li>Example: “User ABC123 is logged in with admin rights”</li>
+      <li>Why Redis? Because we need to check this on every request!</li>
+    </ul>
+  </li>
+  <li><strong>Rate Limiting</strong> 🚦
+    <ul>
+      <li>Prevents users from making too many requests</li>
+      <li>Example: “User XYZ has made 3 requests in the last minute”</li>
+      <li>Why Redis? We need to count requests very quickly!</li>
+    </ul>
+  </li>
+  <li><strong>Real-time Updates</strong> ⚡
+    <ul>
+      <li>Instantly notifies users when something changes</li>
+      <li>Example: “Hey everyone, Task #123 was just completed!”</li>
+      <li>Why Redis? We need to broadcast messages instantly!</li>
+    </ul>
+  </li>
+  <li><strong>Smart Caching</strong> 🧠
+    <ul>
+      <li>Remembers results of complex calculations</li>
+      <li>Example: “Here’s the pre-calculated dashboard data”</li>
+      <li>Why Redis? Saves time by avoiding repeated work!</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="2-redis-patterns-real-world-examples-">2. Redis Patterns: Real-World Examples 📚</h2>
+
+<h3 id="pattern-1-the-smart-menu-board-">Pattern 1: The Smart Menu Board 🍔</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Real-World Example: Think of a busy restaurant's menu board
+- Traditional: Recalculate popular dishes every time (slow)
+- With Redis: Keep a "cheat sheet" of popular items (fast)
+
+How It Works (Caching):
+1. Customer asks: "What are today's specials?"
+2. Redis checks its "cheat sheet"
+   - Found it? → Show immediately! (⚡ super fast)
+   - Not found? → Calculate new list, save it for 5 minutes
+
+In Code:
+KEY: "daily_specials"
+VALUE: ["Pasta", "Salad", "Soup"]
+EXPIRES: 5 minutes
+</code></pre></div></div>
+
+<h3 id="pattern-2-the-vip-wristband-">Pattern 2: The VIP Wristband 💎</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Real-World Example: Think of a theme park's VIP wristband
+- Traditional: Show ID at every ride (slow)
+- With Redis: Quick scan of wristband (fast)
+
+How It Works (Sessions):
+1. Guest checks in → Get special wristband
+2. Redis remembers: "Wristband ABC123 = Valid VIP Guest"
+3. Each ride just scans the band (super quick check!)
+4. Band expires at end of day
+
+In Code:
+KEY: "session:abc123"
+VALUE: {name: "John", type: "VIP"}
+EXPIRES: 24 hours
+</code></pre></div></div>
+
+<h3 id="pattern-3-the-friendly-bouncer-">Pattern 3: The Friendly Bouncer 📦</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Real-World Example: Think of a nightclub's friendly bouncer
+- Traditional: Try to remember faces (unreliable)
+- With Redis: Keep a quick count (reliable)
+
+How It Works (Rate Limiting):
+1. Person tries to enter
+2. Bouncer checks their recent visits:
+   - First time today? → Welcome!
+   - 5th time in 1 minute? → "Please wait"
+3. Count resets after a minute
+
+In Code:
+KEY: "visits:user123"
+VALUE: 3 (number of visits)
+EXPIRES: 1 minute
+</code></pre></div></div>
+
+<h3 id="pattern-4-the-office-announcement-system-">Pattern 4: The Office Announcement System 📣</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Real-World Example: Think of an office PA system
+- Traditional: Walk around to tell everyone (slow)
+- With Redis: Use the PA system (instant)
+
+How It Works (Real-time Updates):
+1. Manager: "Free pizza in the break room!"
+2. Redis broadcasts to all computers
+3. Everyone gets notified instantly
+4. No need to email or message individually
+
+In Code:
+CHANNEL: "office_announcements"
+MESSAGE: "Free pizza in break room!"
+TYPE: Instant (no storage)
+</code></pre></div></div>
+
+<h3 id="pattern-5-the-security-camera-">Pattern 5: The Security Camera 📷</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Real-World Example: Think of a security camera system
+- Traditional: Write everything to tape (messy)
+- With Redis: Smart recording with timestamps
+
+How It Works (Event Logging):
+1. Camera detects movement
+2. Redis logs: "Motion at front door - 2:30 PM"
+3. Security team can:
+   - Watch live feed (real-time)
+   - Check past events (history)
+   - Search by time (organized)
+
+In Code:
+STREAM: "security_events"
+EVENT: {location: "front_door", time: "14:30"}
+STORED: Until explicitly deleted
+</code></pre></div></div>
+
+<h3 id="when-to-use-each-pattern-">When to Use Each Pattern? 🤔</h3>
+
+<ol>
+  <li>Use Caching When:
+    <ul>
+      <li>Something takes long to calculate</li>
+      <li>Result stays same for a while</li>
+      <li>Speed is important</li>
+    </ul>
+  </li>
+  <li>Use Sessions When:
+    <ul>
+      <li>Users need to stay logged in</li>
+      <li>Security is important</li>
+      <li>Multiple services need user info</li>
+    </ul>
+  </li>
+  <li>Use Rate Limiting When:
+    <ul>
+      <li>Protecting from overuse</li>
+      <li>Ensuring fair access</li>
+      <li>Preventing abuse</li>
+    </ul>
+  </li>
+  <li>Use Real-time Updates When:
+    <ul>
+      <li>Users need instant info</li>
+      <li>Changes affect many people</li>
+      <li>UI needs live updates</li>
+    </ul>
+  </li>
+  <li>Use Event Logging When:
+    <ul>
+      <li>Need history of actions</li>
+      <li>Multiple services need same data</li>
+      <li>Order of events matters</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="3-how-redis-ties-into-devmentor">3. How Redis Ties Into DevMentor</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     YOUR BROWSER                    DEVMENTOR SERVERS                    REDIS
+    ┌────────────┐                 ┌─────────────────┐              ┌──────────────┐
+    │            │   1. Login      │                 │  2. Store    │              │
+    │   Click    │────────────────&gt;│   Auth Service  │─────────────&gt;│  Session     │
+    │   Login    │                 │                 │   session    │  Token       │
+    │            │&lt;────────────────│                 │&lt;─────────────│  (60 min)    │
+    └────────────┘   4. Success    └─────────────────┘  3. Confirm  └──────────────┘
+    
+    Later...
+    
+    ┌────────────┐                 ┌─────────────────┐              ┌──────────────┐
+    │            │   1. Request    │                 │  2. Check    │              │
+    │   Load     │────────────────&gt;│   Any Service   │─────────────&gt;│  Is session  │
+    │   Page     │                 │                 │   session    │  still valid?│
+    │            │&lt;────────────────│                 │&lt;─────────────│  YES!        │
+    └────────────┘   4. Here's     └─────────────────┘  3. Valid    └──────────────┘
+                     your page
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="our-two-redis-instances-what-each-does">Our Two Redis Instances (What Each Does)</h2>
+
+<h2 id="the-redis-cache-port-6379">The Redis Cache (Port 6379)</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────┐
+│                    REDIS CACHE (:6379)                    │
+│                 "The Fast Notepad"                        │
+├──────────────────────────────────────────────────────────┤
+│                                                           │
+│  What it stores:                                         │
+│  ┌─────────────────────────────────────────────┐        │
+│  │ session:abc123 = {userId: "42", ...}       │ 60min  │
+│  │ rate_limit:user42 = 5                       │ 1min   │
+│  │ locked:bad@email.com = "2025-08-16"        │ 15min  │
+│  │ password_reset:xyz = "user@email.com"      │ 30min  │
+│  │ cache:expensive_calculation = {result:...}  │ 5min   │
+│  └─────────────────────────────────────────────┘        │
+│                                                           │
+│  Used by: Auth Service, UI Server, All Services          │
+│  Purpose: Fast lookups, temporary storage                │
+│  If it dies: Users logged out, but system survives       │
+└──────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="the-redis-event-stream-port-6380">The Redis Event Stream (Port 6380)</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────┐
+│                 REDIS LEARNING (:6380)                    │
+│                "The Event Highway"                        │
+├──────────────────────────────────────────────────────────┤
+│                                                           │
+│  What it does:                                           │
+│                                                           │
+│  STREAMS (Like a permanent chat history):                │
+│  ┌─────────────────────────────────────────────┐        │
+│  │ stream:devmentor:projects                   │        │
+│  │  [1] Task created by user 42                │        │
+│  │  [2] Epic updated by user 99                │        │
+│  │  [3] Task completed by user 42              │        │
+│  │  ... (keeps forever or until limit)         │        │
+│  └─────────────────────────────────────────────┘        │
+│                                                           │
+│  PUB/SUB (Like a live radio broadcast):                  │
+│  ┌─────────────────────────────────────────────┐        │
+│  │ Channel: realtime:devmentor:projects        │        │
+│  │  📻 Broadcasting: "Task just created!"      │        │
+│  │  👂 Listeners: WebSocket server, Dashboard  │        │
+│  └─────────────────────────────────────────────┘        │
+│                                                           │
+│  Used by: Project Service, AI Gateway, (Future: Learning)│
+│  Purpose: Event history + real-time updates              │
+│  If it dies: No real-time updates, no event history      │
+└──────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="how-the-dual-write-pattern-works-important">How the Dual-Write Pattern Works (Important!)</h2>
+
+<p>When a project event happens, we write it to TWO places:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     PROJECT SERVICE
+           │
+           ├──────[Event: "Task Created"]──────┐
+           │                                    │
+           ▼                                    ▼
+    REDIS STREAMS                        REDIS PUB/SUB
+    (Permanent Log)                      (Live Broadcast)
+           │                                    │
+           │                                    │
+    ┌──────────────┐                    ┌──────────────┐
+    │ Analytics    │                    │ WebSocket    │
+    │ reads later  │                    │ pushes NOW   │
+    └──────────────┘                    └──────────────┘
+           │                                    │
+           ▼                                    ▼
+     Can replay events                   Users see updates
+     from history                        instantly
+</code></pre></div></div>
+
+<p><strong>Why Both?</strong></p>
+<ul>
+  <li><strong>Streams</strong> = Like email (arrives even if you’re offline)</li>
+  <li><strong>Pub/Sub</strong> = Like a phone call (only works if you’re listening)</li>
+</ul>
+
+<hr />
+
+<h2 id="what-happens-when-you-login-step-by-step">What Happens When You Login (Step by Step)</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. You enter username/password
+   │
+   ▼
+2. Auth Service checks database
+   │
+   ├─ Wrong? → Increment failed attempts in Redis
+   │            (If &gt; 5, lock account for 15 min)
+   │
+   └─ Correct? → Generate session token
+                  │
+                  ▼
+3. Store in Redis: session:abc123 = {userId: 42, roles: ["user"]}
+   Set expiry: 60 minutes
+   │
+   ▼
+4. Return token to browser
+   │
+   ▼
+5. Browser sends token with EVERY request
+   │
+   ▼
+6. Services check Redis: "Is session:abc123 still valid?"
+   │
+   ├─ Yes → Process request
+   │
+   └─ No → "Please login again"
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3--component-readiness-checklist">3. ✅ Component Readiness Checklist</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Status</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Redis Cache (:6379)</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>Stable, well-integrated with graceful degradation in the UI.</td>
+    </tr>
+    <tr>
+      <td><strong>Redis Learning (:6380)</strong></td>
+      <td>🟡 <strong>Partial</strong></td>
+      <td>Producer side is functional. Consumer side is largely unimplemented.</td>
+    </tr>
+    <tr>
+      <td><strong>Auth Service Integration</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>All auth flows (sessions, rate limits, tokens, lockout) are stable.</td>
+    </tr>
+    <tr>
+      <td><strong>Project Service Events</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>The dual-write to Streams and Pub/Sub is functional and reliable.</td>
+    </tr>
+    <tr>
+      <td><strong>UI Caching</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>Caching helpers are implemented with proper error handling.</td>
+    </tr>
+    <tr>
+      <td><strong>UI Admin Panel</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>Provides good visibility for development and debugging.</td>
+    </tr>
+    <tr>
+      <td><strong>Learning Stream Consumers</strong></td>
+      <td>🔴 <strong>Not Ready</strong></td>
+      <td><strong>CRITICAL GAP.</strong> No active consumers for <code class="language-plaintext highlighter-rouge">user:*</code> or <code class="language-plaintext highlighter-rouge">ai:*</code> streams found. Data is being logged to streams but not processed.</td>
+    </tr>
+    <tr>
+      <td><strong>WebSocket Gateway</strong></td>
+      <td>🟡 <strong>Partial</strong></td>
+      <td>Consumes <code class="language-plaintext highlighter-rouge">ai:events</code> stream but not the primary <code class="language-plaintext highlighter-rouge">project</code> stream.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="4--data-contracts--schema">4. 📝 Data Contracts &amp; Schema</h2>
+
+<p>The data contracts for Redis are well-defined:</p>
+
+<ul>
+  <li><strong>Auth Keys:</strong> Secure, namespaced, and rely on TTLs. <strong>(Ready)</strong></li>
+  <li><strong>Project Events:</strong> Clear, versioned JSON schema for events published by the <code class="language-plaintext highlighter-rouge">project-service</code>. <strong>(Ready)</strong></li>
+  <li><strong>Learning Events:</strong> Detailed schemas are documented but not yet enforced by active consumers. <strong>(At Risk)</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="5--monitoring--observability">5. 📊 Monitoring &amp; Observability</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Area</th>
+      <th>Status</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Basic Health Checks</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>Services include <code class="language-plaintext highlighter-rouge">ping</code>-based health checks.</td>
+    </tr>
+    <tr>
+      <td><strong>Redis Commander</strong></td>
+      <td>🟢 <strong>Ready</strong></td>
+      <td>Available for manual inspection and debugging.</td>
+    </tr>
+    <tr>
+      <td><strong>Stream Monitoring</strong></td>
+      <td>🔴 <strong>Not Ready</strong></td>
+      <td><strong>CRITICAL GAP.</strong> No monitoring for consumer lag, pending messages, or dead-letter queues.</td>
+    </tr>
+    <tr>
+      <td><strong>Business Metrics</strong></td>
+      <td>🔴 <strong>Not Ready</strong></td>
+      <td>No tracking of event processing rates, adaptation accuracy, or feedback trends.</td>
+    </tr>
+    <tr>
+      <td><strong>Alerting</strong></td>
+      <td>🔴 <strong>Not Ready</strong></td>
+      <td>No alerts configured for Redis downtime, high latency, or stream processing failures.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="6--security-assessment">6. 🔐 Security Assessment</h2>
+
+<ul>
+  <li><strong>Authentication:</strong> Redis instances are configured to allow password authentication (via <code class="language-plaintext highlighter-rouge">REDIS_PASSWORD</code> env var). This is sufficient for beta.</li>
+  <li><strong>Data Segregation:</strong> Using separate Redis databases or instances for cache vs. learning data is a good practice.</li>
+  <li><strong>Data at Rest:</strong> Data is not encrypted in Redis. This is an acceptable risk for the beta, as no highly sensitive PII is stored.</li>
+  <li><strong>Access Control:</strong> The system relies on network-level access control (Docker networking). More granular Redis ACLs are not yet in use.</li>
+</ul>
+
+<p><strong>Overall Security Posture:</strong> 🟡 <strong>Acceptable for Beta.</strong></p>
+
+<hr />
+
+<h2 id="7--outstanding-risks--pre-beta-tasks">7. 💣 Outstanding Risks &amp; Pre-Beta Tasks</h2>
+
+<h3 id="high-priority-risks-must-fix-for-beta">High-Priority Risks (Must-Fix for Beta)</h3>
+
+<ol>
+  <li><strong>Implement a Basic Learning Consumer:</strong> At minimum, a simple consumer should be created for the <code class="language-plaintext highlighter-rouge">user:feedback</code> stream to demonstrate the feedback loop is viable. This is critical for the product’s value proposition.</li>
+  <li><strong>Implement Core Stream Monitoring:</strong> Set up basic monitoring for consumer lag on <code class="language-plaintext highlighter-rouge">stream:devmentor:projects</code>. If lag grows, the system is failing, and we need to know.</li>
+  <li><strong>End-to-End Test for Real-time Updates:</strong> Verify that events published to <code class="language-plaintext highlighter-rouge">realtime:devmentor:projects</code> are correctly received by the WebSocket gateway and pushed to the UI.</li>
+</ol>
+
+<h3 id="medium-priority-risks-address-post-beta">Medium-Priority Risks (Address Post-Beta)</h3>
+
+<ol>
+  <li><strong>Full Learning Pipeline Implementation:</strong> Build out the full set of consumers for all learning-related streams.</li>
+  <li><strong>Comprehensive Alerting:</strong> Configure alerts for all critical failure modes.</li>
+  <li><strong>Load Testing:</strong> Simulate high-traffic scenarios to identify and address potential bottlenecks.</li>
+</ol>
+
+<hr />
+
+<h2 id="what-actually-works-right-now-vs-what-doesnt">What Actually Works Right Now vs What Doesn’t</h2>
+
+<h3 id="-working-you-can-use-these-today">✅ WORKING (You can use these today)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌────────────────────────────────────────────────────────┐
+│ AUTHENTICATION FLOW                                    │
+│ • Login/logout                                         │
+│ • Session management                                   │
+│ • Rate limiting (5 requests/minute)                    │
+│ • Account lockout after 5 failed attempts              │
+│ • Password reset tokens                                │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ CACHING                                                │
+│ • UI server caches API responses                       │
+│ • Graceful fallback if Redis is down                   │
+│ • Admin panel to view Redis status                     │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ PROJECT EVENTS (PRODUCER SIDE)                         │
+│ • Events written to Redis Streams                      │
+│ • Events broadcast via Pub/Sub                         │
+│ • Dual-write pattern working                           │
+└────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="-not-working-gaps-to-fill">🔴 NOT WORKING (Gaps to fill)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌────────────────────────────────────────────────────────┐
+│ LEARNING PIPELINE                                      │
+│ ✗ No consumers reading learning streams                │
+│ ✗ User feedback not being processed                    │
+│ ✗ AI not adapting based on interactions                │
+│ ✗ Events pile up in streams with no processing         │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ REAL-TIME UPDATES                                      │
+│ ✗ WebSocket not consuming project events               │
+│ ✗ Dashboard doesn't update live                        │
+│ ✗ Users must refresh to see changes                    │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ MONITORING                                             │
+│ ✗ No alerts if Redis goes down                         │
+│ ✗ Can't see if events are being processed              │
+│ ✗ No visibility into consumer lag                      │
+└────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="how-each-service-uses-redis">How Each Service Uses Redis</h2>
+
+<h3 id="auth-service-integration">Auth Service Integration</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────┐
+│  Auth Service   │                     Redis Cache (:6379)
+│  Node.js        │                ┌──────────────────────────┐
+├─────────────────┤     Store      │                        │
+│                 │────Session────&gt;│ session:abc123        │
+│ /api/login      │                │ {user: 42, roles: []}  │
+│ /api/register   │                │ TTL: 60min             │
+│ /api/logout     │                │                        │
+└─────────────────┘                └──────────────────────────┘
+        │                                     ▲
+        │                                     │
+        └─────────────Is Valid?───────────────┘
+
+Code Example (auth-service/src/redis.ts):
+```javascript
+// Store a new session
+await redis.setex(
+  `session:${token}`,
+  3600,  // 1 hour
+  JSON.stringify({ userId, roles })
+);
+
+// Check rate limits
+const attempts = await redis.incr(
+  `rate_limit:${ip}:${endpoint}`
+);
+if (attempts === 1) {
+  await redis.expire(
+    `rate_limit:${ip}:${endpoint}`,
+    60  // 1 minute window
+  );
+}
+</code></pre></div></div>
+
+<h3 id="project-service-integration">Project Service Integration</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────┐
+│ Project Service │                Redis Learning (:6380)
+│   Node.js       │          ┌───────────────────────────┐
+├─────────────────┤          │      STREAMS             │
+│                 │───XADD──&gt;│ stream:projects         │
+│ /api/projects   │          │ [1] Task Created        │
+│ /api/tasks      │          │ [2] Epic Updated        │
+│                 │          │                         │
+│                 │───PUB───&gt;│      PUB/SUB           │
+│                 │          │ realtime:projects       │
+└─────────────────┘          └───────────────────────────┘
+
+Code Example (project-service/src/redis.ts):
+```javascript
+// Dual write pattern
+async function publishEvent(event) {
+  // 1. Write to stream (durable)
+  await redis.xadd(
+    'stream:projects',
+    '*',  // Auto ID
+    'event', JSON.stringify(event)
+  );
+
+  // 2. Publish for real-time (ephemeral)
+  await redisPub.publish(
+    'realtime:projects',
+    JSON.stringify(event)
+  );
+}
+</code></pre></div></div>
+
+<h3 id="ui-server-integration">UI Server Integration</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────┐
+│    UI Server    │                 Redis Cache (:6379)
+│    Next.js      │             ┌──────────────────────────┐
+├─────────────────┤             │                        │
+│                 │──Read Cache&gt;│ cache:expensive:123   │
+│ /api/*          │             │ {result: [...]}        │
+│ pages/          │             │ TTL: 5min              │
+│                 │             │                        │
+│   WebSocket     │◀─Subscribe──┤ PUBSUB                 │
+│   Server        │             │ realtime:projects      │
+└─────────────────┘             └──────────────────────────┘
+
+Code Example (ui-server/src/redis.ts):
+```typescript
+// Cache expensive results
+async function getCachedData(key: string): Promise&lt;Data | null&gt; {
+  try {
+    // Try cache first
+    const cached = await redis.get(`cache:${key}`);
+    if (cached) return JSON.parse(cached);
+
+    // Cache miss - get fresh data
+    const data = await expensiveOperation();
+    await redis.setex(
+      `cache:${key}`,
+      300,  // 5 min TTL
+      JSON.stringify(data)
+    );
+    return data;
+  } catch (e) {
+    // Redis down? Just get fresh data
+    return expensiveOperation();
+  }
+}
+</code></pre></div></div>
+
+<h3 id="ai-gateway-integration-planned">AI Gateway Integration (Planned)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────┐
+│   AI Gateway    │               Redis Learning (:6380)
+│    Node.js      │            ┌──────────────────────────┐
+├─────────────────┤            │     STREAMS            │
+│                 │───XADD────&gt;│ user:interactions     │
+│ /api/ai/chat    │            │ user:feedback         │
+│ /api/ai/learn   │            │ ai:adaptations        │
+│                 │            │                       │
+│                 │───PUB─────&gt;│     PUBSUB            │
+│                 │            │ realtime:ai:events    │
+└─────────────────┘            └──────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="learning-service-integration-to-be-built">Learning Service Integration (To Be Built)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────┐
+│Learning Service │              Redis Learning (:6380)
+│   Python        │            ┌──────────────────────────┐
+├─────────────────┤            │     STREAMS            │
+│                 │◀──XREAD────┤ user:interactions     │
+│ Pattern         │            │ user:feedback         │
+│ Detection       │            │ ai:adaptations        │
+│                 │            │                       │
+│ Update          │───XADD────&gt;│     New Events        │
+│ AI Models       │            │ ai:model:updates      │
+└─────────────────┘            └──────────────────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="key-action-items-before-beta">Key Action Items Before Beta</h2>
+
+<h3 id="1-basic-learning-consumer-2-3-days-work">1. Basic Learning Consumer (2-3 days work)</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Need to build this:</span>
+<span class="kd">const</span> <span class="nx">consumer</span> <span class="o">=</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">xreadgroup</span><span class="p">(</span>
+  <span class="dl">'</span><span class="s1">learning-group</span><span class="dl">'</span><span class="p">,</span>           <span class="c1">// Consumer group name</span>
+  <span class="dl">'</span><span class="s1">consumer-1</span><span class="dl">'</span><span class="p">,</span>              <span class="c1">// Consumer ID</span>
+  <span class="dl">'</span><span class="s1">user:feedback</span><span class="dl">'</span><span class="p">,</span>          <span class="c1">// Stream to read from</span>
+  <span class="nx">processUserFeedback</span>      <span class="c1">// Function to handle events</span>
+<span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">processUserFeedback</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Update AI personality based on feedback</span>
+  <span class="c1">// Store patterns in Qdrant</span>
+  <span class="c1">// Notify UI of changes</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-stream-monitoring-1-day-work">2. Stream Monitoring (1 day work)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Need a script that checks:</span>
+redis-cli XINFO GROUPS stream:devmentor:projects
+<span class="c"># Shows: pending messages, consumer lag, last delivered</span>
+
+<span class="c"># Alert if lag &gt; 1000 messages</span>
+<span class="c"># Alert if no consumers active</span>
+<span class="c"># Dashboard to visualize this</span>
+</code></pre></div></div>
+
+<h3 id="3-websocket-integration-test-1-day-work">3. WebSocket Integration Test (1 day work)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   Project Service → Redis Pub/Sub → WebSocket → Browser
+   
+   Test: Create a task
+   Verify: Browser gets update without refresh
+   Currently: This chain is broken somewhere
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="8--gono-go-recommendation">8. 🚀 Go/No-Go Recommendation</h2>
+
+<p><strong>Recommendation: 🟡 Conditional Go</strong></p>
+
+<p>The Redis integration can proceed to a <strong>limited beta</strong> under the following conditions:</p>
+
+<ol>
+  <li><strong>Condition 1:</strong> The <strong>High-Priority Risks</strong> listed above are addressed before launch.</li>
+  <li><strong>Condition 2:</strong> The “Learning” features of the application are clearly marked as “experimental” or “in-development” to manage user expectations.</li>
+</ol>
+
+<p>Without addressing these conditions, launching to a wider audience would be a <strong>No-Go</strong> due to the risk of silent failures in the learning pipeline and the inability to demonstrate the core value proposition of an adaptive AI.</p>
+
+<hr />
+
+<h2 id="9--common-redis-issues-and-solutions">9. 🔧 Common Redis Issues and Solutions</h2>
+
+<h3 id="issue-1-users-getting-logged-out-randomly-">Issue 1: Users Getting Logged Out Randomly 🔓</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Symptom: Users have to login again unexpectedly
+Possible Causes:
+1. Redis Cache (:6379) is down
+2. Session TTL is too short
+3. Session data corrupted
+
+How to Check:
+1. Run health check: redis-cli -p 6379 ping
+2. Check session TTL: redis-cli -p 6379 ttl "session:abc123"
+3. Inspect session: redis-cli -p 6379 get "session:abc123"
+
+Solution:
+- If Redis is down: Check Redis logs, restart if needed
+- If TTL issue: Adjust session expiry time (currently 60 min)
+- If corrupted: Clear affected session, user can login again
+</code></pre></div></div>
+
+<h3 id="issue-2-real-time-updates-not-working-">Issue 2: Real-time Updates Not Working 📡</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Symptom: UI not updating when changes happen
+Possible Causes:
+1. Redis Learning (:6380) is down
+2. WebSocket not subscribed to Redis channel
+3. Events not being published
+
+How to Check:
+1. Monitor pub/sub: redis-cli -p 6380 pubsub channels *
+2. Check WebSocket logs for subscription errors
+3. Watch events: redis-cli -p 6380 psubscribe *
+
+Solution:
+- If no channels: Restart Redis Learning instance
+- If WebSocket issue: Check connection configs
+- If no events: Verify publisher service is running
+</code></pre></div></div>
+
+<h3 id="issue-3-high-memory-usage-">Issue 3: High Memory Usage 📋</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Symptom: Redis using too much memory
+Possible Causes:
+1. Too many items in cache
+2. Stream data growing too large
+3. Memory limit too low
+
+How to Check:
+1. Check memory: redis-cli info memory
+2. List big keys: redis-cli --bigkeys
+3. Monitor streams: redis-cli xinfo stream *
+
+Solution:
+- Reduce TTLs for cache items
+- Set stream length limits
+- Increase Redis memory limit
+</code></pre></div></div>
+
+<h3 id="issue-4-slow-performance-">Issue 4: Slow Performance 🔥</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Symptom: Redis operations taking longer than usual
+Possible Causes:
+1. Too many connections
+2. Large keys/values
+3. Slow commands
+
+How to Check:
+1. Monitor latency: redis-cli --latency
+2. List clients: redis-cli client list
+3. Watch slow log: redis-cli slowlog get
+
+Solution:
+- Limit max connections
+- Break up large values
+- Optimize slow commands
+</code></pre></div></div>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/redis/REDIS_BETA_READINESS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

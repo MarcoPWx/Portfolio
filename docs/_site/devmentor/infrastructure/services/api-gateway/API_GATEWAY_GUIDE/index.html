@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API GATEWAY GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/api-gateway/API_GATEWAY_GUIDE.md</span>
+</div>
+
+<h1>API GATEWAY GUIDE</h1>
+
+
+<p>CURRENT_ARCHITECTURE</p>
+
+<h1 id="api-gateway-technical-guide">API Gateway Technical Guide</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>This guide explains how our API Gateway serves as the entry point for all client requests to NatureQuest’s backend services, specifically focusing on integration with QWEN, PBML, Qdrant, and PostgreSQL.</p>
+
+<h2 id="api-design-best-practices">API Design Best Practices</h2>
+
+<h3 id="1-clear-naming">1. Clear Naming</h3>
+<ul>
+  <li>Use clear, consistent resource naming</li>
+  <li>Follow REST conventions:
+    <ul>
+      <li>Create → POST /api/products</li>
+      <li>Read → GET /api/products</li>
+      <li>Update → PUT /api/products</li>
+      <li>Delete → DELETE /api/products</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="2-idempotency">2. Idempotency</h3>
+<p>HTTP methods and their idempotency:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">GET</span><span class="pi">:</span>    <span class="s">Yes (Safe, no side effects)</span>
+<span class="na">HEAD</span><span class="pi">:</span>   <span class="s">Yes (Safe, no side effects)</span>
+<span class="na">PUT</span><span class="pi">:</span>    <span class="s">Yes (Same result regardless of retries)</span>
+<span class="na">DELETE</span><span class="pi">:</span> <span class="s">Yes (Same end state)</span>
+<span class="na">POST</span><span class="pi">:</span>   <span class="s">No  (May create multiple resources)</span>
+<span class="na">PATCH</span><span class="pi">:</span>  <span class="s">No  (May have different results)</span>
+</code></pre></div></div>
+
+<h3 id="3-pagination">3. Pagination</h3>
+<p>Support both methods:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Offset-based</span><span class="pi">:</span>
+  <span class="s">/api/products?page=2&amp;limit=10</span>
+
+<span class="na">Cursor-based</span><span class="pi">:</span>
+  <span class="s">/api/products?cursor=last_fetched_id</span>
+  <span class="s">Better for real-time data and large datasets</span>
+</code></pre></div></div>
+
+<h3 id="4-sorting-and-filtering">4. Sorting and Filtering</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Filtering</span><span class="pi">:</span>
+  <span class="s">/api/products?filter=size:10&amp;sort_by=date_added</span>
+
+<span class="na">Multiple Filters</span><span class="pi">:</span>
+  <span class="s">/api/products?category=books&amp;price_range=10-20</span>
+</code></pre></div></div>
+
+<h3 id="5-cross-resource-references">5. Cross Resource References</h3>
+<p>Preferred approach:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://api.example.com/api/v1/carts/123/items/321 ✓
+
+https://api.example.com/api/v1/items?cart_id=123&amp;item_id=321 ✗
+</code></pre></div></div>
+
+<h3 id="6-rate-limiting">6. Rate Limiting</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Implementation</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Client identification</span>
+  <span class="pi">-</span> <span class="s">Rate limit window (e.g., 1000 req/hour)</span>
+  <span class="pi">-</span> <span class="s">Rate limiter before API server</span>
+
+<span class="na">Headers</span><span class="pi">:</span>
+  <span class="na">X-RateLimit-Limit</span><span class="pi">:</span> <span class="m">1000</span>
+  <span class="na">X-RateLimit-Remaining</span><span class="pi">:</span> <span class="m">986</span>
+  <span class="na">X-RateLimit-Reset</span><span class="pi">:</span> <span class="m">1640995200</span>
+</code></pre></div></div>
+
+<h3 id="7-versioning">7. Versioning</h3>
+<p>Two supported approaches:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">URL-based</span><span class="pi">:</span>
+  <span class="s">https://api.example.com/v1/users</span>
+  <span class="s">https://api.example.com/v2/users</span>
+
+<span class="na">Query Parameter</span><span class="pi">:</span>
+  <span class="s">https://api.example.com/users?version=1</span>
+  <span class="s">https://api.example.com/users?version=2</span>
+</code></pre></div></div>
+
+<h3 id="8-security">8. Security</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Authentication</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Bearer token in Authorization header</span>
+  <span class="pi">-</span> <span class="s">API keys for service-to-service</span>
+  <span class="pi">-</span> <span class="s">OAuth2 for user authorization</span>
+
+<span class="na">Access Control</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Role-based permissions</span>
+  <span class="pi">-</span> <span class="s">Resource-level access</span>
+  <span class="pi">-</span> <span class="s">Audit logging</span>
+</code></pre></div></div>
+
+<h2 id="core-components">Core Components</h2>
+
+<ol>
+  <li><strong>API Gateway Layer</strong>
+    <ul>
+      <li>Entry point for all API requests</li>
+      <li>Request/response transformation</li>
+      <li>Authentication and authorization</li>
+      <li>Rate limiting and security</li>
+      <li>Response caching</li>
+      <li>Service routing</li>
+    </ul>
+  </li>
+  <li><strong>Service Integration</strong>
+    <ul>
+      <li>QWEN ML Service</li>
+      <li>Pattern-Based ML (PBML)</li>
+      <li>Qdrant Vector Store</li>
+      <li>PostgreSQL Database</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="api-testing-types">API Testing Types</h2>
+
+<p>As shown in our architecture, we implement multiple testing layers:</p>
+
+<h3 id="1-smoke-testing">1. Smoke Testing</h3>
+<p>Purpose: Quick verification of core API functionalities</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Process</span><span class="pi">:</span>
+  <span class="s">Input → Does Something Break? → Application</span>
+<span class="na">Focus</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Basic endpoint availability</span>
+  <span class="pi">-</span> <span class="s">Critical path validation</span>
+  <span class="pi">-</span> <span class="s">Essential service health</span>
+</code></pre></div></div>
+
+<h3 id="2-functional-testing">2. Functional Testing</h3>
+<p>Purpose: Test functional requirements and analyze responses</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Flow</span><span class="pi">:</span>
+  <span class="s">1. Functional Specification → Service</span>
+  <span class="s">2. Compare Expected vs Actual Results</span>
+<span class="na">Components</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">API endpoint behavior</span>
+  <span class="pi">-</span> <span class="s">Data validation</span>
+  <span class="pi">-</span> <span class="s">Business logic verification</span>
+</code></pre></div></div>
+
+<h3 id="3-integration-testing">3. Integration Testing</h3>
+<p>Purpose: Verify different components connected via APIs</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Process</span><span class="pi">:</span>
+  <span class="s">Test Plan → Input Data → Application → Results</span>
+<span class="na">Covers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Service interactions</span>
+  <span class="pi">-</span> <span class="s">Data flow between components</span>
+  <span class="pi">-</span> <span class="s">End-to-end scenarios</span>
+</code></pre></div></div>
+
+<h3 id="4-regression-testing">4. Regression Testing</h3>
+<p>Purpose: Ensure changes don’t break existing behavior</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Steps</span><span class="pi">:</span>
+  <span class="s">1. Functional Specification → Input Data</span>
+  <span class="s">2. Test both old and new versions</span>
+  <span class="s">3. Compare results</span>
+<span class="na">Focus</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Backward compatibility</span>
+  <span class="pi">-</span> <span class="s">Feature consistency</span>
+  <span class="pi">-</span> <span class="s">API contract adherence</span>
+</code></pre></div></div>
+
+<h3 id="5-load-testing">5. Load Testing</h3>
+<p>Purpose: Test application capacity under load</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Setup</span><span class="pi">:</span>
+  <span class="s">Apache JMeter → Test Engine → Application</span>
+<span class="na">Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Response times</span>
+  <span class="pi">-</span> <span class="s">Throughput</span>
+  <span class="pi">-</span> <span class="s">Error rates</span>
+  <span class="pi">-</span> <span class="s">Resource usage</span>
+</code></pre></div></div>
+
+<h3 id="6-stress-testing">6. Stress Testing</h3>
+<p>Purpose: Test API under high load conditions</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Configuration</span><span class="pi">:</span>
+  <span class="s">JMeter → Multiple Test Engines → Application</span>
+<span class="na">Validation</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Breaking points</span>
+  <span class="pi">-</span> <span class="s">Recovery behavior</span>
+  <span class="pi">-</span> <span class="s">Error handling</span>
+  <span class="pi">-</span> <span class="s">Resource limits</span>
+</code></pre></div></div>
+
+<h3 id="7-security-testing">7. Security Testing</h3>
+<p>Purpose: Test for external threats</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Process</span><span class="pi">:</span>
+  <span class="s">Security Test Specification → Input Data → Application</span>
+<span class="na">Focus</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Authentication</span>
+  <span class="pi">-</span> <span class="s">Authorization</span>
+  <span class="pi">-</span> <span class="s">Data protection</span>
+  <span class="pi">-</span> <span class="s">Input validation</span>
+</code></pre></div></div>
+
+<h3 id="8-ui-testing">8. UI Testing</h3>
+<p>Purpose: Test UI-API interactions</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Flow</span><span class="pi">:</span>
+  <span class="s">UI Specs → Input Data → Application</span>
+<span class="na">Coverage</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Frontend-API integration</span>
+  <span class="pi">-</span> <span class="s">Response handling</span>
+  <span class="pi">-</span> <span class="s">Error display</span>
+</code></pre></div></div>
+
+<h3 id="9-fuzz-testing">9. Fuzz Testing</h3>
+<p>Purpose: Test with unexpected input data</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Process</span><span class="pi">:</span>
+  <span class="s">Unexpected Data → Does Something Break? → Application</span>
+<span class="na">Goals</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Edge cases</span>
+  <span class="pi">-</span> <span class="s">Error handling</span>
+  <span class="pi">-</span> <span class="s">Input validation</span>
+  <span class="pi">-</span> <span class="s">Security vulnerabilities</span>
+</code></pre></div></div>
+
+<h3 id="10-reliability-testing">10. Reliability Testing</h3>
+<p>Purpose: Test API stability over time</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Approach</span><span class="pi">:</span>
+  <span class="s">Long-running tests with monitoring</span>
+<span class="na">Focus</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Stability</span>
+  <span class="pi">-</span> <span class="s">Memory leaks</span>
+  <span class="pi">-</span> <span class="s">Resource usage</span>
+  <span class="pi">-</span> <span class="s">Performance degradation</span>
+</code></pre></div></div>
+
+<h2 id="gateway-architecture">Gateway Architecture</h2>
+
+<h3 id="request-flow">Request Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Client Request
+    ↓
+API Gateway
+    ↓
+Authentication → Rate Limiting → Request Transform → Service Routing
+    ↓
+Service (QWEN/PBML/Qdrant/PostgreSQL)
+    ↓
+Response Transform → Cache → Client Response
+</code></pre></div></div>
+
+<h3 id="core-features">Core Features</h3>
+
+<ol>
+  <li><strong>Authentication &amp; Authorization</strong>
+```yaml
+Methods:
+    <ul>
+      <li>JWT validation</li>
+      <li>API key authentication</li>
+      <li>OAuth 2.0 flows
+Headers:</li>
+      <li>Authorization: Bearer <token></token></li>
+      <li>X-API-Key: <api_key>
+```</api_key></li>
+    </ul>
+  </li>
+  <li><strong>Rate Limiting</strong>
+```yaml
+Limits:
+    <ul>
+      <li>Per user: 100 req/min</li>
+      <li>Per IP: 1000 req/hour</li>
+      <li>Per API key: Configurable
+Implementation:</li>
+      <li>Redis for counter storage</li>
+      <li>Sliding window algorithm
+```</li>
+    </ul>
+  </li>
+  <li><strong>Request/Response Transform</strong>
+```yaml
+Request:
+    <ul>
+      <li>Add correlation ID</li>
+      <li>Validate content type</li>
+      <li>Check required headers
+Response:</li>
+      <li>Format standardization</li>
+      <li>Error wrapping</li>
+      <li>Cache headers
+```</li>
+    </ul>
+  </li>
+  <li><strong>Service Discovery</strong>
+```yaml
+Routes:
+    <ul>
+      <li>/ml/* → QWEN service</li>
+      <li>/vector/* → Qdrant</li>
+      <li>/data/* → PostgreSQL</li>
+      <li>/pattern/* → PBML
+```</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="testing-implementation">Testing Implementation</h2>
+
+<h3 id="1-unit-tests">1. Unit Tests</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_api_authentication</span><span class="p">():</span>
+    <span class="c1"># Test API key validation
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/api/v1/data'</span><span class="p">,</span>
+                         <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'X-API-Key'</span><span class="p">:</span> <span class="s">'invalid'</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span>
+
+    <span class="c1"># Test JWT validation
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/api/v1/data'</span><span class="p">,</span>
+                         <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Bearer invalid'</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span>
+</code></pre></div></div>
+
+<h3 id="2-integration-tests">2. Integration Tests</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_ml_inference_flow</span><span class="p">():</span>
+    <span class="c1"># Test complete flow through gateway
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s">'image'</span><span class="p">:</span> <span class="s">'base64_encoded_image'</span><span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">'/api/v1/ml/identify'</span><span class="p">,</span>
+                         <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                         <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Bearer valid_token'</span><span class="p">})</span>
+    
+    <span class="k">assert</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">assert</span> <span class="s">'species'</span> <span class="ow">in</span> <span class="n">response</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s">'confidence'</span> <span class="ow">in</span> <span class="n">response</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="3-load-tests">3. Load Tests</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_gateway_performance</span><span class="p">():</span>
+    <span class="c1"># Configure locust for load testing
+</span>    <span class="o">@</span><span class="n">task</span>
+    <span class="k">def</span> <span class="nf">test_api_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/api/v1/data'</span><span class="p">,</span>
+                       <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'X-API-Key'</span><span class="p">:</span> <span class="s">'valid_key'</span><span class="p">})</span>
+
+    <span class="c1"># Run with 1000 users, 100 spawn rate
+</span>    <span class="c1"># Monitor response times and error rates
+</span></code></pre></div></div>
+
+<h2 id="monitoring--observability">Monitoring &amp; Observability</h2>
+
+<h3 id="1-metrics-collection">1. Metrics Collection</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Key Metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Request latency</span>
+  <span class="pi">-</span> <span class="s">Error rates</span>
+  <span class="pi">-</span> <span class="s">Cache hit ratio</span>
+  <span class="pi">-</span> <span class="s">Rate limit triggers</span>
+  <span class="pi">-</span> <span class="s">CPU/Memory usage</span>
+</code></pre></div></div>
+
+<h3 id="2-logging">2. Logging</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Log Levels</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">ERROR</span><span class="pi">:</span> <span class="s">Authentication failures, service errors</span>
+  <span class="pi">-</span> <span class="na">WARN</span><span class="pi">:</span> <span class="s">Rate limit hits, cache misses</span>
+  <span class="pi">-</span> <span class="na">INFO</span><span class="pi">:</span> <span class="s">Request/response details</span>
+  <span class="pi">-</span> <span class="na">DEBUG</span><span class="pi">:</span> <span class="s">Detailed debugging info</span>
+</code></pre></div></div>
+
+<h3 id="3-alerting">3. Alerting</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Thresholds</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Error rate &gt; 1%</span>
+  <span class="pi">-</span> <span class="s">P95 latency &gt; 500ms</span>
+  <span class="pi">-</span> <span class="s">Rate limit triggers &gt; 100/min</span>
+  <span class="pi">-</span> <span class="s">Cache hit ratio &lt; 80%</span>
+</code></pre></div></div>
+
+<h2 id="environment-configuration">Environment Configuration</h2>
+
+<h3 id="development">Development</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Gateway</span><span class="pi">:</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s">localhost</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="m">8000</span>
+<span class="na">Services</span><span class="pi">:</span>
+  <span class="na">qwen</span><span class="pi">:</span> <span class="s">localhost:8001</span>
+  <span class="na">qdrant</span><span class="pi">:</span> <span class="s">localhost:8002</span>
+  <span class="na">postgresql</span><span class="pi">:</span> <span class="s">localhost:5432</span>
+<span class="na">Rate Limits</span><span class="pi">:</span>
+  <span class="na">default</span><span class="pi">:</span> <span class="s">100/min</span>
+<span class="na">Cache</span><span class="pi">:</span>
+  <span class="na">ttl</span><span class="pi">:</span> <span class="s">300s</span>
+</code></pre></div></div>
+
+<h3 id="production">Production</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Gateway</span><span class="pi">:</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s">api.naturequest.com</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="m">443</span>
+<span class="na">Services</span><span class="pi">:</span>
+  <span class="na">qwen</span><span class="pi">:</span> <span class="s">internal-ml-service:8001</span>
+  <span class="na">qdrant</span><span class="pi">:</span> <span class="s">internal-vector-service:8002</span>
+  <span class="na">postgresql</span><span class="pi">:</span> <span class="s">internal-db-service:5432</span>
+<span class="na">Rate Limits</span><span class="pi">:</span>
+  <span class="na">default</span><span class="pi">:</span> <span class="s">1000/min</span>
+<span class="na">Cache</span><span class="pi">:</span>
+  <span class="na">ttl</span><span class="pi">:</span> <span class="s">3600s</span>
+</code></pre></div></div>
+
+<h2 id="gateway-health-checks">Gateway Health Checks</h2>
+
+<h3 id="1-service-health">1. Service Health</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check gateway status</span>
+curl http://localhost:8000/health
+
+<span class="c"># Check individual service health</span>
+curl http://localhost:8000/health/ml
+curl http://localhost:8000/health/vector
+curl http://localhost:8000/health/db
+</code></pre></div></div>
+
+<h3 id="2-performance-health">2. Performance Health</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check gateway metrics</span>
+curl http://localhost:8000/metrics
+
+<span class="c"># Check specific service metrics</span>
+curl http://localhost:8000/metrics/ml
+curl http://localhost:8000/metrics/vector
+curl http://localhost:8000/metrics/db
+</code></pre></div></div>
+
+<h2 id="deployment--scaling">Deployment &amp; Scaling</h2>
+
+<h3 id="container-configuration">Container Configuration</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">gateway</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">kong:latest</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">8000:8000"</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">8001:8001"</span>
+  <span class="na">environment</span><span class="pi">:</span>
+    <span class="na">KONG_DATABASE</span><span class="pi">:</span> <span class="s">postgres</span>
+    <span class="na">KONG_PG_HOST</span><span class="pi">:</span> <span class="s">kong-database</span>
+    <span class="na">KONG_PROXY_ACCESS_LOG</span><span class="pi">:</span> <span class="s">/dev/stdout</span>
+    <span class="na">KONG_ADMIN_ACCESS_LOG</span><span class="pi">:</span> <span class="s">/dev/stdout</span>
+    <span class="na">KONG_PROXY_ERROR_LOG</span><span class="pi">:</span> <span class="s">/dev/stderr</span>
+    <span class="na">KONG_ADMIN_ERROR_LOG</span><span class="pi">:</span> <span class="s">/dev/stderr</span>
+    <span class="na">KONG_ADMIN_LISTEN</span><span class="pi">:</span> <span class="s">0.0.0.0:8001</span>
+</code></pre></div></div>
+
+<h3 id="scaling-rules">Scaling Rules</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Auto-scaling</span><span class="pi">:</span>
+  <span class="na">min_replicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">max_replicas</span><span class="pi">:</span> <span class="m">10</span>
+  <span class="na">metrics</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">cpu_utilization</span><span class="pi">:</span> <span class="s">70%</span>
+    <span class="pi">-</span> <span class="na">memory_utilization</span><span class="pi">:</span> <span class="s">80%</span>
+    <span class="pi">-</span> <span class="na">request_count</span><span class="pi">:</span> <span class="s">1000/min</span>
+</code></pre></div></div>
+
+<h2 id="security-implementation">Security Implementation</h2>
+
+<h3 id="1-authentication">1. Authentication</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Methods</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">JWT with RS256</span>
+  <span class="pi">-</span> <span class="s">API keys with HMAC</span>
+  <span class="pi">-</span> <span class="s">OAuth 2.0 authorization code flow</span>
+<span class="na">Headers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">Authorization</span><span class="pi">:</span> <span class="s">Bearer {jwt_token}</span>
+  <span class="pi">-</span> <span class="na">X-API-Key</span><span class="pi">:</span> <span class="pi">{</span><span class="nv">api_key</span><span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="2-rate-limiting">2. Rate Limiting</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Algorithms</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Token bucket</span>
+  <span class="pi">-</span> <span class="s">Sliding window</span>
+<span class="na">Storage</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Redis for counters</span>
+  <span class="pi">-</span> <span class="s">Distributed locking</span>
+</code></pre></div></div>
+
+<h3 id="3-input-validation">3. Input Validation</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Validation</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Request size limits</span>
+  <span class="pi">-</span> <span class="s">Content type checks</span>
+  <span class="pi">-</span> <span class="s">Schema validation</span>
+  <span class="pi">-</span> <span class="s">SQL injection prevention</span>
+  <span class="pi">-</span> <span class="s">XSS protection</span>
+</code></pre></div></div>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<h3 id="1-standard-error-responses">1. Standard Error Responses</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AUTH_ERROR"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid API key"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API key expired"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-15T10:00:00Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="2-error-categories">2. Error Categories</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">4xx Errors</span><span class="pi">:</span>
+  <span class="na">400</span><span class="pi">:</span> <span class="s">Bad Request</span>
+  <span class="na">401</span><span class="pi">:</span> <span class="s">Unauthorized</span>
+  <span class="na">403</span><span class="pi">:</span> <span class="s">Forbidden</span>
+  <span class="na">429</span><span class="pi">:</span> <span class="s">Too Many Requests</span>
+<span class="na">5xx Errors</span><span class="pi">:</span>
+  <span class="na">500</span><span class="pi">:</span> <span class="s">Internal Server Error</span>
+  <span class="na">502</span><span class="pi">:</span> <span class="s">Bad Gateway</span>
+  <span class="na">503</span><span class="pi">:</span> <span class="s">Service Unavailable</span>
+  <span class="na">504</span><span class="pi">:</span> <span class="s">Gateway Timeout</span>
+</code></pre></div></div>
+
+<h2 id="api-documentation">API Documentation</h2>
+
+<h3 id="1-swagger-integration">1. Swagger Integration</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">swagger</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2.0"</span>
+<span class="na">info</span><span class="pi">:</span>
+  <span class="na">title</span><span class="pi">:</span> <span class="s">NatureQuest API</span>
+  <span class="na">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1.0"</span>
+<span class="na">paths</span><span class="pi">:</span>
+  <span class="na">/api/v1/ml/identify</span><span class="pi">:</span>
+    <span class="na">post</span><span class="pi">:</span>
+      <span class="na">summary</span><span class="pi">:</span> <span class="s">Identify species in image</span>
+      <span class="na">security</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">Bearer</span><span class="pi">:</span> <span class="pi">[]</span>
+      <span class="na">parameters</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">image</span>
+          <span class="na">in</span><span class="pi">:</span> <span class="s">body</span>
+          <span class="na">required</span><span class="pi">:</span> <span class="no">true</span>
+          <span class="na">schema</span><span class="pi">:</span>
+            <span class="na">type</span><span class="pi">:</span> <span class="s">object</span>
+            <span class="na">properties</span><span class="pi">:</span>
+              <span class="na">data</span><span class="pi">:</span>
+                <span class="na">type</span><span class="pi">:</span> <span class="s">string</span>
+                <span class="na">format</span><span class="pi">:</span> <span class="s">base64</span>
+</code></pre></div></div>
+
+<h3 id="2-postman-collections">2. Postman Collections</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NatureQuest API Tests"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"item"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Identify Species"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"header"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Authorization"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer {{jwt_token}}"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"raw"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{base_url}}/api/v1/ml/identify"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This guide covers the technical implementation of our API Gateway, focusing on practical aspects like testing, monitoring, and security. Use this as your reference for development and maintenance of the gateway infrastructure.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/api-gateway/API_GATEWAY_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

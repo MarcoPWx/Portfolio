@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISTIO SIDECAR AUTH SETUP | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/kubernetes/ISTIO_SIDECAR_AUTH_SETUP.md</span>
+</div>
+
+<h1>ISTIO SIDECAR AUTH SETUP</h1>
+
+
+<h1 id="complete-istio-sidecar--authentication-setup-guide">Complete Istio Sidecar &amp; Authentication Setup Guide</h1>
+
+<h2 id="current-status">Current Status</h2>
+<ul>
+  <li>✅ Istio is installed</li>
+  <li>✅ Kiali is accessible</li>
+  <li>❌ Services missing sidecars</li>
+  <li>❌ No authentication configured</li>
+  <li>❌ No Istio policies</li>
+</ul>
+
+<h2 id="step-1-enable-sidecar-injection-for-all-namespaces">Step 1: Enable Sidecar Injection for All Namespaces</h2>
+
+<h3 id="11-label-the-namespaces-for-automatic-sidecar-injection">1.1 Label the namespaces for automatic sidecar injection</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable for devmentor namespace (already done)</span>
+kubectl label namespace devmentor istio-injection<span class="o">=</span>enabled <span class="nt">--overwrite</span>
+
+<span class="c"># Enable for devmentor-data namespace</span>
+kubectl label namespace devmentor-data istio-injection<span class="o">=</span>enabled <span class="nt">--overwrite</span>
+
+<span class="c"># Verify labels</span>
+kubectl get namespace <span class="nt">-L</span> istio-injection
+</code></pre></div></div>
+
+<h3 id="12-restart-all-deployments-to-inject-sidecars">1.2 Restart ALL deployments to inject sidecars</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Restart devmentor namespace deployments</span>
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor
+
+<span class="c"># Restart devmentor-data namespace deployments  </span>
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor-data
+kubectl rollout restart statefulset <span class="nt">-n</span> devmentor-data
+
+<span class="c"># Watch the rollout status</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-w</span>
+kubectl get pods <span class="nt">-n</span> devmentor-data <span class="nt">-w</span>
+</code></pre></div></div>
+
+<h3 id="13-verify-sidecars-are-injected">1.3 Verify sidecars are injected</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if pods have 2 containers (app + sidecar)</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].name}{"\n"}{end}'</span>
+kubectl get pods <span class="nt">-n</span> devmentor-data <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].name}{"\n"}{end}'</span>
+</code></pre></div></div>
+
+<h2 id="step-2-fix-postgresql-service-issue">Step 2: Fix PostgreSQL Service Issue</h2>
+
+<h3 id="21-check-postgresql-status">2.1 Check PostgreSQL status</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check PostgreSQL pod</span>
+kubectl get pods <span class="nt">-n</span> devmentor-data | <span class="nb">grep </span>postgres
+
+<span class="c"># Check PostgreSQL service</span>
+kubectl get svc <span class="nt">-n</span> devmentor-data postgresql
+
+<span class="c"># Check PostgreSQL logs</span>
+kubectl logs <span class="nt">-n</span> devmentor-data <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>postgresql <span class="nt">--tail</span><span class="o">=</span>50
+</code></pre></div></div>
+
+<h3 id="22-fix-postgresql-connectivity">2.2 Fix PostgreSQL connectivity</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a service if missing</span>
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: devmentor-data
+spec:
+  selector:
+    app: postgresql
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h2 id="step-3-deploy-keycloak-for-authentication">Step 3: Deploy Keycloak for Authentication</h2>
+
+<h3 id="31-create-keycloak-namespace-and-secrets">3.1 Create Keycloak namespace and secrets</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create namespace</span>
+kubectl create namespace keycloak
+
+<span class="c"># Create admin password secret</span>
+kubectl create secret generic keycloak-admin <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span><span class="nv">username</span><span class="o">=</span>admin <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span><span class="nv">password</span><span class="o">=</span>admin123! <span class="se">\</span>
+  <span class="nt">-n</span> keycloak
+</code></pre></div></div>
+
+<h3 id="32-deploy-keycloak-with-postgresql-backend">3.2 Deploy Keycloak with PostgreSQL backend</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save as keycloak-deployment.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak-config</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">keycloak.conf</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">db=postgres</span>
+    <span class="s">db-url=jdbc:postgresql://postgresql.devmentor-data.svc.cluster.local:5432/keycloak</span>
+    <span class="s">db-username=keycloak</span>
+    <span class="s">db-password=keycloak123</span>
+    <span class="s">hostname-strict=false</span>
+    <span class="s">proxy=edge</span>
+    <span class="s">http-enabled=true</span>
+<span class="s">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+        <span class="na">version</span><span class="pi">:</span> <span class="s">v1</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">quay.io/keycloak/keycloak:23.0</span>
+        <span class="na">args</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">start-dev"</span><span class="pi">]</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KEYCLOAK_ADMIN</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak-admin</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">username</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KEYCLOAK_ADMIN_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak-admin</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgres</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB_URL</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">jdbc:postgresql://postgresql.devmentor-data.svc.cluster.local:5432/keycloak</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB_USERNAME</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgres</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_DB_PASSWORD</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s">postgres</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_HOSTNAME_STRICT</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">false"</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_HTTP_ENABLED</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_PROXY</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">edge"</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">http</span>
+          <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">readinessProbe</span><span class="pi">:</span>
+          <span class="na">httpGet</span><span class="pi">:</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s">/health/ready</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">60</span>
+          <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">10</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">ClusterIP</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">8080</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">http</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+</code></pre></div></div>
+
+<h3 id="33-apply-keycloak-deployment">3.3 Apply Keycloak deployment</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> keycloak-deployment.yaml
+
+<span class="c"># Wait for it to be ready</span>
+kubectl <span class="nb">wait</span> <span class="nt">--for</span><span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready pod <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>keycloak <span class="nt">-n</span> keycloak <span class="nt">--timeout</span><span class="o">=</span>300s
+
+<span class="c"># Port forward to access Keycloak UI</span>
+kubectl port-forward <span class="nt">-n</span> keycloak svc/keycloak 8080:8080
+</code></pre></div></div>
+
+<h2 id="step-4-configure-istio-authentication-policies">Step 4: Configure Istio Authentication Policies</h2>
+
+<h3 id="41-create-peerauthentication-for-mtls">4.1 Create PeerAuthentication for mTLS</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save as istio-mtls.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PeerAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">mtls</span><span class="pi">:</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">STRICT</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PeerAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor-data</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">mtls</span><span class="pi">:</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">STRICT</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PeerAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">mtls</span><span class="pi">:</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">STRICT</span>
+</code></pre></div></div>
+
+<h3 id="42-create-requestauthentication-for-jwt">4.2 Create RequestAuthentication for JWT</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save as istio-jwt-auth.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">RequestAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">jwt-auth</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">jwtRules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://keycloak.keycloak.svc.cluster.local:8080/realms/devmentor"</span>
+    <span class="na">jwksUri</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://keycloak.keycloak.svc.cluster.local:8080/realms/devmentor/protocol/openid-connect/certs"</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">RequestAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">jwt-auth</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">auth-service</span>
+  <span class="na">jwtRules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://keycloak.keycloak.svc.cluster.local:8080/realms/devmentor"</span>
+    <span class="na">jwksUri</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://keycloak.keycloak.svc.cluster.local:8080/realms/devmentor/protocol/openid-connect/certs"</span>
+</code></pre></div></div>
+
+<h3 id="43-create-authorization-policies">4.3 Create Authorization Policies</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save as istio-authz-policy.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">AuthorizationPolicy</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">allow-all-in-namespace</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">action</span><span class="pi">:</span> <span class="s">ALLOW</span>
+  <span class="na">rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">from</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">source</span><span class="pi">:</span>
+        <span class="na">namespaces</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">devmentor"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">devmentor-data"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">istio-system"</span><span class="pi">]</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">AuthorizationPolicy</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">require-jwt-for-api</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">action</span><span class="pi">:</span> <span class="s">ALLOW</span>
+  <span class="na">rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">from</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">source</span><span class="pi">:</span>
+        <span class="na">requestPrincipals</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">*"</span><span class="pi">]</span>
+    <span class="na">to</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">operation</span><span class="pi">:</span>
+        <span class="na">methods</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">GET"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">POST"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">PUT"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">DELETE"</span><span class="pi">]</span>
+  <span class="pi">-</span> <span class="na">to</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">operation</span><span class="pi">:</span>
+        <span class="na">methods</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">GET"</span><span class="pi">]</span>
+        <span class="na">paths</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/health"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">/metrics"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h3 id="44-apply-all-istio-configurations">4.4 Apply all Istio configurations</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> istio-mtls.yaml
+kubectl apply <span class="nt">-f</span> istio-jwt-auth.yaml
+kubectl apply <span class="nt">-f</span> istio-authz-policy.yaml
+
+<span class="c"># Verify configurations</span>
+kubectl get peerauthentication <span class="nt">-A</span>
+kubectl get requestauthentication <span class="nt">-A</span>
+kubectl get authorizationpolicy <span class="nt">-A</span>
+</code></pre></div></div>
+
+<h2 id="step-5-configure-keycloak-realm-and-clients">Step 5: Configure Keycloak Realm and Clients</h2>
+
+<h3 id="51-access-keycloak-admin-console">5.1 Access Keycloak Admin Console</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Port forward if not already done</span>
+kubectl port-forward <span class="nt">-n</span> keycloak svc/keycloak 8080:8080
+
+<span class="c"># Open browser</span>
+open http://localhost:8080
+<span class="c"># Login: admin / admin123!</span>
+</code></pre></div></div>
+
+<h3 id="52-create-devmentor-realm">5.2 Create DevMentor Realm</h3>
+<ol>
+  <li>Click “Create Realm”</li>
+  <li>Name: <code class="language-plaintext highlighter-rouge">devmentor</code></li>
+  <li>Click “Create”</li>
+</ol>
+
+<h3 id="53-create-client-for-frontend">5.3 Create Client for Frontend</h3>
+<ol>
+  <li>Go to Clients → Create</li>
+  <li>Client ID: <code class="language-plaintext highlighter-rouge">devmentor-frontend</code></li>
+  <li>Client Protocol: <code class="language-plaintext highlighter-rouge">openid-connect</code></li>
+  <li>Root URL: <code class="language-plaintext highlighter-rouge">http://localhost:3000</code></li>
+  <li>Valid Redirect URIs: <code class="language-plaintext highlighter-rouge">http://localhost:3000/*</code></li>
+  <li>Web Origins: <code class="language-plaintext highlighter-rouge">*</code></li>
+</ol>
+
+<h3 id="54-create-client-for-services">5.4 Create Client for Services</h3>
+<ol>
+  <li>Go to Clients → Create</li>
+  <li>Client ID: <code class="language-plaintext highlighter-rouge">devmentor-services</code></li>
+  <li>Client Protocol: <code class="language-plaintext highlighter-rouge">openid-connect</code></li>
+  <li>Access Type: <code class="language-plaintext highlighter-rouge">confidential</code></li>
+  <li>Service Accounts Enabled: <code class="language-plaintext highlighter-rouge">ON</code></li>
+  <li>Valid Redirect URIs: <code class="language-plaintext highlighter-rouge">http://localhost:*</code></li>
+</ol>
+
+<h3 id="55-create-test-users">5.5 Create Test Users</h3>
+<ol>
+  <li>Go to Users → Add User</li>
+  <li>Username: <code class="language-plaintext highlighter-rouge">developer</code></li>
+  <li>Email: <code class="language-plaintext highlighter-rouge">developer@devmentor.local</code></li>
+  <li>Save → Credentials → Set Password</li>
+</ol>
+
+<h2 id="step-6-update-auth-service-to-use-keycloak">Step 6: Update Auth Service to Use Keycloak</h2>
+
+<h3 id="61-install-dependencies">6.1 Install dependencies</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>services/auth-service
+npm <span class="nb">install </span>jsonwebtoken jwks-rsa axios
+</code></pre></div></div>
+
+<h3 id="62-update-auth-service-to-validate-keycloak-tokens">6.2 Update auth-service to validate Keycloak tokens</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// services/auth-service/keycloak.js</span>
+<span class="kd">const</span> <span class="nx">jwksClient</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jwks-rsa</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">jwt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">jwksClient</span><span class="p">({</span>
+  <span class="na">jwksUri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://keycloak.keycloak.svc.cluster.local:8080/realms/devmentor/protocol/openid-connect/certs</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">getKey</span><span class="p">(</span><span class="nx">header</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">client</span><span class="p">.</span><span class="nx">getSigningKey</span><span class="p">(</span><span class="nx">header</span><span class="p">.</span><span class="nx">kid</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">signingKey</span> <span class="o">=</span> <span class="nx">key</span><span class="p">.</span><span class="nx">publicKey</span> <span class="o">||</span> <span class="nx">key</span><span class="p">.</span><span class="nx">rsaPublicKey</span><span class="p">;</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">signingKey</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">verifyToken</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">getKey</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">audience</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor-frontend</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">issuer</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://keycloak.keycloak.svc.cluster.local:8080/realms/devmentor</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">algorithms</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">RS256</span><span class="dl">'</span><span class="p">]</span>
+    <span class="p">},</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">decoded</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="k">else</span> <span class="nx">resolve</span><span class="p">(</span><span class="nx">decoded</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">verifyToken</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="step-7-test-the-setup">Step 7: Test the Setup</h2>
+
+<h3 id="71-get-a-token-from-keycloak">7.1 Get a token from Keycloak</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get token</span>
+<span class="nv">TOKEN</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">-X</span> POST http://localhost:8080/realms/devmentor/protocol/openid-connect/token <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/x-www-form-urlencoded"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s2">"client_id=devmentor-frontend"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s2">"username=developer"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s2">"password=password123"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s2">"grant_type=password"</span> | jq <span class="nt">-r</span> <span class="s1">'.access_token'</span><span class="si">)</span>
+
+<span class="nb">echo</span> <span class="nv">$TOKEN</span>
+</code></pre></div></div>
+
+<h3 id="72-test-api-with-token">7.2 Test API with token</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Test without token (should fail)</span>
+curl http://localhost:3001/api/test
+
+<span class="c"># Test with token (should work)</span>
+curl http://localhost:3001/api/test <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<h2 id="step-8-monitoring-authentication">Step 8: Monitoring Authentication</h2>
+
+<h3 id="81-view-in-kiali">8.1 View in Kiali</h3>
+<ul>
+  <li>Check service mesh traffic</li>
+  <li>Look for mTLS badges</li>
+  <li>Check authorization policies</li>
+</ul>
+
+<h3 id="82-check-istio-logs">8.2 Check Istio logs</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check Envoy proxy logs</span>
+kubectl logs <span class="nt">-n</span> devmentor <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>ai-gateway <span class="nt">-c</span> istio-proxy <span class="nt">--tail</span><span class="o">=</span>100
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="if-sidecars-not-injecting">If sidecars not injecting:</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check webhook</span>
+kubectl get mutatingwebhookconfiguration istio-sidecar-injector <span class="nt">-o</span> yaml
+
+<span class="c"># Restart istio</span>
+kubectl rollout restart deployment/istiod <span class="nt">-n</span> istio-system
+</code></pre></div></div>
+
+<h3 id="if-postgresql-connection-fails">If PostgreSQL connection fails:</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create database for Keycloak</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> <span class="nt">-n</span> devmentor-data postgresql-0 <span class="nt">--</span> psql <span class="nt">-U</span> postgres <span class="nt">-c</span> <span class="s2">"CREATE DATABASE keycloak;"</span>
+</code></pre></div></div>
+
+<h3 id="if-keycloak-wont-start">If Keycloak won’t start:</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+kubectl logs <span class="nt">-n</span> keycloak <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>keycloak <span class="nt">--tail</span><span class="o">=</span>100
+</code></pre></div></div>
+
+<h2 id="summary">Summary</h2>
+
+<p>After completing these steps, you’ll have:</p>
+<ol>
+  <li>✅ All services with Istio sidecars</li>
+  <li>✅ mTLS between all services</li>
+  <li>✅ Keycloak for authentication</li>
+  <li>✅ JWT validation at the gateway</li>
+  <li>✅ Authorization policies enforced</li>
+  <li>✅ Full observability in Kiali</li>
+</ol>
+
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+  <li>Configure frontend to use Keycloak login</li>
+  <li>Add role-based access control (RBAC)</li>
+  <li>Set up user registration flow</li>
+  <li>Configure social logins (GitHub, Google)</li>
+  <li>Add multi-factor authentication</li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/kubernetes/ISTIO_SIDECAR_AUTH_SETUP.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

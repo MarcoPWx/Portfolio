@@ -1,0 +1,170 @@
+# QuizMentor Documentation
+Generated: 2025-08-28T14:12:19.806Z
+Total Documents: 137
+
+## Statistics
+### By Category
+- API: 105
+- USER_JOURNEY: 18
+- ARCHITECTURE: 9
+- TESTING: 3
+- AI: 1
+- GENERAL: 1
+
+## All Documents
+
+### AI
+
+- [Page snapshot](../../QuizMentor/playwright-report/data/a3c43ba8381dbb79494941ce280381a50b03db37.md)
+
+### API
+
+- [✅ Testing Infrastructure Complete](../../QuizMentor/TESTING_COMPLETE.md)
+- [🌐 Quiz Content Harvest Sources - Complete Directory](../../QuizMentor/HARVEST_SOURCES.md)
+- [🎓 QuizMentor Self-Learning System: Complete User & Developer Guide](../../QuizMentor/docs/SELF_LEARNING_USER_GUIDE.md)
+- [🎯 QuizMentor: Multi-Agent AI Quiz Generation System](../../QuizMentor/MULTI_AGENT_RUNBOOK.md)
+- [🏆 QuizMentor Testing Achievements](../../QuizMentor/TESTING_ACHIEVEMENTS.md)
+- [💰 QuizMentor Cost Minimization Guide](../../QuizMentor/docs/COST_MINIMIZATION_GUIDE.md)
+- [📊 SYSTEM STATUS & EPIC MANAGEMENT](../../QuizMentor/status/SYSTEM_STATUS.md)
+- [📋 EPIC MANAGEMENT - CURRENT STATUS](../../QuizMentor/docs/EPIC_MANAGEMENT_CURRENT.md)
+- [📚 MASTER DOCUMENTATION INDEX](../../QuizMentor/docs/MASTER_DOCUMENTATION_INDEX.md)
+- [📚 Quiz Content Harvester - Complete Runbook](../../QuizMentor/RUNBOOK.md)
+- [📚 Self-Learning System Operational Runbook](../../QuizMentor/docs/SELF_LEARNING_OPERATIONAL_RUNBOOK.md)
+- [📝 DEVELOPMENT LOG](../../QuizMentor/status/DEVLOG.md)
+- [🔄 COMPLETE USER FLOWS DOCUMENTATION](../../QuizMentor/docs/flows/ALL_USER_FLOWS.md)
+- [🔌 COMPLETE API & SERVICES REFERENCE](../../QuizMentor/docs/API_COMPLETE_REFERENCE.md)
+- [🧠 QuizMentor - AI-Powered Developer Learning Platform](../../QuizMentor/README.md)
+- [🧠 QuizMentor Ultra - Current Implementation Status](../../QuizMentor/README_CURRENT.md)
+- [🧪 COMPREHENSIVE TESTING STRATEGY](../../QuizMentor/docs/TESTING_STRATEGY_COMPLETE.md)
+- [🚀 Immediate Action Items - QuizMentor](../../QuizMentor/docs/IMMEDIATE_ACTIONS.md)
+- [🚀 Kubernetes Deployment & SRE Guide for Self-Learning System](../../QuizMentor/kubernetes/KUBERNETES_SRE_GUIDE.md)
+- [🚨 COMPLETE ERROR HANDLING & TROUBLESHOOTING GUIDE](../../QuizMentor/docs/ERROR_HANDLING_COMPLETE.md)
+- [🚨 QuizMentor Production Readiness Runbook](../../QuizMentor/docs/PRODUCTION_READINESS_RUNBOOK.md)
+- [🚨 QuizMentor REALISTIC Project Status](../../QuizMentor/docs/REALISTIC_PROJECT_STATUS.md)
+- [🟢 SYSTEM STATUS - NEW STRATEGIC DIRECTION](../../QuizMentor/docs/SYSTEM_STATUS_CURRENT.md)
+- [AI Engine Hosting Guide for QuizMentor](../../QuizMentor/docs/AI_ENGINE_HOSTING_GUIDE.md)
+- [API Routes Overview](../../QuizMentor/docs/API_ROUTES.md)
+- [Authentication System Technical Design](../../QuizMentor/docs/AUTHENTICATION_DESIGN.md)
+- [Autonomous Quiz Generation System - Cloud Deployment Guide](../../QuizMentor/cloud_infrastructure/DEPLOYMENT_GUIDE.md)
+- [Caching Patterns Runbook](../../QuizMentor/runbooks/CACHING_PATTERNS_RUNBOOK.md)
+- [Dark Patterns & Gamification Implementation Runbook](../../QuizMentor/docs/DARK_PATTERNS_IMPLEMENTATION_RUNBOOK.md)
+- [Database Optimization Runbook](../../QuizMentor/runbooks/DATABASE_OPTIMIZATION_RUNBOOK.md)
+- [Development Log](../../QuizMentor/docs/status/DEVLOG.md)
+- [DigitalOcean to Kubernetes Migration Strategy](../../QuizMentor/docs/DO_TO_KUBERNETES_MIGRATION_STRATEGY.md)
+- [E2E Testing Documentation](../../QuizMentor/e2e/README.md)
+- [Emergency Demo Fixes - Make It Run NOW](../../QuizMentor/runbooks/EMERGENCY_DEMO_FIXES.md)
+- [Enhanced Features Runbook](../../QuizMentor/docs/runbooks/ENHANCED_FEATURES_RUNBOOK.md)
+- [Epic Management](../../QuizMentor/docs/status/EPIC_MANAGEMENT.md)
+- [Integrating Your Existing QuizMentor Engine with Next.js + Supabase](../../QuizMentor/docs/INTEGRATE_EXISTING_ENGINE.md)
+- [Quiz Generation & Testing System Architecture](../../QuizMentor/SYSTEM_ARCHITECTURE.md)
+- [Quiz Optimization System - Final Summary](../../QuizMentor/docs/QUIZ_OPTIMIZATION_SUMMARY.md)
+- [Quiz Quality Analysis Summary Report](../../QuizMentor/QUIZ_QUALITY_ANALYSIS_SUMMARY.md)
+- [Quiz Quality Improvement Results](../../QuizMentor/IMPROVEMENT_RESULTS.md)
+- [QuizMentor - ACTUAL Reality Status Report](../../QuizMentor/docs/ACTUAL_REALITY_STATUS.md)
+- [QuizMentor - App Store Readiness Checklist](../../QuizMentor/docs/APP_STORE_READINESS.md)
+- [QuizMentor - Complete Project Documentation](../../QuizMentor/docs/PROJECT_OVERVIEW.md)
+- [QuizMentor - Complete User Journey & App Experience](../../QuizMentor/docs/USER_JOURNEY_COMPLETE.md)
+- [QuizMentor $200/Month Production Architecture](../../QuizMentor/infrastructure/production-200-setup.md)
+- [QuizMentor ACTUAL Development Status](../../QuizMentor/docs/ACTUAL_STATUS.md)
+- [QuizMentor Ad Service & Monetization Strategy](../../QuizMentor/docs/AD_SERVICE_MONETIZATION_STRATEGY.md)
+- [QuizMentor Admin Dashboard](../../QuizMentor/docs/ADMIN_DASHBOARD.md)
+- [QuizMentor All-Cloud Architecture on DigitalOcean ($200/month)](../../QuizMentor/infrastructure/digitalocean-cloud-setup.md)
+- [QuizMentor Animation & Performance Optimization](../../QuizMentor/docs/ANIMATION_OPTIMIZATION.md)
+- [QuizMentor API Documentation](../../QuizMentor/docs/API_DOCUMENTATION.md)
+- [QuizMentor App Store Metadata](../../QuizMentor/store/app-store-metadata.md)
+- [QuizMentor Competitive Analysis & Inspiration](../../QuizMentor/docs/COMPETITIVE_ANALYSIS.md)
+- [QuizMentor Complete Self-Hosted Architecture](../../QuizMentor/docs/COMPLETE_SELF_HOSTED_ARCHITECTURE.md)
+- [QuizMentor Complete Supabase Architecture](../../QuizMentor/infrastructure/supabase-complete-setup.md)
+- [QuizMentor Complete User Journey & Technical Architecture](../../QuizMentor/docs/USER_JOURNEY_ARCHITECTURE.md)
+- [QuizMentor Deployment & Launch Strategy](../../QuizMentor/docs/DEPLOYMENT_LAUNCH_STRATEGY.md)
+- [QuizMentor Deployment Guide](../../QuizMentor/docs/DEPLOYMENT_GUIDE.md)
+- [QuizMentor Deployment Guide - Reusing DevMentor K8s/Istio Infrastructure](../../QuizMentor/DEPLOYMENT_GUIDE.md)
+- [QuizMentor Deployment Runbook](../../QuizMentor/runbooks/DEPLOYMENT_RUNBOOK.md)
+- [QuizMentor Development Log](../../QuizMentor/devlog.md)
+- [QuizMentor Development Log](../../QuizMentor/docs/QuizMentor_DEVLOG.md)
+- [QuizMentor Development Log](../../QuizMentor/docs/devlog.md)
+- [QuizMentor Documentation](../../QuizMentor/docs/README.md)
+- [QuizMentor Documentation Architecture Blueprint](../../QuizMentor/docs/DOCUMENTATION_ARCHITECTURE_BLUEPRINT.md)
+- [QuizMentor Epic Management](../../QuizMentor/epic_management.md)
+- [QuizMentor Epic Management v2.0](../../QuizMentor/docs/QuizMentor_EPIC_MANAGEMENT_V2.md)
+- [QuizMentor Frictionless MVP - Deployment Guide](../../QuizMentor/docs/FRICTIONLESS_DEPLOYMENT.md)
+- [QuizMentor Hands-On Tutorial: From Zero to Kubernetes](../../QuizMentor/docs/HANDS_ON_TUTORIAL.md)
+- [QuizMentor Implementation Roadmap](../../QuizMentor/IMPLEMENTATION_ROADMAP.md)
+- [QuizMentor Implementation Roadmap 2025](../../QuizMentor/IMPLEMENTATION_ROADMAP_2025.md)
+- [QuizMentor Implementation Status](../../QuizMentor/docs/IMPLEMENTATION_STATUS.md)
+- [QuizMentor Integration Wiring – Quiz Flow, Delivery, Gamification](../../QuizMentor/docs/INTEGRATION_WIRING.md)
+- [QuizMentor Learning Guide: Understanding Kubernetes & Microservices](../../QuizMentor/docs/LEARNING_GUIDE.md)
+- [QuizMentor Local Development Setup](../../QuizMentor/LOCAL_DEV_README.md)
+- [QuizMentor Platform Vision: Enterprise Scale](../../QuizMentor/docs/PLATFORM_VISION.md)
+- [QuizMentor Product Differentiation & User Journey](../../QuizMentor/docs/PRODUCT_DIFFERENTIATION.md)
+- [QuizMentor Production Architecture](../../QuizMentor/docs/PRODUCTION_ARCHITECTURE.md)
+- [QuizMentor Project Status - December 2025](../../QuizMentor/docs/PROJECT_STATUS_2025.md)
+- [QuizMentor Project Summary](../../QuizMentor/PROJECT_SUMMARY.md)
+- [QuizMentor Quick Start with Supabase + Next.js](../../QuizMentor/docs/QUICK_START_SUPABASE.md)
+- [QuizMentor Scaling Runbook](../../QuizMentor/runbooks/SCALING_RUNBOOK.md)
+- [QuizMentor Simplified Architecture with Supabase](../../QuizMentor/SIMPLIFIED_ARCHITECTURE.md)
+- [QuizMentor Simplified User Journey](../../QuizMentor/docs/USER_JOURNEY_SIMPLIFIED.md)
+- [QuizMentor System Status](../../QuizMentor/docs/QuizMentor_SYSTEM_STATUS.md)
+- [QuizMentor System Status](../../QuizMentor/system_status.md)
+- [QuizMentor Test Summary](../../QuizMentor/TEST_SUMMARY.md)
+- [QuizMentor Ultra - Complete Project Status](../../QuizMentor/PROJECT_STATUS_COMPLETE.md)
+- [QuizMentor Ultra - Executive Summary](../../QuizMentor/EXECUTIVE_SUMMARY.md)
+- [QuizMentor Unified Architecture with Expo](../../QuizMentor/infrastructure/expo-unified-architecture.md)
+- [QuizMentor User Stories & Acceptance Criteria](../../QuizMentor/docs/USER_STORIES.md)
+- [README](../../QuizMentor/venv/lib/python3.13/site-packages/sklearn/externals/array_api_compat/README.md)
+- [README](../../QuizMentor/venv/lib/python3.13/site-packages/sklearn/externals/array_api_extra/README.md)
+- [Runbooks Index](../../QuizMentor/runbooks/RUNBOOKS_INDEX.md)
+- [SCDD Framework Experiment: QuizMentor Strategic Development](../../QuizMentor/docs/SCDD_EXPERIMENT.md)
+- [Self-Learning System: Testing & Production Deployment Guide](../../QuizMentor/docs/SELF_LEARNING_DEPLOYMENT_GUIDE.md)
+- [SLO Monitoring and Management Runbook](../../QuizMentor/runbooks/SLO_MONITORING_RUNBOOK.md)
+- [SRE Self-Healing and Load Testing Runbook](../../QuizMentor/runbooks/SRE_SELF_HEALING_AND_LOAD_TESTING.md)
+- [Supabase Setup Guide for QuizMentor](../../QuizMentor/docs/SUPABASE_SETUP_GUIDE.md)
+- [System Status](../../QuizMentor/docs/status/SYSTEM_STATUS.md)
+- [TDD Implementation Runbook - Making QuizMentor Actually Work](../../QuizMentor/runbooks/TDD_IMPLEMENTATION_RUNBOOK.md)
+- [Testing Strategy](../../QuizMentor/docs/testing-strategy.md)
+- [The Reality Check: Why Ultra-Cheap Will Break QuizMentor](../../QuizMentor/docs/BUDGET_VS_REALITY_ANALYSIS.md)
+- [User Registration Flow](../../QuizMentor/docs/flows/main-flows/USER_REGISTRATION_FLOW.md)
+
+### ARCHITECTURE
+
+- [🎮 Gamification System Documentation](../../QuizMentor/docs/GAMIFICATION_SYSTEM.md)
+- [For reference on dataset card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/datasetcard.md?plain=1](../../QuizMentor/venv/lib/python3.13/site-packages/huggingface_hub/templates/datasetcard_template.md)
+- [For reference on model card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/modelcard.md?plain=1](../../QuizMentor/venv/lib/python3.13/site-packages/huggingface_hub/templates/modelcard_template.md)
+- [For reference on model card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/modelcard.md?plain=1](../../QuizMentor/venv/lib/python3.13/site-packages/sentence_transformers/model_card_template.md)
+- [For reference on model card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/modelcard.md?plain=1](../../QuizMentor/venv/lib/python3.13/site-packages/sentence_transformers/sparse_encoder/model_card_template.md)
+- [NCSA Open Source License](../../QuizMentor/venv/lib/python3.13/site-packages/numpy/random/LICENSE.md)
+- [Privacy Policy](../../QuizMentor/legal/PRIVACY_POLICY.md)
+- [QuizMentor Storybook Guide](../../QuizMentor/docs/STORYBOOK_GUIDE.md)
+- [Terms of Service](../../QuizMentor/legal/TERMS_OF_SERVICE.md)
+
+### GENERAL
+
+- [README](../../QuizMentor/venv/lib/python3.13/site-packages/torchgen/packaged/autograd/README.md)
+
+### TESTING
+
+- [For reference on model card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/modelcard.md?plain=1](../../QuizMentor/venv/lib/python3.13/site-packages/sentence_transformers/cross_encoder/model_card_template.md)
+- [LICENSE](../../QuizMentor/venv/lib/python3.13/site-packages/scipy/fft/_pocketfft/LICENSE.md)
+- [Page snapshot](../../QuizMentor/test-results/quiz-mentor-QuizMentor-E2E-45bc7-e-network-errors-gracefully-chromium/error-context.md)
+
+### USER_JOURNEY
+
+- [🎨 QuizMentor Logo & Brand Assets](../../QuizMentor/docs/LOGO_BRAND_ASSETS.md)
+- [🎨 QuizMentor Premium Design System](../../QuizMentor/docs/PREMIUM_DESIGN_SYSTEM.md)
+- [🎨 QuizMentor Refined Design System](../../QuizMentor/docs/DESIGN_SYSTEM_REFINED.md)
+- [🎨 QuizMentor UX Excellence Guide](../../QuizMentor/UX_EXCELLENCE_GUIDE.md)
+- [🎯 Quiz Harvest Results - 10 Minute Test Run](../../QuizMentor/HARVEST_RESULTS.md)
+- [🎯 QuizMentor User Journey & Story Analysis](../../QuizMentor/docs/USER_JOURNEY_ANALYSIS.md)
+- [App Store Listing Information](../../QuizMentor/store/APP_STORE_LISTING.md)
+- [Data-TestID Implementation Guide](../../QuizMentor/docs/testing-testid-guide.md)
+- [How Quiz Optimization Actually Works - Simple Flow](../../QuizMentor/docs/QUIZ_OPTIMIZATION_FLOW.md)
+- [Integration Guide - Adding Smart Quiz Logic to Your App](../../QuizMentor/docs/INTEGRATION_GUIDE.md)
+- [Quiz Content Comprehensive Analysis Report](../../QuizMentor/CONTENT_ANALYSIS_REPORT.md)
+- [Quiz Optimization Research & Best Practices](../../QuizMentor/docs/QUIZ_OPTIMIZATION_RESEARCH.md)
+- [QuizMentor - Final Implementation Summary](../../QuizMentor/FINAL_SUMMARY.md)
+- [QuizMentor Epic Management](../../QuizMentor/docs/QuizMentor_EPIC_MANAGEMENT.md)
+- [QuizMentor Monetization Psychology & Dark Patterns](../../QuizMentor/docs/MONETIZATION_PSYCHOLOGY.md)
+- [QuizMentor Testing Guide](../../QuizMentor/TESTING.md)
+- [Testing Guide for QuizMentor](../../QuizMentor/docs/testing-guide.md)
+- [Testing Strategy](../../QuizMentor/docs/TESTING_STRATEGY.md)
+

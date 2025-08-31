@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI GATEWAY BETA READINESS</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/ai-gateway/AI_GATEWAY_BETA_READINESS.md</span>
+</div>
+
+<h1>AI GATEWAY BETA READINESS</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="devmentor-ai-gateway-beta-readiness-guide">DevMentor AI Gateway: Beta Readiness Guide</h1>
+
+<h2 id="-status-overview">📌 Status Overview</h2>
+<ul>
+  <li><strong>Current State</strong>: 45% Ready</li>
+  <li><strong>Target Beta Date</strong>: September 30, 2025</li>
+  <li><strong>Key Focus</strong>: Multi-provider support, security, and enterprise features</li>
+</ul>
+
+<h2 id="1️⃣-what-is-the-ai-gateway">1️⃣ What is the AI Gateway?</h2>
+
+<h3 id="simple-explanation">Simple Explanation</h3>
+<p>The AI Gateway is like a smart traffic controller for AI requests:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Without Gateway:                    With Gateway:
+Your App → OpenAI Key → OpenAI     Your App → One Key → AI Gateway → Any AI Provider
+Your App → Claude Key → Claude     
+Your App → Azure Key → Azure      
+</code></pre></div></div>
+
+<h3 id="key-benefits">Key Benefits</h3>
+<ol>
+  <li><strong>One Key, All AIs</strong>: Single API key for all AI providers</li>
+  <li><strong>Smart Routing</strong>: Automatically picks the best AI for each task</li>
+  <li><strong>Cost Control</strong>: Tracks and limits spending</li>
+  <li><strong>Safety First</strong>: Automatically protects sensitive data</li>
+</ol>
+
+<h2 id="2️⃣-current-status">2️⃣ Current Status</h2>
+
+<h3 id="whats-working-">What’s Working ✅</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Core Features</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Basic chat completions (with Ollama)</span>
+  <span class="pi">-</span> <span class="s">API authentication</span>
+  <span class="pi">-</span> <span class="s">Rate limiting</span>
+  <span class="pi">-</span> <span class="s">Health monitoring</span>
+  <span class="pi">-</span> <span class="s">Swagger documentation</span>
+
+<span class="na">Infrastructure</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Kubernetes ready</span>
+  <span class="pi">-</span> <span class="s">Redis caching</span>
+  <span class="pi">-</span> <span class="s">PostgreSQL database</span>
+  <span class="pi">-</span> <span class="s">Basic logging</span>
+</code></pre></div></div>
+
+<h3 id="whats-missing-">What’s Missing ❌</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Critical Gaps</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Multi-provider support (OpenAI, Claude, etc.)</span>
+  <span class="pi">-</span> <span class="s">Security features (PII detection, etc.)</span>
+  <span class="pi">-</span> <span class="s">Cost tracking</span>
+  <span class="pi">-</span> <span class="s">Enterprise features</span>
+
+<span class="na">Nice to Have</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Advanced caching</span>
+  <span class="pi">-</span> <span class="s">Better monitoring</span>
+  <span class="pi">-</span> <span class="s">Developer tools</span>
+</code></pre></div></div>
+
+<h2 id="3️⃣-beta-implementation-plan">3️⃣ Beta Implementation Plan</h2>
+
+<h3 id="week-1-core-providers-sept-2-8">Week 1: Core Providers (Sept 2-8)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. Add OpenAI support</span>
+<span class="kd">const</span> <span class="nx">openai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpenAIProvider</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OPENAI_KEY</span><span class="p">,</span>
+  <span class="na">models</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">gpt-4</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">gpt-3.5-turbo</span><span class="dl">'</span><span class="p">]</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Add Anthropic support</span>
+<span class="kd">const</span> <span class="nx">claude</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AnthropicProvider</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ANTHROPIC_KEY</span><span class="p">,</span>
+  <span class="na">models</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">claude-3-opus</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">claude-3-sonnet</span><span class="dl">'</span><span class="p">]</span>
+<span class="p">});</span>
+
+<span class="c1">// 3. Add provider routing</span>
+<span class="kd">const</span> <span class="nx">gateway</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AIGateway</span><span class="p">({</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">openai</span><span class="p">,</span> <span class="nx">claude</span><span class="p">,</span> <span class="nx">ollama</span><span class="p">],</span>
+  <span class="na">strategy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cost_optimized</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="week-2-security-sept-9-15">Week 2: Security (Sept 9-15)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. Add PII detection</span>
+<span class="kd">const</span> <span class="nx">security</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SecurityModule</span><span class="p">({</span>
+  <span class="na">piiDetection</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="na">contentFiltering</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Add audit logging</span>
+<span class="kd">const</span> <span class="nx">audit</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AuditLogger</span><span class="p">({</span>
+  <span class="na">database</span><span class="p">:</span> <span class="nx">postgres</span><span class="p">,</span>
+  <span class="na">retention</span><span class="p">:</span> <span class="dl">'</span><span class="s1">90d</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="week-3-enterprise-features-sept-16-22">Week 3: Enterprise Features (Sept 16-22)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. Multi-tenant support</span>
+<span class="kr">interface</span> <span class="nx">Organization</span> <span class="p">{</span>
+  <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">allowedModels</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
+  <span class="nl">monthlyBudget</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">securityLevel</span><span class="p">:</span> <span class="dl">'</span><span class="s1">standard</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">high</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">hipaa</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 2. Cost tracking</span>
+<span class="kd">const</span> <span class="nx">costs</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CostTracker</span><span class="p">({</span>
+  <span class="na">alerts</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">threshold</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="na">notification</span><span class="p">:</span> <span class="dl">'</span><span class="s1">slack+email</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="week-4-developer-experience-sept-23-30">Week 4: Developer Experience (Sept 23-30)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. TypeScript SDK</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">DevMentorAI</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@devmentor/ai-gateway</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="dl">'</span><span class="s1">your-key</span><span class="dl">'</span><span class="p">,</span>
+  <span class="c1">// Simple mode - we handle everything</span>
+  <span class="na">mode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">automatic</span><span class="dl">'</span><span class="p">,</span>
+  <span class="c1">// Optional: advanced settings</span>
+  <span class="na">settings</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">preferredProvider</span><span class="p">:</span> <span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">maxCost</span><span class="p">:</span> <span class="mi">50</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Python SDK</span>
+<span class="k">from</span> <span class="nx">devmentor_ai</span> <span class="k">import</span> <span class="nx">DevMentorAI</span>
+
+<span class="nx">ai</span> <span class="o">=</span> <span class="nx">DevMentorAI</span><span class="p">(</span>
+    <span class="nx">api_key</span><span class="o">=</span><span class="dl">'</span><span class="s1">your-key</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">mode</span><span class="o">=</span><span class="dl">'</span><span class="s1">automatic</span><span class="dl">'</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="4️⃣-how-to-use-it-beta-preview">4️⃣ How to Use It (Beta Preview)</h2>
+
+<h3 id="simple-usage">Simple Usage</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. Initialize client</span>
+<span class="kd">const</span> <span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="dl">'</span><span class="s1">your-key</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Send request</span>
+<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+  <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> 
+    <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> 
+    <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Hello!</span><span class="dl">'</span> 
+  <span class="p">}]</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="advanced-usage">Advanced Usage</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. Initialize with preferences</span>
+<span class="kd">const</span> <span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="dl">'</span><span class="s1">your-key</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">settings</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// Prefer certain providers</span>
+    <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">anthropic</span><span class="dl">'</span><span class="p">],</span>
+    <span class="c1">// Cost settings</span>
+    <span class="na">maxCostPerRequest</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
+    <span class="c1">// Safety settings</span>
+    <span class="na">safety</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">piiDetection</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="na">contentFilter</span><span class="p">:</span> <span class="dl">'</span><span class="s1">medium</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. Send complex request</span>
+<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+  <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> 
+    <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> 
+    <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Analyze this code</span><span class="dl">'</span> 
+  <span class="p">}],</span>
+  <span class="c1">// Use specific models</span>
+  <span class="na">routing</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">preferredModels</span><span class="p">:</span> <span class="p">[</span>
+      <span class="dl">'</span><span class="s1">gpt-4</span><span class="dl">'</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">claude-3-opus</span><span class="dl">'</span>
+    <span class="p">],</span>
+    <span class="na">strategy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">quality</span><span class="dl">'</span>  <span class="c1">// vs 'cost' or 'speed'</span>
+  <span class="p">},</span>
+  <span class="c1">// Enable caching</span>
+  <span class="na">cache</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">ttl</span><span class="p">:</span> <span class="mi">3600</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="5️⃣-beta-success-criteria">5️⃣ Beta Success Criteria</h2>
+
+<h3 id="must-have-">Must Have ✅</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Providers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">At least 3 major providers integrated</span>
+  <span class="pi">-</span> <span class="s">Automatic failover between providers</span>
+  <span class="pi">-</span> <span class="s">Cost-based routing</span>
+
+<span class="na">Security</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">PII detection working</span>
+  <span class="pi">-</span> <span class="s">Basic content filtering</span>
+  <span class="pi">-</span> <span class="s">API key management</span>
+  <span class="pi">-</span> <span class="s">Audit logging</span>
+
+<span class="na">Performance</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">&lt; 200ms added latency</span>
+  <span class="pi">-</span> <span class="s">99.9% uptime</span>
+  <span class="pi">-</span> <span class="s">Error rate &lt; 0.1%</span>
+</code></pre></div></div>
+
+<h3 id="should-have-">Should Have 🟡</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Features</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Semantic caching</span>
+  <span class="pi">-</span> <span class="s">Cost tracking dashboard</span>
+  <span class="pi">-</span> <span class="s">Basic monitoring</span>
+  <span class="pi">-</span> <span class="s">Simple SDKs</span>
+
+<span class="na">Enterprise</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Multi-tenant support</span>
+  <span class="pi">-</span> <span class="s">Usage quotas</span>
+  <span class="pi">-</span> <span class="s">Basic team management</span>
+</code></pre></div></div>
+
+<h3 id="nice-to-have-">Nice to Have 🔵</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Advanced</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">A/B testing</span>
+  <span class="pi">-</span> <span class="s">Custom model fine-tuning</span>
+  <span class="pi">-</span> <span class="s">Advanced analytics</span>
+  <span class="pi">-</span> <span class="s">Mobile SDKs</span>
+</code></pre></div></div>
+
+<h2 id="6️⃣-setup-guide">6️⃣ Setup Guide</h2>
+
+<h3 id="1-basic-setup">1. Basic Setup</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Install from npm</span>
+npm <span class="nb">install</span> @devmentor/ai-gateway
+
+<span class="c"># 2. Set up environment</span>
+<span class="nb">cat</span> <span class="o">&gt;</span> .env <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh">
+DEVMENTOR_API_KEY=your-key
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+</span><span class="no">EOF
+
+</span><span class="c"># 3. Initialize gateway</span>
+const gateway <span class="o">=</span> new DevMentorAI<span class="o">({</span>
+  apiKey: process.env.DEVMENTOR_API_KEY
+<span class="o">})</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="2-docker-setup">2. Docker Setup</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.yml</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">ai-gateway</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/ai-gateway:beta</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">DEVMENTOR_API_KEY=${DEVMENTOR_API_KEY}</span>
+      <span class="pi">-</span> <span class="s">OPENAI_API_KEY=${OPENAI_API_KEY}</span>
+      <span class="pi">-</span> <span class="s">ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+      <span class="pi">-</span> <span class="s">postgres</span>
+
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:7</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6379:6379"</span>
+
+  <span class="na">postgres</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres:15</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_PASSWORD=password</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">pgdata:/var/lib/postgresql/data</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">pgdata</span><span class="pi">:</span>
+</code></pre></div></div>
+
+<h2 id="7️⃣-next-steps">7️⃣ Next Steps</h2>
+
+<h3 id="immediate-today">Immediate (Today)</h3>
+<ol>
+  <li>Set up development environment</li>
+  <li>Add OpenAI integration</li>
+  <li>Start PII detection</li>
+</ol>
+
+<h3 id="this-week">This Week</h3>
+<ol>
+  <li>Complete OpenAI integration</li>
+  <li>Add Anthropic support</li>
+  <li>Basic security features</li>
+</ol>
+
+<h3 id="next-week">Next Week</h3>
+<ol>
+  <li>Cost tracking</li>
+  <li>Multi-tenant support</li>
+  <li>Developer documentation</li>
+</ol>
+
+<h2 id="8️⃣-support--resources">8️⃣ Support &amp; Resources</h2>
+
+<h3 id="documentation">Documentation</h3>
+<ul>
+  <li><a href="./docs/quickstart.md">Quick Start Guide</a></li>
+  <li><a href="./docs/api-reference.md">API Reference</a></li>
+  <li><a href="./docs/security.md">Security Guide</a></li>
+  <li><a href="./docs/best-practices.md">Best Practices</a></li>
+</ul>
+
+<h3 id="contact">Contact</h3>
+<ul>
+  <li><strong>Slack</strong>: #ai-gateway-beta</li>
+  <li><strong>Email</strong>: ai-gateway@devmentor.ai</li>
+  <li><strong>GitHub</strong>: github.com/devmentor/ai-gateway</li>
+</ul>
+
+<hr />
+
+<p><em>Document Version: 2.0.0</em><br />
+<em>Last Updated: August 18, 2025</em><br />
+<em>Contact: devmentor-ai@devmentor.ai</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/ai-gateway/AI_GATEWAY_BETA_READINESS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

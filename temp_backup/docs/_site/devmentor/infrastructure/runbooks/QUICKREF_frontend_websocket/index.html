@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUICKREF frontend websocket | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/QUICKREF_frontend_websocket.md</span>
+</div>
+
+<h1>QUICKREF frontend websocket</h1>
+
+
+<h1 id="quick-reference-frontend--websocket-operations">Quick Reference: Frontend &amp; WebSocket Operations</h1>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>For on-call engineers</strong></td>
+      <td><strong>Print this page</strong></td>
+      <td><strong>Keep it handy</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-emergency-commands-copy--paste">🚨 Emergency Commands (Copy &amp; Paste)</h2>
+
+<h3 id="websocket-down---switch-to-polling-2-min-fix">WebSocket Down - Switch to Polling (2 min fix)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nb">set env </span>deployment/frontend <span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">false</span> <span class="nt">-n</span> devmentor-app
+kubectl rollout restart deployment/frontend <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="frontend-not-loading---quick-rollback-3-min-fix">Frontend Not Loading - Quick Rollback (3 min fix)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl rollout undo deployment/frontend <span class="nt">-n</span> devmentor-app
+kubectl rollout status deployment/frontend <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="high-error-rate---enable-debug-mode">High Error Rate - Enable Debug Mode</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nb">set env </span>deployment/frontend <span class="nv">NEXT_PUBLIC_DEBUG</span><span class="o">=</span><span class="nb">true</span> <span class="nt">-n</span> devmentor-app
+kubectl logs deployment/frontend <span class="nt">-n</span> devmentor-app <span class="nt">--tail</span><span class="o">=</span>500 | <span class="nb">grep </span>ERROR
+</code></pre></div></div>
+
+<h3 id="performance-issues---scale-up">Performance Issues - Scale Up</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl scale deployment/frontend <span class="nt">--replicas</span><span class="o">=</span>5 <span class="nt">-n</span> devmentor-app
+kubectl scale deployment/websocket-gateway <span class="nt">--replicas</span><span class="o">=</span>3 <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h2 id="-health-check-urls">📊 Health Check URLs</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Health Check</th>
+      <th>Expected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Frontend Dev</td>
+      <td><code class="language-plaintext highlighter-rouge">curl http://localhost:3001/api/health</code></td>
+      <td>200 OK</td>
+    </tr>
+    <tr>
+      <td>Frontend Prod</td>
+      <td><code class="language-plaintext highlighter-rouge">curl https://devmentor.io/api/health</code></td>
+      <td>200 OK</td>
+    </tr>
+    <tr>
+      <td>WebSocket Dev</td>
+      <td><code class="language-plaintext highlighter-rouge">curl http://localhost:8002/health</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{"status":"healthy"}</code></td>
+    </tr>
+    <tr>
+      <td>WebSocket Prod</td>
+      <td><code class="language-plaintext highlighter-rouge">curl https://ws.devmentor.io/health</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{"status":"healthy"}</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-quick-diagnostics">🔍 Quick Diagnostics</h2>
+
+<h3 id="is-websocket-working">Is WebSocket Working?</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check connection count</span>
+curl http://websocket-gateway:8002/metrics | <span class="nb">grep </span>connections
+
+<span class="c"># Check logs for errors</span>
+kubectl logs deployment/websocket-gateway <span class="nt">-n</span> devmentor-app <span class="nt">--tail</span><span class="o">=</span>50 | <span class="nb">grep </span>ERROR
+
+<span class="c"># Test from browser console</span>
+websocketService.getConnectionStatus<span class="o">()</span>  // Should <span class="k">return </span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="is-frontend-healthy">Is Frontend Healthy?</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check pod status</span>
+kubectl get pods <span class="nt">-n</span> devmentor-app | <span class="nb">grep </span>frontend
+
+<span class="c"># Check recent errors</span>
+kubectl logs deployment/frontend <span class="nt">-n</span> devmentor-app <span class="nt">--tail</span><span class="o">=</span>100 | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"ERROR|CRASH"</span>
+
+<span class="c"># Check memory usage</span>
+kubectl top pod <span class="nt">-n</span> devmentor-app | <span class="nb">grep </span>frontend
+</code></pre></div></div>
+
+<h2 id="-common-fixes">🔧 Common Fixes</h2>
+
+<h3 id="problem-polling-badge-instead-of-live">Problem: “Polling” badge instead of “Live”</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Fix 1: Restart WebSocket gateway</span>
+kubectl rollout restart deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Fix 2: Check WebSocket URL config</span>
+kubectl get deployment frontend <span class="nt">-o</span> yaml | <span class="nb">grep </span>WEBSOCKET_URL
+
+<span class="c"># Fix 3: Check CORS settings</span>
+kubectl <span class="nb">exec </span>deployment/websocket-gateway <span class="nt">--</span> <span class="nb">cat </span>config.json | <span class="nb">grep </span>cors
+</code></pre></div></div>
+
+<h3 id="problem-tasks-not-updating-in-real-time">Problem: Tasks not updating in real-time</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Fix 1: Clear Redis cache</span>
+kubectl <span class="nb">exec </span>deployment/redis <span class="nt">--</span> redis-cli FLUSHDB
+
+<span class="c"># Fix 2: Restart both services</span>
+kubectl rollout restart deployment/websocket-gateway deployment/frontend <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Fix 3: Check room subscriptions (browser console)</span>
+websocketService.joinProject<span class="o">(</span><span class="s1">'project-id'</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="problem-high-memory-usage">Problem: High memory usage</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Fix 1: Restart with limits</span>
+kubectl <span class="nb">set </span>resources deployment/websocket-gateway <span class="nt">--limits</span><span class="o">=</span><span class="nv">memory</span><span class="o">=</span>512Mi <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Fix 2: Clean connections</span>
+kubectl <span class="nb">exec </span>deployment/websocket-gateway <span class="nt">--</span> node scripts/cleanup-connections.js
+
+<span class="c"># Fix 3: Scale horizontally instead</span>
+kubectl scale deployment/websocket-gateway <span class="nt">--replicas</span><span class="o">=</span>3 <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h2 id="-who-to-call">📱 Who to Call</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Primary</th>
+      <th>Backup</th>
+      <th>Escalation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Frontend Down</td>
+      <td>Frontend On-call</td>
+      <td>Platform On-call</td>
+      <td>CTO</td>
+    </tr>
+    <tr>
+      <td>WebSocket Down</td>
+      <td>Platform On-call</td>
+      <td>Frontend On-call</td>
+      <td>CTO</td>
+    </tr>
+    <tr>
+      <td>Data Loss</td>
+      <td>Backend On-call</td>
+      <td>Database Admin</td>
+      <td>CTO</td>
+    </tr>
+    <tr>
+      <td>Security</td>
+      <td>Security On-call</td>
+      <td>Platform Lead</td>
+      <td>CISO</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>PagerDuty</strong>: +1-555-DEVMENT<br />
+<strong>Slack</strong>: #incident-response<br />
+<strong>Status Page</strong>: https://status.devmentor.io</p>
+
+<h2 id="-decision-tree">🎯 Decision Tree</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Frontend Issue?
+├─ Loading at all?
+│  ├─ No → Rollback deployment
+│  └─ Yes → Check console errors
+│     ├─ API errors → Check backend services
+│     └─ JS errors → Check recent commits
+└─ Performance issue?
+   ├─ Slow loading → Check bundle size, CDN
+   └─ Slow updates → Check WebSocket
+      ├─ Not connected → Switch to polling
+      └─ Connected → Check server load
+</code></pre></div></div>
+
+<h2 id="-monitoring-dashboard-links">📝 Monitoring Dashboard Links</h2>
+
+<ul>
+  <li><strong>Grafana</strong>: https://grafana.devmentor.io/d/frontend</li>
+  <li><strong>WebSocket Metrics</strong>: https://grafana.devmentor.io/d/websocket</li>
+  <li><strong>Error Tracking</strong>: https://sentry.devmentor.io/projects/frontend</li>
+  <li><strong>Uptime</strong>: https://uptime.devmentor.io</li>
+</ul>
+
+<h2 id="-performance-thresholds">⚡ Performance Thresholds</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Good</th>
+      <th>Warning</th>
+      <th>Critical</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Page Load</td>
+      <td>&lt;3s</td>
+      <td>3-5s</td>
+      <td>&gt;5s</td>
+      <td>Check CDN, bundle size</td>
+    </tr>
+    <tr>
+      <td>WebSocket Latency</td>
+      <td>&lt;100ms</td>
+      <td>100-500ms</td>
+      <td>&gt;500ms</td>
+      <td>Scale WebSocket servers</td>
+    </tr>
+    <tr>
+      <td>Error Rate</td>
+      <td>&lt;1%</td>
+      <td>1-5%</td>
+      <td>&gt;5%</td>
+      <td>Check logs, rollback</td>
+    </tr>
+    <tr>
+      <td>Memory Usage</td>
+      <td>&lt;70%</td>
+      <td>70-85%</td>
+      <td>&gt;85%</td>
+      <td>Restart pods</td>
+    </tr>
+    <tr>
+      <td>CPU Usage</td>
+      <td>&lt;60%</td>
+      <td>60-80%</td>
+      <td>&gt;80%</td>
+      <td>Scale horizontally</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-rollback-procedures">🔄 Rollback Procedures</h2>
+
+<h3 id="frontend-rollback">Frontend Rollback</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># List versions</span>
+kubectl rollout <span class="nb">history </span>deployment/frontend <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Rollback to previous</span>
+kubectl rollout undo deployment/frontend <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Rollback to specific version</span>
+kubectl rollout undo deployment/frontend <span class="nt">--to-revision</span><span class="o">=</span>5 <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="websocket-rollback">WebSocket Rollback</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Quick rollback</span>
+kubectl rollout undo deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Verify</span>
+kubectl rollout status deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h2 id="️-useful-browser-console-commands">🛠️ Useful Browser Console Commands</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Check WebSocket status</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">getConnectionStatus</span><span class="p">()</span>
+
+<span class="c1">// Manually reconnect</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">()</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">connect</span><span class="p">()</span>
+
+<span class="c1">// Join project room</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">joinProject</span><span class="p">(</span><span class="dl">'</span><span class="s1">project-123</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">// Enable debug logging</span>
+<span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="dl">'</span><span class="s1">DEBUG</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">socket.io-client:*</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">// Check environment</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="p">)</span>
+
+<span class="c1">// Force refresh data</span>
+<span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-pre-incident-checklist">📋 Pre-incident Checklist</h2>
+
+<p>Before declaring an incident:</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check status page for known issues</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify from multiple locations (VPN on/off)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check recent deployments (last 2 hours)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test in incognito mode</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check monitoring dashboards</li>
+</ul>
+
+<h2 id="-incident-response-steps">🔴 Incident Response Steps</h2>
+
+<ol>
+  <li><strong>Acknowledge</strong> (2 min)
+    <ul>
+      <li>Respond in #incident-response</li>
+      <li>Create incident channel #inc-YYYYMMDD-description</li>
+    </ul>
+  </li>
+  <li><strong>Assess</strong> (5 min)
+    <ul>
+      <li>Impact: How many users affected?</li>
+      <li>Scope: Which features broken?</li>
+      <li>Severity: P1/P2/P3?</li>
+    </ul>
+  </li>
+  <li><strong>Mitigate</strong> (10 min)
+    <ul>
+      <li>Try quick fixes first</li>
+      <li>Consider rollback</li>
+      <li>Enable degraded mode if needed</li>
+    </ul>
+  </li>
+  <li><strong>Communicate</strong> (ongoing)
+    <ul>
+      <li>Update status page</li>
+      <li>Post in #general every 30 min</li>
+      <li>Email for P1 incidents</li>
+    </ul>
+  </li>
+  <li><strong>Resolve</strong> (varies)
+    <ul>
+      <li>Fix root cause</li>
+      <li>Verify resolution</li>
+      <li>Monitor for 30 min</li>
+    </ul>
+  </li>
+  <li><strong>Review</strong> (next day)
+    <ul>
+      <li>Schedule post-mortem</li>
+      <li>Document lessons learned</li>
+      <li>Update runbooks</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<p><strong>Remember</strong>:</p>
+<ul>
+  <li>🚀 <strong>Fast mitigation &gt; perfect fix</strong></li>
+  <li>📢 <strong>Over-communicate during incidents</strong></li>
+  <li>🔄 <strong>When in doubt, rollback</strong></li>
+  <li>📝 <strong>Document everything</strong></li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Last Updated</strong>: 2025-08-25</td>
+      <td><strong>Version</strong>: 1.0</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/QUICKREF_frontend_websocket.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

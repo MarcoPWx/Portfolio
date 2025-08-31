@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLI GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/learning-engine/CLI_GUIDE.md</span>
+</div>
+
+<h1>CLI GUIDE</h1>
+
+
+<h1 id="-personal-learning-engine-cli-guide">🎮 Personal Learning Engine CLI Guide</h1>
+<h2 id="configure-your-ai-to-learn-your-coding-style">Configure Your AI to Learn Your Coding Style</h2>
+
+<blockquote>
+  <p><strong>Interactive CLI for personalizing your AI development assistant</strong></p>
+</blockquote>
+
+<p>The Personal Learning Engine CLI allows you to configure how the AI learns your coding patterns, design preferences, and development style, creating a truly personalized AI assistant.</p>
+
+<hr />
+
+<h2 id="-quick-start">🚀 <strong>Quick Start</strong></h2>
+
+<h3 id="first-time-setup"><strong>First Time Setup</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Interactive setup wizard</span>
+personal-learning setup
+
+<span class="c"># Quick setup with defaults</span>
+personal-learning setup <span class="nt">--quick</span>
+
+<span class="c"># Advanced setup with all options</span>
+personal-learning setup <span class="nt">--advanced</span>
+</code></pre></div></div>
+
+<h3 id="check-your-profile"><strong>Check Your Profile</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View current profile</span>
+personal-learning profile show
+
+<span class="c"># View learning progress</span>
+personal-learning analyze progress
+
+<span class="c"># See discovered patterns</span>
+personal-learning analyze patterns
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-configuration-commands">🎯 <strong>Configuration Commands</strong></h2>
+
+<h3 id="-coding-style-configuration"><strong>🎨 Coding Style Configuration</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Configure your coding style preferences</span>
+personal-learning configure coding-style
+</code></pre></div></div>
+
+<p><strong>What it configures:</strong></p>
+<ul>
+  <li>Variable naming conventions (camelCase, snake_case, etc.)</li>
+  <li>Function declaration style (arrow functions vs declarations)</li>
+  <li>TypeScript preferences</li>
+  <li>Code quality rules and principles</li>
+  <li>Maximum complexity preferences</li>
+</ul>
+
+<p><strong>Example interaction:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>🎨 Coding Style Configuration
+? Variable naming convention: camelCase
+? Function declaration style: arrow functions  
+? Prefer TypeScript over JavaScript? Yes
+? Maximum function complexity (cyclomatic): 10
+? Important code quality rules: 
+  ✓ Single Responsibility Principle
+  ✓ DRY (Don't Repeat Yourself)
+  ✓ KISS (Keep It Simple, Stupid)
+</code></pre></div></div>
+
+<h3 id="️-design-patterns-configuration"><strong>🏗️ Design Patterns Configuration</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Set preferred design patterns and architectures</span>
+personal-learning configure design-patterns
+</code></pre></div></div>
+
+<p><strong>What it configures:</strong></p>
+<ul>
+  <li>Favorite design patterns (Observer, Strategy, Factory, etc.)</li>
+  <li>Architectural preferences (Microservices, Clean Architecture, etc.)</li>
+  <li>Scalability approach and philosophy</li>
+  <li>Domain-driven design preferences</li>
+</ul>
+
+<h3 id="️-tools--technologies"><strong>🛠️ Tools &amp; Technologies</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Configure preferred tools and tech stack</span>
+personal-learning configure tools
+</code></pre></div></div>
+
+<p><strong>What it configures:</strong></p>
+<ul>
+  <li>Preferred development environments (VS Code, IntelliJ, etc.)</li>
+  <li>Deployment and DevOps tools (Docker, Kubernetes, AWS, etc.)</li>
+  <li>Database preferences (SQL, NoSQL, Graph, etc.)</li>
+  <li>Testing frameworks and approaches</li>
+</ul>
+
+<h3 id="-communication-preferences"><strong>💬 Communication Preferences</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Set how you prefer to receive explanations</span>
+personal-learning configure communication
+</code></pre></div></div>
+
+<p><strong>What it configures:</strong></p>
+<ul>
+  <li>Explanation style (brief, detailed, step-by-step)</li>
+  <li>Technical depth level (1-10 scale)</li>
+  <li>Whether to include alternative approaches</li>
+  <li>Feedback frequency preferences</li>
+</ul>
+
+<h3 id="-learning-goals"><strong>🎯 Learning Goals</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Define your learning objectives</span>
+personal-learning configure learning-goals
+</code></pre></div></div>
+
+<p><strong>What it configures:</strong></p>
+<ul>
+  <li>Short-term learning goals (3-6 months)</li>
+  <li>Long-term learning goals (6+ months)</li>
+  <li>Preferred learning methods</li>
+  <li>Weekly learning time allocation</li>
+</ul>
+
+<hr />
+
+<h2 id="-profile-management">👤 <strong>Profile Management</strong></h2>
+
+<h3 id="create--switch-profiles"><strong>Create &amp; Switch Profiles</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create a new profile</span>
+personal-learning profile create <span class="s2">"work-profile"</span>
+
+<span class="c"># Create profile copying from existing</span>
+personal-learning profile create <span class="s2">"personal-dev"</span> <span class="nt">--copy-from</span> work-profile
+
+<span class="c"># Switch between profiles</span>
+personal-learning profile switch work-profile
+
+<span class="c"># List all profiles</span>
+personal-learning profile list
+
+<span class="c"># Show detailed profile info</span>
+personal-learning profile show <span class="nt">--verbose</span>
+</code></pre></div></div>
+
+<h3 id="profile-use-cases"><strong>Profile Use Cases</strong></h3>
+<ul>
+  <li><strong>Work Profile</strong>: Enterprise patterns, conservative choices</li>
+  <li><strong>Personal Profile</strong>: Experimental tech, cutting-edge patterns</li>
+  <li><strong>Learning Profile</strong>: Focus on skill development areas</li>
+  <li><strong>Project-Specific</strong>: Tailored for specific tech stacks</li>
+</ul>
+
+<hr />
+
+<h2 id="-analysis-commands">🔍 <strong>Analysis Commands</strong></h2>
+
+<h3 id="-code-pattern-analysis"><strong>📊 Code Pattern Analysis</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Analyze current repository</span>
+personal-learning analyze code
+
+<span class="c"># Analyze specific repository</span>
+personal-learning analyze code <span class="nt">--repo</span> /path/to/project
+
+<span class="c"># Analyze recent commits only</span>
+personal-learning analyze code <span class="nt">--since</span> <span class="s2">"2024-01-01"</span>
+
+<span class="c"># Analyze by specific author</span>
+personal-learning analyze code <span class="nt">--author</span> <span class="s2">"your-name"</span>
+</code></pre></div></div>
+
+<p><strong>What it analyzes:</strong></p>
+<ul>
+  <li>Naming conventions and consistency</li>
+  <li>Function complexity patterns</li>
+  <li>File organization structures</li>
+  <li>Git commit patterns and frequency</li>
+  <li>Code reuse and refactoring habits</li>
+</ul>
+
+<h3 id="-knowledge-gap-detection"><strong>🧩 Knowledge Gap Detection</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Identify learning opportunities</span>
+personal-learning analyze gaps
+
+<span class="c"># Focus on specific domain</span>
+personal-learning analyze gaps <span class="nt">--domain</span> <span class="s2">"system-design"</span>
+</code></pre></div></div>
+
+<p><strong>What it identifies:</strong></p>
+<ul>
+  <li>Patterns you avoid or struggle with</li>
+  <li>Technologies mentioned but not deeply used</li>
+  <li>Areas where you rely heavily on assistance</li>
+  <li>Skills gaps based on industry standards</li>
+</ul>
+
+<h3 id="-learning-progress"><strong>📈 Learning Progress</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View learning progress</span>
+personal-learning analyze progress
+
+<span class="c"># Specific timeframe</span>
+personal-learning analyze progress <span class="nt">--timeframe</span> week
+personal-learning analyze progress <span class="nt">--timeframe</span> year
+</code></pre></div></div>
+
+<p><strong>What it shows:</strong></p>
+<ul>
+  <li>Patterns learned over time</li>
+  <li>Accuracy improvement metrics</li>
+  <li>Goals achieved vs total goals</li>
+  <li>Time spent learning and practicing</li>
+</ul>
+
+<hr />
+
+<h2 id="-get-personalized-suggestions">💡 <strong>Get Personalized Suggestions</strong></h2>
+
+<h3 id="-book-recommendations"><strong>📚 Book Recommendations</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get book recommendations based on your gaps</span>
+personal-learning suggest books
+
+<span class="c"># Focus on specific domain</span>
+personal-learning suggest books <span class="nt">--domain</span> <span class="s2">"architecture"</span>
+
+<span class="c"># Filter by skill level</span>
+personal-learning suggest books <span class="nt">--level</span> intermediate
+</code></pre></div></div>
+
+<h3 id="️-pattern-recommendations"><strong>🏗️ Pattern Recommendations</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get design pattern suggestions for current work</span>
+personal-learning suggest patterns
+
+<span class="c"># With specific context</span>
+personal-learning suggest patterns <span class="nt">--context</span> <span class="s2">"building-api"</span>
+</code></pre></div></div>
+
+<h3 id="️-tool-recommendations"><strong>🛠️ Tool Recommendations</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get tool suggestions</span>
+personal-learning suggest tools
+
+<span class="c"># For specific purpose</span>
+personal-learning suggest tools <span class="nt">--for</span> <span class="s2">"testing"</span>
+</code></pre></div></div>
+
+<h3 id="-code-improvements"><strong>✨ Code Improvements</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get improvement suggestions for current code</span>
+personal-learning suggest improvements
+
+<span class="c"># For specific file</span>
+personal-learning suggest improvements src/components/MyComponent.js
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-learning-management">🤖 <strong>Learning Management</strong></h2>
+
+<h3 id="-start-learning"><strong>🎓 Start Learning</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start autonomous learning</span>
+personal-learning learn start
+
+<span class="c"># Set learning mode</span>
+personal-learning learn start <span class="nt">--mode</span> aggressive
+personal-learning learn start <span class="nt">--mode</span> passive
+</code></pre></div></div>
+
+<p><strong>Learning Modes:</strong></p>
+<ul>
+  <li><strong>Passive</strong>: Observes patterns without active suggestions</li>
+  <li><strong>Active</strong>: Provides suggestions and learns from feedback</li>
+  <li><strong>Aggressive</strong>: Actively suggests improvements and alternatives</li>
+</ul>
+
+<h3 id="-monitor-learning"><strong>📊 Monitor Learning</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check learning status</span>
+personal-learning learn status
+
+<span class="c"># View live dashboard</span>
+personal-learning dashboard <span class="nt">--live</span>
+
+<span class="c"># Open web dashboard</span>
+personal-learning dashboard <span class="nt">--web</span>
+</code></pre></div></div>
+
+<h3 id="-provide-feedback"><strong>👍 Provide Feedback</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Rate AI suggestions (1-5 scale)</span>
+personal-learning learn feedback 5 <span class="s2">"Great suggestion!"</span>
+personal-learning learn feedback 2 <span class="s2">"Not relevant to my style"</span>
+</code></pre></div></div>
+
+<h3 id="-reset-learning"><strong>🔄 Reset Learning</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Reset all learning data</span>
+personal-learning learn reset
+
+<span class="c"># Keep preferences but reset learning</span>
+personal-learning learn reset <span class="nt">--keep-preferences</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-dashboard--analytics">📊 <strong>Dashboard &amp; Analytics</strong></h2>
+
+<h3 id="-view-statistics"><strong>📈 View Statistics</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Show detailed learning statistics</span>
+personal-learning stats
+
+<span class="c"># Export in different formats</span>
+personal-learning stats <span class="nt">--format</span> json
+personal-learning stats <span class="nt">--format</span> yaml
+</code></pre></div></div>
+
+<h3 id="-export-data"><strong>📤 Export Data</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Export learning data</span>
+personal-learning <span class="nb">export </span>json <span class="nt">--output</span> my-profile.json
+personal-learning <span class="nb">export </span>csv <span class="nt">--output</span> learning-data.csv
+personal-learning <span class="nb">export </span>pdf <span class="nt">--output</span> learning-report.pdf
+
+<span class="c"># Include specific data types</span>
+personal-learning <span class="nb">export </span>json <span class="nt">--include</span> <span class="s2">"preferences,patterns,progress"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-example-workflows">🎯 <strong>Example Workflows</strong></h2>
+
+<h3 id="-setting-up-for-new-project"><strong>🔧 Setting Up for New Project</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create project-specific profile</span>
+personal-learning profile create <span class="s2">"react-native-project"</span> <span class="nt">--copy-from</span> work-profile
+
+<span class="c"># Configure for React Native specifics</span>
+personal-learning configure tools
+<span class="c"># Select: React Native, Expo, TypeScript, Jest</span>
+
+personal-learning configure design-patterns  
+<span class="c"># Select: Component patterns, State management, etc.</span>
+
+<span class="c"># Start learning in active mode</span>
+personal-learning learn start <span class="nt">--mode</span> active
+</code></pre></div></div>
+
+<h3 id="-focused-learning-session"><strong>📚 Focused Learning Session</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Set learning goals</span>
+personal-learning configure learning-goals
+<span class="c"># Add: "Master TypeScript advanced patterns"</span>
+
+<span class="c"># Analyze current gaps</span>
+personal-learning analyze gaps <span class="nt">--domain</span> typescript
+
+<span class="c"># Get book recommendations</span>
+personal-learning suggest books <span class="nt">--domain</span> typescript <span class="nt">--level</span> advanced
+
+<span class="c"># Start focused learning</span>
+personal-learning learn start <span class="nt">--mode</span> aggressive
+</code></pre></div></div>
+
+<h3 id="-code-review-preparation"><strong>🔍 Code Review Preparation</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Analyze recent work</span>
+personal-learning analyze code <span class="nt">--since</span> <span class="s2">"last week"</span>
+
+<span class="c"># Get improvement suggestions</span>
+personal-learning suggest improvements
+
+<span class="c"># Check consistency with your patterns</span>
+personal-learning analyze patterns <span class="nt">--category</span> consistency
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️-advanced-configuration">⚙️ <strong>Advanced Configuration</strong></h2>
+
+<h3 id="-custom-learning-parameters"><strong>🔧 Custom Learning Parameters</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Edit advanced settings (creates profile-specific config)</span>
+personal-learning configure advanced
+</code></pre></div></div>
+
+<p><strong>Advanced options:</strong></p>
+<ul>
+  <li>Learning rate (how fast to adapt)</li>
+  <li>Confidence threshold (when to make suggestions)</li>
+  <li>Pattern sensitivity (how strict pattern matching is)</li>
+  <li>Explanation depth preference</li>
+  <li>Custom code quality rules</li>
+</ul>
+
+<h3 id="️-importexport-configurations"><strong>🗂️ Import/Export Configurations</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Export current configuration</span>
+personal-learning <span class="nb">export </span>config <span class="nt">--output</span> my-config.json
+
+<span class="c"># Import configuration</span>
+personal-learning import config my-config.json
+
+<span class="c"># Share configuration with team</span>
+personal-learning <span class="nb">export </span>config <span class="nt">--team-safe</span> <span class="nt">--output</span> team-config.json
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-troubleshooting">🚨 <strong>Troubleshooting</strong></h2>
+
+<h3 id="common-issues"><strong>Common Issues</strong></h3>
+
+<p><strong>CLI not found:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Make sure it's executable</span>
+<span class="nb">chmod</span> +x src/cli.js
+
+<span class="c"># Add to PATH or use full path</span>
+./src/cli.js setup
+</code></pre></div></div>
+
+<p><strong>Permission errors:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check config directory permissions</span>
+<span class="nb">ls</span> <span class="nt">-la</span> ~/.personal-learning/
+
+<span class="c"># Reset permissions if needed</span>
+<span class="nb">chmod</span> <span class="nt">-R</span> 755 ~/.personal-learning/
+</code></pre></div></div>
+
+<p><strong>Git analysis fails:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Ensure you're in a Git repository</span>
+git status
+
+<span class="c"># Check if repository has commits</span>
+git log <span class="nt">--oneline</span> <span class="nt">-n</span> 5
+</code></pre></div></div>
+
+<p><strong>Learning data corruption:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Reset learning data</span>
+personal-learning learn reset <span class="nt">--force</span>
+
+<span class="c"># Start fresh setup</span>
+personal-learning setup <span class="nt">--advanced</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-tips-for-best-results">🎉 <strong>Tips for Best Results</strong></h2>
+
+<h3 id="-effective-configuration"><strong>🎯 Effective Configuration</strong></h3>
+<ol>
+  <li><strong>Be specific</strong> - Don’t choose “mixed” or “context-dependent” unless necessary</li>
+  <li><strong>Set realistic goals</strong> - Start with 1-2 learning areas</li>
+  <li><strong>Provide feedback</strong> - Rate suggestions to improve accuracy</li>
+  <li><strong>Use multiple profiles</strong> - Different contexts need different settings</li>
+</ol>
+
+<h3 id="-maximizing-learning"><strong>📈 Maximizing Learning</strong></h3>
+<ol>
+  <li><strong>Analyze regularly</strong> - Run code analysis weekly</li>
+  <li><strong>Review suggestions</strong> - Check what the AI recommends daily</li>
+  <li><strong>Update goals</strong> - Revise learning goals monthly</li>
+  <li><strong>Track progress</strong> - Monitor learning metrics for motivation</li>
+</ol>
+
+<h3 id="-iterative-improvement"><strong>🔄 Iterative Improvement</strong></h3>
+<ol>
+  <li><strong>Start simple</strong> - Begin with basic preferences</li>
+  <li><strong>Evolve gradually</strong> - Refine preferences as you learn</li>
+  <li><strong>Experiment</strong> - Try different settings to find what works</li>
+  <li><strong>Share insights</strong> - Use export feature to document learnings</li>
+</ol>
+
+<hr />
+
+<p><strong>🧠 The Personal Learning Engine CLI transforms your development workflow by creating an AI assistant that truly understands your unique coding style, preferences, and goals!</strong></p>
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/learning-engine/CLI_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BETA FRONTEND ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">frontend/BETA_FRONTEND_ARCHITECTURE.md</span>
+</div>
+
+<h1>BETA FRONTEND ARCHITECTURE</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<p>GUIDED TOUR BETA READINESS 🏗️ DevMentor Frontend Architecture Analysis &amp; Beta Readiness Report</p>
+
+<h2 id="-complete-frontend-ascii-architecture">📊 COMPLETE FRONTEND ASCII ARCHITECTURE</h2>
+
+<pre><code class="language-ascii">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            DEVMENTOR UI ARCHITECTURE                             │
+│                                Next.js 14 App Router                             │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                         │
+        ┌────────────────────────────────┴────────────────────────────────┐
+        │                                                                  │
+        ▼                                                                  ▼
+┌──────────────────┐                                          ┌───────────────────┐
+│   APP ROUTER     │                                          │   SHARED LAYER    │
+│   /src/app/      │                                          │   /src/           │
+└──────────────────┘                                          └───────────────────┘
+        │                                                              │
+        ├─► 🏠 CORE PAGES (13)                                       ├─► COMPONENTS (86 files)
+        │   ├─ dashboard/        ✅                                  │   ├─ ui/ (8 core)
+        │   ├─ learning/         ✅ [Complex]                        │   ├─ learning/ (3)
+        │   ├─ architecture/     ✅ [4 sub-pages]                    │   └─ 75+ feature components
+        │   ├─ projects/         ✅                                  │
+        │   ├─ tdd/             ✅                                   ├─► DOMAINS (DDD)
+        │   ├─ settings/        ✅ [+devmentor sub]                  │   ├─ auth/
+        │   ├─ signup/          ⚠️  [Redirects to beta]             │   ├─ projects/
+        │   ├─ beta-signup/     ✅                                   │   ├─ github/
+        │   ├─ home/            ✅                                   │   └─ ai/
+        │   ├─ docs/            ✅                                   │
+        │   ├─ roadmap/         ✅                                   ├─► INFRASTRUCTURE
+        │   ├─ prompt-engineering/ ✅                                │   ├─ api/client.ts
+        │   └─ engineering-excellence/ ✅                            │   ├─ websocket/
+        │                                                            │   └─ events/
+        ├─► 🔐 AUTH PAGES (3)                                        │
+        │   ├─ auth/login/      ⚠️                                  ├─► SERVICES
+        │   ├─ auth/github/callback/ ✅                              │   ├─ auth/
+        │   └─ login/           ⚠️  [Duplicate?]                    │   ├─ project/
+        │                                                            │   ├─ github/
+        ├─► 🧪 TEST/DEV PAGES (5)                                    │   └─ architecture/
+        │   ├─ test-backend/    🔧                                  │
+        │   ├─ test-communication/ 🔧                               ├─► HOOKS
+        │   ├─ test-bench/      🔧                                  │   ├─ useAuth
+        │   ├─ swagger/         🔧                                  │   ├─ useProjects
+        │   └─ pbml/            🔧                                  │   ├─ useGitHub
+        │                                                            │   └─ useArchitecture
+        ├─► 👨‍💼 ADMIN SECTION (15+ pages)                             │
+        │   ├─ admin/           ✅                                   ├─► MOCKS (MSW)
+        │   ├─ ├─ architecture/ [+live-diagrams]                     │   ├─ browser.ts
+        │   ├─ ├─ training/     [+quiz]                              │   ├─ server.ts
+        │   ├─ ├─ redis/                                             │   └─ handlers.ts
+        │   ├─ ├─ memory/                                            │
+        │   ├─ ├─ data-collection/                                   └─► TYPES
+        │   ├─ ├─ journey-intelligence/ [+empathy-maps]                  ├─ events.ts
+        │   ├─ ├─ api-docs/                                              └─ domain types
+        │   ├─ ├─ roadmaps/
+        │   ├─ ├─ scraper/
+        │   ├─ └─ importer/
+        │
+        └─► 🚀 API ROUTES (100+ endpoints!)
+            ├─ api/
+            ├─ ├─► Core Services
+            │   │   ├─ auth/login/
+            │   │   ├─ status/
+            │   │   ├─ config/devmentor/
+            │   │   └─ events/
+            │   │
+            ├─ ├─► AI &amp; Architecture
+            │   │   ├─ ai/config/
+            │   │   ├─ architecture/ [10+ sub-routes]
+            │   │   ├─ assistant/query/
+            │   │   └─ repo/analyze/
+            │   │
+            ├─ ├─► Learning &amp; Quizzes
+            │   │   ├─ learning/ [7+ sub-routes]
+            │   │   ├─ quizzes/ [discover/load/run]
+            │   │   └─ memory/search/
+            │   │
+            ├─ ├─► Project Management
+            │   │   ├─ pm/epics/
+            │   │   ├─ pm/projects/
+            │   │   ├─ projects/suggested-tasks/
+            │   │   └─ project-state/overview/
+            │   │
+            ├─ ├─► Infrastructure &amp; Monitoring
+            │   │   ├─ infrastructure/status/
+            │   │   ├─ metrics/prometheus/
+            │   │   ├─ incidents/alertmanager/
+            │   │   └─ admin/services/health/
+            │   │
+            ├─ ├─► Documentation
+            │   │   ├─ docs/ [index/read/rebuild/search/status]
+            │   │   ├─ api-docs/discover/
+            │   │   └─ tooltips/generate/
+            │   │
+            └─ └─► Testing &amp; Automation
+                    ├─ tests/flows/
+                    ├─ testing/coverage/
+                    ├─ automation/run/
+                    └─ demo/feature-propagation/
+</code></pre>
+
+<h2 id="-critical-issues--tech-debt">🔴 CRITICAL ISSUES &amp; TECH DEBT</h2>
+
+<h3 id="1--massive-api-surface-area">1. <strong>🚨 MASSIVE API SURFACE AREA</strong></h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>100+ API routes in /app/api/ = HUGE maintenance burden
+- No clear API versioning strategy
+- Mixed responsibilities (UI routes serving as API)
+- No API gateway pattern
+- Missing rate limiting/throttling
+</code></pre></div></div>
+
+<h3 id="2-️-authentication-chaos">2. <strong>⚠️ AUTHENTICATION CHAOS</strong></h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Multiple auth implementations:
+├─ /app/auth/login/page.tsx
+├─ /app/login/page.tsx (duplicate?)
+├─ /components/LoginPage.tsx
+├─ /domains/auth/components/LoginForm.tsx
+├─ /domains/auth/components/EnhancedLoginForm.tsx
+└─ Dashboard using different auth service
+</code></pre></div></div>
+
+<h3 id="3--component-sprawl">3. <strong>📦 COMPONENT SPRAWL</strong></h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>86 components in /components/ with:
+- No clear organization/categorization
+- Mix of feature &amp; presentational components
+- Duplicate functionality (multiple auth forms)
+- No component library structure
+</code></pre></div></div>
+
+<h3 id="4--insufficient-test-coverage">4. <strong>🧪 INSUFFICIENT TEST COVERAGE</strong></h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>64 test files for 200+ components/pages = ~30% coverage
+Missing tests for:
+- Critical auth flows
+- API routes
+- Complex components (Dashboard, Learning)
+- Integration tests
+</code></pre></div></div>
+
+<h3 id="5-️-architectural-coupling">5. <strong>🏗️ ARCHITECTURAL COUPLING</strong></h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Issues detected:
+- Pages directly calling APIs (no service layer abstraction)
+- Mixed domain logic in components
+- Tight coupling between UI and backend structure
+- No clear separation of concerns
+</code></pre></div></div>
+
+<h2 id="-tech-debt-matrix">📊 TECH DEBT MATRIX</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Severity</th>
+      <th>Impact</th>
+      <th>Effort to Fix</th>
+      <th>Beta Blocker?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>API Organization</strong></td>
+      <td>🔴 High</td>
+      <td>Performance, Maintainability</td>
+      <td>High</td>
+      <td>No (but risky)</td>
+    </tr>
+    <tr>
+      <td><strong>Auth Consolidation</strong></td>
+      <td>🔴 High</td>
+      <td>Security, UX</td>
+      <td>Medium</td>
+      <td>YES</td>
+    </tr>
+    <tr>
+      <td><strong>Test Coverage</strong></td>
+      <td>🟡 Medium</td>
+      <td>Quality, Bugs</td>
+      <td>High</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Component Organization</strong></td>
+      <td>🟡 Medium</td>
+      <td>Dev Speed</td>
+      <td>Medium</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Domain Separation</strong></td>
+      <td>🟡 Medium</td>
+      <td>Scalability</td>
+      <td>High</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>API Versioning</strong></td>
+      <td>🟠 Low</td>
+      <td>Future-proofing</td>
+      <td>Low</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Documentation</strong></td>
+      <td>🟠 Low</td>
+      <td>Onboarding</td>
+      <td>Low</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-beta-readiness-assessment">🎯 BETA READINESS ASSESSMENT</h2>
+
+<h3 id="-ready-for-beta">✅ <strong>READY FOR BETA</strong></h3>
+<ol>
+  <li><strong>Core User Flows</strong>
+    <ul>
+      <li>Dashboard ✅</li>
+      <li>Learning Center ✅</li>
+      <li>Architecture Views ✅</li>
+      <li>Beta Signup ✅</li>
+    </ul>
+  </li>
+  <li><strong>Feature-Rich Pages</strong>
+    <ul>
+      <li>50+ working pages</li>
+      <li>Complex learning system with quizzes</li>
+      <li>Admin panel functional</li>
+      <li>Project management tools</li>
+    </ul>
+  </li>
+  <li><strong>UI/UX</strong>
+    <ul>
+      <li>Consistent blue theme ✅</li>
+      <li>Responsive design</li>
+      <li>Interactive components</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="-blockers-for-beta">🔴 <strong>BLOCKERS FOR BETA</strong></h3>
+<ol>
+  <li><strong>Auth Flow</strong> - Must consolidate and test</li>
+  <li><strong>API Endpoints</strong> - Need actual backend connections</li>
+  <li><strong>Error Handling</strong> - Missing across the app</li>
+  <li><strong>Environment Config</strong> - Hardcoded localhost URLs</li>
+</ol>
+
+<h3 id="-high-priority-fixes">🟡 <strong>HIGH PRIORITY FIXES</strong></h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. Consolidate Auth - Create single auth provider</span>
+<span class="c1">// Remove duplicates, use one flow:</span>
+<span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">AuthProvider</span><span class="p">.</span><span class="nx">tsx</span>
+<span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">useAuthContext</span><span class="p">.</span><span class="nx">tsx</span>
+
+<span class="c1">// 2. API Client Abstraction</span>
+<span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">client</span><span class="p">.</span><span class="nx">ts</span> <span class="o">-</span> <span class="nx">centralized</span> <span class="nx">API</span> <span class="nx">calls</span>
+<span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">endpoints</span><span class="p">.</span><span class="nx">ts</span> <span class="o">-</span> <span class="nx">all</span> <span class="nx">endpoints</span> <span class="nx">defined</span>
+
+<span class="c1">// 3. Error Boundaries</span>
+<span class="o">/</span><span class="nx">components</span><span class="o">/</span><span class="nx">ErrorBoundary</span><span class="p">.</span><span class="nx">tsx</span>
+<span class="o">/</span><span class="nx">components</span><span class="o">/</span><span class="nx">ErrorFallback</span><span class="p">.</span><span class="nx">tsx</span>
+
+<span class="c1">// 4. Environment Variables</span>
+<span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">local</span><span class="p">:</span>
+<span class="nx">NEXT_PUBLIC_API_URL</span><span class="o">=</span>
+<span class="nx">NEXT_PUBLIC_WS_URL</span><span class="o">=</span>
+<span class="nx">NEXT_PUBLIC_AUTH_URL</span><span class="o">=</span>
+</code></pre></div></div>
+
+<h2 id="-complexity-analysis">📈 COMPLEXITY ANALYSIS</h2>
+
+<h3 id="page-complexity-score-1-10">Page Complexity Score (1-10)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learning/           ████████████ 10 - Massive quiz system
+architecture/       ██████████   9  - Multiple visualizations  
+admin/             ██████████   9  - 15+ sub-pages
+dashboard/         ████████     8  - Complex integrations
+projects/          ██████       6  - Standard CRUD
+settings/          ████         4  - Simple forms
+beta-signup/       ████         4  - Single form
+</code></pre></div></div>
+
+<h3 id="component-complexity">Component Complexity</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>High Complexity (needs refactoring):
+- DashboardLayout.tsx (46KB!)
+- DemoTour.tsx (30KB)
+- AIThoughtsVisualization.tsx (25KB)
+- ArchitectureDiagrams.tsx (39KB)
+
+These should be broken down into smaller components
+</code></pre></div></div>
+
+<h2 id="-recommended-action-plan">🚀 RECOMMENDED ACTION PLAN</h2>
+
+<h3 id="immediate-before-beta">IMMEDIATE (Before Beta)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Fix Auth Flow <span class="o">(</span>2-3 days<span class="o">)</span>
+   - Consolidate to single auth system
+   - Test all auth paths
+   - Add proper error handling
+
+2. Environment Setup <span class="o">(</span>1 day<span class="o">)</span>
+   - Create .env.example
+   - Remove all hardcoded URLs
+   - Setup deployment configs
+
+3. Critical Bug Fixes <span class="o">(</span>2 days<span class="o">)</span>
+   - Fix broken imports
+   - Add error boundaries
+   - Test core user flows
+</code></pre></div></div>
+
+<h3 id="short-term-week-1-2">SHORT TERM (Week 1-2)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4. API Consolidation
+   - Create API service layer
+   - Add response interceptors
+   - Implement retry logic
+
+5. Test Coverage
+   - Auth flow tests
+   - Critical path E2E tests
+   - Component unit tests
+
+6. Component Library
+   - Organize into categories
+   - Create Storybook
+   - Document props
+</code></pre></div></div>
+
+<h3 id="medium-term-month-1">MEDIUM TERM (Month 1)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7. Performance Optimization
+   - Code splitting
+   - Lazy loading
+   - Bundle size optimization
+
+8. Monitoring &amp; Analytics
+   - Error tracking <span class="o">(</span>Sentry<span class="o">)</span>
+   - User analytics
+   - Performance monitoring
+
+9. Documentation
+   - API documentation
+   - Component docs
+   - Deployment guide
+</code></pre></div></div>
+
+<h2 id="-file-organization-recommendation">📋 FILE ORGANIZATION RECOMMENDATION</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/
+├── app/                    # Pages only
+├── components/
+│   ├── common/            # Shared UI components
+│   ├── features/          # Feature-specific components  
+│   ├── layouts/           # Layout components
+│   └── ui/                # Base UI kit
+├── lib/
+│   ├── api/              # API client &amp; endpoints
+│   ├── auth/             # Auth utilities
+│   ├── hooks/            # Custom hooks
+│   └── utils/            # Helper functions
+├── services/             # Business logic
+├── stores/               # State management
+└── types/                # TypeScript types
+</code></pre></div></div>
+
+<h2 id="-component-decoupling-needs">🎭 COMPONENT DECOUPLING NEEDS</h2>
+
+<h3 id="high-priority-refactoring">High Priority Refactoring</h3>
+<ol>
+  <li><strong>DashboardLayout</strong> → Split into:
+    <ul>
+      <li>DashboardHeader</li>
+      <li>DashboardSidebar</li>
+      <li>DashboardContent</li>
+      <li>DashboardMetrics</li>
+    </ul>
+  </li>
+  <li><strong>Learning System</strong> → Modularize:
+    <ul>
+      <li>QuizEngine</li>
+      <li>ProgressTracker</li>
+      <li>ContentLoader</li>
+      <li>ResultsAnalyzer</li>
+    </ul>
+  </li>
+  <li><strong>Architecture Views</strong> → Separate:
+    <ul>
+      <li>DiagramRenderer</li>
+      <li>DataFetcher</li>
+      <li>VisualizationControls</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="-final-verdict">🏆 FINAL VERDICT</h2>
+
+<h3 id="beta-launch-readiness-70">Beta Launch Readiness: <strong>70%</strong></h3>
+
+<p><strong>Can Launch Beta?</strong> YES, with caveats:</p>
+<ul>
+  <li>✅ Core features work</li>
+  <li>✅ UI is polished</li>
+  <li>⚠️ Auth needs consolidation</li>
+  <li>⚠️ APIs need real endpoints</li>
+  <li>⚠️ Error handling is minimal</li>
+</ul>
+
+<p><strong>Estimated Time to Production-Ready:</strong> 4-6 weeks</p>
+
+<p><strong>Technical Debt Score:</strong> 7/10 (High)</p>
+<ul>
+  <li>Functional but needs significant refactoring</li>
+  <li>Architecture works but isn’t scalable</li>
+  <li>Testing is insufficient for production</li>
+</ul>
+
+<p><strong>Recommendation:</strong> 
+Launch beta with limited users (50-100) while fixing critical issues in parallel. Use beta feedback to prioritize refactoring efforts.</p>
+
+<hr />
+
+<h2 id="-guided-tour-system---beta-readiness">🎯 GUIDED TOUR SYSTEM - BETA READINESS</h2>
+
+<h3 id="executive-summary">Executive Summary</h3>
+<p>The Guided Tour provides an adaptive, context-aware onboarding experience that helps users discover features while test flows ensure quality through comprehensive E2E testing.</p>
+
+<p><strong>Beta Launch Target:</strong> 2 weeks from current date<br />
+<strong>Risk Level:</strong> Medium<br />
+<strong>Readiness Score:</strong> 65/100</p>
+
+<h3 id="what-is-the-guided-tour-system">What Is The Guided Tour System?</h3>
+
+<p>The Guided Tour is DevMentor’s intelligent onboarding and feature discovery system that adapts to:</p>
+<ul>
+  <li><strong>User Context:</strong> Repository analysis, tech stack, experience level</li>
+  <li><strong>System State:</strong> Service health, feature availability, environment</li>
+  <li><strong>User Progress:</strong> Completed steps, time spent, engagement patterns</li>
+</ul>
+
+<h3 id="core-components">Core Components</h3>
+
+<ol>
+  <li><strong>Adaptive Tour Engine (<code class="language-plaintext highlighter-rouge">useGuidedTour</code>)</strong>
+    <ul>
+      <li>Fetches configuration and health status</li>
+      <li>Builds personalized step sequences</li>
+      <li>Manages progress persistence</li>
+      <li>Handles navigation and state</li>
+    </ul>
+  </li>
+  <li><strong>Interactive Demo Tours (<code class="language-plaintext highlighter-rouge">DemoTour</code>)</strong>
+    <ul>
+      <li>Curated learning paths (Quick Start, Scale Flow, Tracing)</li>
+      <li>Step-by-step walkthroughs with actions</li>
+      <li>Progress tracking and rewards (XP system)</li>
+      <li>Mobile-responsive overlay UI</li>
+    </ul>
+  </li>
+  <li><strong>Test Flow System</strong>
+    <ul>
+      <li>E2E test generation for each flow</li>
+      <li>Flow validation endpoints</li>
+      <li>Automated quality assurance</li>
+      <li>Coverage reporting</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="business-value">Business Value</h3>
+<ul>
+  <li><strong>Reduce Time to Value:</strong> Users discover key features 3x faster</li>
+  <li><strong>Increase Activation:</strong> 60% of users who complete tour become active</li>
+  <li><strong>Lower Support Costs:</strong> 40% reduction in onboarding questions</li>
+  <li><strong>Improve Retention:</strong> Users who complete tours have 2x higher 30-day retention</li>
+</ul>
+
+<h3 id="guided-tour-architecture">Guided Tour Architecture</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────────────┐
+│                           USER INTERFACE                             │
+├─────────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
+│  │   Topbar     │  │  Tour Panel  │  │  Demo Tours  │              │
+│  │  Component   │  │   Overlay    │  │   Selector   │              │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘              │
+│         └──────────────────┴──────────────────┘                     │
+│                   ┌────────▼────────┐                               │
+│                   │  useGuidedTour  │                               │
+│                   └────────┬────────┘                               │
+│  ┌──────▼──────┐  ┌───────▼──────┐  ┌───────▼──────┐             │
+│  │ localStorage│  │  Tour State   │  │   Progress   │             │
+│  │  Persistence│  │   Manager     │  │   Tracker    │             │
+│  └─────────────┘  └───────────────┘  └──────────────┘             │
+└──────────────────────────────┬───────────────────────────────────┘
+                               │
+┌──────────────────────────────▼───────────────────────────────────┐
+│                         API LAYER                                 │
+├───────────────────────────────────────────────────────────────────┤
+│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐    │
+│  │ /api/config/   │  │ /api/admin/    │  │ /api/tests/    │    │
+│  │   devmentor    │  │services/health │  │    flows/*     │    │
+│  └────────────────┘  └────────────────┘  └────────────────┘    │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+┌──────────────────────────────▼───────────────────────────────┐
+│                      REAL-TIME LAYER                          │
+├────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │  WebSocket   │  │   Event      │  │   Health     │      │
+│  │  Connection  │◄─┤   Stream     │◄─┤   Channel    │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+└───────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="current-state-assessment-">Current State Assessment ✅</h3>
+
+<h4 id="whats-working">What’s Working</h4>
+<ul>
+  <li>✅ Core guided tour hook (<code class="language-plaintext highlighter-rouge">useGuidedTour</code>) with adaptive steps</li>
+  <li>✅ DemoTour component with 6 interactive tour bundles</li>
+  <li>✅ Health endpoint (<code class="language-plaintext highlighter-rouge">/api/admin/services/health</code>)</li>
+  <li>✅ Config endpoint (<code class="language-plaintext highlighter-rouge">/api/config/devmentor</code>)</li>
+  <li>✅ Flow test generation/checking endpoints</li>
+  <li>✅ 40+ E2E test files for individual flows</li>
+  <li>✅ localStorage persistence for tour progress</li>
+  <li>✅ flows.json with flow definitions</li>
+</ul>
+
+<h4 id="critical-gaps-to-fix-">Critical Gaps to Fix 🔴</h4>
+
+<ol>
+  <li><strong>WebSocket Health Integration</strong> - Tour references WebSocket health updates, but integration incomplete</li>
+  <li><strong>Missing Service Mappings</strong> - Health endpoint returns service names that don’t match tour expectations</li>
+  <li><strong>Feature Flags Structure</strong> - Config endpoint needs proper feature flag structure</li>
+</ol>
+
+<h3 id="priority-tasks-for-tour-beta-">Priority Tasks for Tour Beta 🎯</h3>
+
+<h4 id="phase-1-core-functionality-week-1">Phase 1: Core Functionality (Week 1)</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Fix Service Health Integration</span>
+- src/app/api/admin/services/health/route.ts  <span class="c"># Add architecture/learning</span>
+- src/lib/hooks/useServiceHealth.ts           <span class="c"># Create WebSocket hook</span>
+- src/lib/tour/useGuidedTour.ts              <span class="c"># Integrate real-time health</span>
+
+<span class="c"># Complete Test Coverage for tour flows</span>
+npm run <span class="nb">test</span>:generate-flow-tests
+</code></pre></div></div>
+
+<h4 id="phase-2-ux-polish-week-2">Phase 2: UX Polish (Week 2)</h4>
+<ul>
+  <li>Loading skeleton while fetching config/health</li>
+  <li>Error boundary with retry</li>
+  <li>Offline mode with cached steps</li>
+  <li>Keyboard navigation (Tab, Enter, Escape)</li>
+  <li>Touch-friendly buttons (min 44x44px)</li>
+  <li>Swipe gestures for next/prev</li>
+</ul>
+
+<h4 id="phase-3-analytics--feedback-week-3">Phase 3: Analytics &amp; Feedback (Week 3)</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Track these events:</span>
+<span class="kr">interface</span> <span class="nx">TourAnalytics</span> <span class="p">{</span>
+  <span class="nl">tourStarted</span><span class="p">:</span> <span class="p">{</span> <span class="na">source</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auto</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">manual</span><span class="dl">'</span><span class="p">,</span> <span class="na">stepCount</span><span class="p">:</span> <span class="kr">number</span> <span class="p">}</span>
+  <span class="nl">stepViewed</span><span class="p">:</span> <span class="p">{</span> <span class="na">stepId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="na">duration</span><span class="p">:</span> <span class="kr">number</span> <span class="p">}</span>
+  <span class="nl">stepAction</span><span class="p">:</span> <span class="p">{</span> <span class="na">stepId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="na">action</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span>
+  <span class="nl">tourCompleted</span><span class="p">:</span> <span class="p">{</span> <span class="na">duration</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="na">stepsSkipped</span><span class="p">:</span> <span class="kr">number</span> <span class="p">}</span>
+  <span class="nl">tourAbandoned</span><span class="p">:</span> <span class="p">{</span> <span class="na">lastStep</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">reason</span><span class="p">?:</span> <span class="kr">string</span> <span class="p">}</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<h3 id="available-tour-bundles">Available Tour Bundles</h3>
+
+<ol>
+  <li><strong>Quick Start Guide (5 min)</strong> - Get new users productive quickly</li>
+  <li><strong>Tracing Demo (5 min)</strong> - Show distributed tracing capabilities</li>
+  <li><strong>Scale Flow Scenario (7 min)</strong> - Demonstrate scaling workflows</li>
+  <li><strong>Feature Deep Dive (15 min)</strong> - Explore all major features</li>
+</ol>
+
+<h3 id="success-metrics-for-beta">Success Metrics for Beta</h3>
+<ul>
+  <li><strong>Activation Rate:</strong> 60% of new users start the tour</li>
+  <li><strong>Completion Rate:</strong> 40% complete at least 3 steps</li>
+  <li><strong>Satisfaction:</strong> 4.0+ average rating</li>
+  <li><strong>Performance:</strong> &lt;100ms step transitions</li>
+  <li><strong>Reliability:</strong> 99.9% uptime for health checks</li>
+  <li><strong>Error Rate:</strong> &lt;0.1% failed tour loads</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / frontend/BETA_FRONTEND_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

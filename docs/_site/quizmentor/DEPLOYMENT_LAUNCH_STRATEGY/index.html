@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEPLOYMENT LAUNCH STRATEGY</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">DEPLOYMENT_LAUNCH_STRATEGY.md</span>
+</div>
+
+<h1>DEPLOYMENT LAUNCH STRATEGY</h1>
+
+
+<h1 id="quizmentor-deployment--launch-strategy">QuizMentor Deployment &amp; Launch Strategy</h1>
+
+<h2 id="executive-summary">Executive Summary</h2>
+
+<p>A comprehensive deployment and go-to-market strategy for QuizMentor, leveraging dark patterns and psychological manipulation to achieve rapid user acquisition, high engagement, and aggressive monetization.</p>
+
+<h2 id="deployment-architecture">Deployment Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────────┐
+│                    Production Environment                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                                │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │                   Mobile Apps                        │     │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐         │     │
+│  │  │   iOS    │  │ Android  │  │   Web    │         │     │
+│  │  │ (Expo)   │  │  (Expo)  │  │ (Vercel) │         │     │
+│  │  └──────────┘  └──────────┘  └──────────┘         │     │
+│  └─────────────────────────────────────────────────────┘     │
+│                           │                                    │
+│                           ▼                                    │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │                    CDN Layer                         │     │
+│  │         Cloudflare / Vercel Edge Network            │     │
+│  └─────────────────────────────────────────────────────┘     │
+│                           │                                    │
+│                           ▼                                    │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │                  Backend Services                    │     │
+│  │  ┌──────────────┐  ┌──────────────┐               │     │
+│  │  │   Supabase   │  │ Admin Panel  │               │     │
+│  │  │  PostgreSQL  │  │   (Next.js)  │               │     │
+│  │  │   Realtime   │  │    Vercel    │               │     │
+│  │  └──────────────┘  └──────────────┘               │     │
+│  └─────────────────────────────────────────────────────┘     │
+│                           │                                    │
+│                           ▼                                    │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │              Third-Party Services                    │     │
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ │     │
+│  │  │RevenueCat│ │ AdMob  │ │Analytics│ │  Sentry │ │     │
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘ │     │
+│  └─────────────────────────────────────────────────────┘     │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="phase-1-pre-launch-week--4-to--1">Phase 1: Pre-Launch (Week -4 to -1)</h2>
+
+<h3 id="infrastructure-setup">Infrastructure Setup</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Supabase Setup</span>
+- Create production project
+- Configure database schema
+- Set up Row Level Security <span class="o">(</span>RLS<span class="o">)</span>
+- Configure edge functions
+- Set up real-time subscriptions
+
+<span class="c"># 2. Vercel Deployment</span>
+- Deploy admin dashboard
+- Configure environment variables
+- Set up custom domains
+- Configure edge functions
+
+<span class="c"># 3. Expo/EAS Setup</span>
+- Configure build profiles
+- Set up code signing <span class="o">(</span>iOS<span class="o">)</span>
+- Configure app store metadata
+- Set up OTA updates
+
+<span class="c"># 4. Third-party Services</span>
+- RevenueCat configuration
+- AdMob account setup
+- Analytics integration
+- Sentry error tracking
+</code></pre></div></div>
+
+<h3 id="content-preparation">Content Preparation</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Load 500+ initial quiz questions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create 5 fake friend profiles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Generate 200+ fake leaderboard users</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prepare notification templates</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure initial A/B tests</li>
+</ul>
+
+<h3 id="testing-checklist">Testing Checklist</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Load test with 10,000 concurrent users</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security penetration testing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />App store compliance review</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GDPR/CCPA compliance check</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Accessibility testing (WCAG 2.1)</li>
+</ul>
+
+<h2 id="phase-2-soft-launch-week-1-2">Phase 2: Soft Launch (Week 1-2)</h2>
+
+<h3 id="target-markets">Target Markets</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Primary</span><span class="pi">:</span> 
+  <span class="pi">-</span> <span class="na">Country</span><span class="pi">:</span> <span class="s">Canada</span>
+  <span class="pi">-</span> <span class="na">Users</span><span class="pi">:</span> <span class="s">10,000</span>
+  <span class="pi">-</span> <span class="na">Purpose</span><span class="pi">:</span> <span class="s">Test engagement mechanics</span>
+  
+<span class="na">Secondary</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">Country</span><span class="pi">:</span> <span class="s">Australia</span>  
+  <span class="pi">-</span> <span class="na">Users</span><span class="pi">:</span> <span class="s">5,000</span>
+  <span class="pi">-</span> <span class="na">Purpose</span><span class="pi">:</span> <span class="s">Test timezone handling</span>
+
+<span class="na">Tertiary</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">Country</span><span class="pi">:</span> <span class="s">Netherlands</span>
+  <span class="pi">-</span> <span class="na">Users</span><span class="pi">:</span> <span class="s">5,000</span>
+  <span class="pi">-</span> <span class="na">Purpose</span><span class="pi">:</span> <span class="s">Test GDPR compliance</span>
+</code></pre></div></div>
+
+<h3 id="metrics-to-monitor">Metrics to Monitor</h3>
+<ol>
+  <li><strong>Engagement</strong>
+    <ul>
+      <li>D1 Retention: Target 60%</li>
+      <li>D7 Retention: Target 40%</li>
+      <li>DAU/MAU: Target 35%</li>
+      <li>Session Length: Target 8+ minutes</li>
+    </ul>
+  </li>
+  <li><strong>Manipulation Effectiveness</strong>
+    <ul>
+      <li>Streak Adoption: Target 70%</li>
+      <li>Hearts Depletion Rate: 2-3 per session</li>
+      <li>Notification Open Rate: Target 25%</li>
+      <li>Daily Challenge Participation: Target 50%</li>
+    </ul>
+  </li>
+  <li><strong>Monetization</strong>
+    <ul>
+      <li>Ad View Rate: 3-5 per session</li>
+      <li>Premium Conversion: Target 3-5%</li>
+      <li>ARPU: Target $0.50</li>
+      <li>LTV: Target $5</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="ab-tests-to-run">A/B Tests to Run</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">softLaunchExperiments</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Hearts Regeneration Time</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">variants</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">30min</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">45min</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">60min</span><span class="dl">"</span><span class="p">],</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">"</span><span class="s2">premium_conversion</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Notification Timing</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">variants</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">8pm</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">9pm</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">personalized</span><span class="dl">"</span><span class="p">],</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">"</span><span class="s2">d1_retention</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Fake User Activity Level</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">variants</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">low</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">medium</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">high</span><span class="dl">"</span><span class="p">],</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">"</span><span class="s2">engagement_duration</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Paywall Timing</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">variants</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">after_3_quizzes</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">after_hearts_depleted</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">after_streak_3</span><span class="dl">"</span><span class="p">],</span>
+    <span class="na">metric</span><span class="p">:</span> <span class="dl">"</span><span class="s2">conversion_rate</span><span class="dl">"</span>
+  <span class="p">}</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h2 id="phase-3-global-launch-week-3-4">Phase 3: Global Launch (Week 3-4)</h2>
+
+<h3 id="launch-strategy">Launch Strategy</h3>
+
+<h4 id="day-1-product-hunt-launch">Day 1: Product Hunt Launch</h4>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gs">**Title**</span>: QuizMentor - Duolingo for Technical Skills 🚀
+
+<span class="gs">**Tagline**</span>: Build an unbreakable learning habit with streaks, challenges, and friends
+
+<span class="gs">**Key Features**</span>:
+<span class="p">-</span> 🔥 Streak system to build daily habits
+<span class="p">-</span> ❤️ Lives system for focused learning
+<span class="p">-</span> 🏆 Compete with friends on leaderboards
+<span class="p">-</span> 🎯 Daily challenges with bonus rewards
+<span class="p">-</span> 📱 Works on iOS, Android, and Web
+
+<span class="gs">**Maker Comment**</span>: 
+"We've gamified technical learning by applying psychology from top apps like Duolingo..."
+</code></pre></div></div>
+
+<h4 id="day-2-7-influencer-campaign">Day 2-7: Influencer Campaign</h4>
+<p>Target micro-influencers in:</p>
+<ul>
+  <li>Tech education (10-50k followers)</li>
+  <li>Productivity/self-improvement</li>
+  <li>Coding bootcamps</li>
+  <li>Computer science students</li>
+</ul>
+
+<h4 id="week-2-paid-acquisition">Week 2: Paid Acquisition</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Facebook/Instagram</span><span class="pi">:</span>
+  <span class="na">Budget</span><span class="pi">:</span> <span class="s">$10,000</span>
+  <span class="na">Target CPI</span><span class="pi">:</span> <span class="s">$1.50</span>
+  <span class="na">Expected Installs</span><span class="pi">:</span> <span class="s">6,667</span>
+  
+<span class="na">Google Ads</span><span class="pi">:</span>
+  <span class="na">Budget</span><span class="pi">:</span> <span class="s">$5,000</span>
+  <span class="na">Target CPI</span><span class="pi">:</span> <span class="s">$2.00</span>
+  <span class="na">Expected Installs</span><span class="pi">:</span> <span class="s">2,500</span>
+  
+<span class="na">TikTok</span><span class="pi">:</span>
+  <span class="na">Budget</span><span class="pi">:</span> <span class="s">$5,000</span>
+  <span class="na">Target CPI</span><span class="pi">:</span> <span class="s">$1.00</span>
+  <span class="na">Expected Installs</span><span class="pi">:</span> <span class="s">5,000</span>
+
+<span class="na">Total Expected Installs</span><span class="pi">:</span> <span class="s">14,167</span>
+<span class="na">Target D7 Retention</span><span class="pi">:</span> <span class="s">40% = 5,667 retained users</span>
+</code></pre></div></div>
+
+<h3 id="app-store-optimization-aso">App Store Optimization (ASO)</h3>
+
+<h4 id="ios-app-store">iOS App Store</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Title: QuizMentor: Learn &amp; Compete
+Subtitle: Daily Quizzes, Streaks &amp; Friends
+Keywords: quiz,trivia,learning,education,streak,compete,knowledge,brain,training,challenge
+</code></pre></div></div>
+
+<h4 id="google-play-store">Google Play Store</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Title: QuizMentor - Quiz Learning App
+Short Description: Build knowledge daily with streaks, challenges &amp; friends
+Keywords: quiz app, trivia game, learning app, education, brain training, knowledge quiz
+</code></pre></div></div>
+
+<h3 id="viral-mechanics">Viral Mechanics</h3>
+<ol>
+  <li><strong>Referral Program</strong>
+    <ul>
+      <li>Referrer gets: 100 XP + 1 streak freeze</li>
+      <li>Referee gets: 3 extra hearts + 50 XP</li>
+      <li>Deep linking for easy sharing</li>
+    </ul>
+  </li>
+  <li><strong>Social Sharing</strong>
+    <ul>
+      <li>Share streak milestones</li>
+      <li>Challenge friends directly</li>
+      <li>Leaderboard screenshots</li>
+      <li>Achievement unlocks</li>
+    </ul>
+  </li>
+  <li><strong>Content Partnerships</strong>
+    <ul>
+      <li>Tech bootcamps: Custom quiz categories</li>
+      <li>YouTube educators: Sponsored quizzes</li>
+      <li>Coding platforms: Integration APIs</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="phase-4-growth--optimization-week-5-12">Phase 4: Growth &amp; Optimization (Week 5-12)</h2>
+
+<h3 id="growth-loops">Growth Loops</h3>
+
+<pre><code class="language-mermaid">graph LR
+    A[New User] --&gt; B[Easy First Quiz]
+    B --&gt; C[Dopamine Hit]
+    C --&gt; D[Start Streak]
+    D --&gt; E[Daily Notification]
+    E --&gt; F[Return Next Day]
+    F --&gt; G[Build Habit]
+    G --&gt; H[Hearts Depleted]
+    H --&gt; I[Watch Ad/Pay]
+    I --&gt; J[Social Pressure]
+    J --&gt; K[Invite Friends]
+    K --&gt; A
+</code></pre>
+
+<h3 id="retention-tactics-timeline">Retention Tactics Timeline</h3>
+<ul>
+  <li><strong>Day 0</strong>: Easy onboarding, immediate success</li>
+  <li><strong>Day 1</strong>: Streak reminder notification</li>
+  <li><strong>Day 3</strong>: Introduce hearts scarcity</li>
+  <li><strong>Day 7</strong>: Milestone celebration + social prompt</li>
+  <li><strong>Day 14</strong>: Premium offer (30% off)</li>
+  <li><strong>Day 30</strong>: Major milestone + referral push</li>
+  <li><strong>Day 60</strong>: VIP features preview</li>
+  <li><strong>Day 90</strong>: Lifetime offer</li>
+</ul>
+
+<h3 id="monetization-optimization">Monetization Optimization</h3>
+
+<h4 id="dynamic-pricing-strategy">Dynamic Pricing Strategy</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">pricingStrategy</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">baseline</span><span class="p">:</span> <span class="mf">9.99</span><span class="p">,</span>
+  <span class="na">factors</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">high_engagement</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>    <span class="c1">// +20% for engaged users</span>
+    <span class="na">high_frustration</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>    <span class="c1">// -20% for frustrated users</span>
+    <span class="na">streak_investment</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span>   <span class="c1">// +10% for long streaks</span>
+    <span class="na">location_ppp</span><span class="p">:</span> <span class="nx">variable</span><span class="p">,</span>   <span class="c1">// Adjust by country PPP</span>
+    <span class="na">time_limited</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>        <span class="c1">// -30% for urgency</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="ad-monetization">Ad Monetization</h4>
+<ul>
+  <li>Interstitial: After every 3rd quiz</li>
+  <li>Rewarded: Hearts regeneration</li>
+  <li>Banner: Non-premium users only</li>
+  <li>Native: In leaderboard feed</li>
+</ul>
+
+<p>Expected eCPM:</p>
+<ul>
+  <li>US: $15-20</li>
+  <li>UK: $12-15</li>
+  <li>Tier 2: $5-10</li>
+  <li>Tier 3: $2-5</li>
+</ul>
+
+<h2 id="phase-5-scale--expand-month-3">Phase 5: Scale &amp; Expand (Month 3+)</h2>
+
+<h3 id="platform-expansion">Platform Expansion</h3>
+<ol>
+  <li><strong>Desktop App</strong> (Electron)</li>
+  <li><strong>Apple Watch</strong> (Micro-interactions)</li>
+  <li><strong>Chrome Extension</strong> (Quick quizzes)</li>
+  <li><strong>Slack Bot</strong> (Team challenges)</li>
+</ol>
+
+<h3 id="content-expansion">Content Expansion</h3>
+<ul>
+  <li>User-generated questions</li>
+  <li>Expert-curated categories</li>
+  <li>Seasonal events (holidays, exams)</li>
+  <li>Sponsored content partnerships</li>
+</ul>
+
+<h3 id="feature-roadmap">Feature Roadmap</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Q1 2025:
+- Multiplayer battles
+- Voice quiz mode
+- AR quiz experiences
+- Clan/Guild system
+
+Q2 2025:
+- AI-personalized learning paths
+- Video explanations
+- Mentor matching
+- Certificate programs
+
+Q3 2025:
+- Job board integration
+- Skill assessments
+- Corporate training
+- API for schools
+</code></pre></div></div>
+
+<h2 id="monitoring--analytics">Monitoring &amp; Analytics</h2>
+
+<h3 id="key-dashboards">Key Dashboards</h3>
+
+<h4 id="real-time-operations">Real-time Operations</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Dashboard 1 - User Engagement</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Active users (real-time)</span>
+  <span class="pi">-</span> <span class="s">Quiz completion rate</span>
+  <span class="pi">-</span> <span class="s">Streak distribution</span>
+  <span class="pi">-</span> <span class="s">Hearts depletion rate</span>
+  
+<span class="na">Dashboard 2 - Monetization</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Revenue (real-time)</span>
+  <span class="pi">-</span> <span class="s">Conversion funnel</span>
+  <span class="pi">-</span> <span class="s">Ad performance</span>
+  <span class="pi">-</span> <span class="s">Pricing experiments</span>
+  
+<span class="na">Dashboard 3 - System Health</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">API latency</span>
+  <span class="pi">-</span> <span class="s">Error rates</span>
+  <span class="pi">-</span> <span class="s">Database performance</span>
+  <span class="pi">-</span> <span class="s">CDN hit rate</span>
+</code></pre></div></div>
+
+<h4 id="daily-reports">Daily Reports</h4>
+<ol>
+  <li><strong>Cohort Analysis</strong>: Retention by acquisition source</li>
+  <li><strong>Manipulation Metrics</strong>: Effectiveness scores</li>
+  <li><strong>Revenue Report</strong>: By source, country, platform</li>
+  <li><strong>User Feedback</strong>: App store reviews, support tickets</li>
+  <li><strong>Competitive Analysis</strong>: Feature comparisons, market position</li>
+</ol>
+
+<h3 id="alert-thresholds">Alert Thresholds</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">alerts</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">critical</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">dau_drop</span><span class="p">:</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span>        <span class="c1">// DAU drops 20%</span>
+    <span class="na">revenue_drop</span><span class="p">:</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span>    <span class="c1">// Revenue drops 30%</span>
+    <span class="na">error_rate</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>        <span class="c1">// Error rate &gt; 5%</span>
+    <span class="na">api_latency</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>    <span class="c1">// API &gt; 1 second</span>
+  <span class="p">},</span>
+  <span class="na">warning</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">retention_d7</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>     <span class="c1">// D7 retention &lt; 35%</span>
+    <span class="na">conversion_rate</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>   <span class="c1">// Premium CVR &lt; 2%</span>
+    <span class="na">ad_fill_rate</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>     <span class="c1">// Ad fill &lt; 80%</span>
+    <span class="na">frustration_score</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="c1">// User frustration &gt; 80</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="risk-mitigation">Risk Mitigation</h2>
+
+<h3 id="technical-risks">Technical Risks</h3>
+<ol>
+  <li><strong>Scalability Issues</strong>
+    <ul>
+      <li>Solution: Auto-scaling infrastructure</li>
+      <li>Backup: Rate limiting, queue systems</li>
+    </ul>
+  </li>
+  <li><strong>Data Loss</strong>
+    <ul>
+      <li>Solution: Real-time replication</li>
+      <li>Backup: Point-in-time recovery</li>
+    </ul>
+  </li>
+  <li><strong>Security Breach</strong>
+    <ul>
+      <li>Solution: Penetration testing</li>
+      <li>Backup: Incident response plan</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="business-risks">Business Risks</h3>
+<ol>
+  <li><strong>App Store Rejection</strong>
+    <ul>
+      <li>Solution: Compliance review</li>
+      <li>Backup: Direct distribution</li>
+    </ul>
+  </li>
+  <li><strong>Negative PR (Dark Patterns)</strong>
+    <ul>
+      <li>Solution: PR strategy ready</li>
+      <li>Backup: “Wellness mode” feature</li>
+    </ul>
+  </li>
+  <li><strong>Competitive Response</strong>
+    <ul>
+      <li>Solution: Rapid feature iteration</li>
+      <li>Backup: Acquisition opportunities</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="regulatory-risks">Regulatory Risks</h3>
+<ol>
+  <li><strong>GDPR/CCPA Violations</strong>
+    <ul>
+      <li>Solution: Privacy-first design</li>
+      <li>Backup: Legal counsel on retainer</li>
+    </ul>
+  </li>
+  <li><strong>COPPA (Children)</strong>
+    <ul>
+      <li>Solution: Age verification</li>
+      <li>Backup: 13+ age restriction</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="success-metrics">Success Metrics</h2>
+
+<h3 id="month-1-targets">Month 1 Targets</h3>
+<ul>
+  <li>Downloads: 50,000</li>
+  <li>DAU: 10,000</li>
+  <li>D7 Retention: 40%</li>
+  <li>Premium Subscribers: 500</li>
+  <li>Revenue: $5,000</li>
+</ul>
+
+<h3 id="month-3-targets">Month 3 Targets</h3>
+<ul>
+  <li>Downloads: 500,000</li>
+  <li>DAU: 75,000</li>
+  <li>D7 Retention: 45%</li>
+  <li>Premium Subscribers: 3,750</li>
+  <li>Revenue: $50,000</li>
+</ul>
+
+<h3 id="month-6-targets">Month 6 Targets</h3>
+<ul>
+  <li>Downloads: 2,000,000</li>
+  <li>DAU: 200,000</li>
+  <li>D7 Retention: 50%</li>
+  <li>Premium Subscribers: 10,000</li>
+  <li>Revenue: $200,000</li>
+</ul>
+
+<h3 id="year-1-goals">Year 1 Goals</h3>
+<ul>
+  <li>Downloads: 10,000,000</li>
+  <li>DAU: 500,000</li>
+  <li>MAU: 1,500,000</li>
+  <li>Premium Subscribers: 25,000</li>
+  <li>ARR: $3,000,000</li>
+</ul>
+
+<h2 id="launch-checklist">Launch Checklist</h2>
+
+<h3 id="technical-readiness">Technical Readiness</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Load testing complete (10k concurrent)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security audit passed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup systems tested</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitoring dashboards live</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Error tracking configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Analytics events verified</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />A/B testing framework ready</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Remote config synchronized</li>
+</ul>
+
+<h3 id="content-readiness">Content Readiness</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />500+ questions loaded</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fake users generated</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Notification templates configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Daily challenges scheduled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Seasonal events planned</li>
+</ul>
+
+<h3 id="marketing-readiness">Marketing Readiness</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />App store listings optimized</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Press kit prepared</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Influencer outreach complete</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ad campaigns configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Social media scheduled</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Product Hunt submission ready</li>
+</ul>
+
+<h3 id="legal-readiness">Legal Readiness</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Terms of Service finalized</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Privacy Policy updated</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GDPR compliance verified</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Age verification implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Content moderation plan</li>
+</ul>
+
+<h3 id="support-readiness">Support Readiness</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />FAQ documentation complete</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Support ticket system ready</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Community guidelines published</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Escalation procedures defined</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Refund policy clear</li>
+</ul>
+
+<h2 id="post-launch-optimization">Post-Launch Optimization</h2>
+
+<h3 id="week-1-2-stabilization">Week 1-2: Stabilization</h3>
+<ul>
+  <li>Fix critical bugs</li>
+  <li>Optimize performance bottlenecks</li>
+  <li>Respond to user feedback</li>
+  <li>Fine-tune notifications</li>
+</ul>
+
+<h3 id="week-3-4-optimization">Week 3-4: Optimization</h3>
+<ul>
+  <li>A/B test refinements</li>
+  <li>Pricing experiments</li>
+  <li>Ad placement optimization</li>
+  <li>Onboarding improvements</li>
+</ul>
+
+<h3 id="month-2-expansion">Month 2: Expansion</h3>
+<ul>
+  <li>New content categories</li>
+  <li>Social features enhancement</li>
+  <li>Premium features addition</li>
+  <li>Platform expansion planning</li>
+</ul>
+
+<h3 id="month-3-scale">Month 3+: Scale</h3>
+<ul>
+  <li>International expansion</li>
+  <li>Partnership development</li>
+  <li>Feature innovation</li>
+  <li>M&amp;A opportunities</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This deployment and launch strategy leverages aggressive psychological manipulation, dark patterns, and data-driven optimization to achieve rapid growth and monetization. The multi-phase approach allows for iterative improvement while maintaining system stability and user engagement.</p>
+
+<p>The combination of:</p>
+<ul>
+  <li><strong>Sophisticated manipulation mechanics</strong></li>
+  <li><strong>Remote configuration capabilities</strong></li>
+  <li><strong>Comprehensive testing coverage</strong></li>
+  <li><strong>Scalable infrastructure</strong></li>
+  <li><strong>Data-driven decision making</strong></li>
+</ul>
+
+<p>Creates a powerful platform for user acquisition, engagement, and monetization at scale.</p>
+
+<p>Expected outcome: <strong>$3M ARR within 12 months</strong> with potential for acquisition at <strong>10-15x revenue multiple</strong> ($30-45M valuation).</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / DEPLOYMENT_LAUNCH_STRATEGY.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISTIO KIALI SIDECAR RUNBOOK | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/kubernetes/ISTIO_KIALI_SIDECAR_RUNBOOK.md</span>
+</div>
+
+<h1>ISTIO KIALI SIDECAR RUNBOOK</h1>
+
+
+<h1 id="istio--kiali-sidecar-mtls-and-traffic-runbook">Istio + Kiali: Sidecar, mTLS, and Traffic Runbook</h1>
+
+<p>Last reviewed: 2025-08-23
+Audience: Devs/Ops running DevMentor locally (kind) or in dev clusters</p>
+
+<p>What you’re seeing in Kiali</p>
+<ul>
+  <li>“Missing Sidecar”: Pod doesn’t have the istio-proxy sidecar. It will not participate in mesh features (mTLS, telemetry, routing). This is OK for DBs in dev, but not for services you want in mesh.</li>
+  <li>“mTLS is enabled/partially enabled”: PeerAuthentication/mesh config is STRICT or PERMISSIVE. Partially enabled often means some workloads are outside the mesh (no sidecar) while others are in.</li>
+  <li>“No inbound traffic”: Kiali shows app graph based on telemetry/Prometheus. If no requests hit the service (or sidecar is missing), it may show as no inbound traffic.</li>
+</ul>
+
+<p>Decisions for DevMentor (recommended for dev)</p>
+<ul>
+  <li>In mesh: ai-gateway, auth-service, api-gateway (when deployed)</li>
+  <li>Out of mesh (OK): postgres, redis, ollama (resource-heavy / simple TCP). Kiali will flag “Missing Sidecar”, but it’s acceptable.</li>
+</ul>
+
+<p>Quick checks</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Is namespace labeled for auto injection?</span>
+kubectl get ns devmentor <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.metadata.labels.istio-injection}'</span>
+<span class="c"># Should be: enabled</span>
+
+<span class="c"># Do deployments have sidecars?</span>
+kubectl <span class="nt">-n</span> devmentor get pods <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{range .items[*]}{.metadata.name}{"  sidecars:"}{.spec.containers[*].name}{"\n"}{end}'</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'(ai-gateway|auth-service)'</span>
+<span class="c"># Expect both app container + istio-proxy</span>
+</code></pre></div></div>
+
+<p>Enable sidecar injection for a namespace</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Label namespace (idempotent)</span>
+kubectl label ns devmentor istio-injection<span class="o">=</span>enabled <span class="nt">--overwrite</span>
+
+<span class="c"># Restart deployments that should have a sidecar</span>
+kubectl <span class="nt">-n</span> devmentor rollout restart deploy/ai-gateway
+kubectl <span class="nt">-n</span> devmentor rollout restart deploy/auth-service
+<span class="c"># Optional (if you want DBs to join the mesh, usually NOT in dev)</span>
+<span class="c"># kubectl -n devmentor rollout restart deploy/postgres deploy/redis deploy/ollama</span>
+</code></pre></div></div>
+
+<p>Exclude a specific deployment from injection (even if namespace is enabled)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> devmentor patch deploy/redis <span class="se">\</span>
+  <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="se">\</span>
+  <span class="nt">-p</span><span class="o">=</span><span class="s1">'[{"op":"add","path":"/spec/template/metadata/annotations/sidecar.istio.io~1inject","value":"false"}]'</span>
+</code></pre></div></div>
+
+<p>mTLS modes</p>
+<ul>
+  <li>STRICT: only mTLS traffic is allowed between sidecar’d workloads</li>
+  <li>PERMISSIVE (recommended in dev): permits both plaintext and mTLS. Good while some pods are out of mesh (DBs).</li>
+</ul>
+
+<p>Set PERMISSIVE in a namespace</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file: permissive-peerauth.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PeerAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-permissive</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">mtls</span><span class="pi">:</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">PERMISSIVE</span>
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> permissive-peerauth.yaml
+</code></pre></div></div>
+
+<p>Confirm in Kiali</p>
+<ul>
+  <li>Overview: devmentor namespace should show “mTLS is enabled for this” but flows to out-of-mesh DBs will be in plain HTTP/TCP, which is fine for dev.</li>
+</ul>
+
+<p>Troubleshooting</p>
+<ul>
+  <li>Sidecar not injected after restart
+    <ul>
+      <li>Ensure label istio-injection=enabled on namespace</li>
+      <li>Pod template may have annotation sidecar.istio.io/inject: “false” — remove it</li>
+      <li>Check MutatingWebhookConfiguration istio-sidecar-injector is Ready</li>
+    </ul>
+  </li>
+  <li>503 between services
+    <ul>
+      <li>Destination Service has no Ready endpoints or mTLS mismatch (STRICT vs plaintext)</li>
+      <li>Set PERMISSIVE while mixing sidecar’d and non-sidecar workloads</li>
+    </ul>
+  </li>
+  <li>No traffic in graph
+    <ul>
+      <li>Hit the service via ingress or curl directly in cluster. Kiali needs telemetry.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Useful commands</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>istioctl proxy-status
+istioctl analyze <span class="nt">-n</span> devmentor
+kubectl <span class="nt">-n</span> devmentor get pods <span class="nt">-o</span> wide
+kubectl <span class="nt">-n</span> devmentor describe pod &lt;pod&gt;
+</code></pre></div></div>
+
+<p>Next steps for production-hardening</p>
+<ul>
+  <li>Move DBs into mesh or create explicit AuthorizationPolicies</li>
+  <li>Switch PeerAuthentication to STRICT once all relevant workloads have sidecars</li>
+  <li>Add DestinationRules/PeerAuthentication per service as needed</li>
+</ul>
+
+<p>References</p>
+<ul>
+  <li>Ingress/Gateway routing: docs/infrastructure/kubernetes/INGRESS_RUNBOOK.md</li>
+  <li>Monitoring and dashboards: docs/infrastructure/kube-prometheus-stack.md</li>
+  <li>Commands reference: docs/infrastructure/operations/COMMANDS.md</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/kubernetes/ISTIO_KIALI_SIDECAR_RUNBOOK.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

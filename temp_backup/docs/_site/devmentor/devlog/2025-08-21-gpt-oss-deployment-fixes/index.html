@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-08-21-gpt-oss-deployment-fixes | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">devlog/2025-08-21-gpt-oss-deployment-fixes.md</span>
+</div>
+
+<h1>2025-08-21-gpt-oss-deployment-fixes</h1>
+
+
+<h1 id="devlog-2025-08-21---gpt-oss-deployment--system-resource-fixes">DevLog: 2025-08-21 - GPT-OSS Deployment &amp; System Resource Fixes</h1>
+
+<h2 id="-objectives">🎯 Objectives</h2>
+<ol>
+  <li>Deploy GPT-OSS (Llama 3.2) as local AI model</li>
+  <li>Fix resource allocation issues across all services</li>
+  <li>Deploy missing critical infrastructure (Redis, PostgreSQL)</li>
+  <li>Document everything for learning purposes</li>
+</ol>
+
+<h2 id="-initial-state">📋 Initial State</h2>
+<ul>
+  <li>Kubernetes cluster running with minimal services</li>
+  <li>Istio service mesh partially configured</li>
+  <li>No local AI model deployed</li>
+  <li>Many services without resource limits</li>
+  <li>Observability stack down</li>
+</ul>
+
+<h2 id="-discovery-phase">🔍 Discovery Phase</h2>
+
+<h3 id="checking-pod-status">Checking Pod Status</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check all pods across namespaces</span>
+kubectl get pods <span class="nt">--all-namespaces</span>
+
+<span class="c"># Found issues:</span>
+<span class="c"># - AI Gateway in ImagePullBackOff</span>
+<span class="c"># - Ollama pod status Unknown</span>
+<span class="c"># - No Redis or PostgreSQL</span>
+</code></pre></div></div>
+
+<h3 id="image-investigation">Image Investigation</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check local Docker images</span>
+docker images | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s2">"(ai-gateway|ollama)"</span>
+
+<span class="c"># Found:</span>
+<span class="c"># - devmentor/ai-gateway:latest available locally</span>
+<span class="c"># - ollama/ollama:latest available locally</span>
+</code></pre></div></div>
+
+<h2 id="-phase-1-gpt-oss-deployment">🚀 Phase 1: GPT-OSS Deployment</h2>
+
+<h3 id="problem-1-images-not-in-kind-cluster">Problem 1: Images Not in Kind Cluster</h3>
+<p><strong>Issue</strong>: Kubernetes trying to pull from Docker Hub instead of using local images</p>
+
+<p><strong>Solution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Load images into Kind cluster</span>
+kind load docker-image devmentor/ai-gateway:latest <span class="nt">--name</span> devmentor
+kind load docker-image ollama/ollama:latest <span class="nt">--name</span> devmentor
+</code></pre></div></div>
+
+<h3 id="problem-2-istio-sidecar-injection-timeout">Problem 2: Istio Sidecar Injection Timeout</h3>
+<p><strong>Issue</strong>: Webhook timing out when creating pods</p>
+
+<p><strong>Debugging</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check Istio status</span>
+kubectl get pods <span class="nt">-n</span> istio-system
+
+<span class="c"># Check events</span>
+kubectl get events <span class="nt">-n</span> devmentor <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span> | <span class="nb">tail</span> <span class="nt">-10</span>
+<span class="c"># Found: "failed calling webhook namespace.sidecar-injector.istio.io"</span>
+</code></pre></div></div>
+
+<p><strong>Solution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Temporarily disable Istio injection for namespace</span>
+kubectl label namespace devmentor istio-injection<span class="o">=</span>disabled <span class="nt">--overwrite</span>
+
+<span class="c"># Add annotation to specific deployments</span>
+kubectl patch deployment ai-gateway <span class="nt">-n</span> devmentor <span class="nt">-p</span> <span class="se">\</span>
+  <span class="s1">'{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/inject":"false"}}}}}'</span>
+  
+kubectl patch deployment ollama <span class="nt">-n</span> devmentor <span class="nt">-p</span> <span class="se">\</span>
+  <span class="s1">'{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/inject":"false"}}}}}'</span>
+</code></pre></div></div>
+
+<h3 id="problem-3-imagepullpolicy-set-to-always">Problem 3: ImagePullPolicy Set to Always</h3>
+<p><strong>Issue</strong>: Always trying to pull from registry even with local images</p>
+
+<p><strong>Solution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl patch deployment ai-gateway <span class="nt">-n</span> devmentor <span class="nt">-p</span> <span class="se">\</span>
+  <span class="s1">'{"spec":{"template":{"spec":{"containers":[{"name":"ai-gateway","imagePullPolicy":"IfNotPresent"}]}}}}'</span>
+</code></pre></div></div>
+
+<h3 id="loading-llama-32-model">Loading Llama 3.2 Model</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Pull the GPT-OSS model (Llama 3.2)</span>
+kubectl <span class="nb">exec</span> <span class="nt">-n</span> devmentor deployment/ollama <span class="nt">--</span> ollama pull llama3.2:latest
+
+<span class="c"># Verify model loaded</span>
+kubectl <span class="nb">exec</span> <span class="nt">-n</span> devmentor deployment/ollama <span class="nt">--</span> ollama list
+<span class="c"># Output: llama3.2:latest    a80c4f17acd5    2.0 GB</span>
+</code></pre></div></div>
+
+<h2 id="-phase-2-ai-gateway-code-fixes">🔧 Phase 2: AI Gateway Code Fixes</h2>
+
+<h3 id="problem-missing-apichat-endpoint">Problem: Missing /api/chat Endpoint</h3>
+<p><strong>Issue</strong>: AI Gateway only had /api/chat/completions, not simple /api/chat</p>
+
+<p><strong>Solution</strong>: Added new endpoint in <code class="language-plaintext highlighter-rouge">services/ai-gateway/src/index.ts</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Simple chat endpoint (for backward compatibility)</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/chat</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">context</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Message is required</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">`Simple chat request: </span><span class="p">${</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    
+    <span class="c1">// Convert simple message to chat format</span>
+    <span class="kd">const</span> <span class="nx">messages</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">system</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">context</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">You are a helpful AI assistant.</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">message</span> <span class="p">}</span>
+    <span class="p">];</span>
+    
+    <span class="c1">// Use llama3.2:latest by default (GPT-OSS equivalent)</span>
+    <span class="kd">const</span> <span class="nx">model</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">llama3.2:latest</span><span class="dl">'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">chatWithOllama</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">messages</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">temperature</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+      <span class="na">maxTokens</span><span class="p">:</span> <span class="mi">2048</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
+      <span class="nx">response</span><span class="p">,</span>
+      <span class="nx">model</span><span class="p">,</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+    <span class="p">});</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Simple chat error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="rebuild-and-deploy">Rebuild and Deploy</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build TypeScript</span>
+<span class="nb">cd </span>services/ai-gateway
+npm run build
+
+<span class="c"># Build Docker image</span>
+docker build <span class="nt">-t</span> devmentor/ai-gateway:latest <span class="nb">.</span>
+
+<span class="c"># Load into Kind</span>
+kind load docker-image devmentor/ai-gateway:latest <span class="nt">--name</span> devmentor
+
+<span class="c"># Restart deployment</span>
+kubectl rollout restart deployment ai-gateway <span class="nt">-n</span> devmentor
+
+<span class="c"># Wait for ready</span>
+kubectl <span class="nb">wait</span> <span class="nt">--for</span><span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready pod <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>ai-gateway <span class="nt">-n</span> devmentor <span class="nt">--timeout</span><span class="o">=</span>60s
+</code></pre></div></div>
+
+<h2 id="-phase-3-resource-allocation-analysis">📊 Phase 3: Resource Allocation Analysis</h2>
+
+<h3 id="current-resource-issues-found">Current Resource Issues Found</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get deployments <span class="nt">--all-namespaces</span> <span class="nt">-o</span> custom-columns<span class="o">=</span><span class="se">\</span>
+<span class="s1">'NAMESPACE:.metadata.namespace,NAME:.metadata.name,CPU-REQ:.spec.template.spec.containers[*].resources.requests.cpu,MEM-REQ:.spec.template.spec.containers[*].resources.requests.memory,CPU-LIM:.spec.template.spec.containers[*].resources.limits.cpu,MEM-LIM:.spec.template.spec.containers[*].resources.limits.memory'</span>
+</code></pre></div></div>
+
+<p><strong>Critical Findings</strong>:</p>
+<ul>
+  <li>AI Gateway: NO resource limits (can consume all available resources!)</li>
+  <li>Ollama: Only 4GB memory limit (Llama 3.2 needs 8GB)</li>
+  <li>Monitoring components: No resource limits</li>
+  <li>Missing services: Redis, PostgreSQL, Memory Service, etc.</li>
+</ul>
+
+<h2 id="️-phase-4-fixing-resource-issues">🛠️ Phase 4: Fixing Resource Issues</h2>
+
+<h3 id="fix-1-update-ollama-resources">Fix 1: Update Ollama Resources</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl patch deployment ollama <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/resources",
+    "value": {
+      "requests": {"memory": "6Gi", "cpu": "2000m"},
+      "limits": {"memory": "8Gi", "cpu": "4000m"}
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h3 id="fix-2-add-ai-gateway-resources">Fix 2: Add AI Gateway Resources</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl patch deployment ai-gateway <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span><span class="s1">'json'</span> <span class="nt">-p</span><span class="o">=</span><span class="s1">'[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/resources",
+    "value": {
+      "requests": {"memory": "512Mi", "cpu": "250m"},
+      "limits": {"memory": "1Gi", "cpu": "1000m"}
+    }
+  }
+]'</span>
+</code></pre></div></div>
+
+<h3 id="fix-3-deploy-redis">Fix 3: Deploy Redis</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: devmentor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: devmentor
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h3 id="fix-4-deploy-postgresql">Fix 4: Deploy PostgreSQL</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: devmentor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: devmentor
+        - name: POSTGRES_USER
+          value: devmentor
+        - name: POSTGRES_PASSWORD
+          value: devmentor123
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: devmentor
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h2 id="-testing--verification">🧪 Testing &amp; Verification</h2>
+
+<h3 id="test-gpt-oss-chat-endpoint">Test GPT-OSS Chat Endpoint</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Port forward to AI Gateway</span>
+kubectl port-forward <span class="nt">-n</span> devmentor deployment/ai-gateway 3004:3004 &amp;
+
+<span class="c"># Test health check</span>
+curl http://localhost:3004/health | jq
+
+<span class="c"># Test chat endpoint</span>
+curl <span class="nt">-X</span> POST http://localhost:3004/api/chat <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "message": "Hello! What model are you?",
+    "context": "You are Llama 3.2, the GPT-OSS model for DevMentor."
+  }'</span>
+
+<span class="c"># Check available models</span>
+curl http://localhost:3004/api/models | jq
+</code></pre></div></div>
+
+<h3 id="verify-all-services">Verify All Services</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check pod status</span>
+kubectl get pods <span class="nt">-n</span> devmentor
+
+<span class="c"># Check resource usage (requires metrics-server)</span>
+kubectl top pods <span class="nt">-n</span> devmentor
+
+<span class="c"># Check services</span>
+kubectl get svc <span class="nt">-n</span> devmentor
+
+<span class="c"># Check events for errors</span>
+kubectl get events <span class="nt">-n</span> devmentor <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span>
+</code></pre></div></div>
+
+<h2 id="-troubleshooting-issues-encountered">🐛 Troubleshooting Issues Encountered</h2>
+
+<h3 id="issue-1-chat-request-timeout">Issue 1: Chat Request Timeout</h3>
+<p><strong>Problem</strong>: Llama 3.2 inference taking too long with 4GB memory
+<strong>Solution</strong>: Increased memory to 8GB</p>
+
+<h3 id="issue-2-redis-connection-failed">Issue 2: Redis Connection Failed</h3>
+<p><strong>Problem</strong>: AI Gateway couldn’t connect to Redis
+<strong>Solution</strong>: Redis wasn’t deployed yet, deployed it</p>
+
+<h3 id="issue-3-port-forward-hanging">Issue 3: Port Forward Hanging</h3>
+<p><strong>Problem</strong>: kubectl port-forward commands hanging
+<strong>Solution</strong>: Kill background processes: <code class="language-plaintext highlighter-rouge">kill %1 %2</code></p>
+
+<h3 id="issue-4-model-name-mismatch">Issue 4: Model Name Mismatch</h3>
+<p><strong>Problem</strong>: Code using ‘llama3.2’ but Ollama expects ‘llama3.2:latest’
+<strong>Solution</strong>: Updated code to use full model name with tag</p>
+
+<h2 id="-key-learnings">📚 Key Learnings</h2>
+
+<h3 id="1-kind-cluster-image-loading">1. Kind Cluster Image Loading</h3>
+<ul>
+  <li>Local Docker images must be explicitly loaded into Kind</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">kind load docker-image &lt;image&gt; --name &lt;cluster&gt;</code></li>
+</ul>
+
+<h3 id="2-istio-sidecar-injection">2. Istio Sidecar Injection</h3>
+<ul>
+  <li>Can timeout during high load or resource constraints</li>
+  <li>Disable with namespace label or pod annotation</li>
+  <li>Re-enable when system is stable</li>
+</ul>
+
+<h3 id="3-resource-management">3. Resource Management</h3>
+<ul>
+  <li><strong>Always set resource limits</strong> to prevent runaway containers</li>
+  <li>Memory requirements for LLMs are substantial (8GB+)</li>
+  <li>Use requests for guaranteed resources, limits for maximum</li>
+</ul>
+
+<h3 id="4-service-dependencies">4. Service Dependencies</h3>
+<ul>
+  <li>Redis needed for caching and session management</li>
+  <li>PostgreSQL needed for persistent data</li>
+  <li>Services should gracefully handle missing dependencies</li>
+</ul>
+
+<h3 id="5-debugging-kubernetes">5. Debugging Kubernetes</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Essential debugging commands</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> &lt;namespace&gt;
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">--tail</span><span class="o">=</span>50
+kubectl get events <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod-name&gt; <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">--</span> /bin/sh
+</code></pre></div></div>
+
+<h2 id="-performance-metrics">📈 Performance Metrics</h2>
+
+<h3 id="before-fixes">Before Fixes</h3>
+<ul>
+  <li>Ollama: 4GB memory, timeouts on inference</li>
+  <li>AI Gateway: Unlimited resources, potential OOM</li>
+  <li>No caching (Redis missing)</li>
+  <li>No persistence (PostgreSQL missing)</li>
+</ul>
+
+<h3 id="after-fixes">After Fixes</h3>
+<ul>
+  <li>Ollama: 8GB memory, successful inference</li>
+  <li>AI Gateway: Limited to 1GB memory, 1 CPU</li>
+  <li>Redis deployed for caching</li>
+  <li>PostgreSQL deployed for persistence</li>
+</ul>
+
+<h2 id="-next-steps">🔄 Next Steps</h2>
+
+<ol>
+  <li><strong>Re-enable Istio injection</strong> once system stable</li>
+  <li><strong>Deploy remaining microservices</strong>:
+    <ul>
+      <li>Memory Service (vector search)</li>
+      <li>Project Service</li>
+      <li>API Gateway (external access)</li>
+      <li>PBML Service (learning engine)</li>
+    </ul>
+  </li>
+  <li><strong>Start observability stack</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>infrastructure/observability
+./start-observability.sh
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Configure monitoring dashboards</strong></li>
+  <li><strong>Set up automated backups</strong></li>
+  <li><strong>Implement CI/CD pipeline</strong></li>
+</ol>
+
+<h2 id="-configuration-files-created">📝 Configuration Files Created</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/docs/infrastructure/RESOURCE_ALLOCATION_GUIDE.md</code> - Complete resource guide</li>
+  <li><code class="language-plaintext highlighter-rouge">/docs/status/GPT_OSS_STATUS.md</code> - GPT-OSS deployment status</li>
+  <li><code class="language-plaintext highlighter-rouge">/services/ai-gateway/src/index.ts</code> - Updated with /api/chat endpoint</li>
+</ul>
+
+<h2 id="-educational-notes">🎓 Educational Notes</h2>
+
+<h3 id="understanding-resource-limits">Understanding Resource Limits</h3>
+<ul>
+  <li><strong>Requests</strong>: Guaranteed resources, used for scheduling</li>
+  <li><strong>Limits</strong>: Maximum allowed, pod killed if exceeded</li>
+  <li><strong>CPU</strong>: Measured in millicores (1000m = 1 CPU)</li>
+  <li><strong>Memory</strong>: Measured in bytes (Gi = Gibibytes)</li>
+</ul>
+
+<h3 id="llm-memory-requirements">LLM Memory Requirements</h3>
+<ul>
+  <li>Small models (1-3B params): 2-4GB</li>
+  <li>Medium models (7B params): 8-16GB</li>
+  <li>Large models (13B+ params): 16-32GB+</li>
+  <li>Llama 3.2 (3B params): ~8GB recommended</li>
+</ul>
+
+<h3 id="service-mesh-benefits">Service Mesh Benefits</h3>
+<ul>
+  <li>Automatic mTLS between services</li>
+  <li>Traffic management and load balancing</li>
+  <li>Observability without code changes</li>
+  <li>Circuit breaking and retries</li>
+</ul>
+
+<h2 id="-completed-tasks">✅ Completed Tasks</h2>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Deploy GPT-OSS (Llama 3.2)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Fix AI Gateway endpoints</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Update resource allocations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Deploy Redis</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Deploy PostgreSQL</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Document everything for learning</li>
+</ul>
+
+<h2 id="-related-documents">🔗 Related Documents</h2>
+<ul>
+  <li><a href="/docs/infrastructure/RESOURCE_ALLOCATION_GUIDE.md">Resource Allocation Guide</a></li>
+  <li><a href="/docs/status/GPT_OSS_STATUS.md">GPT-OSS Status</a></li>
+  <li><a href="/docs/debugging/k8s-debugging.md">Kubernetes Debugging Guide</a></li>
+  <li><a href="/docs/status/SYSTEM_STATUS.md">System Status</a></li>
+</ul>
+
+<hr />
+<p><em>DevLog created: 2025-08-21 by AI Assistant</em>
+<em>Purpose: Educational documentation for learning Kubernetes, resource management, and AI deployment</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / devlog/2025-08-21-gpt-oss-deployment-fixes.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

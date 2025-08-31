@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QDRANT INTEGRATION</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">AI/QDRANT_INTEGRATION.md</span>
+</div>
+
+<h1>QDRANT INTEGRATION</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="qdrant-integration-system">Qdrant Integration System</h1>
+
+<pre><code class="language-ascii">┌──────────────────────────────────────────────────────────┐
+│               QDRANT INTEGRATION                         │
+│            Complete System Reference                     │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+  <li><a href="#system-overview">System Overview</a></li>
+  <li><a href="#architecture">Architecture</a></li>
+  <li><a href="#performance-optimization">Performance Optimization</a></li>
+  <li><a href="#implementation-guide">Implementation Guide</a></li>
+  <li><a href="#memory-management">Memory Management</a></li>
+  <li><a href="#integration-points">Integration Points</a></li>
+  <li><a href="#monitoring--maintenance">Monitoring &amp; Maintenance</a></li>
+  <li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+
+<h2 id="system-overview">System Overview</h2>
+
+<h3 id="purpose">Purpose</h3>
+<p>The Qdrant Integration System serves as the vector storage and retrieval layer for DevMentor, providing high-performance similarity search capabilities and efficient vector data management.</p>
+
+<h3 id="core-features">Core Features</h3>
+<ul>
+  <li>Vector storage and indexing</li>
+  <li>Similarity search</li>
+  <li>Metadata filtering</li>
+  <li>Collection management</li>
+  <li>Performance optimization</li>
+</ul>
+
+<h2 id="architecture">Architecture</h2>
+
+<h3 id="system-components">System Components</h3>
+<pre><code class="language-ascii">┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+│ Vector Engine  │   │ Query Manager  │   │ Cache Layer    │
+└───────┬────────┘   └───────┬────────┘   └───────┬────────┘
+        │                    │                    │
+        └──────────┬────────┴──────────┬────────┘
+                   │                    │
+            ┌──────┴──────┐    ┌───────┴───────┐
+            │   Storage   │    │  Integration  │
+            │   Layer     │    │     API       │
+            └─────────────┘    └───────────────┘
+</code></pre>
+
+<h3 id="agent-specific-memory-partitions">Agent-Specific Memory Partitions</h3>
+<pre><code class="language-ascii">┌─────────────────────────┐
+│    Shared Context       │
+└──────────┬──────────────┘
+           │
+    ┌──────┴──────┐
+    │  Qdrant DB  │
+    └──────┬──────┘
+           │
+┌──────────┴──────────┐
+│  Agent Collections  │
+├───────────────────┐ │
+│PostgreSQL Context │ │
+├───────────────────┤ │
+│Redis Context      │ │
+├───────────────────┤ │
+│Frontend Context   │ │
+└───────────────────┘ │
+└────────────────────┘
+</code></pre>
+
+<h2 id="performance-optimization">Performance Optimization</h2>
+
+<h3 id="configuration-parameters">Configuration Parameters</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"performance_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"vector_params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1536</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cosine"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"index_params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"m"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ef_construct"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ef_search"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"optimizer_params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"deleted_threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"vacuum_min_vector_number"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"default_segment_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="optimization-strategies">Optimization Strategies</h3>
+<ol>
+  <li><strong>Index Optimization</strong>
+    <ul>
+      <li>HNSW parameters tuning</li>
+      <li>Quantization settings</li>
+      <li>Segment optimization</li>
+    </ul>
+  </li>
+  <li><strong>Query Optimization</strong>
+    <ul>
+      <li>Filter optimization</li>
+      <li>Batch processing</li>
+      <li>Cache strategies</li>
+    </ul>
+  </li>
+  <li><strong>Resource Management</strong>
+    <ul>
+      <li>Memory allocation</li>
+      <li>CPU utilization</li>
+      <li>Storage efficiency</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="implementation-guide">Implementation Guide</h2>
+
+<h3 id="setup-process">Setup Process</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/qdrant/
+├── config/
+│   ├── qdrant.yaml
+│   └── collections/
+├── data/
+│   └── vectors/
+└── scripts/
+    └── setup.sh
+</code></pre></div></div>
+
+<h3 id="collection-configuration">Collection Configuration</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">collections</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">postgresql_context</span>
+    <span class="na">vectors</span><span class="pi">:</span>
+      <span class="na">size</span><span class="pi">:</span> <span class="m">1536</span>
+      <span class="na">distance</span><span class="pi">:</span> <span class="s">Cosine</span>
+    <span class="na">optimizers_config</span><span class="pi">:</span>
+      <span class="na">deleted_threshold</span><span class="pi">:</span> <span class="m">0.2</span>
+      <span class="na">vacuum_min_vector_number</span><span class="pi">:</span> <span class="m">1000</span>
+      <span class="na">default_segment_number</span><span class="pi">:</span> <span class="m">5</span>
+    
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">shared_context</span>
+    <span class="na">vectors</span><span class="pi">:</span>
+      <span class="na">size</span><span class="pi">:</span> <span class="m">1536</span>
+      <span class="na">distance</span><span class="pi">:</span> <span class="s">Cosine</span>
+    <span class="na">optimizers_config</span><span class="pi">:</span>
+      <span class="na">deleted_threshold</span><span class="pi">:</span> <span class="m">0.15</span>
+      <span class="na">vacuum_min_vector_number</span><span class="pi">:</span> <span class="m">2000</span>
+      <span class="na">default_segment_number</span><span class="pi">:</span> <span class="m">7</span>
+</code></pre></div></div>
+
+<h2 id="memory-management">Memory Management</h2>
+
+<h3 id="partition-strategy">Partition Strategy</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">MemoryPartition</span> <span class="p">{</span>
+  <span class="nl">collection</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">vectorSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">optimizerConfig</span><span class="p">:</span> <span class="nx">OptimizerConfig</span><span class="p">;</span>
+  <span class="nl">retentionPolicy</span><span class="p">:</span> <span class="nx">RetentionPolicy</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">agentPartitions</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">MemoryPartition</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">postgresql</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">collection</span><span class="p">:</span> <span class="dl">'</span><span class="s1">postgresql_context</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">vectorSize</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span>
+    <span class="na">optimizerConfig</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">deletedThreshold</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+      <span class="na">vacuumMinVectors</span><span class="p">:</span> <span class="mi">1000</span>
+    <span class="p">},</span>
+    <span class="na">retentionPolicy</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">maxAge</span><span class="p">:</span> <span class="dl">'</span><span class="s1">7d</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">maxSize</span><span class="p">:</span> <span class="dl">'</span><span class="s1">10GB</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">redis</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">collection</span><span class="p">:</span> <span class="dl">'</span><span class="s1">redis_context</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">vectorSize</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span>
+    <span class="na">optimizerConfig</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">deletedThreshold</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+      <span class="na">vacuumMinVectors</span><span class="p">:</span> <span class="mi">1000</span>
+    <span class="p">},</span>
+    <span class="na">retentionPolicy</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">maxAge</span><span class="p">:</span> <span class="dl">'</span><span class="s1">7d</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">maxSize</span><span class="p">:</span> <span class="dl">'</span><span class="s1">5GB</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="memory-operations">Memory Operations</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">QdrantMemoryManager</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getAgentContext</span><span class="p">(</span><span class="nx">agentId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">partition</span> <span class="o">=</span> <span class="nx">agentPartitions</span><span class="p">[</span><span class="nx">agentId</span><span class="p">];</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="nx">qdrant</span><span class="p">.</span><span class="nx">search</span><span class="p">({</span>
+      <span class="na">collection</span><span class="p">:</span> <span class="nx">partition</span><span class="p">.</span><span class="nx">collection</span><span class="p">,</span>
+      <span class="na">query_vector</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">embedText</span><span class="p">(</span><span class="nx">query</span><span class="p">),</span>
+      <span class="na">limit</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">updateAgentContext</span><span class="p">(</span><span class="nx">agentId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">partition</span> <span class="o">=</span> <span class="nx">agentPartitions</span><span class="p">[</span><span class="nx">agentId</span><span class="p">];</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="nx">qdrant</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+      <span class="na">collection</span><span class="p">:</span> <span class="nx">partition</span><span class="p">.</span><span class="nx">collection</span><span class="p">,</span>
+      <span class="na">points</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">uuidv4</span><span class="p">(),</span>
+        <span class="na">vector</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">embedText</span><span class="p">(</span><span class="nx">context</span><span class="p">),</span>
+        <span class="na">payload</span><span class="p">:</span> <span class="p">{</span> <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="p">}</span>
+      <span class="p">}]</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="integration-points">Integration Points</h2>
+
+<h3 id="with-multi-agent-system">With Multi-Agent System</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">AgentContextManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">qdrant</span><span class="p">:</span> <span class="nx">QdrantClient</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">preserveAgentContext</span><span class="p">(</span><span class="nx">agent</span><span class="p">:</span> <span class="nx">Agent</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">createEmbedding</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">upsert</span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">contextCollection</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">embedding</span><span class="p">,</span>
+      <span class="na">payload</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">agentId</span><span class="p">:</span> <span class="nx">agent</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+        <span class="na">contextType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">agent_memory</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">retrieveAgentContext</span><span class="p">(</span><span class="nx">agent</span><span class="p">:</span> <span class="nx">Agent</span><span class="p">,</span> <span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">queryEmbedding</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">createEmbedding</span><span class="p">(</span><span class="nx">query</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">contextCollection</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">queryEmbedding</span><span class="p">,</span>
+      <span class="na">limit</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="na">filter</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">must</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">agentId</span><span class="dl">'</span><span class="p">,</span> <span class="na">match</span><span class="p">:</span> <span class="p">{</span> <span class="na">value</span><span class="p">:</span> <span class="nx">agent</span><span class="p">.</span><span class="nx">id</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="with-pbml-system">With PBML System</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">PBMLIntegration</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">storePattern</span><span class="p">(</span><span class="nx">pattern</span><span class="p">:</span> <span class="nx">Pattern</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">upsert</span><span class="p">(</span><span class="dl">'</span><span class="s1">patterns</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">embedding</span><span class="p">,</span>
+      <span class="na">payload</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">patternType</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span>
+        <span class="na">confidence</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">confidence</span><span class="p">,</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">findSimilarPatterns</span><span class="p">(</span><span class="nx">pattern</span><span class="p">:</span> <span class="nx">Pattern</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="dl">'</span><span class="s1">patterns</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">embedding</span><span class="p">,</span>
+      <span class="na">limit</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="na">filter</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">must</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">confidence</span><span class="dl">'</span><span class="p">,</span> <span class="na">range</span><span class="p">:</span> <span class="p">{</span> <span class="na">gte</span><span class="p">:</span> <span class="mf">0.8</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="monitoring--maintenance">Monitoring &amp; Maintenance</h2>
+
+<h3 id="health-checks">Health Checks</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">QdrantHealthMonitor</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">checkHealth</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">collections</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">listCollections</span><span class="p">(),</span>
+      <span class="na">metrics</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMetrics</span><span class="p">(),</span>
+      <span class="na">storage</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkStorage</span><span class="p">(),</span>
+      <span class="na">performance</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkPerformance</span><span class="p">()</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getMetrics</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">totalVectors</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">countVectors</span><span class="p">(),</span>
+      <span class="na">memoryUsage</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMemoryUsage</span><span class="p">(),</span>
+      <span class="na">queryLatency</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">measureQueryLatency</span><span class="p">(),</span>
+      <span class="na">indexSize</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getIndexSize</span><span class="p">()</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="maintenance-tasks">Maintenance Tasks</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Daily</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Vacuum collections</span>
+  <span class="pi">-</span> <span class="s">Update indexes</span>
+  <span class="pi">-</span> <span class="s">Check storage usage</span>
+  <span class="pi">-</span> <span class="s">Monitor query performance</span>
+
+<span class="na">Weekly</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Optimize segments</span>
+  <span class="pi">-</span> <span class="s">Clean old vectors</span>
+  <span class="pi">-</span> <span class="s">Backup collections</span>
+  <span class="pi">-</span> <span class="s">Analyze usage patterns</span>
+
+<span class="na">Monthly</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Full optimization</span>
+  <span class="pi">-</span> <span class="s">Storage reallocation</span>
+  <span class="pi">-</span> <span class="s">Performance tuning</span>
+  <span class="pi">-</span> <span class="s">Capacity planning</span>
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">QdrantTroubleshooter</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">diagnosePerformance</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">issues</span> <span class="o">=</span> <span class="p">[];</span>
+    
+    <span class="c1">// Check index health</span>
+    <span class="kd">const</span> <span class="nx">indexMetrics</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkIndexHealth</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">indexMetrics</span><span class="p">.</span><span class="nx">fragmentation</span> <span class="o">&gt;</span> <span class="mf">0.3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">issues</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">index_fragmentation</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">severity</span><span class="p">:</span> <span class="dl">'</span><span class="s1">high</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">optimize_index</span><span class="dl">'</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Check memory usage</span>
+    <span class="kd">const</span> <span class="nx">memoryMetrics</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkMemoryUsage</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">memoryMetrics</span><span class="p">.</span><span class="nx">usage</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">issues</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">high_memory</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">severity</span><span class="p">:</span> <span class="dl">'</span><span class="s1">critical</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">reduce_load</span><span class="dl">'</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">issues</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">resolveIssue</span><span class="p">(</span><span class="nx">issue</span><span class="p">:</span> <span class="nx">Issue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">issue</span><span class="p">.</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">index_fragmentation</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">optimizeIndex</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">high_memory</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">reduceLoad</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="recovery-procedures">Recovery Procedures</h3>
+<ol>
+  <li><strong>Index Corruption</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Backup current state</span>
+qdrant-backup /data/backup
+   
+<span class="c"># Rebuild index</span>
+qdrant-tool rebuild-index <span class="se">\</span>
+  <span class="nt">--collection</span> affected_collection <span class="se">\</span>
+  <span class="nt">--config</span> /path/to/config.yaml
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Performance Degradation</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Analyze query patterns</span>
+qdrant-tool analyze-queries <span class="se">\</span>
+  <span class="nt">--collection</span> slow_collection <span class="se">\</span>
+  <span class="nt">--last-hours</span> 24
+   
+<span class="c"># Optimize affected segments</span>
+qdrant-tool optimize <span class="se">\</span>
+  <span class="nt">--collection</span> slow_collection <span class="se">\</span>
+  <span class="nt">--segments</span> affected_segments
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="success-metrics">Success Metrics</h2>
+
+<h3 id="performance-goals">Performance Goals</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Query Performance</span><span class="pi">:</span>
+  <span class="na">latency_p95</span><span class="pi">:</span> <span class="s">&lt; 50ms</span>
+  <span class="na">latency_p99</span><span class="pi">:</span> <span class="s">&lt; 100ms</span>
+  <span class="na">throughput</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">1000</span> <span class="err">qps</span>
+
+<span class="na">Resource Usage</span><span class="pi">:</span>
+  <span class="na">memory</span><span class="pi">:</span> <span class="s">&lt; 80%</span>
+  <span class="na">cpu</span><span class="pi">:</span> <span class="s">&lt; 70%</span>
+  <span class="na">storage</span><span class="pi">:</span> <span class="s">&lt; 75%</span>
+
+<span class="na">Quality</span><span class="pi">:</span>
+  <span class="na">recall@10</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">0.95</span>
+  <span class="s">precision@10: &gt; 0.90</span>
+  <span class="s">indexing_speed: &gt; 10k vectors/s</span>
+</code></pre></div></div>
+
+<h3 id="monitoring-dashboards">Monitoring Dashboards</h3>
+<pre><code class="language-ascii">┌────────────────┐  ┌────────────────┐  ┌────────────────┐
+│  Performance   │  │   Resources    │  │    Quality     │
+│  - Latency    │  │  - Memory      │  │  - Recall      │
+│  - Throughput │  │  - CPU         │  │  - Precision   │
+│  - Queue Size │  │  - Storage     │  │  - Accuracy    │
+└────────────────┘  └────────────────┘  └────────────────┘
+</code></pre>
+
+<hr />
+
+<p><em>This documentation provides a comprehensive guide for Qdrant integration, serving as the central reference for development and maintenance.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / AI/QDRANT_INTEGRATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

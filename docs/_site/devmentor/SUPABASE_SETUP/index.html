@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPABASE SETUP</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">SUPABASE_SETUP.md</span>
+</div>
+
+<h1>SUPABASE SETUP</h1>
+
+
+<h1 id="supabase-setup-guide-for-devmentor">Supabase Setup Guide for DevMentor</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>DevMentor uses Supabase for:</p>
+<ul>
+  <li><strong>Authentication</strong> (email/password, OAuth providers)</li>
+  <li><strong>PostgreSQL Database</strong> with Row Level Security</li>
+  <li><strong>Real-time subscriptions</strong> for collaborative features</li>
+  <li><strong>File storage</strong> for avatars and project files</li>
+  <li><strong>Vector embeddings</strong> for AI memory (future)</li>
+</ul>
+
+<h2 id="setup-steps">Setup Steps</h2>
+
+<h3 id="1-create-supabase-project">1. Create Supabase Project</h3>
+
+<ol>
+  <li>Go to <a href="https://app.supabase.com">https://app.supabase.com</a></li>
+  <li>Click “New project”</li>
+  <li>Enter project details:
+    <ul>
+      <li>Organization: Your org name</li>
+      <li>Project name: <code class="language-plaintext highlighter-rouge">devmentor</code></li>
+      <li>Database Password: Generate a strong password (save this!)</li>
+      <li>Region: Choose closest to your users</li>
+      <li>Pricing Plan: Start with Free tier</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="2-get-your-api-keys">2. Get Your API Keys</h3>
+
+<p>After project creation, go to Settings → API:</p>
+
+<pre><code class="language-env"># Add these to frontend/.env.local
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
+# For backend services (keep secure!)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+</code></pre>
+
+<h3 id="3-configure-authentication">3. Configure Authentication</h3>
+
+<p>Go to Authentication → Providers:</p>
+
+<h4 id="email-authentication">Email Authentication</h4>
+<ul>
+  <li>✅ Enable Email provider</li>
+  <li>Configure email templates (optional)</li>
+  <li>Set redirect URLs:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:3000/auth/callback
+https://your-domain.com/auth/callback
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="github-oauth">GitHub OAuth</h4>
+<ol>
+  <li>Enable GitHub provider</li>
+  <li>Create GitHub OAuth App:
+    <ul>
+      <li>Go to GitHub Settings → Developer settings → OAuth Apps</li>
+      <li>Click “New OAuth App”</li>
+      <li>Fill in:
+        <ul>
+          <li>Application name: <code class="language-plaintext highlighter-rouge">DevMentor</code></li>
+          <li>Homepage URL: <code class="language-plaintext highlighter-rouge">http://localhost:3000</code></li>
+          <li>Authorization callback URL: <code class="language-plaintext highlighter-rouge">https://your-project.supabase.co/auth/v1/callback</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Copy Client ID and Client Secret to Supabase</li>
+</ol>
+
+<h4 id="google-oauth-optional">Google OAuth (Optional)</h4>
+<ol>
+  <li>Enable Google provider</li>
+  <li>Set up in Google Cloud Console</li>
+  <li>Add credentials to Supabase</li>
+</ol>
+
+<h3 id="4-set-up-database-schema">4. Set Up Database Schema</h3>
+
+<ol>
+  <li>Go to SQL Editor in Supabase Dashboard</li>
+  <li>Run the schema from <code class="language-plaintext highlighter-rouge">/infrastructure/supabase/schema.sql</code></li>
+  <li>This creates:
+    <ul>
+      <li>User profiles table</li>
+      <li>Projects table</li>
+      <li>AI interactions table</li>
+      <li>Code snippets table</li>
+      <li>Learning paths table</li>
+      <li>Memory system table</li>
+      <li>Team collaboration tables</li>
+      <li>All RLS policies</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="5-configure-storage-buckets">5. Configure Storage Buckets</h3>
+
+<p>In Storage section:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Run in SQL Editor</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">storage</span><span class="p">.</span><span class="n">buckets</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="k">public</span><span class="p">)</span> 
+<span class="k">VALUES</span> 
+  <span class="p">(</span><span class="s1">'avatars'</span><span class="p">,</span> <span class="s1">'avatars'</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span>
+  <span class="p">(</span><span class="s1">'project-files'</span><span class="p">,</span> <span class="s1">'project-files'</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="6-set-up-edge-functions-optional">6. Set Up Edge Functions (Optional)</h3>
+
+<p>For custom business logic:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Supabase CLI</span>
+npm <span class="nb">install</span> <span class="nt">-g</span> supabase
+
+<span class="c"># Login</span>
+supabase login
+
+<span class="c"># Create function</span>
+supabase functions new process-ai-interaction
+
+<span class="c"># Deploy</span>
+supabase functions deploy process-ai-interaction
+</code></pre></div></div>
+
+<h3 id="7-configure-security">7. Configure Security</h3>
+
+<h4 id="row-level-security-rls">Row Level Security (RLS)</h4>
+<ul>
+  <li>✅ Already configured in schema.sql</li>
+  <li>Users can only access their own data</li>
+  <li>Public projects visible to all</li>
+  <li>Team members can access team data</li>
+</ul>
+
+<h4 id="api-rate-limiting">API Rate Limiting</h4>
+<p>In Dashboard → Settings → API:</p>
+<ul>
+  <li>Set rate limits for anonymous users</li>
+  <li>Configure CORS origins</li>
+</ul>
+
+<h4 id="secrets-management">Secrets Management</h4>
+<p>For API keys (OpenAI, GitHub, etc.):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supabase secrets <span class="nb">set </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
+supabase secrets <span class="nb">set </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>ghp_...
+</code></pre></div></div>
+
+<h2 id="frontend-integration">Frontend Integration</h2>
+
+<h3 id="1-install-dependencies">1. Install Dependencies</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>frontend/devmentor-ui
+npm <span class="nb">install</span> @supabase/supabase-js
+</code></pre></div></div>
+
+<h3 id="2-initialize-supabase-client">2. Initialize Supabase Client</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/lib/supabase.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/supabase-js</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">supabaseUrl</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">supabaseAnonKey</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">(</span><span class="nx">supabaseUrl</span><span class="p">,</span> <span class="nx">supabaseAnonKey</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="3-use-auth-service">3. Use Auth Service</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/services/supabaseAuthService.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">supabaseAuth</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./supabaseAuthService</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Register</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabaseAuth</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">);</span>
+
+<span class="c1">// Login</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">session</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabaseAuth</span><span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">);</span>
+
+<span class="c1">// OAuth</span>
+<span class="k">await</span> <span class="nx">supabaseAuth</span><span class="p">.</span><span class="nx">loginWithGitHub</span><span class="p">();</span>
+
+<span class="c1">// Logout</span>
+<span class="k">await</span> <span class="nx">supabaseAuth</span><span class="p">.</span><span class="nx">logout</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="4-protected-routes">4. Protected Routes</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/components/ProtectedRoute.tsx</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useRouter</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/router</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">supabaseAuth</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/services/supabaseAuthService</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">ProtectedRoute</span><span class="p">({</span> <span class="nx">children</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="nx">useRouter</span><span class="p">();</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">checkAuth</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">isAuthenticated</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabaseAuth</span><span class="p">.</span><span class="nx">isAuthenticated</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isAuthenticated</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">router</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="nx">checkAuth</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+  
+  <span class="k">return</span> <span class="nx">children</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="database-operations">Database Operations</h2>
+
+<h3 id="basic-crud-operations">Basic CRUD Operations</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Create project</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+  <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">insert</span><span class="p">({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">description</span><span class="p">,</span> <span class="nx">user_id</span> <span class="p">});</span>
+
+<span class="c1">// Read projects</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">projects</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+  <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">user_id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+
+<span class="c1">// Update project</span>
+<span class="k">await</span> <span class="nx">supabase</span>
+  <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">update</span><span class="p">({</span> <span class="na">name</span><span class="p">:</span> <span class="nx">newName</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">projectId</span><span class="p">);</span>
+
+<span class="c1">// Delete project</span>
+<span class="k">await</span> <span class="nx">supabase</span>
+  <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="k">delete</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">projectId</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="real-time-subscriptions">Real-time Subscriptions</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Subscribe to changes</span>
+<span class="kd">const</span> <span class="nx">subscription</span> <span class="o">=</span> <span class="nx">supabase</span>
+  <span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">postgres_changes</span><span class="dl">'</span><span class="p">,</span> 
+    <span class="p">{</span> <span class="na">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span> <span class="na">schema</span><span class="p">:</span> <span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">,</span> <span class="na">table</span><span class="p">:</span> <span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">(</span><span class="nx">payload</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Change received!</span><span class="dl">'</span><span class="p">,</span> <span class="nx">payload</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">)</span>
+  <span class="p">.</span><span class="nx">subscribe</span><span class="p">();</span>
+
+<span class="c1">// Cleanup</span>
+<span class="nx">subscription</span><span class="p">.</span><span class="nx">unsubscribe</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="local-development">Local Development</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start Supabase locally (requires Docker)</span>
+supabase start
+
+<span class="c"># Get local URLs</span>
+supabase status
+
+<span class="c"># Stop local Supabase</span>
+supabase stop
+</code></pre></div></div>
+
+<h3 id="test-authentication-flow">Test Authentication Flow</h3>
+
+<ol>
+  <li>Register new user</li>
+  <li>Check email for verification (in development, check Inbucket at http://localhost:54324)</li>
+  <li>Login with credentials</li>
+  <li>Test OAuth providers</li>
+  <li>Verify protected routes work</li>
+  <li>Test logout</li>
+</ol>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<h3 id="dashboard-metrics">Dashboard Metrics</h3>
+<ul>
+  <li>Authentication → Users: Monitor signups</li>
+  <li>Database → Query Performance: Check slow queries</li>
+  <li>Storage → Usage: Monitor file uploads</li>
+  <li>Logs → Edge Functions: Debug functions</li>
+</ul>
+
+<h3 id="error-handling">Error Handling</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">projects</span><span class="dl">'</span><span class="p">).</span><span class="nx">select</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+  <span class="c1">// Handle data</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">PGRST116</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle RLS policy violation</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">23505</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle unique constraint violation</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="production-checklist">Production Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set strong database password</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure custom domain</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up email templates</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Enable 2FA for team members</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure backup strategy</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up monitoring alerts</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review and test RLS policies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure rate limiting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up SSL certificates</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Enable point-in-time recovery</li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<ol>
+  <li><strong>“Invalid API key”</strong>
+    <ul>
+      <li>Check environment variables</li>
+      <li>Ensure using correct key type (anon vs service role)</li>
+    </ul>
+  </li>
+  <li><strong>“Permission denied for table”</strong>
+    <ul>
+      <li>Check RLS policies</li>
+      <li>Verify user is authenticated</li>
+      <li>Check user has correct role</li>
+    </ul>
+  </li>
+  <li><strong>“OAuth redirect mismatch”</strong>
+    <ul>
+      <li>Update redirect URLs in provider settings</li>
+      <li>Check callback URL configuration</li>
+    </ul>
+  </li>
+  <li><strong>Real-time not working</strong>
+    <ul>
+      <li>Enable real-time for tables in Dashboard</li>
+      <li>Check WebSocket connection</li>
+      <li>Verify RLS policies allow SELECT</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://supabase.com/docs">Supabase Documentation</a></li>
+  <li><a href="https://discord.supabase.com">Supabase Discord</a></li>
+  <li><a href="https://supabase.com/docs/guides/database">SQL Editor Snippets</a></li>
+  <li><a href="https://supabase.com/docs/guides/auth/auth-helpers">Auth Helpers</a></li>
+  <li><a href="https://supabase.com/docs/guides/auth/row-level-security">RLS Examples</a></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / SUPABASE_SETUP.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

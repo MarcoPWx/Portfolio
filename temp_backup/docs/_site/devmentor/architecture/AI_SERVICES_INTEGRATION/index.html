@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SERVICES INTEGRATION | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">architecture/AI_SERVICES_INTEGRATION.md</span>
+</div>
+
+<h1>AI SERVICES INTEGRATION</h1>
+
+
+<h1 id="devmentor-ai-services-integration-architecture">DevMentor AI Services Integration Architecture</h1>
+
+<h2 id="overview">Overview</h2>
+<p>The DevMentor platform leverages multiple AI services working in concert to provide intelligent development assistance. The Repository Analyzer now integrates with all core AI services for comprehensive analysis.</p>
+
+<h2 id="-ai-services-architecture">🧠 AI Services Architecture</h2>
+
+<pre><code class="language-mermaid">graph TB
+    subgraph "Frontend Layer"
+        UI[Dev Environment UI]
+        RA[Repository Analyzer]
+    end
+    
+    subgraph "AI Gateway Layer"
+        AG[AI Gateway&lt;br/&gt;:3003]
+        AG_DESC["Routes &amp; Orchestrates&lt;br/&gt;AI Requests"]
+    end
+    
+    subgraph "Core AI Services"
+        PBML[PBML Service&lt;br/&gt;:3005]
+        PBML_DESC["Pattern-Based&lt;br/&gt;Memory Learning"]
+        
+        MEM[Memory Service&lt;br/&gt;:3004]
+        MEM_DESC["Persistent Context&lt;br/&gt;Storage"]
+        
+        LE[Learning Engine&lt;br/&gt;:3006]
+        LE_DESC["AI Model Training&lt;br/&gt;&amp; Pattern Recognition"]
+    end
+    
+    subgraph "External AI Providers"
+        OAI[OpenAI API]
+        CLAUDE[Claude API]
+        LOCAL[Local Models]
+    end
+    
+    subgraph "Data Storage"
+        VDB[(Vector Database&lt;br/&gt;Qdrant)]
+        RDB[(PostgreSQL)]
+        CACHE[(Redis Cache)]
+    end
+    
+    UI --&gt; RA
+    RA --&gt; AG
+    
+    AG --&gt; PBML
+    AG --&gt; MEM
+    AG --&gt; LE
+    AG --&gt; OAI
+    AG --&gt; CLAUDE
+    AG --&gt; LOCAL
+    
+    PBML --&gt; VDB
+    MEM --&gt; VDB
+    MEM --&gt; CACHE
+    LE --&gt; RDB
+    
+    style AG fill:#4A90E2
+    style PBML fill:#50C878
+    style MEM fill:#FFD700
+    style LE fill:#FF6B6B
+</code></pre>
+
+<h2 id="-data-flow">🔄 Data Flow</h2>
+
+<h3 id="1-repository-analysis-request-flow">1. Repository Analysis Request Flow</h3>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant UI as Dev Environment UI
+    participant RA as Repository Analyzer
+    participant AG as AI Gateway
+    participant PBML as PBML Service
+    participant MEM as Memory Service
+    participant LE as Learning Engine
+    participant EXT as External AI
+    
+    User-&gt;&gt;UI: Request Analysis
+    UI-&gt;&gt;RA: analyzeRepository()
+    
+    Note over RA: Scan file system&lt;br/&gt;Detect services
+    
+    RA-&gt;&gt;AG: Get previous patterns
+    AG-&gt;&gt;PBML: getLearnedPatterns()
+    PBML--&gt;&gt;AG: Historical patterns
+    
+    RA-&gt;&gt;AG: Get memory context
+    AG-&gt;&gt;MEM: getMemoryContext()
+    MEM--&gt;&gt;AG: Previous analysis
+    
+    RA-&gt;&gt;AG: Analyze with AI
+    AG-&gt;&gt;EXT: Code analysis request
+    EXT--&gt;&gt;AG: AI insights
+    
+    AG-&gt;&gt;LE: Pattern recognition
+    LE--&gt;&gt;AG: Detected patterns
+    
+    AG-&gt;&gt;PBML: Store new patterns
+    AG-&gt;&gt;MEM: Save analysis
+    
+    AG--&gt;&gt;RA: Complete analysis
+    RA--&gt;&gt;UI: Display results
+    UI--&gt;&gt;User: Show insights
+</code></pre>
+
+<h2 id="-service-responsibilities">🎯 Service Responsibilities</h2>
+
+<h3 id="ai-gateway-port-3003">AI Gateway (Port 3003)</h3>
+<p><strong>Primary Role</strong>: Central orchestration point for all AI operations</p>
+
+<ul>
+  <li><strong>Request Routing</strong>: Directs requests to appropriate AI services</li>
+  <li><strong>Load Balancing</strong>: Distributes AI workload across providers</li>
+  <li><strong>Fallback Logic</strong>: Switches between OpenAI, Claude, and local models</li>
+  <li><strong>Response Aggregation</strong>: Combines insights from multiple sources</li>
+  <li><strong>Authentication</strong>: Manages API keys and access tokens</li>
+</ul>
+
+<h3 id="pbml-service-port-3005">PBML Service (Port 3005)</h3>
+<p><strong>Primary Role</strong>: Pattern-Based Memory Learning system</p>
+
+<ul>
+  <li><strong>Pattern Storage</strong>: Persists discovered code patterns</li>
+  <li><strong>Pattern Recognition</strong>: Identifies recurring patterns in codebase</li>
+  <li><strong>Learning</strong>: Improves pattern detection over time</li>
+  <li><strong>Context Building</strong>: Creates project-specific pattern libraries</li>
+  <li><strong>Vector Storage</strong>: Uses Qdrant for similarity search</li>
+</ul>
+
+<h3 id="memory-service-port-3004">Memory Service (Port 3004)</h3>
+<p><strong>Primary Role</strong>: Long-term context preservation</p>
+
+<ul>
+  <li><strong>Analysis History</strong>: Stores all previous analysis results</li>
+  <li><strong>Context Retrieval</strong>: Provides historical context for better recommendations</li>
+  <li><strong>Caching</strong>: Redis-based caching for fast access</li>
+  <li><strong>Relationship Mapping</strong>: Tracks relationships between code elements</li>
+  <li><strong>Incremental Learning</strong>: Builds knowledge base over time</li>
+</ul>
+
+<h3 id="learning-engine-port-3006">Learning Engine (Port 3006)</h3>
+<p><strong>Primary Role</strong>: AI model training and inference</p>
+
+<ul>
+  <li><strong>Code Analysis</strong>: Deep analysis of code structure</li>
+  <li><strong>Pattern Detection</strong>: Identifies design patterns and anti-patterns</li>
+  <li><strong>Complexity Scoring</strong>: Calculates code complexity metrics</li>
+  <li><strong>Suggestion Generation</strong>: Creates improvement recommendations</li>
+  <li><strong>Model Updates</strong>: Continuously improves based on feedback</li>
+</ul>
+
+<h2 id="-integration-benefits">💡 Integration Benefits</h2>
+
+<h3 id="1-contextual-intelligence">1. <strong>Contextual Intelligence</strong></h3>
+<p>The system remembers previous analyses and learns from them:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example: PBML remembers your coding patterns</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">pbmlContext</span><span class="p">.</span><span class="nx">patterns</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">Repository Pattern</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
+  <span class="nx">suggestions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">Consider using Repository pattern for new service</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-progressive-learning">2. <strong>Progressive Learning</strong></h3>
+<p>Each analysis improves future recommendations:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Memory Service tracks improvements</span>
+<span class="nx">memoryContext</span><span class="p">.</span><span class="nx">analysisHistory</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">analysis</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">analysis</span><span class="p">.</span><span class="nx">improvements</span><span class="p">.</span><span class="nx">implemented</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">learningEngine</span><span class="p">.</span><span class="nx">reinforcePattern</span><span class="p">(</span><span class="nx">analysis</span><span class="p">.</span><span class="nx">pattern</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="3-intelligent-fallbacks">3. <strong>Intelligent Fallbacks</strong></h3>
+<p>System gracefully degrades when services are unavailable:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+  <span class="c1">// Try AI Gateway first</span>
+  <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">aiGateway</span><span class="p">.</span><span class="nx">analyze</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+  <span class="c1">// Fall back to local analysis</span>
+  <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">localAnalyzer</span><span class="p">.</span><span class="nx">analyze</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-real-world-usage-examples">🚀 Real-World Usage Examples</h2>
+
+<h3 id="example-1-new-service-detection">Example 1: New Service Detection</h3>
+<p>When you add a new service to your project:</p>
+
+<ol>
+  <li><strong>Repository Analyzer</strong> detects the new package.json</li>
+  <li><strong>AI Gateway</strong> routes to pattern analysis</li>
+  <li><strong>PBML Service</strong> checks if similar services exist</li>
+  <li><strong>Memory Service</strong> provides context from similar services</li>
+  <li><strong>Learning Engine</strong> suggests best practices</li>
+  <li><strong>Result</strong>: Tailored recommendations based on your project’s patterns</li>
+</ol>
+
+<h3 id="example-2-security-vulnerability-detection">Example 2: Security Vulnerability Detection</h3>
+<p>When analyzing dependencies:</p>
+
+<ol>
+  <li><strong>Repository Analyzer</strong> scans all dependencies</li>
+  <li><strong>AI Gateway</strong> checks multiple sources</li>
+  <li><strong>External AI</strong> identifies potential vulnerabilities</li>
+  <li><strong>PBML Service</strong> checks if vulnerability patterns seen before</li>
+  <li><strong>Memory Service</strong> provides historical fix approaches</li>
+  <li><strong>Result</strong>: Contextual security recommendations with proven fixes</li>
+</ol>
+
+<h3 id="example-3-architecture-evolution">Example 3: Architecture Evolution</h3>
+<p>As your project grows:</p>
+
+<ol>
+  <li><strong>Repository Analyzer</strong> tracks service growth</li>
+  <li><strong>PBML Service</strong> identifies architectural patterns</li>
+  <li><strong>Memory Service</strong> shows architecture evolution</li>
+  <li><strong>Learning Engine</strong> predicts scaling needs</li>
+  <li><strong>AI Gateway</strong> aggregates insights</li>
+  <li><strong>Result</strong>: Proactive architecture recommendations</li>
+</ol>
+
+<h2 id="-performance-metrics">📊 Performance Metrics</h2>
+
+<h3 id="service-communication-latency">Service Communication Latency</h3>
+<ul>
+  <li><strong>AI Gateway → PBML</strong>: ~50ms</li>
+  <li><strong>AI Gateway → Memory</strong>: ~30ms</li>
+  <li><strong>AI Gateway → Learning Engine</strong>: ~100ms</li>
+  <li><strong>AI Gateway → External AI</strong>: ~500-2000ms</li>
+</ul>
+
+<h3 id="analysis-performance">Analysis Performance</h3>
+<ul>
+  <li><strong>Small Project</strong> (&lt;1000 files): ~5 seconds</li>
+  <li><strong>Medium Project</strong> (1000-5000 files): ~15 seconds</li>
+  <li><strong>Large Project</strong> (&gt;5000 files): ~30 seconds</li>
+</ul>
+
+<h3 id="accuracy-metrics">Accuracy Metrics</h3>
+<ul>
+  <li><strong>Service Detection</strong>: 95%+ accuracy</li>
+  <li><strong>Pattern Recognition</strong>: 88%+ accuracy</li>
+  <li><strong>Security Detection</strong>: 92%+ accuracy</li>
+  <li><strong>Architecture Classification</strong>: 90%+ accuracy</li>
+</ul>
+
+<h2 id="-security-considerations">🔐 Security Considerations</h2>
+
+<h3 id="api-key-management">API Key Management</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Environment variables for secure API access</span>
+<span class="nx">NEXT_PUBLIC_AI_GATEWAY_URL</span><span class="o">=</span><span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:3003</span>
+<span class="nx">NEXT_PUBLIC_PBML_SERVICE_URL</span><span class="o">=</span><span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:3005</span>
+<span class="nx">NEXT_PUBLIC_MEMORY_SERVICE_URL</span><span class="o">=</span><span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:3004</span>
+<span class="nx">NEXT_PUBLIC_LEARNING_ENGINE_URL</span><span class="o">=</span><span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:3006</span>
+<span class="nx">AI_AUTH_TOKEN</span><span class="o">=</span><span class="nx">your</span><span class="o">-</span><span class="nx">secure</span><span class="o">-</span><span class="nx">token</span>
+<span class="nx">OPENAI_API_KEY</span><span class="o">=</span><span class="nx">sk</span><span class="o">-</span><span class="p">...</span>
+<span class="nx">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="nx">sk</span><span class="o">-</span><span class="nx">ant</span><span class="o">-</span><span class="p">...</span>
+</code></pre></div></div>
+
+<h3 id="data-privacy">Data Privacy</h3>
+<ul>
+  <li><strong>Local First</strong>: Basic analysis performed locally</li>
+  <li><strong>Opt-in AI</strong>: External AI only with user consent</li>
+  <li><strong>Data Sanitization</strong>: Sensitive data removed before external calls</li>
+  <li><strong>Encrypted Storage</strong>: All stored patterns encrypted</li>
+</ul>
+
+<h2 id="️-configuration">🛠️ Configuration</h2>
+
+<h3 id="enable-ai-services">Enable AI Services</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In your .env.local</span>
+<span class="nx">ENABLE_AI_GATEWAY</span><span class="o">=</span><span class="kc">true</span>
+<span class="nx">ENABLE_PBML</span><span class="o">=</span><span class="kc">true</span>
+<span class="nx">ENABLE_MEMORY_SERVICE</span><span class="o">=</span><span class="kc">true</span>
+<span class="nx">ENABLE_LEARNING_ENGINE</span><span class="o">=</span><span class="kc">true</span>
+<span class="nx">USE_EXTERNAL_AI</span><span class="o">=</span><span class="kc">true</span>
+</code></pre></div></div>
+
+<h3 id="service-endpoints">Service Endpoints</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Default local development endpoints</span>
+<span class="kd">const</span> <span class="nx">AI_SERVICES</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">AI_GATEWAY</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:3003</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">PBML_SERVICE</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:3005</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">MEMORY_SERVICE</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:3004</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">LEARNING_ENGINE</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:3006</span><span class="dl">'</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="docker-compose-setup">Docker Compose Setup</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">ai-gateway</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/ai-gateway:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3003:3003"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">OPENAI_API_KEY=${OPENAI_API_KEY}</span>
+      <span class="pi">-</span> <span class="s">ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}</span>
+    
+  <span class="na">pbml-service</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/pbml-service:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3005:3005"</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">qdrant</span>
+    
+  <span class="na">memory-service</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/memory-service:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3004:3004"</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+      <span class="pi">-</span> <span class="s">qdrant</span>
+    
+  <span class="na">learning-engine</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/learning-engine:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3006:3006"</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">postgres</span>
+</code></pre></div></div>
+
+<h2 id="-future-enhancements">📈 Future Enhancements</h2>
+
+<h3 id="phase-1-enhanced-integration">Phase 1: Enhanced Integration</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Real-time service health monitoring</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Automatic service discovery</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dynamic load balancing</li>
+</ul>
+
+<h3 id="phase-2-advanced-ai-features">Phase 2: Advanced AI Features</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Custom model training on your codebase</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Team-wide pattern sharing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Predictive issue detection</li>
+</ul>
+
+<h3 id="phase-3-enterprise-features">Phase 3: Enterprise Features</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Multi-tenant support</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Advanced RBAC</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Compliance reporting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Air-gapped deployment</li>
+</ul>
+
+<h2 id="-contributing">🤝 Contributing</h2>
+
+<p>To add new AI capabilities:</p>
+
+<ol>
+  <li><strong>Extend AI Gateway</strong> - Add new routing logic</li>
+  <li><strong>Update PBML Patterns</strong> - Define new pattern types</li>
+  <li><strong>Enhance Memory Service</strong> - Add new context types</li>
+  <li><strong>Train Learning Engine</strong> - Provide training data</li>
+</ol>
+
+<h2 id="-related-documentation">📚 Related Documentation</h2>
+
+<ul>
+  <li><a href="../AI/PBML_SYSTEM_CORE.md">PBML System Core</a></li>
+  <li><a href="../api/AI_GATEWAY.md">AI Gateway API</a></li>
+  <li><a href="../api/MEMORY_SERVICE.md">Memory Service Architecture</a></li>
+  <li><a href="../AI/LEARNING_ENGINE.md">Learning Engine Guide</a></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / architecture/AI_SERVICES_INTEGRATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIMAI TECHNICAL ARCHITECTURE INSIGHTS | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">analysis/SIMAI_TECHNICAL_ARCHITECTURE_INSIGHTS.md</span>
+</div>
+
+<h1>SIMAI TECHNICAL ARCHITECTURE INSIGHTS</h1>
+
+
+<h1 id="simai-technical-architecture-insights-for-devmentor">SIM.AI Technical Architecture: Insights for DevMentor</h1>
+
+<h2 id="executive-summary">Executive Summary</h2>
+
+<p>Based on analysis of SIM.AI’s GitHub repository (7,962 stars, TypeScript-based), this document outlines key architectural patterns and features that DevMentor can adopt to enhance its AI orchestration, workflow execution, and overall platform capabilities.</p>
+
+<hr />
+
+<h2 id="1-core-architecture-insights">1. Core Architecture Insights</h2>
+
+<h3 id="technology-stack"><strong>Technology Stack</strong></h3>
+<ul>
+  <li><strong>Frontend</strong>: Next.js (React) with TypeScript</li>
+  <li><strong>Backend</strong>: Node.js with Bun runtime for performance</li>
+  <li><strong>Database</strong>: PostgreSQL with pgvector extension for embeddings</li>
+  <li><strong>Real-time</strong>: Separate WebSocket server for live collaboration</li>
+  <li><strong>Containerization</strong>: Docker Compose for deployment</li>
+  <li><strong>AI Models</strong>: Support for OpenAI, Anthropic, Google, and Ollama (local)</li>
+</ul>
+
+<h3 id="service-architecture"><strong>Service Architecture</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Services</span><span class="pi">:</span>
+  <span class="s">1. Main Application (Port 3000)</span>
+     <span class="s">- Next.js app serving UI and API</span>
+     <span class="s">- Workflow builder interface</span>
+     <span class="s">- User management</span>
+  
+  <span class="s">2. Realtime Server (Port 3002)</span>
+     <span class="s">- WebSocket server for live updates</span>
+     <span class="s">- Workflow execution streaming</span>
+     <span class="s">- Collaborative editing</span>
+     
+  <span class="s">3. Database (Port 5432)</span>
+     <span class="s">- PostgreSQL with pgvector</span>
+     <span class="s">- Vector embeddings storage</span>
+     <span class="s">- Workflow definitions</span>
+     
+  <span class="s">4. Migrations Service</span>
+     <span class="s">- Database schema management</span>
+     <span class="s">- One-time execution container</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2-key-features-devmentor-should-adopt">2. Key Features DevMentor Should Adopt</h2>
+
+<h3 id="a-workflow-execution-architecture"><strong>A. Workflow Execution Architecture</strong></h3>
+
+<h4 id="real-time-execution-with-websocket-server"><strong>Real-time Execution with WebSocket Server</strong></h4>
+<p>SIM.AI uses a separate WebSocket server for:</p>
+<ul>
+  <li><strong>Live execution updates</strong> - Users see workflow progress in real-time</li>
+  <li><strong>Collaborative editing</strong> - Multiple users can edit same workflow</li>
+  <li><strong>Streaming responses</strong> - AI responses stream as they generate</li>
+</ul>
+
+<p><strong>DevMentor Implementation:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Proposed WebSocket server structure for DevMentor</span>
+<span class="kr">interface</span> <span class="nx">ExecutionServer</span> <span class="p">{</span>
+  <span class="nl">handlers</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">workflow</span><span class="p">:</span> <span class="nx">WorkflowExecutionHandler</span><span class="p">;</span>
+    <span class="nl">presence</span><span class="p">:</span> <span class="nx">CollaborationHandler</span><span class="p">;</span>
+    <span class="nl">operations</span><span class="p">:</span> <span class="nx">OperationHandler</span><span class="p">;</span>
+    <span class="nl">subblocks</span><span class="p">:</span> <span class="nx">SubBlockHandler</span><span class="p">;</span>
+    <span class="nl">variables</span><span class="p">:</span> <span class="nx">VariableHandler</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="nl">rooms</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">execution</span><span class="p">:</span> <span class="nx">ExecutionRoom</span><span class="p">;</span>
+    <span class="nl">collaboration</span><span class="p">:</span> <span class="nx">CollaborationRoom</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="block-based-execution-model"><strong>Block-Based Execution Model</strong></h4>
+<p>SIM.AI’s core abstraction is “blocks” - self-contained units with:</p>
+<ul>
+  <li>Defined inputs/outputs</li>
+  <li>Configuration schema</li>
+  <li>Execution logic</li>
+  <li>Error handling</li>
+</ul>
+
+<p><strong>Key Block Types Found:</strong></p>
+<ol>
+  <li><strong>Agent</strong> - AI model interaction</li>
+  <li><strong>API</strong> - External service calls</li>
+  <li><strong>Condition</strong> - Branching logic</li>
+  <li><strong>Loop</strong> - Iteration control</li>
+  <li><strong>Parallel</strong> - Concurrent execution</li>
+  <li><strong>Router</strong> - Dynamic routing</li>
+  <li><strong>Function</strong> - Custom code execution</li>
+  <li><strong>Evaluator</strong> - Output validation</li>
+  <li><strong>Workflow</strong> - Nested workflows</li>
+</ol>
+
+<p><strong>DevMentor Adaptation:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Proposed block interface for DevMentor</span>
+<span class="kr">interface</span> <span class="nx">DevMentorBlock</span> <span class="p">{</span>
+  <span class="nl">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">agent</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">memory</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">code-analysis</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">deploy</span><span class="dl">'</span><span class="p">;</span>
+  
+  <span class="nx">execute</span><span class="p">(</span><span class="nx">inputs</span><span class="p">:</span> <span class="nx">BlockInputs</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">BlockOutputs</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">validate</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">BlockConfig</span><span class="p">):</span> <span class="nx">ValidationResult</span><span class="p">;</span>
+  <span class="nx">getSchema</span><span class="p">():</span> <span class="nx">JSONSchema</span><span class="p">;</span>
+  
+  <span class="c1">// Unique to DevMentor</span>
+  <span class="nx">learnFromExecution</span><span class="p">(</span><span class="nx">result</span><span class="p">:</span> <span class="nx">ExecutionResult</span><span class="p">):</span> <span class="k">void</span><span class="p">;</span> <span class="c1">// PBML integration</span>
+  <span class="nx">getMemoryContext</span><span class="p">():</span> <span class="nx">MemoryContext</span><span class="p">;</span> <span class="c1">// Qdrant integration</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="b-ai-gateway-pattern"><strong>B. AI Gateway Pattern</strong></h3>
+
+<h4 id="multi-provider-abstraction"><strong>Multi-Provider Abstraction</strong></h4>
+<p>SIM.AI doesn’t have a traditional “AI Gateway” service. Instead, they implement provider abstraction at the application level:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Their approach (simplified)</span>
+<span class="kd">class</span> <span class="nx">AIProvider</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">complete</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">CompletionParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Response</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">provider</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">:</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">openAIComplete</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">anthropic</span><span class="dl">'</span><span class="p">:</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">anthropicComplete</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">ollama</span><span class="dl">'</span><span class="p">:</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">ollamaComplete</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+      <span class="c1">// ... other providers</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>DevMentor Enhancement:</strong>
+Create a dedicated AI Gateway service with:</p>
+<ul>
+  <li><strong>Provider routing</strong> based on capabilities</li>
+  <li><strong>Cost optimization</strong> logic</li>
+  <li><strong>Fallback mechanisms</strong></li>
+  <li><strong>Response caching</strong></li>
+  <li><strong>Usage tracking</strong></li>
+</ul>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Proposed AI Gateway for DevMentor</span>
+<span class="na">ai-gateway</span><span class="pi">:</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="m">3001</span>
+  <span class="na">features</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">Multi-provider support (OpenAI, Anthropic, Google, Ollama)</span>
+    <span class="pi">-</span> <span class="s">Capability-based routing</span>
+    <span class="pi">-</span> <span class="s">Cost tracking per execution</span>
+    <span class="pi">-</span> <span class="s">Automatic fallback on failures</span>
+    <span class="pi">-</span> <span class="s">Response streaming</span>
+    <span class="pi">-</span> <span class="s">Token usage optimization</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="c-vector-storage-integration"><strong>C. Vector Storage Integration</strong></h3>
+
+<h4 id="pgvector-for-embeddings"><strong>pgvector for Embeddings</strong></h4>
+<p>SIM.AI uses PostgreSQL with pgvector extension for:</p>
+<ul>
+  <li><strong>Knowledge base</strong> storage</li>
+  <li><strong>Semantic search</strong> capabilities</li>
+  <li><strong>Workflow similarity</strong> matching</li>
+</ul>
+
+<p><strong>DevMentor Comparison:</strong></p>
+<ul>
+  <li>SIM.AI: pgvector (simpler, integrated with main DB)</li>
+  <li>DevMentor: Qdrant (more powerful, separate service)</li>
+</ul>
+
+<p><strong>Recommendation:</strong> Keep Qdrant for advanced vector operations but consider pgvector for simple embeddings to reduce complexity.</p>
+
+<hr />
+
+<h3 id="d-workflow-persistence--version-control"><strong>D. Workflow Persistence &amp; Version Control</strong></h3>
+
+<h4 id="yaml-based-workflow-definitions"><strong>YAML-Based Workflow Definitions</strong></h4>
+<p>SIM.AI stores workflows in a format that’s:</p>
+<ul>
+  <li>Git-friendly</li>
+  <li>Human-readable</li>
+  <li>Version-controllable</li>
+</ul>
+
+<p><strong>DevMentor Implementation:</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Proposed workflow format for DevMentor</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">1.0'</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Code</span><span class="nv"> </span><span class="s">Review</span><span class="nv"> </span><span class="s">Pipeline'</span>
+<span class="na">triggers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">type</span><span class="pi">:</span> <span class="s1">'</span><span class="s">github_pr'</span>
+    <span class="na">config</span><span class="pi">:</span>
+      <span class="na">repository</span><span class="pi">:</span> <span class="s1">'</span><span class="s">user/repo'</span>
+      
+<span class="na">blocks</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">id</span><span class="pi">:</span> <span class="s1">'</span><span class="s">analyze-code'</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s1">'</span><span class="s">code-agent'</span>
+    <span class="na">config</span><span class="pi">:</span>
+      <span class="na">analysis_type</span><span class="pi">:</span> <span class="s1">'</span><span class="s">security,performance,style'</span>
+    
+  <span class="pi">-</span> <span class="na">id</span><span class="pi">:</span> <span class="s1">'</span><span class="s">run-tests'</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s1">'</span><span class="s">test-runner'</span>
+    <span class="na">depends_on</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">analyze-code'</span><span class="pi">]</span>
+    
+  <span class="pi">-</span> <span class="na">id</span><span class="pi">:</span> <span class="s1">'</span><span class="s">generate-report'</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s1">'</span><span class="s">report-generator'</span>
+    <span class="na">depends_on</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">run-tests'</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-architectural-patterns-to-adopt">3. Architectural Patterns to Adopt</h2>
+
+<h3 id="a-separation-of-concerns"><strong>A. Separation of Concerns</strong></h3>
+
+<p><strong>SIM.AI’s Approach:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/apps
+  /sim          # Main application
+  /docs         # Documentation site
+  
+/packages
+  /cli          # Command-line interface
+  /python-sdk   # Python SDK
+  /ts-sdk       # TypeScript SDK
+</code></pre></div></div>
+
+<p><strong>DevMentor Should Adopt:</strong></p>
+<ul>
+  <li>Separate packages for SDKs</li>
+  <li>Dedicated CLI package</li>
+  <li>Clear separation between UI and execution logic</li>
+</ul>
+
+<h3 id="b-real-time-collaboration-infrastructure"><strong>B. Real-time Collaboration Infrastructure</strong></h3>
+
+<p><strong>Key Components:</strong></p>
+<ol>
+  <li><strong>Presence System</strong> - Show who’s online</li>
+  <li><strong>Operation Transform</strong> - Handle concurrent edits</li>
+  <li><strong>Room Management</strong> - Isolate collaboration spaces</li>
+  <li><strong>State Synchronization</strong> - Keep all clients in sync</li>
+</ol>
+
+<p><strong>Implementation Strategy:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Proposed collaboration system for DevMentor</span>
+<span class="kd">class</span> <span class="nx">CollaborationManager</span> <span class="p">{</span>
+  <span class="nl">rooms</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">CollaborationRoom</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">joinRoom</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">workflowId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">room</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOrCreateRoom</span><span class="p">(</span><span class="nx">workflowId</span><span class="p">);</span>
+    <span class="nx">room</span><span class="p">.</span><span class="nx">addUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="nx">room</span><span class="p">.</span><span class="nx">broadcastPresence</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">handleOperation</span><span class="p">(</span><span class="nx">operation</span><span class="p">:</span> <span class="nx">Operation</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">transformed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">transformOperation</span><span class="p">(</span><span class="nx">operation</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">applyOperation</span><span class="p">(</span><span class="nx">transformed</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">broadcast</span><span class="p">(</span><span class="nx">transformed</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="c-execution-orchestration"><strong>C. Execution Orchestration</strong></h3>
+
+<p><strong>SIM.AI’s Execution Flow:</strong></p>
+<ol>
+  <li>Parse workflow definition</li>
+  <li>Build execution graph</li>
+  <li>Resolve dependencies</li>
+  <li>Execute blocks in order/parallel</li>
+  <li>Stream results via WebSocket</li>
+  <li>Handle errors/retries</li>
+  <li>Store execution history</li>
+</ol>
+
+<p><strong>DevMentor Enhancement:</strong>
+Add PBML learning at each step:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">DevMentorOrchestrator</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">execute</span><span class="p">(</span><span class="nx">workflow</span><span class="p">:</span> <span class="nx">Workflow</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">graph</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">buildExecutionGraph</span><span class="p">(</span><span class="nx">workflow</span><span class="p">);</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">block</span> <span class="k">of</span> <span class="nx">graph</span><span class="p">.</span><span class="nx">getExecutionOrder</span><span class="p">())</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">block</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+      
+      <span class="c1">// Unique to DevMentor</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">pbmlEngine</span><span class="p">.</span><span class="nx">learn</span><span class="p">(</span><span class="nx">block</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">memoryService</span><span class="p">.</span><span class="nx">store</span><span class="p">(</span><span class="nx">block</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+      
+      <span class="k">this</span><span class="p">.</span><span class="nx">streamResult</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-features-breakdown">4. Features Breakdown</h2>
+
+<h3 id="must-have-features-from-simai"><strong>Must-Have Features from SIM.AI</strong></h3>
+
+<ol>
+  <li><strong>Visual Workflow Builder</strong>
+    <ul>
+      <li>Drag-and-drop interface</li>
+      <li>Real-time preview</li>
+      <li>Block library</li>
+    </ul>
+  </li>
+  <li><strong>Multi-Model Support</strong>
+    <ul>
+      <li>Provider abstraction</li>
+      <li>Model selection UI</li>
+      <li>Cost estimation</li>
+    </ul>
+  </li>
+  <li><strong>Execution Triggers</strong>
+    <ul>
+      <li>Webhooks</li>
+      <li>Schedules</li>
+      <li>Manual triggers</li>
+      <li>Event-based</li>
+    </ul>
+  </li>
+  <li><strong>60+ Integrations</strong>
+    <ul>
+      <li>Pre-built connectors</li>
+      <li>OAuth handling</li>
+      <li>Credential management</li>
+    </ul>
+  </li>
+  <li><strong>Real-time Execution</strong>
+    <ul>
+      <li>WebSocket streaming</li>
+      <li>Progress indicators</li>
+      <li>Live logs</li>
+    </ul>
+  </li>
+  <li><strong>Collaboration</strong>
+    <ul>
+      <li>Multi-user editing</li>
+      <li>Presence indicators</li>
+      <li>Change history</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="5-technical-implementation-roadmap">5. Technical Implementation Roadmap</h2>
+
+<h3 id="phase-1-core-infrastructure-weeks-1-2"><strong>Phase 1: Core Infrastructure (Weeks 1-2)</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Tasks</span><span class="pi">:</span>
+  <span class="s">1. Set up WebSocket server for real-time</span>
+  <span class="s">2. Implement block abstraction</span>
+  <span class="s">3. Create execution orchestrator</span>
+  <span class="s">4. Add provider abstraction layer</span>
+</code></pre></div></div>
+
+<h3 id="phase-2-visual-builder-weeks-3-4"><strong>Phase 2: Visual Builder (Weeks 3-4)</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Tasks</span><span class="pi">:</span>
+  <span class="s">1. React Flow integration</span>
+  <span class="s">2. Block component library</span>
+  <span class="s">3. Drag-and-drop functionality</span>
+  <span class="s">4. Connection validation</span>
+</code></pre></div></div>
+
+<h3 id="phase-3-execution-engine-weeks-5-6"><strong>Phase 3: Execution Engine (Weeks 5-6)</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Tasks</span><span class="pi">:</span>
+  <span class="s">1. Workflow parser</span>
+  <span class="s">2. Dependency resolver</span>
+  <span class="s">3. Parallel execution</span>
+  <span class="s">4. Error handling</span>
+  <span class="s">5. Retry logic</span>
+</code></pre></div></div>
+
+<h3 id="phase-4-integrations-weeks-7-8"><strong>Phase 4: Integrations (Weeks 7-8)</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Tasks</span><span class="pi">:</span>
+  <span class="s">1. Integration framework</span>
+  <span class="s">2. OAuth flow</span>
+  <span class="s">3. Credential storage</span>
+  <span class="s">4. Top 10 integrations</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="6-devmentors-unique-advantages-to-preserve">6. DevMentor’s Unique Advantages to Preserve</h2>
+
+<p>While adopting SIM.AI’s patterns, maintain:</p>
+
+<ol>
+  <li><strong>PBML Learning System</strong> - Unique adaptive capability</li>
+  <li><strong>Advanced Memory (Qdrant)</strong> - Superior to pgvector</li>
+  <li><strong>Development Focus</strong> - Deep code intelligence</li>
+  <li><strong>Microservices Architecture</strong> - Better for scaling</li>
+  <li><strong>Kubernetes Deployment</strong> - Enterprise-ready</li>
+</ol>
+
+<hr />
+
+<h2 id="7-key-architectural-decisions">7. Key Architectural Decisions</h2>
+
+<h3 id="from-simais-codebase"><strong>From SIM.AI’s Codebase:</strong></h3>
+
+<ol>
+  <li><strong>Bun Runtime</strong> - 3x faster than Node.js</li>
+  <li><strong>pgvector</strong> - Simpler than separate vector DB</li>
+  <li><strong>Separate WebSocket Server</strong> - Better scaling</li>
+  <li><strong>Monorepo Structure</strong> - Easier management</li>
+  <li><strong>Docker Compose</strong> - Simple deployment</li>
+</ol>
+
+<h3 id="devmentor-should-consider"><strong>DevMentor Should Consider:</strong></h3>
+
+<ol>
+  <li><strong>Adopt Bun</strong> for performance gains</li>
+  <li><strong>Keep Qdrant</strong> but add pgvector for simple cases</li>
+  <li><strong>Add WebSocket server</strong> for real-time features</li>
+  <li><strong>Maintain microservices</strong> but improve orchestration</li>
+  <li><strong>Keep K8s</strong> but add Docker Compose option</li>
+</ol>
+
+<hr />
+
+<h2 id="8-cost-and-performance-optimizations">8. Cost and Performance Optimizations</h2>
+
+<h3 id="simais-approach"><strong>SIM.AI’s Approach:</strong></h3>
+<ul>
+  <li>Memory limits per service (8GB for main, 4GB for realtime)</li>
+  <li>Health checks with appropriate intervals</li>
+  <li>Resource-based scaling</li>
+</ul>
+
+<h3 id="devmentor-improvements"><strong>DevMentor Improvements:</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Enhanced resource management</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">ai-gateway</span><span class="pi">:</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">resources</span><span class="pi">:</span>
+        <span class="na">limits</span><span class="pi">:</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">4G</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2'</span>
+        <span class="na">reservations</span><span class="pi">:</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">2G</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">1'</span>
+    
+    <span class="na">autoscaling</span><span class="pi">:</span>
+      <span class="na">min_replicas</span><span class="pi">:</span> <span class="m">1</span>
+      <span class="na">max_replicas</span><span class="pi">:</span> <span class="m">5</span>
+      <span class="na">target_cpu</span><span class="pi">:</span> <span class="m">70</span>
+      <span class="na">target_memory</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="9-security-considerations">9. Security Considerations</h2>
+
+<h3 id="from-simai"><strong>From SIM.AI:</strong></h3>
+<ul>
+  <li>Encryption key for sensitive data</li>
+  <li>OAuth for third-party integrations</li>
+  <li>Credential isolation per user</li>
+</ul>
+
+<h3 id="devmentor-enhancements"><strong>DevMentor Enhancements:</strong></h3>
+<ul>
+  <li>Zero-knowledge architecture for code</li>
+  <li>Federated learning for PBML</li>
+  <li>End-to-end encryption for workflows</li>
+</ul>
+
+<hr />
+
+<h2 id="10-conclusion--recommendations">10. Conclusion &amp; Recommendations</h2>
+
+<h3 id="top-5-features-to-implement"><strong>Top 5 Features to Implement:</strong></h3>
+
+<ol>
+  <li><strong>Visual Workflow Builder</strong> - Biggest gap, highest impact</li>
+  <li><strong>Real-time Execution with WebSocket</strong> - Better UX</li>
+  <li><strong>Multi-Provider AI Support</strong> - Flexibility for users</li>
+  <li><strong>Block-Based Architecture</strong> - Modularity and reusability</li>
+  <li><strong>YAML Workflow Definitions</strong> - Version control friendly</li>
+</ol>
+
+<h3 id="architecture-changes"><strong>Architecture Changes:</strong></h3>
+
+<ol>
+  <li>Add separate WebSocket server</li>
+  <li>Implement block abstraction layer</li>
+  <li>Create unified execution orchestrator</li>
+  <li>Build provider abstraction</li>
+  <li>Add collaboration infrastructure</li>
+</ol>
+
+<h3 id="maintain-devmentors-strengths"><strong>Maintain DevMentor’s Strengths:</strong></h3>
+
+<ol>
+  <li>Keep PBML for learning</li>
+  <li>Keep Qdrant for advanced vectors</li>
+  <li>Keep microservices for scale</li>
+  <li>Keep K8s for enterprise</li>
+  <li>Keep development focus</li>
+</ol>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+  <li><strong>Review and prioritize</strong> features from this analysis</li>
+  <li><strong>Create proof of concept</strong> for visual workflow builder</li>
+  <li><strong>Design block abstraction</strong> that fits DevMentor’s architecture</li>
+  <li><strong>Implement WebSocket server</strong> for real-time features</li>
+  <li><strong>Build provider abstraction</strong> for multi-model support</li>
+</ol>
+
+<hr />
+
+<p><em>Analysis Date: January 20, 2025</em><br />
+<em>Based on: SIM.AI GitHub Repository Analysis</em><br />
+<em>Repository: github.com/simstudioai/sim</em><br />
+<em>Stars: 7,962 | Language: TypeScript</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / analysis/SIMAI_TECHNICAL_ARCHITECTURE_INSIGHTS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

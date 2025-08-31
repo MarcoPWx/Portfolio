@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>backend-implementation-plan</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">implementation/backend-implementation-plan.md</span>
+</div>
+
+<h1>backend-implementation-plan</h1>
+
+
+<h1 id="devmentor-backend-implementation-plan">DevMentor Backend Implementation Plan</h1>
+
+<h2 id="executive-summary">Executive Summary</h2>
+<p>The DevMentor system currently has a polished frontend UI with mock data but <strong>NO BACKEND IMPLEMENTATION</strong>. This document outlines all the backend services, APIs, and real-time features that need to be built to make the system functional.</p>
+
+<h2 id="current-state-analysis">Current State Analysis</h2>
+
+<h3 id="what-exists-frontend-only">What Exists (Frontend Only)</h3>
+<ul>
+  <li>✅ Beautiful UI with glass morphism design</li>
+  <li>✅ Frontend service clients expecting backend APIs</li>
+  <li>✅ WebSocket client ready for real-time features</li>
+  <li>✅ Mock data and placeholder responses</li>
+  <li>✅ Authentication flow UI (no backend)</li>
+  <li>✅ Project management UI (no backend)</li>
+</ul>
+
+<h3 id="whats-missing-everything-backend">What’s Missing (Everything Backend)</h3>
+<ul>
+  <li>❌ <strong>NO API Gateway</strong> (expected at port 8080)</li>
+  <li>❌ <strong>NO Backend Services</strong> (auth, projects, AI, etc.)</li>
+  <li>❌ <strong>NO Database</strong> (PostgreSQL, Redis)</li>
+  <li>❌ <strong>NO WebSocket Server</strong> (expected at port 8002)</li>
+  <li>❌ <strong>NO AI Integration</strong> (OpenAI, Claude, etc.)</li>
+  <li>❌ <strong>NO GitHub Integration</strong></li>
+  <li>❌ <strong>NO Memory/Persistence Layer</strong></li>
+</ul>
+
+<h2 id="required-backend-architecture">Required Backend Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────┐
+│                         Frontend (Next.js)                   │
+│                            Port: 3001                        │
+└────────────┬─────────────────────────┬──────────────────────┘
+             │                         │
+             ▼                         ▼
+┌─────────────────────┐    ┌──────────────────────┐
+│   API Gateway       │    │  WebSocket Server    │
+│   Port: 8080        │    │  Port: 8002          │
+└──────────┬──────────┘    └──────────┬───────────┘
+           │                           │
+           ▼                           │
+┌──────────────────────────────────────┼──────────────────────┐
+│                  Backend Services    │                      │
+├──────────────────────────────────────┼──────────────────────┤
+│ • Auth Service (8001)                │                      │
+│ • Project Service (8003)             │                      │
+│ • AI Service (8004)                  ◄──────────────────────┘
+│ • Memory Service (8005)              │
+│ • GitHub Service (8006)              │
+│ • TDD Service (8007)                 │
+└──────────────┬───────────────────────┘
+               │
+               ▼
+┌──────────────────────────────────────┐
+│           Data Layer                 │
+├──────────────────────────────────────┤
+│ • PostgreSQL (5432)                  │
+│ • Redis (6379)                       │
+│ • Vector DB (for Memory)             │
+└──────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="1-core-infrastructure-services">1. Core Infrastructure Services</h2>
+
+<h3 id="11-api-gateway-service">1.1 API Gateway Service</h3>
+<p><strong>Port:</strong> 8080<br />
+<strong>Technology:</strong> Node.js/Express or Kong/Nginx</p>
+
+<p><strong>Required Endpoints:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Health &amp; Status</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">health</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">status</span>
+
+<span class="c1">// Service Routing</span>
+<span class="o">*</span>    <span class="sr">/api/</span><span class="nx">auth</span><span class="cm">/*     → Auth Service (8001)
+*    /api/projects/* → Project Service (8003)
+*    /api/ai/*       → AI Service (8004)
+*    /api/memory/*   → Memory Service (8005)
+*    /api/github/*   → GitHub Service (8006)
+*    /api/tdd/*      → TDD Service (8007)
+</span></code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🔴 CRITICAL</p>
+
+<h3 id="12-websocket-server">1.2 WebSocket Server</h3>
+<p><strong>Port:</strong> 8002<br />
+<strong>Technology:</strong> Socket.io or native WebSockets</p>
+
+<p><strong>Required Events:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Connection Management</span>
+<span class="o">-</span> <span class="nx">connection</span>
+<span class="o">-</span> <span class="nx">disconnect</span>
+<span class="o">-</span> <span class="nx">reconnect</span>
+
+<span class="c1">// Project Management Events</span>
+<span class="o">-</span> <span class="nx">task</span><span class="p">:</span><span class="nx">created</span>
+<span class="o">-</span> <span class="nx">task</span><span class="p">:</span><span class="nx">updated</span>
+<span class="o">-</span> <span class="nx">task</span><span class="p">:</span><span class="nx">deleted</span>
+<span class="o">-</span> <span class="nx">task</span><span class="p">:</span><span class="nx">status_changed</span>
+<span class="o">-</span> <span class="nx">epic</span><span class="p">:</span><span class="nx">created</span>
+<span class="o">-</span> <span class="nx">epic</span><span class="p">:</span><span class="nx">updated</span>
+<span class="o">-</span> <span class="nx">epic</span><span class="p">:</span><span class="nx">deleted</span>
+<span class="o">-</span> <span class="nx">project</span><span class="p">:</span><span class="nx">created</span>
+<span class="o">-</span> <span class="nx">project</span><span class="p">:</span><span class="nx">updated</span>
+<span class="o">-</span> <span class="nx">sprint</span><span class="p">:</span><span class="nx">started</span>
+<span class="o">-</span> <span class="nx">sprint</span><span class="p">:</span><span class="nx">completed</span>
+
+<span class="c1">// AI Events</span>
+<span class="o">-</span> <span class="nx">ai</span><span class="p">:</span><span class="nx">thinking</span>
+<span class="o">-</span> <span class="nx">ai</span><span class="p">:</span><span class="nx">response</span>
+<span class="o">-</span> <span class="nx">ai</span><span class="p">:</span><span class="nx">analysis</span><span class="p">:</span><span class="nx">started</span>
+<span class="o">-</span> <span class="nx">ai</span><span class="p">:</span><span class="nx">analysis</span><span class="p">:</span><span class="nx">progress</span>
+<span class="o">-</span> <span class="nx">ai</span><span class="p">:</span><span class="nx">analysis</span><span class="p">:</span><span class="nx">completed</span>
+
+<span class="c1">// System Events</span>
+<span class="o">-</span> <span class="nx">notification</span>
+<span class="o">-</span> <span class="nx">system</span><span class="p">:</span><span class="nx">update</span>
+<span class="o">-</span> <span class="nx">memory</span><span class="p">:</span><span class="nx">stored</span>
+<span class="o">-</span> <span class="nx">memory</span><span class="p">:</span><span class="nx">retrieved</span>
+</code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🔴 CRITICAL</p>
+
+<h2 id="2-business-logic-services">2. Business Logic Services</h2>
+
+<h3 id="21-authentication-service">2.1 Authentication Service</h3>
+<p><strong>Port:</strong> 8001<br />
+<strong>Database:</strong> PostgreSQL</p>
+
+<p><strong>Required APIs:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">login</span>           <span class="c1">// Email/password login</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">register</span>        <span class="c1">// User registration</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">logout</span>          <span class="c1">// Logout</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">refresh</span>         <span class="c1">// Refresh JWT token</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">profile</span>         <span class="c1">// Get user profile</span>
+<span class="nx">PUT</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">profile</span>         <span class="c1">// Update profile</span>
+
+<span class="c1">// GitHub OAuth</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">login</span>    <span class="c1">// Initiate GitHub OAuth</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">callback</span> <span class="c1">// Handle OAuth callback</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">repositories</span>    <span class="c1">// Get user's GitHub repos</span>
+</code></pre></div></div>
+
+<p><strong>Database Schema:</strong></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- users table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">email</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">password_hash</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">username</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">full_name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">avatar_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">github_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+  <span class="n">github_token</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- sessions table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">sessions</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">token</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">refresh_token</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">expires_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🔴 CRITICAL</p>
+
+<h3 id="22-project-management-service">2.2 Project Management Service</h3>
+<p><strong>Port:</strong> 8003<br />
+<strong>Database:</strong> PostgreSQL</p>
+
+<p><strong>Required APIs:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Projects</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span>           <span class="c1">// List user's projects</span>
+<span class="nx">POST</span>   <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span>           <span class="c1">// Create project</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>       <span class="c1">// Get project details</span>
+<span class="nx">PUT</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>       <span class="c1">// Update project</span>
+<span class="nx">DELETE</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>       <span class="c1">// Delete project</span>
+
+<span class="c1">// Epics</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span><span class="o">/</span><span class="nx">epics</span> <span class="c1">// List project epics</span>
+<span class="nx">POST</span>   <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">projects</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span><span class="o">/</span><span class="nx">epics</span> <span class="c1">// Create epic</span>
+<span class="nx">PUT</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">epics</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>          <span class="c1">// Update epic</span>
+<span class="nx">DELETE</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">epics</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>          <span class="c1">// Delete epic</span>
+
+<span class="c1">// Tasks</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">epics</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span><span class="o">/</span><span class="nx">tasks</span>    <span class="c1">// List epic tasks</span>
+<span class="nx">POST</span>   <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">epics</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span><span class="o">/</span><span class="nx">tasks</span>    <span class="c1">// Create task</span>
+<span class="nx">PUT</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tasks</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>          <span class="c1">// Update task</span>
+<span class="nx">DELETE</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tasks</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>          <span class="c1">// Delete task</span>
+<span class="nx">PATCH</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tasks</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span><span class="o">/</span><span class="nx">status</span>   <span class="c1">// Update task status</span>
+</code></pre></div></div>
+
+<p><strong>Database Schema:</strong></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- projects table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">projects</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="k">type</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">status</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">tech_stack</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">repository_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">settings</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- epics table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">epics</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">project_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">projects</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">status</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">priority</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+  <span class="n">assignee</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">due_date</span> <span class="nb">DATE</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- tasks table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">tasks</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">epic_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">epics</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">project_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">projects</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">status</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">priority</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+  <span class="n">assignee</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">estimated_hours</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">actual_hours</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">tags</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">dependencies</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">due_date</span> <span class="nb">DATE</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🟡 HIGH</p>
+
+<h3 id="23-ai-service">2.3 AI Service</h3>
+<p><strong>Port:</strong> 8004<br />
+<strong>Integrations:</strong> OpenAI, Claude, Local LLMs</p>
+
+<p><strong>Required APIs:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Analysis</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">analyze</span><span class="o">/</span><span class="nx">repo</span>      <span class="c1">// Analyze GitHub repository</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">analyze</span><span class="o">/</span><span class="nx">code</span>      <span class="c1">// Analyze code snippet</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">analysis</span><span class="o">/</span><span class="p">:</span><span class="nx">jobId</span>   <span class="c1">// Get analysis job status</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">analysis</span><span class="o">/</span><span class="nx">history</span>  <span class="c1">// Get analysis history</span>
+
+<span class="c1">// AI Assistance</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">chat</span>              <span class="c1">// Chat with AI assistant</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">generate</span><span class="o">/</span><span class="nx">code</span>     <span class="c1">// Generate code</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">generate</span><span class="o">/</span><span class="nx">tests</span>    <span class="c1">// Generate tests</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">review</span><span class="o">/</span><span class="nx">pr</span>         <span class="c1">// Review pull request</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">explain</span>           <span class="c1">// Explain code/concept</span>
+
+<span class="c1">// TDD Support</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">generate</span><span class="o">-</span><span class="nx">spec</span> <span class="c1">// Generate test specifications</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">implement</span>     <span class="c1">// Generate implementation from tests</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">refactor</span>      <span class="c1">// Suggest refactoring</span>
+</code></pre></div></div>
+
+<p><strong>Required Integrations:</strong></p>
+<ul>
+  <li>OpenAI API (GPT-4)</li>
+  <li>Anthropic Claude API</li>
+  <li>Local LLM support (Ollama)</li>
+  <li>GitHub API for code access</li>
+  <li>AST parsing for code analysis</li>
+</ul>
+
+<p><strong>Implementation Priority:</strong> 🟡 HIGH</p>
+
+<h3 id="24-memory-service-pbml">2.4 Memory Service (PBML)</h3>
+<p><strong>Port:</strong> 8005<br />
+<strong>Database:</strong> PostgreSQL + Vector DB (Pinecone/Weaviate)</p>
+
+<p><strong>Required APIs:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Memory Operations</span>
+<span class="nx">POST</span>   <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="nx">store</span>       <span class="c1">// Store new memory</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="nx">retrieve</span>    <span class="c1">// Retrieve relevant memories</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="nx">search</span>      <span class="c1">// Search memories</span>
+<span class="nx">DELETE</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span>         <span class="c1">// Delete memory</span>
+<span class="nx">PUT</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="p">:</span><span class="nx">id</span><span class="o">/</span><span class="nx">relevance</span> <span class="c1">// Update relevance score</span>
+
+<span class="c1">// Context Management</span>
+<span class="nx">GET</span>    <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="nx">context</span><span class="o">/</span><span class="p">:</span><span class="nx">userId</span>  <span class="c1">// Get user's context</span>
+<span class="nx">POST</span>   <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="nx">context</span><span class="o">/</span><span class="nx">update</span>   <span class="c1">// Update context</span>
+<span class="nx">DELETE</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">memory</span><span class="o">/</span><span class="nx">context</span><span class="o">/</span><span class="nx">reset</span>    <span class="c1">// Reset context</span>
+</code></pre></div></div>
+
+<p><strong>Database Schema:</strong></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- memories table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memories</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">context</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">memory</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">embedding</span> <span class="n">VECTOR</span><span class="p">(</span><span class="mi">1536</span><span class="p">),</span> <span class="c1">-- For similarity search</span>
+  <span class="n">tags</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">relevance_score</span> <span class="nb">FLOAT</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">accessed_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">access_count</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span>
+<span class="p">);</span>
+
+<span class="c1">-- memory_contexts table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memory_contexts</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">project_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">projects</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">context_type</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">context_data</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🟡 HIGH</p>
+
+<h3 id="25-github-integration-service">2.5 GitHub Integration Service</h3>
+<p><strong>Port:</strong> 8006<br />
+<strong>APIs:</strong> GitHub REST &amp; GraphQL</p>
+
+<p><strong>Required APIs:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Repository Operations</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">repos</span>          <span class="c1">// List user's repositories</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">repo</span><span class="o">/</span><span class="p">:</span><span class="nx">owner</span><span class="o">/</span><span class="p">:</span><span class="nx">name</span> <span class="c1">// Get repository details</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">repo</span><span class="o">/</span><span class="nx">analyze</span>   <span class="c1">// Trigger repository analysis</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">repo</span><span class="o">/</span><span class="p">:</span><span class="nx">owner</span><span class="o">/</span><span class="p">:</span><span class="nx">name</span><span class="o">/</span><span class="nx">structure</span> <span class="c1">// Get repo structure</span>
+
+<span class="c1">// Code Operations</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">file</span><span class="o">/</span><span class="p">:</span><span class="nx">path</span>     <span class="c1">// Get file content</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">commit</span>         <span class="c1">// Create commit</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">pr</span>             <span class="c1">// Create pull request</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">pr</span><span class="o">/</span><span class="p">:</span><span class="kr">number</span>     <span class="c1">// Get PR details</span>
+
+<span class="c1">// Webhooks</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">github</span><span class="o">/</span><span class="nx">webhook</span>        <span class="c1">// Handle GitHub webhooks</span>
+</code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🟡 HIGH</p>
+
+<h3 id="26-tdd-service">2.6 TDD Service</h3>
+<p><strong>Port:</strong> 8007<br />
+<strong>Database:</strong> PostgreSQL</p>
+
+<p><strong>Required APIs:</strong></p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Test Management</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">session</span><span class="o">/</span><span class="nx">start</span>    <span class="c1">// Start TDD session</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">generate</span>    <span class="c1">// Generate test cases</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">run</span>        <span class="c1">// Run tests</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">results</span>    <span class="c1">// Get test results</span>
+<span class="nx">POST</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">implement</span>       <span class="c1">// Generate implementation</span>
+
+<span class="c1">// Coverage &amp; Metrics</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">coverage</span>        <span class="c1">// Get code coverage</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">metrics</span>         <span class="c1">// Get TDD metrics</span>
+<span class="nx">GET</span>  <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">tdd</span><span class="o">/</span><span class="nx">history</span>         <span class="c1">// Get TDD history</span>
+</code></pre></div></div>
+
+<p><strong>Implementation Priority:</strong> 🟠 MEDIUM</p>
+
+<h2 id="3-data-layer">3. Data Layer</h2>
+
+<h3 id="31-postgresql-database">3.1 PostgreSQL Database</h3>
+<p><strong>Port:</strong> 5432</p>
+
+<p><strong>Required Databases:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">devmentor_auth</code> - User authentication</li>
+  <li><code class="language-plaintext highlighter-rouge">devmentor_projects</code> - Project management</li>
+  <li><code class="language-plaintext highlighter-rouge">devmentor_memory</code> - Memory/context storage</li>
+  <li><code class="language-plaintext highlighter-rouge">devmentor_analytics</code> - Usage analytics</li>
+</ul>
+
+<h3 id="32-redis-cache">3.2 Redis Cache</h3>
+<p><strong>Port:</strong> 6379</p>
+
+<p><strong>Usage:</strong></p>
+<ul>
+  <li>Session storage</li>
+  <li>API response caching</li>
+  <li>Rate limiting</li>
+  <li>Real-time data pub/sub</li>
+  <li>Job queue (Bull/BullMQ)</li>
+</ul>
+
+<h3 id="33-vector-database">3.3 Vector Database</h3>
+<p><strong>Options:</strong> Pinecone, Weaviate, or pgvector</p>
+
+<p><strong>Usage:</strong></p>
+<ul>
+  <li>Memory embeddings</li>
+  <li>Code similarity search</li>
+  <li>Context retrieval</li>
+</ul>
+
+<h2 id="4-real-time-features-implementation">4. Real-Time Features Implementation</h2>
+
+<h3 id="41-live-collaboration">4.1 Live Collaboration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Required WebSocket Rooms</span>
+<span class="o">-</span> <span class="nx">project</span><span class="p">:{</span><span class="nx">projectId</span><span class="p">}</span> <span class="o">-</span> <span class="nx">Project</span> <span class="nx">updates</span>
+<span class="o">-</span> <span class="nx">user</span><span class="p">:{</span><span class="nx">userId</span><span class="p">}</span> <span class="o">-</span> <span class="nx">User</span> <span class="nx">notifications</span>
+<span class="o">-</span> <span class="nx">ai</span><span class="p">:{</span><span class="nx">sessionId</span><span class="p">}</span> <span class="o">-</span> <span class="nx">AI</span> <span class="nx">interaction</span> <span class="nx">updates</span>
+<span class="o">-</span> <span class="nx">tdd</span><span class="p">:{</span><span class="nx">sessionId</span><span class="p">}</span> <span class="o">-</span> <span class="nx">TDD</span> <span class="nx">session</span> <span class="nx">updates</span>
+</code></pre></div></div>
+
+<h3 id="42-ai-streaming-responses">4.2 AI Streaming Responses</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Stream AI responses using Server-Sent Events (SSE)</span>
+<span class="nx">GET</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">stream</span><span class="o">/</span><span class="nx">chat</span>
+<span class="nx">GET</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">ai</span><span class="o">/</span><span class="nx">stream</span><span class="o">/</span><span class="nx">analysis</span>
+</code></pre></div></div>
+
+<h3 id="43-real-time-notifications">4.3 Real-Time Notifications</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Notification Types</span>
+<span class="o">-</span> <span class="nx">task_assigned</span>
+<span class="o">-</span> <span class="nx">task_completed</span>
+<span class="o">-</span> <span class="nx">analysis_complete</span>
+<span class="o">-</span> <span class="nx">ai_suggestion</span>
+<span class="o">-</span> <span class="nx">pr_review_ready</span>
+<span class="o">-</span> <span class="nx">test_failure</span>
+<span class="o">-</span> <span class="nx">deployment_status</span>
+</code></pre></div></div>
+
+<h2 id="5-implementation-phases">5. Implementation Phases</h2>
+
+<h3 id="phase-1-core-infrastructure-week-1-2">Phase 1: Core Infrastructure (Week 1-2)</h3>
+<ol>
+  <li>Set up Docker Compose for all services</li>
+  <li>Implement API Gateway</li>
+  <li>Set up PostgreSQL and Redis</li>
+  <li>Implement Authentication Service</li>
+  <li>Set up WebSocket Server</li>
+</ol>
+
+<h3 id="phase-2-project-management-week-3-4">Phase 2: Project Management (Week 3-4)</h3>
+<ol>
+  <li>Implement Project Service</li>
+  <li>Create database schemas</li>
+  <li>Set up real-time updates</li>
+  <li>Implement task management</li>
+</ol>
+
+<h3 id="phase-3-ai-integration-week-5-6">Phase 3: AI Integration (Week 5-6)</h3>
+<ol>
+  <li>Implement AI Service</li>
+  <li>Integrate OpenAI/Claude APIs</li>
+  <li>Set up streaming responses</li>
+  <li>Implement code analysis</li>
+</ol>
+
+<h3 id="phase-4-memory--github-week-7-8">Phase 4: Memory &amp; GitHub (Week 7-8)</h3>
+<ol>
+  <li>Implement Memory Service</li>
+  <li>Set up vector database</li>
+  <li>Implement GitHub Service</li>
+  <li>Set up webhooks</li>
+</ol>
+
+<h3 id="phase-5-tdd--polish-week-9-10">Phase 5: TDD &amp; Polish (Week 9-10)</h3>
+<ol>
+  <li>Implement TDD Service</li>
+  <li>Add monitoring/logging</li>
+  <li>Performance optimization</li>
+  <li>Security hardening</li>
+</ol>
+
+<h2 id="6-technology-stack-recommendations">6. Technology Stack Recommendations</h2>
+
+<h3 id="backend-framework-options">Backend Framework Options:</h3>
+<ol>
+  <li><strong>Node.js/TypeScript</strong> (Recommended)
+    <ul>
+      <li>Express.js or Fastify</li>
+      <li>TypeORM or Prisma</li>
+      <li>Bull for job queues</li>
+    </ul>
+  </li>
+  <li><strong>Python/FastAPI</strong> (Alternative)
+    <ul>
+      <li>SQLAlchemy</li>
+      <li>Celery for jobs</li>
+      <li>Better for AI/ML integration</li>
+    </ul>
+  </li>
+  <li><strong>Go</strong> (Performance-critical services)
+    <ul>
+      <li>Gin or Fiber</li>
+      <li>GORM</li>
+      <li>Best for high-throughput services</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="deployment">Deployment:</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.yml</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">api-gateway</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./services/gateway</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8080:8080"</span>
+  
+  <span class="na">auth-service</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./services/auth</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8001:8001"</span>
+  
+  <span class="na">project-service</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./services/projects</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8003:8003"</span>
+  
+  <span class="na">ai-service</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./services/ai</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8004:8004"</span>
+  
+  <span class="na">websocket-server</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./services/websocket</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8002:8002"</span>
+  
+  <span class="na">postgres</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres:15</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5432:5432"</span>
+  
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:7</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6379:6379"</span>
+</code></pre></div></div>
+
+<h2 id="7-missing-logic-summary">7. Missing Logic Summary</h2>
+
+<h3 id="critical-missing-components">Critical Missing Components:</h3>
+<ol>
+  <li><strong>No Authentication</strong> - Users can’t actually log in</li>
+  <li><strong>No Data Persistence</strong> - All data is lost on refresh</li>
+  <li><strong>No AI Integration</strong> - AI features are just mocked</li>
+  <li><strong>No GitHub Connection</strong> - Can’t actually analyze repos</li>
+  <li><strong>No Real-Time Updates</strong> - WebSocket client has no server</li>
+  <li><strong>No Project Management</strong> - Can’t create/manage projects</li>
+  <li><strong>No Memory System</strong> - No context persistence</li>
+</ol>
+
+<h3 id="quick-start-implementation">Quick Start Implementation:</h3>
+<p>To get a minimal working system:</p>
+<ol>
+  <li>Start with a simple Express.js API Gateway</li>
+  <li>Implement basic JWT authentication</li>
+  <li>Set up PostgreSQL with basic schemas</li>
+  <li>Create simple CRUD APIs for projects</li>
+  <li>Add Socket.io for real-time updates</li>
+</ol>
+
+<h2 id="8-environment-variables-needed">8. Environment Variables Needed</h2>
+
+<pre><code class="language-env"># Database
+DATABASE_URL=postgresql://user:password@localhost:5432/devmentor
+REDIS_URL=redis://localhost:6379
+
+# Authentication
+JWT_SECRET=your-secret-key
+JWT_REFRESH_SECRET=your-refresh-secret
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+
+# AI Services
+OPENAI_API_KEY=your-openai-key
+ANTHROPIC_API_KEY=your-claude-key
+
+# Services
+API_GATEWAY_URL=http://localhost:8080
+WEBSOCKET_URL=ws://localhost:8002
+
+# Vector Database
+PINECONE_API_KEY=your-pinecone-key
+PINECONE_ENVIRONMENT=your-environment
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The DevMentor frontend is ready and polished, but it’s essentially a “hollow shell” without any backend. The system needs a complete backend implementation from scratch, including:</p>
+
+<ul>
+  <li>API Gateway and service mesh</li>
+  <li>Authentication and authorization</li>
+  <li>Database design and implementation</li>
+  <li>AI service integration</li>
+  <li>WebSocket server for real-time features</li>
+  <li>GitHub integration</li>
+  <li>Memory/context persistence layer</li>
+</ul>
+
+<p><strong>Estimated Timeline:</strong> 8-10 weeks for full implementation with a small team (2-3 developers)
+<strong>Minimum Viable Backend:</strong> 2-3 weeks for basic authentication and project management</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / implementation/backend-implementation-plan.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

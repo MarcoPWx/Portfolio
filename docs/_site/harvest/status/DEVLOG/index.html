@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEVLOG</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">Harvest.ai</span> / 
+  <span style="color: #999;">status/DEVLOG.md</span>
+</div>
+
+<h1>DEVLOG</h1>
+
+
+<h1 id="-harvestai-development-log">📝 HARVEST.AI DEVELOPMENT LOG</h1>
+<p><em>Track daily progress, decisions, and learnings</em></p>
+
+<hr />
+
+<h2 id="december-26-2024">December 26, 2024</h2>
+
+<h3 id="-day-1-project-genesis">🎯 Day 1: Project Genesis</h3>
+
+<p><strong>Time:</strong> 13:30 - 14:30 (1 hour)</p>
+
+<h4 id="what-we-started-with">What We Started With</h4>
+<ul>
+  <li>Idea: “Turn any knowledge source into any format”</li>
+  <li>Inspiration: QuizMentor’s question generation capabilities</li>
+  <li>Goal: Build a content transformation platform with BYOK model</li>
+</ul>
+
+<h4 id="what-we-accomplished">What We Accomplished</h4>
+<ol>
+  <li><strong>Created comprehensive documentation</strong> ✅
+    <ul>
+      <li>Value proposition defined</li>
+      <li>100 use cases documented</li>
+      <li>Competitive analysis complete</li>
+      <li>Market positioning clear</li>
+    </ul>
+  </li>
+  <li><strong>Set up project structure</strong> ✅
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">/docs</code> folder organized</li>
+      <li>Frontend initialized with Next.js</li>
+      <li>Tailwind configured with orange theme</li>
+      <li>Navigation component created</li>
+    </ul>
+  </li>
+  <li><strong>Designed core architecture</strong> ✅
+    <ul>
+      <li>Blackboard pattern for multi-agent system</li>
+      <li>Concurrency patterns documented</li>
+      <li>AI gateway design complete</li>
+      <li>Database schema planned</li>
+    </ul>
+  </li>
+  <li><strong>Identified key differentiators</strong> ✅
+    <ul>
+      <li>RAG-based verification (unique)</li>
+      <li>20+ output formats (vs 1-5 competitors)</li>
+      <li>Real-time web scraping (ChatGPT can’t)</li>
+      <li>BYOK model (nobody else)</li>
+      <li>30-second generation (vs 6 hours manual)</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="key-decisions-made">Key Decisions Made</h4>
+<ul>
+  <li><strong>Tech Stack:</strong> Next.js + FastAPI + Supabase</li>
+  <li><strong>Color Scheme:</strong> Orange (inspired by Supabase design)</li>
+  <li><strong>MVP Focus:</strong> Start with quiz generation, expand later</li>
+  <li><strong>Timeline:</strong> 4 weeks to MVP, 6-8 weeks to production</li>
+</ul>
+
+<h4 id="blockers-encountered">Blockers Encountered</h4>
+<ul>
+  <li>❌ No backend code exists yet</li>
+  <li>❌ No API integrations</li>
+  <li>❌ No database configured</li>
+  <li>❌ Need OpenAI API key for testing</li>
+</ul>
+
+<h4 id="tomorrows-priority">Tomorrow’s Priority</h4>
+<ol>
+  <li>Create FastAPI backend structure</li>
+  <li>Set up Supabase project</li>
+  <li>Implement basic BYOK validation</li>
+  <li>Connect frontend to backend</li>
+</ol>
+
+<h4 id="lessons-learned">Lessons Learned</h4>
+<ul>
+  <li>Documentation first approach helps clarify vision</li>
+  <li>QuizMentor code can be adapted (question generator)</li>
+  <li>Need to START BUILDING, not just planning</li>
+</ul>
+
+<hr />
+
+<h2 id="december-27-2024-planned">December 27, 2024 (Planned)</h2>
+
+<h3 id="-day-2-backend-foundation">🎯 Day 2: Backend Foundation</h3>
+
+<p><strong>Goal:</strong> Get FastAPI running with basic endpoints</p>
+
+<h4 id="morning-900---1200">Morning (9:00 - 12:00)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create backend folder structure</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up FastAPI with uvicorn</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create basic models/schemas</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement health check endpoint</li>
+</ul>
+
+<h4 id="afternoon-1300---1700">Afternoon (13:00 - 17:00)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up Supabase project</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create database schema</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Connect FastAPI to Supabase</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test database operations</li>
+</ul>
+
+<h4 id="evening-1900---2100">Evening (19:00 - 21:00)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create <code class="language-plaintext highlighter-rouge">/api/generate</code> endpoint</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add input validation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement error handling</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write basic tests</li>
+</ul>
+
+<h4 id="success-criteria">Success Criteria</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />API responds at localhost:8000</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Database connected and working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Can make POST to /api/generate</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Errors return proper JSON</li>
+</ul>
+
+<hr />
+
+<h2 id="project-insights--patterns">Project Insights &amp; Patterns</h2>
+
+<h3 id="-observations">🔍 Observations</h3>
+
+<h4 id="whats-working">What’s Working</h4>
+<ul>
+  <li>Clear vision and value proposition</li>
+  <li>Strong documentation foundation</li>
+  <li>Good architectural patterns identified</li>
+  <li>Frontend setup is clean</li>
+</ul>
+
+<h4 id="whats-not-working">What’s Not Working</h4>
+<ul>
+  <li>No actual functionality yet</li>
+  <li>Too much planning, not enough building</li>
+  <li>Missing critical integrations</li>
+  <li>No testing framework</li>
+</ul>
+
+<h3 id="-velocity-tracking">📊 Velocity Tracking</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Stories Planned</th>
+      <th>Stories Completed</th>
+      <th>Blockers</th>
+      <th>Velocity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Dec 26</td>
+      <td>0</td>
+      <td>0 (setup day)</td>
+      <td>4</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>Dec 27</td>
+      <td>4</td>
+      <td>TBD</td>
+      <td>TBD</td>
+      <td>TBD</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-technical-decisions-log">🧠 Technical Decisions Log</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Decision</th>
+      <th>Date</th>
+      <th>Rationale</th>
+      <th>Alternative Considered</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Use FastAPI</td>
+      <td>Dec 26</td>
+      <td>Fast, async, auto-docs</td>
+      <td>Flask, Django</td>
+    </tr>
+    <tr>
+      <td>Supabase for DB</td>
+      <td>Dec 26</td>
+      <td>Managed, free tier</td>
+      <td>Raw PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>BYOK model</td>
+      <td>Dec 26</td>
+      <td>Cost effective for users</td>
+      <td>Pay-per-use</td>
+    </tr>
+    <tr>
+      <td>Orange color</td>
+      <td>Dec 26</td>
+      <td>Unique, energetic</td>
+      <td>Blue, purple</td>
+    </tr>
+    <tr>
+      <td>Next.js frontend</td>
+      <td>Dec 26</td>
+      <td>Fast, SEO, familiar</td>
+      <td>Vue, plain React</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-bugs--issues">🐛 Bugs &amp; Issues</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Resolution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>#001</td>
+      <td>Dec 26</td>
+      <td>No backend exists</td>
+      <td>Open</td>
+      <td>Start tomorrow</td>
+    </tr>
+    <tr>
+      <td>#002</td>
+      <td>Dec 26</td>
+      <td>No API keys</td>
+      <td>Open</td>
+      <td>Use BYOK approach</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-ideas-for-later">💡 Ideas for Later</h3>
+
+<ol>
+  <li><strong>Chrome Extension</strong> - Right-click to harvest any page</li>
+  <li><strong>API Marketplace</strong> - Let users sell their formats</li>
+  <li><strong>Team Workspaces</strong> - Shared templates and content</li>
+  <li><strong>Webhooks</strong> - Notify when generation complete</li>
+  <li><strong>Bulk Operations</strong> - Process multiple URLs at once</li>
+  <li><strong>Schedule Generation</strong> - Daily/weekly content creation</li>
+  <li><strong>Content Monitoring</strong> - Alert when source changes</li>
+  <li><strong>Version Control</strong> - Track content changes over time</li>
+  <li><strong>A/B Testing</strong> - Test different formats</li>
+  <li><strong>White Label</strong> - Let others brand Harvest.ai</li>
+</ol>
+
+<h3 id="-metrics">📈 Metrics</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Project Start</span><span class="pi">:</span> <span class="s">December 26, </span><span class="m">2024</span>
+<span class="na">Total Hours</span><span class="pi">:</span> <span class="m">1</span>
+<span class="na">Lines of Code</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">Documentation</span><span class="pi">:</span> <span class="s">~2500</span>
+  <span class="pi">-</span> <span class="na">Frontend</span><span class="pi">:</span> <span class="s">~400</span>
+  <span class="pi">-</span> <span class="na">Backend</span><span class="pi">:</span> <span class="m">0</span>
+  <span class="pi">-</span> <span class="na">Tests</span><span class="pi">:</span> <span class="m">0</span>
+  
+<span class="na">Files Created</span><span class="pi">:</span> <span class="m">12</span>
+<span class="na">Git Commits</span><span class="pi">:</span> <span class="s">~15</span>
+<span class="na">Features Shipped</span><span class="pi">:</span> <span class="m">0</span>
+<span class="na">Users</span><span class="pi">:</span> <span class="m">0</span>
+<span class="na">Revenue</span><span class="pi">:</span> <span class="s">$0</span>
+</code></pre></div></div>
+
+<h3 id="-success-criteria-progress">🎯 Success Criteria Progress</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Criteria</th>
+      <th>Target</th>
+      <th>Current</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Working MVP</td>
+      <td>4 weeks</td>
+      <td>Day 1</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>First user</td>
+      <td>Week 1</td>
+      <td>0</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>100 generations</td>
+      <td>Week 2</td>
+      <td>0</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>$500 MRR</td>
+      <td>Month 2</td>
+      <td>$0</td>
+      <td>🔴</td>
+    </tr>
+    <tr>
+      <td>1000 users</td>
+      <td>Month 3</td>
+      <td>0</td>
+      <td>🔴</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-predictions--estimates">🔮 Predictions &amp; Estimates</h2>
+
+<h3 id="optimistic-timeline-everything-goes-right">Optimistic Timeline (Everything goes right)</h3>
+<ul>
+  <li><strong>Day 3:</strong> Basic flow working</li>
+  <li><strong>Week 1:</strong> MVP with 1 format</li>
+  <li><strong>Week 2:</strong> 5 formats, caching</li>
+  <li><strong>Week 3:</strong> Full features</li>
+  <li><strong>Week 4:</strong> Production launch</li>
+</ul>
+
+<h3 id="realistic-timeline-some-issues">Realistic Timeline (Some issues)</h3>
+<ul>
+  <li><strong>Week 1:</strong> Backend working</li>
+  <li><strong>Week 2:</strong> Basic flow complete</li>
+  <li><strong>Week 3:</strong> Core features done</li>
+  <li><strong>Week 4:</strong> Testing &amp; polish</li>
+  <li><strong>Week 5-6:</strong> Production ready</li>
+</ul>
+
+<h3 id="pessimistic-timeline-many-issues">Pessimistic Timeline (Many issues)</h3>
+<ul>
+  <li><strong>Week 1-2:</strong> Still setting up</li>
+  <li><strong>Week 3-4:</strong> Basic features</li>
+  <li><strong>Week 5-6:</strong> Making it work</li>
+  <li><strong>Week 7-8:</strong> Bug fixes</li>
+  <li><strong>Month 3:</strong> Maybe launch</li>
+</ul>
+
+<hr />
+
+<h2 id="-notes--reminders">📝 Notes &amp; Reminders</h2>
+
+<ul>
+  <li><strong>IMPORTANT:</strong> Start building backend tomorrow!</li>
+  <li><strong>REMEMBER:</strong> BYOK validation is critical for trust</li>
+  <li><strong>TODO:</strong> Get OpenAI API key for testing</li>
+  <li><strong>IDEA:</strong> Use QuizMentor’s scraper as starting point</li>
+  <li><strong>WARNING:</strong> Don’t over-engineer, ship MVP fast</li>
+  <li><strong>TIP:</strong> Test with real URLs early</li>
+  <li><strong>NOTE:</strong> Cache aggressively to reduce costs</li>
+  <li><strong>LEARN:</strong> Study Supabase’s website for UI inspiration</li>
+</ul>
+
+<hr />
+
+<p><em>This log is updated daily during active development.</em>
+<em>Honest reflection on progress, no sugarcoating.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: Harvest.ai / status/DEVLOG.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

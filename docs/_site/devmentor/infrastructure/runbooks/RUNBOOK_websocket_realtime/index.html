@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUNBOOK websocket realtime</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/runbooks/RUNBOOK_websocket_realtime.md</span>
+</div>
+
+<h1>RUNBOOK websocket realtime</h1>
+
+
+<h1 id="runbook-websocket-and-real-time-features">Runbook: WebSocket and Real-time Features</h1>
+
+<p><strong>Service</strong>: WebSocket Gateway &amp; Frontend Real-time Integration<br />
+<strong>Last Updated</strong>: 2025-08-25<br />
+<strong>Criticality</strong>: HIGH<br />
+<strong>On-call Team</strong>: Platform &amp; Frontend</p>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+  <li><a href="#quick-reference">Quick Reference</a></li>
+  <li><a href="#service-overview">Service Overview</a></li>
+  <li><a href="#common-operations">Common Operations</a></li>
+  <li><a href="#troubleshooting">Troubleshooting</a></li>
+  <li><a href="#emergency-procedures">Emergency Procedures</a></li>
+  <li><a href="#monitoring--alerts">Monitoring &amp; Alerts</a></li>
+  <li><a href="#deployment-procedures">Deployment Procedures</a></li>
+</ol>
+
+<h2 id="quick-reference">Quick Reference</h2>
+
+<h3 id="key-urls">Key URLs</h3>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>WebSocket Gateway</strong>: <code class="language-plaintext highlighter-rouge">ws://localhost:8002</code> (dev)</td>
+          <td><code class="language-plaintext highlighter-rouge">wss://devmentor.io/ws</code> (prod)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Frontend</strong>: <code class="language-plaintext highlighter-rouge">http://localhost:3001</code> (dev)</td>
+          <td><code class="language-plaintext highlighter-rouge">https://devmentor.io</code> (prod)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><strong>Health Check</strong>: <code class="language-plaintext highlighter-rouge">http://localhost:8002/health</code></li>
+</ul>
+
+<h3 id="critical-commands">Critical Commands</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check WebSocket server status</span>
+curl http://localhost:8002/health
+
+<span class="c"># View WebSocket connections</span>
+kubectl logs <span class="nt">-n</span> devmentor-app deployment/websocket-gateway <span class="nt">--tail</span><span class="o">=</span>100
+
+<span class="c"># Restart WebSocket gateway</span>
+kubectl rollout restart deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Check frontend WebSocket config</span>
+<span class="nb">grep </span>WEBSOCKET .env.local
+</code></pre></div></div>
+
+<h3 id="key-files">Key Files</h3>
+<ul>
+  <li>Service: <code class="language-plaintext highlighter-rouge">/services/websocket-gateway/</code></li>
+  <li>Frontend: <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/services/websocket.service.ts</code></li>
+  <li>Config: <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/.env.local</code></li>
+  <li>Tests: <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/tests/playwright/e2e/realtime-updates.spec.ts</code></li>
+</ul>
+
+<h2 id="service-overview">Service Overview</h2>
+
+<h3 id="architecture">Architecture</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────┐     WebSocket      ┌──────────────┐     Redis      ┌─────────────┐
+│   Browser   │ ←────────────────→ │  WS Gateway  │ ←────────────→ │   PubSub    │
+│  (Client)   │     Socket.io      │   (Server)   │                │   (Events)  │
+└─────────────┘                    └──────────────┘                └─────────────┘
+                                           ↓
+                                    ┌──────────────┐
+                                    │   Services   │
+                                    │ (Project/AI) │
+                                    └──────────────┘
+</code></pre></div></div>
+
+<h3 id="dependencies">Dependencies</h3>
+<ul>
+  <li><strong>Frontend</strong>: socket.io-client v4.8.1</li>
+  <li><strong>Backend</strong>: socket.io server (port 8002)</li>
+  <li><strong>Redis</strong>: For multi-instance scaling (optional)</li>
+  <li><strong>Services</strong>: Project Service, Auth Service</li>
+</ul>
+
+<h2 id="common-operations">Common Operations</h2>
+
+<h3 id="1-starting-websocket-service-locally">1. Starting WebSocket Service Locally</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Terminal 1: Start WebSocket server</span>
+<span class="nb">cd </span>services/websocket-gateway
+npm <span class="nb">install
+</span>npm run dev
+
+<span class="c"># Terminal 2: Start frontend with WebSocket enabled</span>
+<span class="nb">cd </span>frontend/devmentor-ui
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">true
+export </span><span class="nv">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="o">=</span>http://localhost:8002
+npm run dev
+
+<span class="c"># Verify connection</span>
+curl http://localhost:8002/health
+<span class="c"># Expected: {"status":"healthy","connections":0}</span>
+</code></pre></div></div>
+
+<h3 id="2-enablingdisabling-real-time-features">2. Enabling/Disabling Real-time Features</h3>
+
+<h4 id="enable-websocket-real-time">Enable WebSocket (Real-time)</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update .env.local</span>
+<span class="nb">echo</span> <span class="s2">"NEXT_PUBLIC_ENABLE_REALTIME=true"</span> <span class="o">&gt;&gt;</span> .env.local
+<span class="nb">echo</span> <span class="s2">"NEXT_PUBLIC_WEBSOCKET_URL=http://localhost:8002"</span> <span class="o">&gt;&gt;</span> .env.local
+
+<span class="c"># Restart frontend</span>
+npm run dev
+</code></pre></div></div>
+
+<h4 id="disable-websocket-polling-mode">Disable WebSocket (Polling Mode)</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update .env.local</span>
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">''</span> <span class="s1">'s/NEXT_PUBLIC_ENABLE_REALTIME=true/NEXT_PUBLIC_ENABLE_REALTIME=false/'</span> .env.local
+
+<span class="c"># Restart frontend</span>
+npm run dev
+</code></pre></div></div>
+
+<h3 id="3-testing-real-time-features">3. Testing Real-time Features</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run verification script</span>
+<span class="nb">cd </span>frontend/devmentor-ui
+./scripts/verify-integration.sh
+
+<span class="c"># Manual test</span>
+1. Open two browser windows
+2. Navigate both to http://localhost:3001/projects
+3. Drag a task <span class="k">in </span>window 1
+4. Verify task moves <span class="k">in </span>window 2
+5. Check <span class="k">for</span> <span class="s2">"Live"</span> indicator <span class="o">(</span>green badge<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="4-monitoring-connections">4. Monitoring Connections</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Local development</span>
+<span class="c"># Check browser console for WebSocket logs</span>
+localStorage.setItem<span class="o">(</span><span class="s1">'DEBUG'</span>, <span class="s1">'socket.io-client:*'</span><span class="o">)</span><span class="p">;</span>
+
+<span class="c"># Production - Check server logs</span>
+kubectl logs <span class="nt">-n</span> devmentor-app deployment/websocket-gateway <span class="nt">--tail</span><span class="o">=</span>100 <span class="nt">-f</span>
+
+<span class="c"># Count active connections</span>
+kubectl <span class="nb">exec</span> <span class="nt">-n</span> devmentor-app deployment/websocket-gateway <span class="nt">--</span> <span class="se">\</span>
+  curl <span class="nt">-s</span> localhost:8002/metrics | <span class="nb">grep </span>websocket_connections
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="issue-connection-not-establishing">Issue: Connection Not Establishing</h3>
+
+<p><strong>Symptoms</strong>:</p>
+<ul>
+  <li>“Polling” badge shown instead of “Live”</li>
+  <li>Console errors about WebSocket connection</li>
+</ul>
+
+<p><strong>Diagnosis</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Check if WebSocket server is running</span>
+curl http://localhost:8002/health
+
+<span class="c"># 2. Check browser console</span>
+<span class="c"># Look for: WebSocket connection to 'ws://...' failed</span>
+
+<span class="c"># 3. Check CORS settings</span>
+<span class="nb">grep</span> <span class="nt">-A5</span> <span class="s2">"cors:"</span> services/websocket-gateway/src/index.ts
+
+<span class="c"># 4. Check firewall/proxy</span>
+<span class="c"># Ensure WebSocket upgrade headers are allowed</span>
+</code></pre></div></div>
+
+<p><strong>Resolution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Option 1: Restart WebSocket server</span>
+<span class="nb">cd </span>services/websocket-gateway
+npm run dev
+
+<span class="c"># Option 2: Check environment variables</span>
+<span class="nb">cd </span>frontend/devmentor-ui
+<span class="nb">cat</span> .env.local | <span class="nb">grep </span>WEBSOCKET
+
+<span class="c"># Option 3: Force polling mode temporarily</span>
+<span class="nb">export </span><span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">false
+</span>npm run dev
+</code></pre></div></div>
+
+<h3 id="issue-events-not-received">Issue: Events Not Received</h3>
+
+<p><strong>Symptoms</strong>:</p>
+<ul>
+  <li>Connected but updates not showing</li>
+  <li>Other users don’t see changes</li>
+</ul>
+
+<p><strong>Diagnosis</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Check room membership</span>
+<span class="c"># In browser console:</span>
+websocketService.getConnectionStatus<span class="o">()</span>
+
+<span class="c"># 2. Check server broadcasting</span>
+<span class="nb">tail</span> <span class="nt">-f</span> services/websocket-gateway/logs/app.log | <span class="nb">grep</span> <span class="s2">"emit"</span>
+
+<span class="c"># 3. Verify event names match</span>
+<span class="nb">grep</span> <span class="nt">-r</span> <span class="s2">"task:updated"</span> frontend/devmentor-ui/src/
+</code></pre></div></div>
+
+<p><strong>Resolution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Option 1: Rejoin project room</span>
+<span class="c"># In browser console:</span>
+websocketService.leaveProject<span class="o">(</span><span class="s1">'old-id'</span><span class="o">)</span><span class="p">;</span>
+websocketService.joinProject<span class="o">(</span><span class="s1">'correct-id'</span><span class="o">)</span><span class="p">;</span>
+
+<span class="c"># Option 2: Clear and reconnect</span>
+websocketService.disconnect<span class="o">()</span><span class="p">;</span>
+websocketService.connect<span class="o">()</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="issue-high-memory-usage">Issue: High Memory Usage</h3>
+
+<p><strong>Symptoms</strong>:</p>
+<ul>
+  <li>Server memory increasing over time</li>
+  <li>Slow WebSocket responses</li>
+</ul>
+
+<p><strong>Diagnosis</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check memory usage</span>
+kubectl top pod <span class="nt">-n</span> devmentor-app | <span class="nb">grep </span>websocket
+
+<span class="c"># Check for memory leaks</span>
+npm run <span class="nb">test</span>:memory
+
+<span class="c"># Count connections</span>
+curl http://localhost:8002/metrics | <span class="nb">grep </span>connections
+</code></pre></div></div>
+
+<p><strong>Resolution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Option 1: Restart with memory limit</span>
+kubectl <span class="nb">set </span>resources deployment/websocket-gateway <span class="se">\</span>
+  <span class="nt">--limits</span><span class="o">=</span><span class="nv">memory</span><span class="o">=</span>512Mi <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Option 2: Enable connection limits</span>
+<span class="c"># In websocket config:</span>
+<span class="nb">export </span><span class="nv">MAX_CONNECTIONS</span><span class="o">=</span>1000
+<span class="nb">export </span><span class="nv">CONNECTION_TIMEOUT</span><span class="o">=</span>300000  <span class="c"># 5 minutes</span>
+
+<span class="c"># Option 3: Clean up stale connections</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> deployment/websocket-gateway <span class="nt">--</span> <span class="se">\</span>
+  node scripts/cleanup-connections.js
+</code></pre></div></div>
+
+<h2 id="emergency-procedures">Emergency Procedures</h2>
+
+<h3 id="1-complete-websocket-failure">1. Complete WebSocket Failure</h3>
+
+<p><strong>Immediate Response</strong> (2 minutes):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Switch to polling mode globally</span>
+kubectl <span class="nb">set env </span>deployment/frontend <span class="se">\</span>
+  <span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">false</span> <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 2. Notify users</span>
+kubectl apply <span class="nt">-f</span> emergency/polling-mode-banner.yaml
+
+<span class="c"># 3. Page on-call</span>
+./scripts/page-oncall.sh <span class="s2">"WebSocket service down"</span>
+</code></pre></div></div>
+
+<p><strong>Investigation</strong> (5 minutes):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+kubectl logs <span class="nt">-n</span> devmentor-app deployment/websocket-gateway <span class="nt">--tail</span><span class="o">=</span>500
+
+<span class="c"># Check events</span>
+kubectl get events <span class="nt">-n</span> devmentor-app <span class="nt">--sort-by</span><span class="o">=</span><span class="s1">'.lastTimestamp'</span>
+
+<span class="c"># Check resource usage</span>
+kubectl describe pod <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>websocket-gateway <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<p><strong>Recovery</strong> (10 minutes):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Option 1: Rolling restart</span>
+kubectl rollout restart deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+kubectl rollout status deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Option 2: Scale and restart</span>
+kubectl scale deployment/websocket-gateway <span class="nt">--replicas</span><span class="o">=</span>0 <span class="nt">-n</span> devmentor-app
+<span class="nb">sleep </span>10
+kubectl scale deployment/websocket-gateway <span class="nt">--replicas</span><span class="o">=</span>2 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Option 3: Rollback to previous version</span>
+kubectl rollout undo deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="2-performance-degradation">2. Performance Degradation</h3>
+
+<p><strong>Symptoms</strong>:</p>
+<ul>
+  <li>Slow updates (&gt;1 second latency)</li>
+  <li>Intermittent disconnections</li>
+</ul>
+
+<p><strong>Response</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Scale up immediately</span>
+kubectl scale deployment/websocket-gateway <span class="nt">--replicas</span><span class="o">=</span>4 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 2. Enable rate limiting</span>
+kubectl <span class="nb">set env </span>deployment/websocket-gateway <span class="se">\</span>
+  <span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+  <span class="nv">RATE_LIMIT_WINDOW</span><span class="o">=</span>60000 <span class="se">\</span>
+  <span class="nv">RATE_LIMIT_MAX</span><span class="o">=</span>100 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 3. Clear Redis cache if used</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> deployment/redis <span class="nt">--</span> redis-cli FLUSHDB
+
+<span class="c"># 4. Monitor recovery</span>
+watch <span class="s1">'kubectl top pod -n devmentor-app | grep websocket'</span>
+</code></pre></div></div>
+
+<h3 id="3-security-incident">3. Security Incident</h3>
+
+<p><strong>Suspicious Activity Detected</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Enable strict mode immediately</span>
+kubectl <span class="nb">set env </span>deployment/websocket-gateway <span class="se">\</span>
+  <span class="nv">STRICT_MODE</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+  <span class="nv">REQUIRE_AUTH</span><span class="o">=</span><span class="nb">true</span> <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 2. Block suspicious IPs</span>
+kubectl apply <span class="nt">-f</span> security/websocket-network-policy.yaml
+
+<span class="c"># 3. Rotate secrets</span>
+kubectl delete secret websocket-secrets <span class="nt">-n</span> devmentor-app
+kubectl create secret generic websocket-secrets <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span>jwt-secret<span class="o">=</span><span class="si">$(</span>openssl rand <span class="nt">-base64</span> 32<span class="si">)</span> <span class="se">\</span>
+  <span class="nt">-n</span> devmentor-app
+
+<span class="c"># 4. Audit connections</span>
+kubectl <span class="nb">exec </span>deployment/websocket-gateway <span class="nt">--</span> <span class="se">\</span>
+  node scripts/audit-connections.js <span class="o">&gt;</span> audit.log
+</code></pre></div></div>
+
+<h2 id="monitoring--alerts">Monitoring &amp; Alerts</h2>
+
+<h3 id="key-metrics">Key Metrics</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Prometheus queries</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">websocket_connections_total</span>
+  <span class="na">query</span><span class="pi">:</span> <span class="s">sum(websocket_connections)</span>
+  <span class="na">warning</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">1000</span>
+  <span class="s">critical: &gt; 2000</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">websocket_message_rate</span>
+  <span class="na">query</span><span class="pi">:</span> <span class="s">rate(websocket_messages_total[5m])</span>
+  <span class="na">warning</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">1000</span>
+  <span class="s">critical: &gt; 5000</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">websocket_error_rate</span>
+  <span class="na">query</span><span class="pi">:</span> <span class="s">rate(websocket_errors_total[5m])</span>
+  <span class="na">warning</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">10</span>
+  <span class="s">critical: &gt; 50</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">websocket_latency_p99</span>
+  <span class="na">query</span><span class="pi">:</span> <span class="s">histogram_quantile(0.99, websocket_latency_seconds)</span>
+  <span class="na">warning</span><span class="pi">:</span> <span class="pi">&gt;</span> <span class="err">1</span>
+  <span class="s">critical: &gt; 5</span>
+</code></pre></div></div>
+
+<h3 id="grafana-dashboard">Grafana Dashboard</h3>
+
+<p>Import dashboard:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create configmap websocket-dashboard <span class="se">\</span>
+  <span class="nt">--from-file</span><span class="o">=</span>dashboards/websocket-realtime.json <span class="se">\</span>
+  <span class="nt">-n</span> monitoring
+</code></pre></div></div>
+
+<h3 id="alert-rules">Alert Rules</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AlertManager configuration</span>
+<span class="na">groups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">websocket</span>
+    <span class="na">rules</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">WebSocketDown</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">up{job="websocket-gateway"} == </span><span class="m">0</span>
+        <span class="na">for</span><span class="pi">:</span> <span class="s">1m</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">WebSocket</span><span class="nv"> </span><span class="s">gateway</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down"</span>
+          <span class="na">runbook</span><span class="pi">:</span> <span class="s2">"</span><span class="s">docs/runbooks/RUNBOOK_websocket_realtime.md#emergency-procedures"</span>
+      
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">HighWebSocketConnections</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">websocket_connections &gt; </span><span class="m">2000</span>
+        <span class="na">for</span><span class="pi">:</span> <span class="s">5m</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">High</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">WebSocket</span><span class="nv"> </span><span class="s">connections"</span>
+          <span class="na">runbook</span><span class="pi">:</span> <span class="s2">"</span><span class="s">docs/runbooks/RUNBOOK_websocket_realtime.md#performance-degradation"</span>
+</code></pre></div></div>
+
+<h2 id="deployment-procedures">Deployment Procedures</h2>
+
+<h3 id="1-pre-deployment-checklist">1. Pre-deployment Checklist</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Run tests</span>
+<span class="nb">cd </span>frontend/devmentor-ui
+npm run <span class="nb">test</span>:unit:services
+npm run <span class="nb">test</span>:e2e
+
+<span class="c"># 2. Check configuration</span>
+./scripts/verify-integration.sh
+
+<span class="c"># 3. Backup current deployment</span>
+kubectl get deployment websocket-gateway <span class="nt">-n</span> devmentor-app <span class="nt">-o</span> yaml <span class="o">&gt;</span> backup.yaml
+
+<span class="c"># 4. Check current connections</span>
+curl http://websocket-gateway:8002/metrics | <span class="nb">grep </span>connections
+</code></pre></div></div>
+
+<h3 id="2-blue-green-deployment">2. Blue-Green Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Deploy green version</span>
+kubectl apply <span class="nt">-f</span> deployments/websocket-gateway-green.yaml
+
+<span class="c"># 2. Test green version</span>
+curl http://websocket-gateway-green:8002/health
+
+<span class="c"># 3. Switch traffic</span>
+kubectl patch service websocket-gateway <span class="nt">-p</span> <span class="se">\</span>
+  <span class="s1">'{"spec":{"selector":{"version":"green"}}}'</span>
+
+<span class="c"># 4. Monitor</span>
+kubectl logs <span class="nt">-f</span> deployment/websocket-gateway-green
+
+<span class="c"># 5. Cleanup old version</span>
+kubectl delete deployment websocket-gateway-blue
+</code></pre></div></div>
+
+<h3 id="3-rollback-procedure">3. Rollback Procedure</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Immediate rollback</span>
+kubectl rollout undo deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Rollback to specific version</span>
+kubectl rollout <span class="nb">history </span>deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+kubectl rollout undo deployment/websocket-gateway <span class="nt">--to-revision</span><span class="o">=</span>3 <span class="nt">-n</span> devmentor-app
+
+<span class="c"># Verify rollback</span>
+kubectl rollout status deployment/websocket-gateway <span class="nt">-n</span> devmentor-app
+</code></pre></div></div>
+
+<h3 id="4-post-deployment-verification">4. Post-deployment Verification</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Health check</span>
+curl http://websocket-gateway:8002/health
+
+<span class="c"># 2. Test real-time features</span>
+npm run <span class="nb">test</span>:e2e <span class="nt">--</span> <span class="nt">--grep</span> <span class="s2">"real-time"</span>
+
+<span class="c"># 3. Check metrics</span>
+curl http://websocket-gateway:8002/metrics
+
+<span class="c"># 4. Monitor logs for 5 minutes</span>
+kubectl logs <span class="nt">-f</span> deployment/websocket-gateway <span class="nt">--tail</span><span class="o">=</span>100
+
+<span class="c"># 5. User verification</span>
+<span class="nb">echo</span> <span class="s2">"Please verify real-time updates are working at https://devmentor.io/projects"</span>
+</code></pre></div></div>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="environment-variables-reference">Environment Variables Reference</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Frontend (.env.local)</span>
+<span class="nv">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="o">=</span>http://localhost:8002
+<span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">NEXT_PUBLIC_MOCK_MODE</span><span class="o">=</span><span class="nb">false</span>
+
+<span class="c"># WebSocket Server</span>
+<span class="nv">PORT</span><span class="o">=</span>8002
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost:6379
+<span class="nv">JWT_SECRET</span><span class="o">=</span>your-secret-key
+<span class="nv">CORS_ORIGIN</span><span class="o">=</span>http://localhost:3001
+<span class="nv">MAX_CONNECTIONS</span><span class="o">=</span>1000
+<span class="nv">CONNECTION_TIMEOUT</span><span class="o">=</span>300000
+<span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">false
+</span><span class="nv">RATE_LIMIT_WINDOW</span><span class="o">=</span>60000
+<span class="nv">RATE_LIMIT_MAX</span><span class="o">=</span>100
+</code></pre></div></div>
+
+<h3 id="useful-scripts">Useful Scripts</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Monitor connections in real-time</span>
+watch <span class="nt">-n</span> 1 <span class="s1">'curl -s http://localhost:8002/metrics | grep websocket'</span>
+
+<span class="c"># Test WebSocket connection</span>
+wscat <span class="nt">-c</span> ws://localhost:8002
+
+<span class="c"># Generate load test</span>
+npm run <span class="nb">test</span>:load <span class="nt">--</span> <span class="nt">--connections</span><span class="o">=</span>100 <span class="nt">--duration</span><span class="o">=</span>60
+
+<span class="c"># Clean up stale connections</span>
+node scripts/cleanup-stale-connections.js
+</code></pre></div></div>
+
+<h3 id="contact-information">Contact Information</h3>
+
+<ul>
+  <li><strong>Platform Team</strong>: platform@devmentor.io</li>
+  <li><strong>Frontend Team</strong>: frontend@devmentor.io</li>
+  <li><strong>On-call</strong>: Use PagerDuty or call +1-555-DEVMENT</li>
+</ul>
+
+<hr />
+
+<p><strong>Remember</strong>: When in doubt, switch to polling mode first to maintain service availability, then investigate.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Last reviewed: 2025-08-25</td>
+      <td>Next review: 2025-09-25</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/runbooks/RUNBOOK_websocket_realtime.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

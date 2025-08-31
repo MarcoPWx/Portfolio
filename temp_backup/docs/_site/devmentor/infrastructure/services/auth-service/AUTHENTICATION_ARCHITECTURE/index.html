@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTHENTICATION ARCHITECTURE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/auth-service/AUTHENTICATION_ARCHITECTURE.md</span>
+</div>
+
+<h1>AUTHENTICATION ARCHITECTURE</h1>
+
+
+<h1 id="devmentor-authentication-architecture">DevMentor Authentication Architecture</h1>
+
+<h2 id="authentication-options-comparison">Authentication Options Comparison</h2>
+
+<h3 id="1-oauth-20-protocol">1. OAuth 2.0 (Protocol)</h3>
+<p><strong>What it is:</strong> An authorization framework/protocol, not an authentication solution</p>
+<ul>
+  <li><strong>Purpose:</strong> Allows third-party applications to access user resources without sharing passwords</li>
+  <li><strong>Use Case:</strong> When you want users to login with Google, GitHub, etc.</li>
+  <li><strong>Implementation:</strong> You need to build the authentication layer yourself</li>
+  <li><strong>Cost:</strong> Free (it’s a protocol)</li>
+  <li><strong>Complexity:</strong> Medium to High</li>
+</ul>
+
+<h3 id="2-auth0-service">2. Auth0 (Service)</h3>
+<p><strong>What it is:</strong> A complete authentication-as-a-service platform</p>
+<ul>
+  <li><strong>Purpose:</strong> Provides ready-to-use authentication, authorization, and user management</li>
+  <li><strong>Use Case:</strong> When you want a complete auth solution without building it yourself</li>
+  <li><strong>Features:</strong>
+    <ul>
+      <li>User management dashboard</li>
+      <li>Multi-factor authentication (MFA)</li>
+      <li>Social logins (Google, GitHub, etc.)</li>
+      <li>Enterprise SSO (SAML, LDAP)</li>
+      <li>Passwordless authentication</li>
+      <li>Anomaly detection</li>
+    </ul>
+  </li>
+  <li><strong>Cost:</strong> Free tier (7,000 active users/month), then paid</li>
+  <li><strong>Complexity:</strong> Low (plug and play)</li>
+</ul>
+
+<h3 id="3-keycloak-self-hosted">3. Keycloak (Self-hosted)</h3>
+<p><strong>What it is:</strong> Open-source identity and access management solution</p>
+<ul>
+  <li><strong>Purpose:</strong> Enterprise-grade authentication and authorization</li>
+  <li><strong>Use Case:</strong> When you want full control and self-hosting</li>
+  <li><strong>Features:</strong>
+    <ul>
+      <li>Single Sign-On (SSO)</li>
+      <li>Identity brokering and social login</li>
+      <li>User federation (LDAP, Active Directory)</li>
+      <li>Fine-grained authorization</li>
+    </ul>
+  </li>
+  <li><strong>Cost:</strong> Free (open source)</li>
+  <li><strong>Complexity:</strong> Medium</li>
+</ul>
+
+<h2 id="recommended-architecture-for-devmentor">Recommended Architecture for DevMentor</h2>
+
+<p>Given your Kubernetes setup with Istio service mesh, here’s the recommended approach:</p>
+
+<h3 id="option-1-istio--oauth2-proxy-recommended-for-your-setup">Option 1: Istio + OAuth2 Proxy (Recommended for Your Setup)</h3>
+<p>Since you already have Istio installed, leverage its built-in authentication capabilities:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 1. Service Mesh Authentication (mTLS between services)</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PeerAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">mtls</span><span class="pi">:</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">STRICT</span>
+
+<span class="c1"># 2. Request Authentication (JWT validation)</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">RequestAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">jwt-auth</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">jwtRules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://your-auth-service.devmentor.svc.cluster.local"</span>
+    <span class="na">jwksUri</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://your-auth-service.devmentor.svc.cluster.local/.well-known/jwks.json"</span>
+
+<span class="c1"># 3. Authorization Policy</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">AuthorizationPolicy</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">require-jwt</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">action</span><span class="pi">:</span> <span class="s">ALLOW</span>
+  <span class="na">rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">from</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">source</span><span class="pi">:</span>
+        <span class="na">requestPrincipals</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">*"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h3 id="option-2-keycloak-integration-best-for-enterprise">Option 2: Keycloak Integration (Best for Enterprise)</h3>
+<p>Deploy Keycloak in your cluster for complete identity management:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Namespace</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">keycloak</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">keycloak</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">quay.io/keycloak/keycloak:latest</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KEYCLOAK_ADMIN</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">admin"</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KEYCLOAK_ADMIN_PASSWORD</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">keycloak-secrets</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">admin-password</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_PROXY</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">edge"</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">KC_HOSTNAME_STRICT</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">false"</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">command</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">/opt/keycloak/bin/kc.sh"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">start-dev"</span>
+</code></pre></div></div>
+
+<h3 id="option-3-auth0-integration-fastest-to-implement">Option 3: Auth0 Integration (Fastest to Implement)</h3>
+<p>Use Auth0’s managed service with your existing auth-service:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// auth-service/index.js enhancement</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">auth</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express-oauth2-jwt-bearer</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Auth0 configuration</span>
+<span class="kd">const</span> <span class="nx">checkJwt</span> <span class="o">=</span> <span class="nx">auth</span><span class="p">({</span>
+  <span class="na">audience</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://devmentor-api</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">issuerBaseURL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://YOUR_DOMAIN.auth0.com/</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">tokenSigningAlg</span><span class="p">:</span> <span class="dl">'</span><span class="s1">RS256</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="c1">// Protect API endpoints</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/protected</span><span class="dl">'</span><span class="p">,</span> <span class="nx">checkJwt</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> 
+    <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Authenticated!</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">user</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">auth</span> 
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="implementation-plan">Implementation Plan</h2>
+
+<h3 id="phase-1-enable-istio-sidecar-injection">Phase 1: Enable Istio Sidecar Injection</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Label namespace for automatic sidecar injection</span>
+kubectl label namespace devmentor istio-injection<span class="o">=</span>enabled
+kubectl label namespace devmentor-data istio-injection<span class="o">=</span>enabled
+
+<span class="c"># Restart deployments to inject sidecars</span>
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor-data
+</code></pre></div></div>
+
+<h3 id="phase-2-configure-service-mesh-security">Phase 2: Configure Service Mesh Security</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Apply mTLS configuration</span>
+kubectl apply <span class="nt">-f</span> istio-security/peer-authentication.yaml
+kubectl apply <span class="nt">-f</span> istio-security/destination-rules.yaml
+</code></pre></div></div>
+
+<h3 id="phase-3-set-up-authentication-service">Phase 3: Set Up Authentication Service</h3>
+<p>Choose one:</p>
+<ul>
+  <li><strong>Quick:</strong> Use Auth0 (managed, 5 minutes setup)</li>
+  <li><strong>Flexible:</strong> Deploy Keycloak (self-hosted, 30 minutes setup)</li>
+  <li><strong>Simple:</strong> Use OAuth2 Proxy with GitHub/Google (15 minutes setup)</li>
+</ul>
+
+<h3 id="phase-4-configure-authorization-policies">Phase 4: Configure Authorization Policies</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Fine-grained access control</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">AuthorizationPolicy</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">api-access</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">action</span><span class="pi">:</span> <span class="s">ALLOW</span>
+  <span class="na">rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">to</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">operation</span><span class="pi">:</span>
+        <span class="na">methods</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">GET"</span><span class="pi">]</span>
+        <span class="na">paths</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/api/public/*"</span><span class="pi">]</span>
+  <span class="pi">-</span> <span class="na">to</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">operation</span><span class="pi">:</span>
+        <span class="na">methods</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">GET"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">POST"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">PUT"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">DELETE"</span><span class="pi">]</span>
+        <span class="na">paths</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/api/*"</span><span class="pi">]</span>
+    <span class="na">when</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">key</span><span class="pi">:</span> <span class="s">request.auth.claims[role]</span>
+      <span class="na">values</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">admin"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">developer"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h2 id="quick-start-oauth2-proxy-with-github">Quick Start: OAuth2 Proxy with GitHub</h2>
+
+<p>Since you already have Kubernetes and Istio, here’s the fastest path:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># oauth2-proxy.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">quay.io/oauth2-proxy/oauth2-proxy:latest</span>
+        <span class="na">args</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">--provider=github</span>
+        <span class="pi">-</span> <span class="s">--github-org=YOUR_GITHUB_ORG</span>
+        <span class="pi">-</span> <span class="s">--email-domain=*</span>
+        <span class="pi">-</span> <span class="s">--upstream=http://ai-gateway:3001</span>
+        <span class="pi">-</span> <span class="s">--http-address=0.0.0.0:4180</span>
+        <span class="pi">-</span> <span class="s">--cookie-secure=false</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">OAUTH2_PROXY_CLIENT_ID</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">client-id</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">OAUTH2_PROXY_CLIENT_SECRET</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">client-secret</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">OAUTH2_PROXY_COOKIE_SECRET</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">cookie-secret</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">4180</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">4180</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">4180</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">oauth2-proxy</span>
+</code></pre></div></div>
+
+<h2 id="security-best-practices">Security Best Practices</h2>
+
+<ol>
+  <li><strong>Always use mTLS</strong> between services in the mesh</li>
+  <li><strong>Validate JWTs</strong> at the ingress gateway</li>
+  <li><strong>Use RBAC</strong> for fine-grained access control</li>
+  <li><strong>Rotate secrets</strong> regularly</li>
+  <li><strong>Enable audit logging</strong> for all auth events</li>
+  <li><strong>Implement rate limiting</strong> to prevent abuse</li>
+  <li><strong>Use short-lived tokens</strong> (15 minutes for access tokens)</li>
+  <li><strong>Implement refresh token rotation</strong></li>
+</ol>
+
+<h2 id="monitoring-authentication">Monitoring Authentication</h2>
+
+<p>Add these metrics to your monitoring service:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Authentication metrics</span>
+<span class="kd">const</span> <span class="nx">authMetrics</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">successful_logins</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Counter</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth_successful_logins_total</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Total successful login attempts</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  <span class="na">failed_logins</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Counter</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth_failed_logins_total</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Total failed login attempts</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  <span class="na">token_validations</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Counter</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth_token_validations_total</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Total JWT token validations</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  <span class="na">active_sessions</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Gauge</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth_active_sessions</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Current active user sessions</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+  <li><strong>Enable sidecar injection</strong> for your namespaces</li>
+  <li><strong>Choose authentication provider</strong> (GitHub OAuth for quick start)</li>
+  <li><strong>Deploy OAuth2 Proxy</strong> or Keycloak</li>
+  <li><strong>Configure Istio policies</strong></li>
+  <li><strong>Test with curl commands</strong></li>
+  <li><strong>Update frontend</strong> to handle auth flow</li>
+  <li><strong>Add monitoring</strong> for auth events</li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/auth-service/AUTHENTICATION_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT OSS IMPLEMENTATION GUIDE | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">learning/GPT_OSS_IMPLEMENTATION_GUIDE.md</span>
+</div>
+
+<h1>GPT OSS IMPLEMENTATION GUIDE</h1>
+
+
+<h1 id="-gpt-oss-implementation-learning-guide">📚 GPT-OSS Implementation Learning Guide</h1>
+
+<h2 id="what-were-building--why">What We’re Building &amp; Why</h2>
+
+<h3 id="the-big-picture">The Big Picture</h3>
+<p>You’re integrating OpenAI’s first open-source model (GPT-OSS) into your DevMentor AI system. This is exciting because:</p>
+<ul>
+  <li><strong>Released August 2024</strong> - You’re an early adopter!</li>
+  <li><strong>128K context window</strong> - Can process entire codebases</li>
+  <li><strong>Chain-of-thought reasoning</strong> - Shows its thinking process</li>
+  <li><strong>Free to use</strong> - Apache 2.0 license</li>
+</ul>
+
+<h3 id="your-current-architecture">Your Current Architecture</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────┐
+│                   KUBERNETES                    │
+│                  (Kind Cluster)                  │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌──────────────┐      ┌──────────────┐       │
+│  │ Auth Service │      │  AI Gateway  │       │
+│  │   (Running)  │◄────►│  (Not Built) │       │
+│  └──────────────┘      └──────────────┘       │
+│                               │                │
+│                               ▼                │
+│                        ┌──────────────┐       │
+│                        │    Ollama    │       │
+│                        │  (Running)   │       │
+│                        └──────────────┘       │
+│                                                │
+│  ┌─────────────────────────────────────┐      │
+│  │        Istio Service Mesh           │      │
+│  │    (Traffic Management &amp; Security)   │      │
+│  └─────────────────────────────────────┘      │
+└─────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="-implementation-steps">🎯 Implementation Steps</h2>
+
+<h3 id="phase-1-understanding-what-you-have">Phase 1: Understanding What You Have</h3>
+
+<h4 id="step-11-check-your-services">Step 1.1: Check Your Services</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># See what's running in your cluster</span>
+kubectl get pods <span class="nt">-n</span> devmentor
+
+<span class="c"># Understanding the output:</span>
+<span class="c"># - auth-service: Handles authentication (RUNNING ✅)</span>
+<span class="c"># - ai-gateway: Will connect to Ollama (NEEDS BUILDING ❌)</span>
+<span class="c"># - ollama: Runs AI models (RUNNING ✅)</span>
+</code></pre></div></div>
+
+<p><strong>What’s happening:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">auth-service</code> is working</li>
+  <li><code class="language-plaintext highlighter-rouge">ai-gateway</code> can’t start because the Docker image doesn’t exist yet</li>
+  <li><code class="language-plaintext highlighter-rouge">ollama</code> is running and ready for models</li>
+</ul>
+
+<h4 id="step-12-understand-ollama">Step 1.2: Understand Ollama</h4>
+<p>Ollama is like Docker but for AI models. It:</p>
+<ul>
+  <li>Downloads and manages AI models</li>
+  <li>Provides a REST API for inference</li>
+  <li>Handles model loading/unloading</li>
+</ul>
+
+<h3 id="phase-2-setting-up-gpt-oss">Phase 2: Setting Up GPT-OSS</h3>
+
+<h4 id="step-21-download-gpt-oss-model-locally">Step 2.1: Download GPT-OSS Model Locally</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># First, install Ollama on your Mac (if not already)</span>
+brew <span class="nb">install </span>ollama
+
+<span class="c"># Start Ollama service</span>
+ollama serve &amp;
+
+<span class="c"># Pull the GPT-OSS model (this is 30GB!)</span>
+ollama pull gpt-oss:128k
+</code></pre></div></div>
+
+<p><strong>What’s happening:</strong></p>
+<ul>
+  <li>Installing Ollama gives you a local AI runtime</li>
+  <li>The model is 30GB because it contains billions of parameters</li>
+  <li>The <code class="language-plaintext highlighter-rouge">:128k</code> tag specifies the context window size</li>
+</ul>
+
+<h4 id="step-22-test-gpt-oss-locally">Step 2.2: Test GPT-OSS Locally</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Test the model</span>
+ollama run gpt-oss:128k <span class="s2">"Explain what Kubernetes is in simple terms"</span>
+
+<span class="c"># Check available models</span>
+ollama list
+
+<span class="c"># See model details</span>
+ollama show gpt-oss:128k
+</code></pre></div></div>
+
+<h3 id="phase-3-building-the-ai-gateway">Phase 3: Building the AI Gateway</h3>
+
+<h4 id="step-31-understanding-the-code-structure">Step 3.1: Understanding the Code Structure</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services/
+└── ai-gateway/
+    ├── src/
+    │   ├── index.ts           # Main server file
+    │   ├── ollama-integration.ts  # Ollama connection
+    │   └── routes/
+    │       └── chat.ts        # Chat endpoints
+    ├── Dockerfile             # Container definition
+    └── package.json          # Dependencies
+</code></pre></div></div>
+
+<h4 id="step-32-update-ollama-integration">Step 3.2: Update Ollama Integration</h4>
+<p>Create or update <code class="language-plaintext highlighter-rouge">services/ai-gateway/src/ollama-integration.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This file connects your AI Gateway to Ollama</span>
+<span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">OLLAMA_HOST</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OLLAMA_HOST</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">http://ollama:11434</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">DEFAULT_MODEL</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">gpt-oss:128k</span><span class="dl">'</span><span class="p">;</span>  <span class="c1">// Changed from qwen</span>
+
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">OllamaService</span> <span class="p">{</span>
+    <span class="k">async</span> <span class="nx">chat</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">[])</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">OLLAMA_HOST</span><span class="p">}</span><span class="s2">/api/chat`</span><span class="p">,</span> <span class="p">{</span>
+                <span class="na">model</span><span class="p">:</span> <span class="nx">DEFAULT_MODEL</span><span class="p">,</span>
+                <span class="na">messages</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">system</span><span class="dl">'</span><span class="p">,</span>
+                        <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">You are DevMentor, an AI coding assistant powered by GPT-OSS.</span><span class="dl">'</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span>
+                        <span class="na">content</span><span class="p">:</span> <span class="nx">prompt</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="na">stream</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="na">temperature</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+                    <span class="na">num_ctx</span><span class="p">:</span> <span class="mi">128000</span>  <span class="c1">// Use full context window</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+            
+            <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Ollama error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+            <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="step-33-build-the-docker-image">Step 3.3: Build the Docker Image</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Navigate to the service directory</span>
+<span class="nb">cd </span>services/ai-gateway
+
+<span class="c"># Build the image</span>
+docker build <span class="nt">-t</span> devmentor/ai-gateway:latest <span class="nb">.</span>
+
+<span class="c"># Verify it was created</span>
+docker images | <span class="nb">grep </span>ai-gateway
+</code></pre></div></div>
+
+<p><strong>What’s happening:</strong></p>
+<ul>
+  <li>Docker builds a container with your Node.js app</li>
+  <li>The image is tagged for local use</li>
+  <li>This fixes the “ImagePullBackOff” error</li>
+</ul>
+
+<h4 id="step-34-load-image-into-kind-cluster">Step 3.4: Load Image into Kind Cluster</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Load the image into your Kind cluster</span>
+kind load docker-image devmentor/ai-gateway:latest <span class="nt">--name</span> devmentor
+
+<span class="c"># This copies the image from Docker to Kind's nodes</span>
+</code></pre></div></div>
+
+<h3 id="phase-4-deploy-to-kubernetes">Phase 4: Deploy to Kubernetes</h3>
+
+<h4 id="step-41-update-the-deployment">Step 4.1: Update the Deployment</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Force Kubernetes to use the new image</span>
+kubectl rollout restart deployment ai-gateway <span class="nt">-n</span> devmentor
+
+<span class="c"># Watch it come up</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-w</span>
+</code></pre></div></div>
+
+<h4 id="step-42-load-gpt-oss-into-clusters-ollama">Step 4.2: Load GPT-OSS into Cluster’s Ollama</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Port-forward to Ollama</span>
+kubectl port-forward <span class="nt">-n</span> devmentor svc/ollama 11434:11434 &amp;
+
+<span class="c"># Pull GPT-OSS into the cluster's Ollama</span>
+curl <span class="nt">-X</span> POST http://localhost:11434/api/pull <span class="nt">-d</span> <span class="s1">'{"name": "gpt-oss:128k"}'</span>
+
+<span class="c"># This will take time (30GB download)</span>
+</code></pre></div></div>
+
+<h3 id="phase-5-testing-the-system">Phase 5: Testing the System</h3>
+
+<h4 id="step-51-test-ai-gateway-directly">Step 5.1: Test AI Gateway Directly</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Port-forward to AI Gateway</span>
+kubectl port-forward <span class="nt">-n</span> devmentor svc/ai-gateway 8080:80 &amp;
+
+<span class="c"># Test the chat endpoint</span>
+curl <span class="nt">-X</span> POST http://localhost:8080/chat <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "prompt": "Explain Docker in simple terms"
+  }'</span>
+</code></pre></div></div>
+
+<h4 id="step-52-test-through-istio-ingress">Step 5.2: Test Through Istio Ingress</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get Istio ingress details</span>
+<span class="nb">export </span><span class="nv">INGRESS_HOST</span><span class="o">=</span><span class="si">$(</span>kubectl <span class="nt">-n</span> istio-system get svc istio-ingressgateway <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="si">)</span>
+<span class="nb">export </span><span class="nv">INGRESS_PORT</span><span class="o">=</span><span class="si">$(</span>kubectl <span class="nt">-n</span> istio-system get svc istio-ingressgateway <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.ports[?(@.name=="http2")].port}'</span><span class="si">)</span>
+
+<span class="c"># Test through the mesh</span>
+curl <span class="nt">-X</span> POST <span class="s2">"http://</span><span class="k">${</span><span class="nv">INGRESS_HOST</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">INGRESS_PORT</span><span class="k">}</span><span class="s2">/ai/chat"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Host: devmentor.local"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "prompt": "What makes GPT-OSS special?"
+  }'</span>
+</code></pre></div></div>
+
+<h2 id="-monitoring-your-implementation">📊 Monitoring Your Implementation</h2>
+
+<h3 id="check-pod-status">Check Pod Status</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># See all pods with their container count</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> wide
+
+<span class="c"># Check logs for issues</span>
+kubectl logs <span class="nt">-n</span> devmentor deployment/ai-gateway
+kubectl logs <span class="nt">-n</span> devmentor deployment/ollama
+</code></pre></div></div>
+
+<h3 id="verify-istio-integration">Verify Istio Integration</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if sidecars are injected</span>
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].name}{"\n"}{end}'</span>
+
+<span class="c"># View traffic in Kiali</span>
+kubectl port-forward <span class="nt">-n</span> istio-system svc/kiali 20001:20001
+<span class="c"># Open http://localhost:20001</span>
+</code></pre></div></div>
+
+<h2 id="-key-concepts-explained">🎓 Key Concepts Explained</h2>
+
+<h3 id="why-kubernetes">Why Kubernetes?</h3>
+<ul>
+  <li><strong>Orchestration</strong>: Manages multiple services</li>
+  <li><strong>Scaling</strong>: Can add more instances when needed</li>
+  <li><strong>Self-healing</strong>: Restarts failed services</li>
+  <li><strong>Service discovery</strong>: Services find each other by name</li>
+</ul>
+
+<h3 id="why-istio">Why Istio?</h3>
+<ul>
+  <li><strong>Traffic management</strong>: Routes requests intelligently</li>
+  <li><strong>Security</strong>: Automatic TLS between services</li>
+  <li><strong>Observability</strong>: See all service communications</li>
+  <li><strong>Resilience</strong>: Retries, timeouts, circuit breakers</li>
+</ul>
+
+<h3 id="why-ollama">Why Ollama?</h3>
+<ul>
+  <li><strong>Model management</strong>: Like Docker for AI</li>
+  <li><strong>Standard API</strong>: Same interface for all models</li>
+  <li><strong>Resource optimization</strong>: Loads/unloads models as needed</li>
+  <li><strong>Local-first</strong>: Run AI without cloud dependencies</li>
+</ul>
+
+<h3 id="why-gpt-oss">Why GPT-OSS?</h3>
+<ul>
+  <li><strong>Open source</strong>: No API costs</li>
+  <li><strong>Large context</strong>: Process entire files/documents</li>
+  <li><strong>Chain-of-thought</strong>: Explains reasoning</li>
+  <li><strong>Function calling</strong>: Can integrate with tools</li>
+</ul>
+
+<h2 id="-common-issues--solutions">🚨 Common Issues &amp; Solutions</h2>
+
+<h3 id="issue-imagepullbackoff">Issue: “ImagePullBackOff”</h3>
+<p><strong>Cause</strong>: Docker image doesn’t exist
+<strong>Solution</strong>: Build and load the image (Step 3.3-3.4)</p>
+
+<h3 id="issue-missing-sidecar-in-kiali">Issue: “Missing Sidecar” in Kiali</h3>
+<p><strong>Cause</strong>: Istio proxy not injected
+<strong>Solution</strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl label namespace devmentor istio-injection<span class="o">=</span>enabled
+kubectl rollout restart deployment <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h3 id="issue-connection-refused">Issue: “Connection Refused”</h3>
+<p><strong>Cause</strong>: Service not running or wrong port
+<strong>Solution</strong>: Check logs and port-forward directly to test</p>
+
+<h3 id="issue-model-download-too-slow">Issue: Model Download Too Slow</h3>
+<p><strong>Cause</strong>: 30GB is large
+<strong>Solution</strong>: Use smaller model for testing: <code class="language-plaintext highlighter-rouge">ollama pull qwen2.5:3b</code></p>
+
+<h2 id="-next-steps-after-implementation">📈 Next Steps After Implementation</h2>
+
+<ol>
+  <li><strong>Add streaming responses</strong>: Make chat feel more responsive</li>
+  <li><strong>Implement context management</strong>: Remember conversation history</li>
+  <li><strong>Add function calling</strong>: Let GPT-OSS call your APIs</li>
+  <li><strong>Create specialized prompts</strong>: Optimize for coding tasks</li>
+  <li><strong>Add rate limiting</strong>: Prevent overload</li>
+  <li><strong>Implement caching</strong>: Save common responses</li>
+</ol>
+
+<h2 id="-success-checklist">🎯 Success Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ollama installed locally</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GPT-OSS model downloaded</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />AI Gateway code updated</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Docker image built</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Image loaded into Kind</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deployment restarted</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Model loaded in cluster</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test requests working</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Kiali showing traffic</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logs are clean</li>
+</ul>
+
+<h2 id="-learning-resources">💡 Learning Resources</h2>
+
+<ul>
+  <li><a href="https://ollama.ai/docs">Ollama Documentation</a></li>
+  <li><a href="https://openai.com/blog/gpt-oss">GPT-OSS Announcement</a></li>
+  <li><a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/">Kubernetes Basics</a></li>
+  <li><a href="https://istio.io/latest/docs/concepts/">Istio Concepts</a></li>
+  <li><a href="https://kind.sigs.k8s.io/">Kind Documentation</a></li>
+</ul>
+
+<hr />
+
+<p>Remember: This is cutting-edge stuff! You’re implementing a model that was just released. Take it step by step, and don’t hesitate to check logs when something doesn’t work as expected.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / learning/GPT_OSS_IMPLEMENTATION_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

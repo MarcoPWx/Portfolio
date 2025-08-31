@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PBML SYSTEM CORE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">AI/PBML_SYSTEM_CORE.md</span>
+</div>
+
+<h1>PBML SYSTEM CORE</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="pattern-based-machine-learning-pbml-system-core">Pattern-Based Machine Learning (PBML) System Core</h1>
+
+<pre><code class="language-ascii">┌──────────────────────────────────────────────────────────┐
+│               PBML SYSTEM CORE                           │
+│          Complete Technical Reference                    │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+  <li><a href="#system-overview">System Overview</a></li>
+  <li><a href="#core-architecture">Core Architecture</a></li>
+  <li><a href="#pattern-recognition-engine">Pattern Recognition Engine</a></li>
+  <li><a href="#learning-framework">Learning Framework</a></li>
+  <li><a href="#local-execution">Local Execution</a></li>
+  <li><a href="#testing-framework">Testing Framework</a></li>
+  <li><a href="#llm-enhancement-architecture">LLM Enhancement Architecture</a></li>
+  <li><a href="#integration-guidelines">Integration Guidelines</a></li>
+</ol>
+
+<h2 id="system-overview">System Overview</h2>
+
+<h3 id="purpose">Purpose</h3>
+<p>The Pattern-Based Machine Learning (PBML) system is the central learning engine of DevMentor, implementing advanced pattern recognition and learning capabilities to improve AI agent responses and system behavior over time.</p>
+
+<h3 id="core-capabilities">Core Capabilities</h3>
+<ul>
+  <li>Pattern identification and extraction</li>
+  <li>Learning from user interactions</li>
+  <li>Model adaptation and enhancement</li>
+  <li>Performance optimization</li>
+  <li>Integration with LLM systems</li>
+</ul>
+
+<h2 id="core-architecture">Core Architecture</h2>
+
+<h3 id="system-layers">System Layers</h3>
+<pre><code class="language-ascii">┌─────────────────────────┐
+│    Interface Layer      │
+├─────────────────────────┤
+│    Pattern Engine       │
+├─────────────────────────┤
+│   Learning Core         │
+├─────────────────────────┤
+│   Storage Interface     │
+└─────────────────────────┘
+</code></pre>
+
+<h3 id="component-integration">Component Integration</h3>
+<pre><code class="language-ascii">┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ Multi-Agent  │    │    PBML      │    │   Qdrant     │
+│   System     │◄──►│    Core      │◄──►│  Storage     │
+└──────────────┘    └──────────────┘    └──────────────┘
+                          ▲
+                          │
+                    ┌─────┴─────┐
+                    │    AI     │
+                    │  Config   │
+                    └───────────┘
+</code></pre>
+
+<h3 id="key-components">Key Components</h3>
+<ol>
+  <li>Pattern Recognition Module</li>
+  <li>Learning Engine</li>
+  <li>Model Management System</li>
+  <li>Integration Framework</li>
+  <li>Testing Suite</li>
+</ol>
+
+<h2 id="pattern-recognition-engine">Pattern Recognition Engine</h2>
+
+<h3 id="pattern-types">Pattern Types</h3>
+<ol>
+  <li><strong>Code Patterns</strong>
+    <ul>
+      <li>Syntax patterns</li>
+      <li>Architecture patterns</li>
+      <li>Error patterns</li>
+      <li>Solution patterns</li>
+    </ul>
+  </li>
+  <li><strong>Behavior Patterns</strong>
+    <ul>
+      <li>User interaction sequences</li>
+      <li>Command patterns</li>
+      <li>Error handling patterns</li>
+      <li>Recovery patterns</li>
+    </ul>
+  </li>
+  <li><strong>Learning Patterns</strong>
+    <ul>
+      <li>Improvement trajectories</li>
+      <li>Adaptation patterns</li>
+      <li>Optimization patterns</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="pattern-processing-flow">Pattern Processing Flow</h3>
+<pre><code class="language-ascii">[Input] → [Extraction] → [Analysis] → [Classification] → [Storage]
+   ↑                                                        │
+   └──────────────── [Feedback Loop] ◄────────────────────┘
+</code></pre>
+
+<h2 id="learning-framework">Learning Framework</h2>
+
+<h3 id="core-learning-process">Core Learning Process</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Process Steps</span><span class="pi">:</span>
+  <span class="na">1. Pattern Identification</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Extract features</span>
+     <span class="pi">-</span> <span class="s">Analyze context</span>
+     <span class="pi">-</span> <span class="s">Identify relationships</span>
+
+  <span class="na">2. Feature Extraction</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Code structure</span>
+     <span class="pi">-</span> <span class="s">Semantic meaning</span>
+     <span class="pi">-</span> <span class="s">Context relevance</span>
+
+  <span class="na">3. Model Update</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Update weights</span>
+     <span class="pi">-</span> <span class="s">Adjust parameters</span>
+     <span class="pi">-</span> <span class="s">Optimize performance</span>
+
+  <span class="na">4. Validation</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Test accuracy</span>
+     <span class="pi">-</span> <span class="s">Verify improvements</span>
+     <span class="pi">-</span> <span class="s">Check consistency</span>
+
+  <span class="na">5. Deployment</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">Roll out updates</span>
+     <span class="pi">-</span> <span class="s">Monitor performance</span>
+     <span class="pi">-</span> <span class="s">Collect feedback</span>
+</code></pre></div></div>
+
+<h3 id="learning-models">Learning Models</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"model_types"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"pattern_recognition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neural_network"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"layers"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"nodes_per_layer"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"response_optimization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reinforcement_learning"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"learning_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"discount_factor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="local-execution">Local Execution</h2>
+
+<h3 id="environment-setup">Environment Setup</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/pbml/
+├── core/
+│   ├── pattern_engine/
+│   ├── learning_engine/
+│   └── model_manager/
+├── config/
+│   └── pbml_config.json
+└── runtime/
+    └── executor.js
+</code></pre></div></div>
+
+<h3 id="runtime-configuration">Runtime Configuration</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">execution</span><span class="pi">:</span>
+  <span class="na">mode</span><span class="pi">:</span> <span class="s">development</span>
+  <span class="na">workers</span><span class="pi">:</span> <span class="m">4</span>
+  <span class="na">batch_size</span><span class="pi">:</span> <span class="m">32</span>
+  <span class="na">max_memory</span><span class="pi">:</span> <span class="s">8GB</span>
+
+<span class="na">optimization</span><span class="pi">:</span>
+  <span class="na">compiler</span><span class="pi">:</span> <span class="s">ahead-of-time</span>
+  <span class="na">cache</span><span class="pi">:</span> <span class="s">enabled</span>
+  <span class="na">prefetch</span><span class="pi">:</span> <span class="no">true</span>
+  
+<span class="na">monitoring</span><span class="pi">:</span>
+  <span class="na">metrics</span><span class="pi">:</span> <span class="s">enabled</span>
+  <span class="na">tracing</span><span class="pi">:</span> <span class="s">enabled</span>
+  <span class="na">profiling</span><span class="pi">:</span> <span class="s">sampling</span>
+</code></pre></div></div>
+
+<h2 id="testing-framework">Testing Framework</h2>
+
+<h3 id="test-categories">Test Categories</h3>
+<ol>
+  <li><strong>Unit Tests</strong>
+    <ul>
+      <li>Pattern recognition accuracy</li>
+      <li>Learning algorithm performance</li>
+      <li>Model management efficiency</li>
+    </ul>
+  </li>
+  <li><strong>Integration Tests</strong>
+    <ul>
+      <li>Multi-agent system integration</li>
+      <li>Qdrant storage integration</li>
+      <li>Configuration system integration</li>
+    </ul>
+  </li>
+  <li><strong>System Tests</strong>
+    <ul>
+      <li>End-to-end workflows</li>
+      <li>Performance under load</li>
+      <li>Resource utilization</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="test-workflow">Test Workflow</h3>
+<pre><code class="language-ascii">┌───────────┐    ┌──────────┐    ┌────────────┐
+│Unit Tests ├───►│Int Tests ├───►│System Tests│
+└───────────┘    └──────────┘    └────────────┘
+      ↑              ↑               ↑
+      └──────────────┴───────────────┘
+         Continuous Integration
+</code></pre>
+
+<h2 id="llm-enhancement-architecture">LLM Enhancement Architecture</h2>
+
+<h3 id="enhancement-framework">Enhancement Framework</h3>
+<pre><code class="language-ascii">┌────────────────┐
+│ Input Analysis │
+└───────┬────────┘
+        ▼
+┌────────────────┐    ┌─────────────┐
+│Pattern Matching├───►│ Context Gen │
+└───────┬────────┘    └──────┬──────┘
+        ▼                    ▼
+┌────────────────┐    ┌─────────────┐
+│Response Synth  │◄───┤  Quality    │
+└───────┬────────┘    │  Control    │
+        ▼             └─────────────┘
+┌────────────────┐
+│ Output Polish  │
+└────────────────┘
+</code></pre>
+
+<h3 id="integration-points">Integration Points</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">PBMLEnhancer</span> <span class="p">{</span>
+  <span class="c1">// Core enhancement methods</span>
+  <span class="k">async</span> <span class="nx">enhancePrompt</span><span class="p">(</span><span class="nx">input</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">async</span> <span class="nx">validateResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">async</span> <span class="nx">improveResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Learning interfaces</span>
+  <span class="k">async</span> <span class="nx">learnFromInteraction</span><span class="p">(</span>
+    <span class="nx">input</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">response</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">feedback</span><span class="p">:</span> <span class="nx">Feedback</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  
+  <span class="c1">// Pattern management</span>
+  <span class="k">async</span> <span class="nx">storePattern</span><span class="p">(</span><span class="nx">pattern</span><span class="p">:</span> <span class="nx">Pattern</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">async</span> <span class="nx">findSimilarPatterns</span><span class="p">(</span><span class="nx">input</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Pattern</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="integration-guidelines">Integration Guidelines</h2>
+
+<h3 id="multi-agent-integration">Multi-Agent Integration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">PBMLAgentIntegration</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">enhanceAgent</span><span class="p">(</span><span class="nx">agent</span><span class="p">:</span> <span class="nx">Agent</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Connect to agent's learning system</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">connectLearningSystem</span><span class="p">(</span><span class="nx">agent</span><span class="p">);</span>
+    
+    <span class="c1">// Setup pattern recognition</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">setupPatternRecognition</span><span class="p">(</span><span class="nx">agent</span><span class="p">);</span>
+    
+    <span class="c1">// Initialize feedback loop</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">initializeFeedbackLoop</span><span class="p">(</span><span class="nx">agent</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">processAgentInteraction</span><span class="p">(</span>
+    <span class="nx">agent</span><span class="p">:</span> <span class="nx">Agent</span><span class="p">,</span>
+    <span class="nx">interaction</span><span class="p">:</span> <span class="nx">Interaction</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Extract patterns</span>
+    <span class="kd">const</span> <span class="nx">patterns</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">extractPatterns</span><span class="p">(</span><span class="nx">interaction</span><span class="p">);</span>
+    
+    <span class="c1">// Update agent's knowledge</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateAgentKnowledge</span><span class="p">(</span><span class="nx">agent</span><span class="p">,</span> <span class="nx">patterns</span><span class="p">);</span>
+    
+    <span class="c1">// Optimize agent's responses</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">optimizeResponses</span><span class="p">(</span><span class="nx">agent</span><span class="p">,</span> <span class="nx">patterns</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="qdrant-integration">Qdrant Integration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">PBMLStorageIntegration</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">storePattern</span><span class="p">(</span><span class="nx">pattern</span><span class="p">:</span> <span class="nx">Pattern</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">upsert</span><span class="p">(</span><span class="dl">'</span><span class="s1">patterns</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">embedding</span><span class="p">,</span>
+      <span class="na">payload</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">type</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span>
+        <span class="na">confidence</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">confidence</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">metadata</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">retrievePatterns</span><span class="p">(</span><span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Pattern</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">createEmbedding</span><span class="p">(</span><span class="nx">query</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="dl">'</span><span class="s1">patterns</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">embedding</span><span class="p">,</span>
+      <span class="na">limit</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="performance-optimization">Performance Optimization</h2>
+
+<h3 id="metrics">Metrics</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Response Time</span><span class="pi">:</span>
+  <span class="na">pattern_recognition</span><span class="pi">:</span> <span class="s">&lt;50ms</span>
+  <span class="na">learning_update</span><span class="pi">:</span> <span class="s">&lt;100ms</span>
+  <span class="na">model_inference</span><span class="pi">:</span> <span class="s">&lt;200ms</span>
+
+<span class="na">Resource Usage</span><span class="pi">:</span>
+  <span class="na">cpu_utilization</span><span class="pi">:</span> <span class="s">&lt;70%</span>
+  <span class="na">memory_usage</span><span class="pi">:</span> <span class="s">&lt;80%</span>
+  <span class="na">gpu_utilization</span><span class="pi">:</span> <span class="s">&lt;90%</span>
+
+<span class="na">Quality</span><span class="pi">:</span>
+  <span class="na">pattern_accuracy</span><span class="pi">:</span> <span class="pi">&gt;</span><span class="err">95%</span>
+  <span class="s">learning_rate: optimal</span>
+  <span class="s">model_convergence: stable</span>
+</code></pre></div></div>
+
+<h3 id="optimization-strategies">Optimization Strategies</h3>
+<ol>
+  <li><strong>Batch Processing</strong>
+    <ul>
+      <li>Pattern batching</li>
+      <li>Update batching</li>
+      <li>Response batching</li>
+    </ul>
+  </li>
+  <li><strong>Caching</strong>
+    <ul>
+      <li>Pattern cache</li>
+      <li>Model cache</li>
+      <li>Response cache</li>
+    </ul>
+  </li>
+  <li><strong>Resource Management</strong>
+    <ul>
+      <li>Dynamic scaling</li>
+      <li>Load balancing</li>
+      <li>Resource pooling</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="maintenance">Maintenance</h2>
+
+<h3 id="regular-tasks">Regular Tasks</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Daily</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Monitor pattern quality</span>
+  <span class="pi">-</span> <span class="s">Check learning rates</span>
+  <span class="pi">-</span> <span class="s">Verify model health</span>
+
+<span class="na">Weekly</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Optimize patterns</span>
+  <span class="pi">-</span> <span class="s">Clean pattern store</span>
+  <span class="pi">-</span> <span class="s">Update models</span>
+  <span class="pi">-</span> <span class="s">Analyze performance</span>
+
+<span class="na">Monthly</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Full system optimization</span>
+  <span class="pi">-</span> <span class="s">Pattern validation</span>
+  <span class="pi">-</span> <span class="s">Model retraining</span>
+  <span class="pi">-</span> <span class="s">Performance tuning</span>
+</code></pre></div></div>
+
+<h3 id="health-checks">Health Checks</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">PBMLHealthMonitor</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">checkSystemHealth</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">HealthStatus</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">pattern_engine</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkPatternEngine</span><span class="p">(),</span>
+      <span class="na">learning_system</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkLearningSystem</span><span class="p">(),</span>
+      <span class="na">model_manager</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkModelManager</span><span class="p">(),</span>
+      <span class="na">storage</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkStorage</span><span class="p">()</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">runDiagnostics</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">DiagnosticReport</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">performance</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkPerformance</span><span class="p">(),</span>
+      <span class="na">accuracy</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkAccuracy</span><span class="p">(),</span>
+      <span class="na">resource_usage</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkResources</span><span class="p">(),</span>
+      <span class="na">integration_status</span><span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkIntegrations</span><span class="p">()</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="configuration-examples">Configuration Examples</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"pbml_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"pattern_engine"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"batch_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.85</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"cache_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"learning_engine"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"learning_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.001</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"epochs"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"validation_split"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="error-handling">Error Handling</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">PBMLErrorHandler</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">handleError</span><span class="p">(</span><span class="nx">error</span><span class="p">:</span> <span class="nx">PBMLError</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Log error</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">logError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    
+    <span class="c1">// Attempt recovery</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">recoverFromError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    
+    <span class="c1">// Notify monitoring</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">notifyMonitoring</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="best-practices">Best Practices</h3>
+<ul>
+  <li>Pattern validation before storage</li>
+  <li>Regular model validation</li>
+  <li>Performance monitoring</li>
+  <li>Resource optimization</li>
+  <li>Error handling and recovery</li>
+  <li>Regular maintenance</li>
+</ul>
+
+<hr />
+
+<p><em>This documentation provides a comprehensive overview of the PBML system, serving as the primary reference for development and maintenance.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / AI/PBML_SYSTEM_CORE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

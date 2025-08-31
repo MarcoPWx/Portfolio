@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBSOCKET | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">api/WEBSOCKET.md</span>
+</div>
+
+<h1>WEBSOCKET</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="websocket--events-system---beta-production-guide">WebSocket &amp; Events System - Beta Production Guide</h1>
+
+<h2 id="-overview">🎯 Overview</h2>
+
+<p>DevMentor uses a dual real-time communication strategy:</p>
+<ul>
+  <li><strong>WebSockets</strong>: Bidirectional communication between IDE extensions and the dashboard</li>
+  <li><strong>Server-Sent Events (SSE)</strong>: One-way streaming from backend services to the UI</li>
+</ul>
+
+<p>This guide will teach you how to make this system production-ready for beta users.</p>
+
+<h2 id="-architecture">📐 Architecture</h2>
+
+<h3 id="current-system-design">Current System Design</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────┐     WebSocket      ┌─────────────┐     Redis PubSub    ┌──────────────┐
+│ IDE/Editor   │ ←─────────────────→ │  Dashboard  │ ←─────────────────→ │ Backend Jobs │
+│  Extension   │    (port 8080)      │  (port 3000)│                     │   Workers    │
+└──────────────┘                     └─────────────┘                     └──────────────┘
+                                            │
+                                            │ SSE
+                                            ↓
+                                     ┌─────────────┐
+                                     │   Browser   │
+                                     │     UI      │
+                                     └─────────────┘
+</code></pre></div></div>
+
+<h3 id="two-websocket-services">Two WebSocket Services</h3>
+
+<ol>
+  <li><strong>WebSocket Server</strong> (<code class="language-plaintext highlighter-rouge">websocketServer.ts</code>)
+    <ul>
+      <li>Runs on the dashboard at <code class="language-plaintext highlighter-rouge">/ws</code></li>
+      <li>Accepts connections from IDE extensions</li>
+      <li>Handles: handshake, codeContext, startTDD, analyzeCode, ping</li>
+    </ul>
+  </li>
+  <li><strong>WebSocket Client</strong> (<code class="language-plaintext highlighter-rouge">websocketService.ts</code>)
+    <ul>
+      <li>Connects FROM dashboard TO IDE extension at <code class="language-plaintext highlighter-rouge">ws://localhost:8080/devmentor</code></li>
+      <li>Handles: context_update, file_changed, selection_changed, suggestion_request, tdd_action</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="event-streaming-sse">Event Streaming (SSE)</h3>
+
+<ul>
+  <li><strong>Endpoint</strong>: <code class="language-plaintext highlighter-rouge">/api/events</code></li>
+  <li><strong>Channels</strong>: ui:activity, ai:jobs:status, sse:progress:scraper, memory:new-items</li>
+  <li><strong>Transport</strong>: Redis Pub/Sub → SSE → Browser EventSource</li>
+</ul>
+
+<h2 id="-making-it-beta-ready">🚀 Making It Beta-Ready</h2>
+
+<h3 id="step-1-understanding-the-flow">Step 1: Understanding the Flow</h3>
+
+<h4 id="ide--dashboard-flow">IDE → Dashboard Flow</h4>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// IDE sends code context</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">codeContext</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">data</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">file</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">src/utils.ts</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">language</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">typescript</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">function add(a, b) { return a + b; }</span><span class="dl">"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Dashboard analyzes and responds</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">suggestions</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">data</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">uuid</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">test</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">title</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Add unit test</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This function needs tests</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.75</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="backend--ui-flow-via-redissse">Backend → UI Flow (via Redis/SSE)</h4>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Backend publishes to Redis</span>
+<span class="nx">redis</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">ai:jobs:status</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="na">jobId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">job_123</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">completed</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">result</span><span class="p">:</span> <span class="p">{</span> <span class="na">suggestions</span><span class="p">:</span> <span class="mi">5</span> <span class="p">}</span>
+<span class="p">}));</span>
+
+<span class="c1">// UI receives via EventSource</span>
+<span class="nx">eventSource</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">message</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+  <span class="c1">// Update UI based on channel and message</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="step-2-production-requirements">Step 2: Production Requirements</h3>
+
+<h4 id="-beta-readiness-checklist">✅ Beta Readiness Checklist</h4>
+
+<h5 id="infrastructure">Infrastructure</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Redis instance running and accessible</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />WebSocket server properly initialized</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SSL/TLS for secure WebSocket connections (wss://)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CORS headers configured correctly</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting implemented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Connection pooling for Redis</li>
+</ul>
+
+<h5 id="reliability">Reliability</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Automatic reconnection logic</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Message queuing for offline clients</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Heartbeat/ping mechanism</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Graceful degradation when services unavailable</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Circuit breaker pattern for external services</li>
+</ul>
+
+<h5 id="security">Security</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Authentication for WebSocket connections</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Message validation and sanitization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting per client</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />DDoS protection</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Secure Redis configuration</li>
+</ul>
+
+<h5 id="monitoring">Monitoring</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Connection metrics (active, total, failed)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Message throughput tracking</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Error logging and alerting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance metrics (latency, queue size)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Client version tracking</li>
+</ul>
+
+<h5 id="developer-experience">Developer Experience</h5>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clear documentation for IDE extension developers</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />SDK/client libraries</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Example implementations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Debugging tools</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Event replay capability</li>
+</ul>
+
+<h2 id="-implementation-steps">💻 Implementation Steps</h2>
+
+<h3 id="step-1-set-up-custom-server-with-websocket-support">Step 1: Set Up Custom Server with WebSocket Support</h3>
+
+<p>Next.js doesn’t natively support WebSocket servers, so we need a custom server:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// server.js</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">createServer</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">parse</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">url</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">next</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">next</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">websocketService</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./dist/lib/services/websocketServer</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">dev</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">next</span><span class="p">({</span> <span class="nx">dev</span> <span class="p">});</span>
+<span class="kd">const</span> <span class="nx">handle</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">getRequestHandler</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">prepare</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">parsedUrl</span> <span class="o">=</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="nx">handle</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">parsedUrl</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Initialize WebSocket server</span>
+  <span class="nx">websocketService</span><span class="p">.</span><span class="nx">initialize</span><span class="p">(</span><span class="nx">server</span><span class="p">);</span>
+
+  <span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">&gt; Ready on http://localhost:3000</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">&gt; WebSocket ready on ws://localhost:3000/ws</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="step-2-add-authentication">Step 2: Add Authentication</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Enhanced WebSocket authentication</span>
+<span class="kr">interface</span> <span class="nx">AuthenticatedClient</span> <span class="kd">extends</span> <span class="nx">ExtensionClient</span> <span class="p">{</span>
+  <span class="nl">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">permissions</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="k">private</span> <span class="k">async</span> <span class="nx">handleHandshake</span><span class="p">(</span><span class="nx">client</span><span class="p">:</span> <span class="nx">ExtensionClient</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="c1">// Validate API key</span>
+  <span class="kd">const</span> <span class="nx">apiKey</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">apiKey</span> <span class="o">||</span> <span class="o">!</span><span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateApiKey</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sendError</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Invalid API key</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">ws</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Set authenticated client data</span>
+  <span class="kd">const</span> <span class="nx">authClient</span> <span class="o">=</span> <span class="nx">client</span> <span class="k">as</span> <span class="nx">AuthenticatedClient</span><span class="p">;</span>
+  <span class="nx">authClient</span><span class="p">.</span><span class="nx">apiKey</span> <span class="o">=</span> <span class="nx">apiKey</span><span class="p">;</span>
+  <span class="nx">authClient</span><span class="p">.</span><span class="nx">userId</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getUserIdFromApiKey</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">);</span>
+  <span class="nx">authClient</span><span class="p">.</span><span class="nx">permissions</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPermissions</span><span class="p">(</span><span class="nx">authClient</span><span class="p">.</span><span class="nx">userId</span><span class="p">);</span>
+
+  <span class="c1">// Continue with normal handshake...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-3-implement-message-queue">Step 3: Implement Message Queue</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Redis-backed message queue for reliability</span>
+<span class="kd">class</span> <span class="nx">MessageQueue</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">queueMessage</span><span class="p">(</span><span class="nx">clientId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">message</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`queue:</span><span class="p">${</span><span class="nx">clientId</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">rpush</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">message</span><span class="p">));</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">expire</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">86400</span><span class="p">);</span> <span class="c1">// 24 hour TTL</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">getQueuedMessages</span><span class="p">(</span><span class="nx">clientId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`queue:</span><span class="p">${</span><span class="nx">clientId</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">messages</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">lrange</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">m</span> <span class="o">=&gt;</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">m</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-4-add-monitoring">Step 4: Add Monitoring</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Metrics collection</span>
+<span class="kd">class</span> <span class="nx">WebSocketMetrics</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">connections</span><span class="p">:</span> <span class="p">{</span> <span class="na">active</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">total</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">failed</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+    <span class="na">messages</span><span class="p">:</span> <span class="p">{</span> <span class="na">sent</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">received</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">errors</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+    <span class="na">latency</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">};</span>
+
+  <span class="nx">trackConnection</span><span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">connect</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">disconnect</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">connect</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">active</span><span class="o">++</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">total</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">disconnect</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">active</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">failed</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">publishMetrics</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="nx">publishMetrics</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="nx">redis</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">metrics:websocket</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">metrics</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-5-client-side-implementation">Step 5: Client-Side Implementation</h3>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// React hook for WebSocket connection</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useRef</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useWebSocket</span><span class="p">(</span><span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">ws</span> <span class="o">=</span> <span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">WebSocket</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isConnected</span><span class="p">,</span> <span class="nx">setIsConnected</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">lastMessage</span><span class="p">,</span> <span class="nx">setLastMessage</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">reconnectTimeoutRef</span> <span class="o">=</span> <span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">reconnectAttempts</span> <span class="o">=</span> <span class="nx">useRef</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">connect</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket connected</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">};</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+        <span class="nx">setLastMessage</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+      <span class="p">};</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">handleReconnect</span><span class="p">();</span>
+      <span class="p">};</span>
+
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to create WebSocket:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="nx">handleReconnect</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">const</span> <span class="nx">handleReconnect</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span><span class="p">),</span> <span class="mi">30000</span><span class="p">);</span>
+      <span class="nx">reconnectTimeoutRef</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">reconnectAttempts</span><span class="p">.</span><span class="nx">current</span><span class="o">++</span><span class="p">;</span>
+        <span class="nx">connect</span><span class="p">();</span>
+      <span class="p">},</span> <span class="nx">delay</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">const</span> <span class="nx">sendMessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">message</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">?.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="nx">WebSocket</span><span class="p">.</span><span class="nx">OPEN</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">message</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">connect</span><span class="p">();</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">reconnectTimeoutRef</span><span class="p">.</span><span class="nx">current</span><span class="p">);</span>
+      <span class="nx">ws</span><span class="p">.</span><span class="nx">current</span><span class="p">?.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">url</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">{</span> <span class="nx">isConnected</span><span class="p">,</span> <span class="nx">lastMessage</span><span class="p">,</span> <span class="nx">sendMessage</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-6-sse-client-implementation">Step 6: SSE Client Implementation</h3>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// React hook for Server-Sent Events</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useRef</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useEventSource</span><span class="p">(</span><span class="nx">url</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">EventSource</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">isConnected</span><span class="p">,</span> <span class="nx">setIsConnected</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">events</span><span class="p">,</span> <span class="nx">setEvents</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">any</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">SSE connected</span><span class="dl">'</span><span class="p">);</span>
+      <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+      <span class="nx">setEvents</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">99</span><span class="p">),</span> <span class="nx">data</span><span class="p">]);</span> <span class="c1">// Keep last 100</span>
+    <span class="p">};</span>
+
+    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">SSE error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="nx">setIsConnected</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">eventSource</span><span class="p">.</span><span class="nx">current</span><span class="p">?.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">url</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">{</span> <span class="nx">isConnected</span><span class="p">,</span> <span class="nx">events</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-testing-strategy">🧪 Testing Strategy</h2>
+
+<h3 id="unit-tests">Unit Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// websocket.test.ts</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket Server</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should handle handshake</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">connectClient</span><span class="p">();</span>
+    <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">handshake</span><span class="dl">'</span><span class="p">,</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span> <span class="p">});</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">receive</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="kd">type</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">welcome</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should queue messages for offline clients</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Test message queuing logic</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="integration-tests">Integration Tests</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// e2e.test.ts</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">End-to-End Flow</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should process IDE context and return suggestions</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Connect WebSocket</span>
+    <span class="c1">// Send code context</span>
+    <span class="c1">// Verify suggestions received</span>
+    <span class="c1">// Check Redis for events</span>
+    <span class="c1">// Verify SSE delivers events</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="load-testing">Load Testing</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// load-test.js</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">Worker</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">worker_threads</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Spawn multiple WebSocket clients</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="dl">'</span><span class="s1">./websocket-client-worker.js</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Monitor metrics</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">metrics:websocket</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Current metrics:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">metrics</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="-debugging-tools">🔍 Debugging Tools</h2>
+
+<h3 id="websocket-inspector">WebSocket Inspector</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add to your dashboard</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">WebSocketInspector</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">clients</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useWebSocketAdmin</span><span class="p">();</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="nx">Connected</span> <span class="nx">Clients</span><span class="p">:</span> <span class="p">{</span><span class="nx">clients</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>      <span class="p">{</span><span class="nx">clients</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">client</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">ID</span><span class="p">:</span> <span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Type</span><span class="p">:</span> <span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="kd">type</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Last</span> <span class="nx">Activity</span><span class="p">:</span> <span class="p">{</span><span class="nx">client</span><span class="p">.</span><span class="nx">lastActivity</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="event-stream-monitor">Event Stream Monitor</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">EventMonitor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">events</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useEventSource</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/events</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="nx">Recent</span> <span class="nx">Events</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>      <span class="p">{</span><span class="nx">events</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">event</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">event</span><span class="p">.</span><span class="nx">channel</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/pre</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-production-deployment">🚦 Production Deployment</h2>
+
+<h3 id="environment-variables">Environment Variables</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.production</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://production-redis:6379
+<span class="nv">WS_PORT</span><span class="o">=</span>3000
+<span class="nv">WS_PATH</span><span class="o">=</span>/ws
+<span class="nv">ENABLE_METRICS</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">MAX_CONNECTIONS</span><span class="o">=</span>1000
+<span class="nv">AUTH_REQUIRED</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="docker-configuration">Docker Configuration</h3>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dockerfile</span>
+<span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm ci <span class="nt">--only</span><span class="o">=</span>production
+<span class="k">RUN </span>npm run build
+
+<span class="k">EXPOSE</span><span class="s"> 3000</span>
+<span class="k">CMD</span><span class="s"> ["node", "server.js"]</span>
+</code></pre></div></div>
+
+<h3 id="nginx-configuration-for-websocket-proxy">Nginx Configuration (for WebSocket proxy)</h3>
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">location</span> <span class="n">/ws</span> <span class="p">{</span>
+    <span class="kn">proxy_pass</span> <span class="s">http://localhost:3000</span><span class="p">;</span>
+    <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">"upgrade"</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+    <span class="kn">proxy_read_timeout</span> <span class="mi">86400</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">location</span> <span class="n">/api/events</span> <span class="p">{</span>
+    <span class="kn">proxy_pass</span> <span class="s">http://localhost:3000</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">''</span><span class="p">;</span>
+    <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+    <span class="kn">chunked_transfer_encoding</span> <span class="no">off</span><span class="p">;</span>
+    <span class="kn">proxy_buffering</span> <span class="no">off</span><span class="p">;</span>
+    <span class="kn">proxy_cache</span> <span class="no">off</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-monitoring-dashboard">📊 Monitoring Dashboard</h2>
+
+<p>Create a real-time monitoring dashboard:</p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">RealtimeMonitor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">wsMetrics</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useWebSocketMetrics</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">sseMetrics</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useSSEMetrics</span><span class="p">();</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">Dashboard</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span> 
+        <span class="na">title</span><span class="p">=</span><span class="s">"WebSocket Connections"</span>
+        <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">active</span><span class="si">}</span>
+        <span class="na">total</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">total</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span> 
+        <span class="na">title</span><span class="p">=</span><span class="s">"Messages/sec"</span>
+        <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">throughput</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">MetricCard</span> 
+        <span class="na">title</span><span class="p">=</span><span class="s">"SSE Subscribers"</span>
+        <span class="na">value</span><span class="p">=</span><span class="si">{</span><span class="nx">sseMetrics</span><span class="p">.</span><span class="nx">subscribers</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">LatencyChart</span> <span class="na">data</span><span class="p">=</span><span class="si">{</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">latency</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">ErrorLog</span> <span class="na">errors</span><span class="p">=</span><span class="si">{</span><span class="p">[...</span><span class="nx">wsMetrics</span><span class="p">.</span><span class="nx">errors</span><span class="p">,</span> <span class="p">...</span><span class="nx">sseMetrics</span><span class="p">.</span><span class="nx">errors</span><span class="p">]</span><span class="si">}</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nc">Dashboard</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-beta-launch-checklist">🎯 Beta Launch Checklist</h2>
+
+<h3 id="week-1-infrastructure">Week 1: Infrastructure</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up production Redis with persistence</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Configure SSL certificates for wss://</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy custom Next.js server</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up monitoring infrastructure</li>
+</ul>
+
+<h3 id="week-2-security--reliability">Week 2: Security &amp; Reliability</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement authentication system</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add rate limiting</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up message queuing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement circuit breakers</li>
+</ul>
+
+<h3 id="week-3-testing">Week 3: Testing</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run load tests (target: 100 concurrent connections)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test failover scenarios</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify message delivery guarantees</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test reconnection logic</li>
+</ul>
+
+<h3 id="week-4-documentation--tools">Week 4: Documentation &amp; Tools</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write IDE extension integration guide</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create example client implementations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Build debugging dashboard</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prepare beta user onboarding</li>
+</ul>
+
+<h2 id="-common-issues--solutions">🆘 Common Issues &amp; Solutions</h2>
+
+<h3 id="issue-websocket-connections-dropping">Issue: WebSocket connections dropping</h3>
+<p><strong>Solution</strong>: Implement heartbeat/ping mechanism and aggressive reconnection</p>
+
+<h3 id="issue-messages-lost-during-disconnection">Issue: Messages lost during disconnection</h3>
+<p><strong>Solution</strong>: Queue messages in Redis with TTL</p>
+
+<h3 id="issue-sse-connections-timing-out">Issue: SSE connections timing out</h3>
+<p><strong>Solution</strong>: Send periodic keep-alive comments, configure proxy timeouts</p>
+
+<h3 id="issue-high-memory-usage-with-many-connections">Issue: High memory usage with many connections</h3>
+<p><strong>Solution</strong>: Implement connection pooling and client limits</p>
+
+<h2 id="-next-steps">📚 Next Steps</h2>
+
+<ol>
+  <li><strong>Implement the custom server</strong> (server.js)</li>
+  <li><strong>Add authentication layer</strong></li>
+  <li><strong>Set up Redis with proper configuration</strong></li>
+  <li><strong>Create monitoring dashboard</strong></li>
+  <li><strong>Write comprehensive tests</strong></li>
+  <li><strong>Document for beta users</strong></li>
+</ol>
+
+<p>This system is the nervous system of DevMentor - it enables real-time collaboration between the IDE and the AI-powered dashboard. Getting it right is crucial for a smooth beta experience.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / api/WEBSOCKET.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

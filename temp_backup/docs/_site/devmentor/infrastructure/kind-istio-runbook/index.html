@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kind-istio-runbook | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/kind-istio-runbook.md</span>
+</div>
+
+<h1>kind-istio-runbook</h1>
+
+
+<h1 id="kind--istio-runbook-devmentor">Kind + Istio Runbook (devmentor)</h1>
+
+<p>This runbook covers the local Kind cluster and Istio configuration that matches your setup and the screenshot (Gateway, VirtualService, DestinationRule, ServiceEntry) for services ai-gateway, auth-service, devmentor-gateway, devmentor-routes, and external-apis.</p>
+
+<p>Last updated: 2025-08-23</p>
+
+<hr />
+
+<h2 id="1-overview">1) Overview</h2>
+<ul>
+  <li>Local Kubernetes via Kind with node image <code class="language-plaintext highlighter-rouge">kindest/node:v1.33.1</code> and kubectl context <code class="language-plaintext highlighter-rouge">kind-devmentor</code>.</li>
+  <li>Istio for service mesh features: ingress, routing, mTLS, traffic shifting, and controlled egress.</li>
+  <li>Primary objects:
+    <ul>
+      <li>Gateway: <code class="language-plaintext highlighter-rouge">devmentor-gateway</code></li>
+      <li>VirtualService: <code class="language-plaintext highlighter-rouge">devmentor-routes</code></li>
+      <li>DestinationRules: <code class="language-plaintext highlighter-rouge">ai-gateway</code>, <code class="language-plaintext highlighter-rouge">auth-service</code></li>
+      <li>ServiceEntry: <code class="language-plaintext highlighter-rouge">external-apis</code> (+ optional DR for TLS origination)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Prereqs: Docker, kind, kubectl, istioctl installed.</p>
+
+<h2 id="2-what-the-kind-creation-messages-mean">2) What the Kind creation messages mean</h2>
+<ul>
+  <li>Ensuring node image: pull image if missing</li>
+  <li>Preparing nodes: create Docker containers for control-plane/worker</li>
+  <li>Writing configuration: render cluster config</li>
+  <li>Starting control-plane: start core control-plane components</li>
+  <li>Installing CNI: install pod networking (kindnet)</li>
+  <li>Installing StorageClass: default dynamic storage class</li>
+  <li>Joining worker nodes: join workers via kubeadm</li>
+  <li>Context set to <code class="language-plaintext highlighter-rouge">kind-devmentor</code>: kubectl now targets this cluster</li>
+</ul>
+
+<h2 id="3-health-checks">3) Health checks</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl cluster-info <span class="nt">--context</span> kind-devmentor
+kubectl <span class="nt">--context</span> kind-devmentor get nodes <span class="nt">-o</span> wide
+kubectl <span class="nt">--context</span> kind-devmentor get sc
+kubectl <span class="nt">--context</span> kind-devmentor <span class="nt">-n</span> kube-system get pods
+</code></pre></div></div>
+
+<h2 id="4-install-istio-demo-profile-for-dev">4) Install Istio (demo profile for dev)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>istioctl <span class="nb">install</span> <span class="nt">--set</span> <span class="nv">profile</span><span class="o">=</span>demo <span class="nt">-y</span>
+kubectl get pods <span class="nt">-n</span> istio-system
+kubectl create ns devmentor <span class="o">||</span> <span class="nb">true
+</span>kubectl label ns devmentor istio-injection<span class="o">=</span>enabled <span class="nt">--overwrite</span>
+</code></pre></div></div>
+
+<h2 id="5-ingress-access">5) Ingress access</h2>
+<ul>
+  <li>Port-forward:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> istio-system port-forward svc/istio-ingressgateway 8080:80 8443:443
+</code></pre></div>    </div>
+  </li>
+  <li>Or expose ports 80/443 via Kind cluster config at creation time.</li>
+</ul>
+
+<h2 id="6-istio-object-concepts">6) Istio object concepts</h2>
+<ul>
+  <li>Gateway (G): Edge listener and TLS config for ingress.</li>
+  <li>VirtualService (VS): HTTP routing rules to in-mesh services.</li>
+  <li>DestinationRule (DR): Policies and subsets (versions) for a destination.</li>
+  <li>ServiceEntry (SE): Registers external services for egress.</li>
+</ul>
+
+<h2 id="7-example-manifests-namespace-devmentor">7) Example manifests (namespace: devmentor)</h2>
+
+<p>Gateway</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Gateway</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-gateway</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">istio</span><span class="pi">:</span> <span class="s">ingressgateway</span>
+  <span class="na">servers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span>
+      <span class="na">number</span><span class="pi">:</span> <span class="m">80</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s">http</span>
+      <span class="na">protocol</span><span class="pi">:</span> <span class="s">HTTP</span>
+    <span class="na">hosts</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">devmentor.local</span>
+</code></pre></div></div>
+
+<p>VirtualService</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">VirtualService</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-routes</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">devmentor.local</span>
+  <span class="na">gateways</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">devmentor/devmentor-gateway</span>
+  <span class="na">http</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">uri</span><span class="pi">:</span>
+        <span class="na">prefix</span><span class="pi">:</span> <span class="s">/api/ai</span>
+    <span class="na">route</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">destination</span><span class="pi">:</span>
+        <span class="na">host</span><span class="pi">:</span> <span class="s">ai-gateway.devmentor.svc.cluster.local</span>
+        <span class="na">subset</span><span class="pi">:</span> <span class="s">v1</span>
+        <span class="na">port</span><span class="pi">:</span>
+          <span class="na">number</span><span class="pi">:</span> <span class="m">80</span>
+  <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">uri</span><span class="pi">:</span>
+        <span class="na">prefix</span><span class="pi">:</span> <span class="s">/api/auth</span>
+    <span class="na">route</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">destination</span><span class="pi">:</span>
+        <span class="na">host</span><span class="pi">:</span> <span class="s">auth-service.devmentor.svc.cluster.local</span>
+        <span class="na">subset</span><span class="pi">:</span> <span class="s">v1</span>
+        <span class="na">port</span><span class="pi">:</span>
+          <span class="na">number</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>DestinationRules</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">DestinationRule</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s">ai-gateway.devmentor.svc.cluster.local</span>
+  <span class="na">trafficPolicy</span><span class="pi">:</span>
+    <span class="na">loadBalancer</span><span class="pi">:</span>
+      <span class="na">simple</span><span class="pi">:</span> <span class="s">ROUND_ROBIN</span>
+  <span class="na">subsets</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">v1</span>
+    <span class="na">labels</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">version</span><span class="pi">:</span> <span class="nv">v1</span> <span class="pi">}</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">v2</span>
+    <span class="na">labels</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">version</span><span class="pi">:</span> <span class="nv">v2</span> <span class="pi">}</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">DestinationRule</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">auth-service</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s">auth-service.devmentor.svc.cluster.local</span>
+  <span class="na">trafficPolicy</span><span class="pi">:</span>
+    <span class="na">loadBalancer</span><span class="pi">:</span>
+      <span class="na">simple</span><span class="pi">:</span> <span class="s">ROUND_ROBIN</span>
+  <span class="na">subsets</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">v1</span>
+    <span class="na">labels</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">version</span><span class="pi">:</span> <span class="nv">v1</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>ServiceEntry and DR for external APIs</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceEntry</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">external-apis</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">api.example.com</span>   <span class="c1"># replace</span>
+  <span class="na">location</span><span class="pi">:</span> <span class="s">MESH_EXTERNAL</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">number</span><span class="pi">:</span> <span class="m">443</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">https</span>
+    <span class="na">protocol</span><span class="pi">:</span> <span class="s">TLS</span>
+  <span class="na">resolution</span><span class="pi">:</span> <span class="s">DNS</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">DestinationRule</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">external-apis-dr</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s">api.example.com</span>   <span class="c1"># replace</span>
+  <span class="na">trafficPolicy</span><span class="pi">:</span>
+    <span class="na">tls</span><span class="pi">:</span>
+      <span class="na">mode</span><span class="pi">:</span> <span class="s">SIMPLE</span>   <span class="c1"># originate TLS from the sidecar</span>
+</code></pre></div></div>
+
+<p>Apply all (if saved to a file):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">--context</span> kind-devmentor apply <span class="nt">-f</span> manifests.yaml
+</code></pre></div></div>
+
+<h2 id="8-workloads-and-selectors">8) Workloads and selectors</h2>
+<p>Your Deployments should label pods with <code class="language-plaintext highlighter-rouge">version: v1</code>/<code class="language-plaintext highlighter-rouge">v2</code> to match DR subsets and Services should select those pods. Example Service:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">ai-gateway</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">http</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">8080</span>
+</code></pre></div></div>
+
+<h2 id="9-traffic-shifting-canary">9) Traffic shifting (canary)</h2>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">VirtualService</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor-routes</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="pi">[</span> <span class="s2">"</span><span class="s">devmentor.local"</span> <span class="pi">]</span>
+  <span class="na">gateways</span><span class="pi">:</span> <span class="pi">[</span> <span class="s2">"</span><span class="s">devmentor/devmentor-gateway"</span> <span class="pi">]</span>
+  <span class="na">http</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span> <span class="pi">[{</span> <span class="nv">uri</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">prefix</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/api/ai"</span> <span class="pi">}</span> <span class="pi">}]</span>
+    <span class="na">route</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">destination</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">host</span><span class="pi">:</span> <span class="nv">ai-gateway.devmentor.svc.cluster.local</span><span class="pi">,</span> <span class="nv">subset</span><span class="pi">:</span> <span class="nv">v1</span><span class="pi">,</span> <span class="nv">port</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">number</span><span class="pi">:</span> <span class="nv">80</span> <span class="pi">}</span> <span class="pi">}</span>
+      <span class="na">weight</span><span class="pi">:</span> <span class="m">90</span>
+    <span class="pi">-</span> <span class="na">destination</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">host</span><span class="pi">:</span> <span class="nv">ai-gateway.devmentor.svc.cluster.local</span><span class="pi">,</span> <span class="nv">subset</span><span class="pi">:</span> <span class="nv">v2</span><span class="pi">,</span> <span class="nv">port</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">number</span><span class="pi">:</span> <span class="nv">80</span> <span class="pi">}</span> <span class="pi">}</span>
+      <span class="na">weight</span><span class="pi">:</span> <span class="m">10</span>
+</code></pre></div></div>
+
+<h2 id="10-mtls-quickstart">10) mTLS quickstart</h2>
+<p>Enable STRICT mTLS for namespace:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">security.istio.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">PeerAuthentication</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">default</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">mtls</span><span class="pi">:</span>
+    <span class="na">mode</span><span class="pi">:</span> <span class="s">STRICT</span>
+</code></pre></div></div>
+
+<h2 id="11-validate-end-to-end">11) Validate end-to-end</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Host mapping for local ingress</span>
+<span class="nb">sudo </span>sh <span class="nt">-c</span> <span class="s1">'echo "127.0.0.1 devmentor.local" &gt;&gt; /etc/hosts'</span>
+
+<span class="c"># Send traffic via ingress</span>
+curl <span class="nt">-i</span> http://devmentor.local:8080/api/ai/health
+curl <span class="nt">-i</span> http://devmentor.local:8080/api/auth/health
+
+<span class="c"># Istio diagnostics</span>
+istioctl analyze
+istioctl proxy-status
+istioctl proxy-config routes deploy/ai-gateway <span class="nt">-n</span> devmentor
+</code></pre></div></div>
+
+<h2 id="12-observability-optional">12) Observability (optional)</h2>
+<ul>
+  <li>Use Kiali, Prometheus, Grafana from Istio addons. Port-forward Kiali:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> istio-system port-forward svc/kiali 20001:20001
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="13-troubleshooting">13) Troubleshooting</h2>
+<ul>
+  <li>Missing sidecars: check <code class="language-plaintext highlighter-rouge">istio-injection=enabled</code> on namespace.</li>
+  <li>503/NR: subset labels mismatch or Service selectors wrong.</li>
+  <li>Egress failing: ensure ServiceEntry exists and DR TLS mode set.</li>
+  <li>Storage issues: check <code class="language-plaintext highlighter-rouge">kubectl get sc,pv,pvc</code>.</li>
+</ul>
+
+<h2 id="14-cleanup">14) Cleanup</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl delete <span class="nt">-n</span> devmentor vs/devmentor-routes dr/ai-gateway dr/auth-service se/external-apis dr/external-apis-dr gw/devmentor-gateway <span class="o">||</span> <span class="nb">true
+</span>istioctl uninstall <span class="nt">-y</span> <span class="nt">--purge</span>
+kind delete cluster <span class="nt">--name</span> devmentor
+</code></pre></div></div>
+
+<h2 id="15-security-and-secrets">15) Security and secrets</h2>
+<ul>
+  <li>Never commit plaintext secrets. Use Kubernetes Secrets; reference via envFrom or mounted files.</li>
+  <li>In commands, represent secrets as environment variables like <code class="language-plaintext highlighter-rouge">{{MY_TOKEN}}</code> rather than inline values.</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/kind-istio-runbook.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

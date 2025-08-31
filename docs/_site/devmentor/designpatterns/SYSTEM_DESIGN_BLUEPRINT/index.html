@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM DESIGN BLUEPRINT</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">designpatterns/SYSTEM_DESIGN_BLUEPRINT.md</span>
+</div>
+
+<h1>SYSTEM DESIGN BLUEPRINT</h1>
+
+
+<p>CURRENT_ARCHITECTURE</p>
+
+<h1 id="devmentor-system-design-blueprint">DevMentor System Design Blueprint</h1>
+
+<h2 id="system-overview">System Overview</h2>
+
+<p>DevMentor is a comprehensive AI-powered development assistant with these key capabilities:</p>
+<ul>
+  <li>🤖 AI-powered code analysis and assistance</li>
+  <li>📝 Project management and organization</li>
+  <li>🧠 Long-term memory and context awareness</li>
+  <li>🔄 Integration with development tools</li>
+</ul>
+
+<h2 id="diagram-annotations">Diagram Annotations</h2>
+
+<ol>
+  <li>
+    <p><strong>Next.js Web App</strong>: Functions as the primary user interface, providing interactive components and server-side rendering support. Integrated with APIs for seamless data exchange.</p>
+  </li>
+  <li>
+    <p><strong>VS Code Extension</strong>: Embeds DevMentor functionalities directly within the coding environment, offering assistance like code suggestions, project management, and real-time collaboration tools.</p>
+  </li>
+  <li>
+    <p><strong>CLI Tool</strong>: Provides command-line access to DevMentor’s features, suitable for automation and quick task execution without a graphical interface.</p>
+  </li>
+  <li>
+    <p><strong>Load Balancer</strong>: Helps in distributing incoming requests across multiple servers, ensuring efficient resource use and high availability.</p>
+  </li>
+  <li>
+    <p><strong>API Gateway</strong>: Acts as a central hub, managing API requests, performing security checks, managing rate limits, and directing traffic to appropriate services.</p>
+  </li>
+  <li>
+    <p><strong>Auth Middleware</strong>: Manages authentication routines, facilitating user identity verification, session handling, and integration with third-party identity providers through OAuth.</p>
+  </li>
+  <li>
+    <p><strong>AI Gateway (3001)</strong>: Central to orchestrating AI functionalities, including task management, integration with AI models, and coordination of AI service responses.</p>
+  </li>
+  <li>
+    <p><strong>LLM Orchestrator</strong>: Responsible for managing interactions with language models, ensuring efficient context management, and generating responses accurately and swiftly.</p>
+  </li>
+  <li>
+    <p><strong>Memory Service</strong>: Manages vector storage, crucial for maintaining long-term contextual memory across sessions, enhancing AI’s responses based on past interactions.</p>
+  </li>
+  <li>
+    <p><strong>PostgreSQL</strong>: Serves as the main relational database, hosting user data, project configurations, and relational mappings.</p>
+  </li>
+  <li>
+    <p><strong>Redis</strong>: Functions as a real-time data cache and message broker, enabling fast data retrievals and managing task queues efficiently.</p>
+  </li>
+  <li>
+    <p><strong>Qdrant</strong>: Dedicated to storing high-dimensional vector data, enabling advanced semantic searches and maintaining context for AI functionalities.</p>
+  </li>
+</ol>
+
+<p>These annotations provide a comprehensive foundation for understanding the system’s architecture and main functionalities, equipping you to address a variety of inquiries about DevMentor’s design.</p>
+
+<h2 id="high-level-architecture">High-Level Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------------------------------------------------------------------------------------+
+|                                    CLIENT LAYER                                          |
+|                                                                                         |
+|   +-------------+               +-----------------+              +------------+          |
+|   |  Next.js    |               |    VS Code      |              |   CLI      |          |
+|   |  Web App    |               |   Extension     |              |   Tool     |          |
+|   +------+------+               +--------+--------+              +-----+------+          |
+|          |                              |                              |                 |
++----------|------------------------------ | ------------------------------|-----------------+
+           |                              |                              |
+           +------------------------------+------------------------------+
+                                         |
++------------------------------------ GATEWAY ----------------------------------------+
+|                                         |                                            |
+|                              +----------v----------+                                 |
+|                              |    Load Balancer    |                                 |
+|                              +----------+----------+                                 |
+|                                         |                                            |
+|                              +----------v----------+      +-----------------+        |
+|                              |    API Gateway     |&lt;----&gt;| Rate Limiter    |        |
+|                              |     (Port 8080)    |      +-----------------+        |
+|                              +----------+----------+                                 |
+|                                         |                                            |
+|   +------------------+   +--------------+-------------+    +------------------+      |
+|   | Auth Middleware  |&lt;-&gt;|    Request Router         |&lt;--&gt;| Error Handler    |      |
+|   +------------------+   +--------------------------+    +------------------+      |
+|                                         |                                            |
++----------------------------------------|--------------------------------------------+
+                                          |
++------------------+   +------------------v-----------------+   +-------------------+
+|   AI Gateway     |   |          Core Services            |   |  Storage Layer    |
+|   (Port 3001)    |   |                                   |   |                   |
+| +-------------+  |   | +-------------+  +-------------+  |   | +--------------+ |
+| |    LLM      |  |   | |    Auth     |  |   Memory    |  |   | |  PostgreSQL   | |
+| | Orchestrator|  |   | |  (Port 3002)|  | (Port 3003) |  |   | |  (Primary DB) | |
+| +-------------+ &lt;-----&gt; +-------------+  +-------------+  |   | +--------------+ |
+|                 |   |         ^              ^          |   |         ^         |
+| +-------------+ |   |         |              |          |   | +--------------+ |
+| |   Agent     | |   |         |              |          |   | |    Redis     | |
+| |   System    | |   | +-------------+  +-------------+  |   | |  (Cache/MQ)  | |
+| +-------------+ |   | |  Project    |  |    Code     |  |   | +--------------+ |
+|        ^        |   | | (Port 3005) |  |  Analysis   |  |   |         ^         |
+|        |        |   | +-------------+  +-------------+  |   | +--------------+ |
+| +-------------+ |   |         ^              ^          |   | |   Qdrant     | |
+| |   Memory    |&lt;-----------------------------+----------+-----&gt;|  (Vector DB) | |
+| |    Bank     | |   |                                   |   | +--------------+ |
+| +-------------+ |   |                                   |   |                   |
++------------------+   +-----------------------------------+   +-------------------+
+</code></pre></div></div>
+
+<h2 id="component-details">Component Details</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────── CLIENT LAYER ───────────────────────────────────┐
+│                                                                                    │
+│     [Next.js Web App]          [VS Code Extension]           [CLI Tool]           │
+│           │                           │                          │                 │
+└───────────┼───────────────────────────┼──────────────────────────┼────────────────┘
+            │                           │                          │
+            └───────────────────────────┼──────────────────────────┘
+                                       ▼
+┌─────────────────────────────── GATEWAY LAYER ──────────────────────────────────┐
+│                                                                                │
+│                              [Load Balancer]                                   │
+│                                    │                                           │
+│                              [API Gateway]                                     │
+│                                    │                                           │
+│            ┌──────────┬───────────┴────────────┬──────────┐                   │
+│   [Auth Middleware] [Rate Limiter] [Request Logger] [Error Handler]           │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+            │           │            │             │
+            └───────────┼────────────┼─────────────┘
+                       ▼            ▼             ▼
+┌─────────────────────────────── CORE SERVICES ──────────────────────────────────┐
+│                                                                                │
+│   ┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐ │
+│   │ AI Gateway  │    │Auth Service  │    │Memory Service│    │Project Service│ │
+│   │  (3001)    │    │   (3002)     │    │   (3003)     │    │    (3005)     │ │
+│   └─────┬───────┘    └──────┬───────┘    └──────┬───────┘    └──────┬───────┘ │
+│         │                   │                    │                    │         │
+└─────────┼───────────────────┼────────────────────┼────────────────────┼─────────┘
+          │                   │                    │                    │
+          ▼                   ▼                    ▼                    ▼
+┌─────────────────────────────── AI SERVICES ───────────────────────────────────┐
+│                                                                               │
+│    ┌────────────────┐   ┌────────────────┐   ┌────────────────┐              │
+│    │LLM Orchestrator│   │  Agent System  │   │ Code Analyzer  │              │
+│    └────────┬───────┘   └───────┬────────┘   └───────┬────────┘              │
+│             │                    │                    │                        │
+│             └──────────┬─────────┴──────────┬────────┘                        │
+│                       │                     │                                 │
+│                       ▼                     ▼                                 │
+│                 [Memory Bank]         [Code Context]                          │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+          │                   │                    │                    │
+          ▼                   ▼                    ▼                    ▼
+┌─────────────────────────── STORAGE LAYER ────────────────────────────────────┐
+│                                                                              │
+│   ┌─────────────┐    ┌──────────────┐    ┌──────────────┐                   │
+│   │  PostgreSQL │    │    Redis     │    │    Qdrant    │                   │
+│   │  (Primary)  │    │(Cache/Stream)│    │   (Vector)   │                   │
+│   └─────────────┘    └──────────────┘    └──────────────┘                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="component-details-1">Component Details</h2>
+
+<h3 id="1-client-layer">1. Client Layer</h3>
+<ul>
+  <li><strong>Next.js Web App</strong>: Main web interface
+    <ul>
+      <li>React components</li>
+      <li>Server-side rendering</li>
+      <li>API integration</li>
+    </ul>
+  </li>
+  <li><strong>VS Code Extension</strong>: IDE integration
+    <ul>
+      <li>Code analysis</li>
+      <li>AI assistance</li>
+      <li>Project management</li>
+    </ul>
+  </li>
+  <li><strong>CLI Tool</strong>: Command-line interface
+    <ul>
+      <li>Quick commands</li>
+      <li>System management</li>
+      <li>Development tools</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="2-gateway-layer">2. Gateway Layer</h3>
+<ul>
+  <li><strong>Load Balancer</strong>: Request distribution
+    <ul>
+      <li>Health checks</li>
+      <li>Traffic routing</li>
+      <li>Failover handling</li>
+    </ul>
+  </li>
+  <li><strong>API Gateway (8080)</strong>: Central entry point
+    <ul>
+      <li>Request routing</li>
+      <li>Protocol translation</li>
+      <li>Rate limiting</li>
+      <li>Authentication</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="3-core-services">3. Core Services</h3>
+<ul>
+  <li><strong>AI Gateway (3001)</strong>
+    <ul>
+      <li>AI model orchestration</li>
+      <li>Agent management</li>
+      <li>Response generation</li>
+      <li>Code analysis coordination</li>
+    </ul>
+  </li>
+  <li><strong>Auth Service (3002)</strong>
+    <ul>
+      <li>User authentication</li>
+      <li>Session management</li>
+      <li>Permission control</li>
+      <li>OAuth integration</li>
+    </ul>
+  </li>
+  <li><strong>Memory Service (3003)</strong>
+    <ul>
+      <li>Vector storage management</li>
+      <li>Embedding generation</li>
+      <li>Context retrieval</li>
+      <li>RAG operations</li>
+    </ul>
+  </li>
+  <li><strong>Project Service (3005)</strong>
+    <ul>
+      <li>Project management</li>
+      <li>Code repository integration</li>
+      <li>Analysis coordination</li>
+      <li>Progress tracking</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="4-ai-services">4. AI Services</h3>
+<ul>
+  <li><strong>LLM Orchestrator</strong>
+    <ul>
+      <li>Model selection</li>
+      <li>Context management</li>
+      <li>Response generation</li>
+      <li>Performance optimization</li>
+    </ul>
+  </li>
+  <li><strong>Agent System</strong>
+    <ul>
+      <li>Task distribution</li>
+      <li>Agent coordination</li>
+      <li>Context sharing</li>
+      <li>Result aggregation</li>
+    </ul>
+  </li>
+  <li><strong>Code Analyzer</strong>
+    <ul>
+      <li>Static analysis</li>
+      <li>Pattern recognition</li>
+      <li>Suggestion generation</li>
+      <li>Quality assessment</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="5-storage-layer">5. Storage Layer</h3>
+<ul>
+  <li><strong>PostgreSQL</strong>
+    <ul>
+      <li>User data</li>
+      <li>Project information</li>
+      <li>System configuration</li>
+      <li>Relationship management</li>
+    </ul>
+  </li>
+  <li><strong>Redis</strong>
+    <ul>
+      <li>Session cache</li>
+      <li>Message streams</li>
+      <li>Real-time data</li>
+      <li>Task queues</li>
+    </ul>
+  </li>
+  <li><strong>Qdrant</strong>
+    <ul>
+      <li>Vector embeddings</li>
+      <li>Semantic search</li>
+      <li>Context storage</li>
+      <li>Similarity matching</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="data-flow-examples">Data Flow Examples</h2>
+
+<h3 id="1-code-analysis-request">1. Code Analysis Request</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User (VS Code) → API Gateway → AI Gateway → Code Analyzer
+                                 ↓
+                             Memory Bank ← Qdrant
+                                 ↓
+                             Response → User
+</code></pre></div></div>
+
+<h3 id="2-authentication-flow">2. Authentication Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User → API Gateway → Auth Service → PostgreSQL
+                         ↓
+                      Redis (Session)
+                         ↓
+                    JWT → User
+</code></pre></div></div>
+
+<h3 id="3-project-analysis">3. Project Analysis</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User → API Gateway → Project Service → GitHub API
+                         ↓
+                    AI Gateway → LLM Orchestrator
+                         ↓
+                    Memory Service → Qdrant
+                         ↓
+                    Response → User
+</code></pre></div></div>
+
+<h2 id="scaling-points">Scaling Points</h2>
+
+<h3 id="horizontal-scaling">Horizontal Scaling</h3>
+<ul>
+  <li>API Gateway instances</li>
+  <li>Core service replicas</li>
+  <li>Database read replicas</li>
+</ul>
+
+<h3 id="vertical-scaling">Vertical Scaling</h3>
+<ul>
+  <li>Database resources</li>
+  <li>AI processing power</li>
+  <li>Memory allocation</li>
+</ul>
+
+<h3 id="caching-strategy">Caching Strategy</h3>
+<ul>
+  <li>Client-side caching</li>
+  <li>API response cache</li>
+  <li>Database query cache</li>
+  <li>Vector embedding cache</li>
+</ul>
+
+<h2 id="security-measures">Security Measures</h2>
+
+<h3 id="authentication">Authentication</h3>
+<ul>
+  <li>JWT tokens</li>
+  <li>OAuth integration</li>
+  <li>Session management</li>
+</ul>
+
+<h3 id="authorization">Authorization</h3>
+<ul>
+  <li>Role-based access</li>
+  <li>Resource permissions</li>
+  <li>Service-level auth</li>
+</ul>
+
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+  <li>Encryption at rest</li>
+  <li>Secure communications</li>
+  <li>Rate limiting</li>
+  <li>Input validation</li>
+</ul>
+
+<h2 id="monitoring-points">Monitoring Points</h2>
+
+<h3 id="system-health">System Health</h3>
+<ul>
+  <li>Service status</li>
+  <li>Resource usage</li>
+  <li>Error rates</li>
+  <li>Response times</li>
+</ul>
+
+<h3 id="performance">Performance</h3>
+<ul>
+  <li>Request latency</li>
+  <li>Cache hit rates</li>
+  <li>Database performance</li>
+  <li>AI model performance</li>
+</ul>
+
+<h3 id="security">Security</h3>
+<ul>
+  <li>Authentication attempts</li>
+  <li>Rate limit breaches</li>
+  <li>Error patterns</li>
+  <li>Access logs</li>
+</ul>
+
+<p>This blueprint provides a clear view of DevMentor’s architecture, making it easy to:</p>
+<ol>
+  <li>Understand component relationships</li>
+  <li>Identify data flows</li>
+  <li>Plan scaling strategies</li>
+  <li>Implement security measures</li>
+  <li>Set up monitoring
+    <h2 id="infrastructure-layer-dns--load-balancing">Infrastructure Layer (DNS &amp; Load Balancing)</h2>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────────────┐
+│                        INFRASTRUCTURE LAYER                         │
+│                                                                     │
+│  ┌─────────────────┐                                               │
+│  │       DNS       │                                               │
+│  │   Management    │                                               │
+│  └────────┬────────┘                                               │
+│           │                                                         │
+│           ▼                                                         │
+│  ┌─────────────────┐                                               │
+│  │      CDN /      │                                               │
+│  │   Edge Cache    │                                               │
+│  └────────┬────────┘                                               │
+│           │                                                         │
+│           ▼                                                         │
+│  ┌─────────────────┐                                               │
+│  │  Load Balancer  │                                               │
+│  │                 │                                               │
+│  │  • Round-robin  │                                               │
+│  │  • Health check │                                               │
+│  │  • Failover     │                                               │
+│  └────────┬────────┘                                               │
+│           │                                                         │
+└───────────┼─────────────────────────────────────────────────────────┘
+            │
+            ▼
+</code></pre></div></div>
+
+<h2 id="api-gateway-layer">API Gateway Layer</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────────────┐
+│                          API GATEWAY LAYER                          │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    API Gateway (Port 8080)                  │   │
+│  └──────────────────────────┬──────────────────────────────────┘   │
+│                             │                                       │
+│         ┌───────────────────┼───────────────────┐                  │
+│         │                   │                   │                  │
+│         ▼                   ▼                   ▼                  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+│  │     Auth     │  │    Rate      │  │   Request    │            │
+│  │  Middleware  │  │   Limiter    │  │    Logger    │            │
+│  └──────────────┘  └──────────────┘  └──────────────┘            │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="core-services-layer">Core Services Layer</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                              CORE SERVICES LAYER                             │
+│                                                                              │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
+│  │   AI Gateway     │  │   Auth Service   │  │  Memory Service  │          │
+│  │   Port: 3001     │  │   Port: 3002     │  │   Port: 3003     │          │
+│  │                  │  │                  │  │                  │          │
+│  │ • AI Orchestr.   │  │ • User Auth      │  │ • Vector Storage │          │
+│  │ • Agent Mgmt     │  │ • JWT Tokens     │  │ • RAG Operations │          │
+│  │ • Response Gen   │  │ • OAuth          │  │ • Embeddings     │          │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘          │
+│                                                                              │
+│                        ┌──────────────────┐                                 │
+│                        │  Project Service │                                 │
+│                        │   Port: 3005     │                                 │
+│                        │                  │                                 │
+│                        │ • Project Mgmt   │                                 │
+│                        │ • Code Repo Int. │                                 │
+│                        │ • Analysis Coord │                                 │
+│                        └──────────────────┘                                 │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="ai-services-layer">AI Services Layer</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌───────────────────────────────────────────────────────────────────────────────┐
+│                               AI SERVICES LAYER                               │
+│                                                                               │
+│   ┌─────────────────────┐              ┌─────────────────────┐               │
+│   │   LLM Orchestrator  │              │    Agent System     │               │
+│   │                     │              │                     │               │
+│   │ • Model Selection   │              │ • Task Distribution │               │
+│   │ • Context Mgmt      │◄────────────►│ • Agent Coordination│               │
+│   │ • Response Gen      │              │ • Result Aggregation│               │
+│   └──────────┬──────────┘              └──────────┬──────────┘               │
+│              │                                     │                          │
+│              └──────────────┬──────────────────────┘                          │
+│                            │                                                  │
+│                            ▼                                                  │
+│              ┌──────────────────────────┐                                    │
+│              │      Memory Bank         │                                    │
+│              │                          │                                    │
+│              │ • Long-term Context      │                                    │
+│              │ • Shared Knowledge       │                                    │
+│              │ • Context Persistence    │                                    │
+│              └──────────────────────────┘                                    │
+│                            ▲                                                  │
+│                            │                                                  │
+│              ┌──────────────────────────┐                                    │
+│              │     Code Analyzer        │                                    │
+│              │                          │                                    │
+│              │ • Static Analysis        │                                    │
+│              │ • Pattern Recognition    │                                    │
+│              │ • Quality Assessment     │                                    │
+│              └──────────────────────────┘                                    │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="storage-layer">Storage Layer</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌───────────────────────────────────────────────────────────────────────────────┐
+│                              STORAGE LAYER                                    │
+│                                                                               │
+│   ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────┐  │
+│   │     PostgreSQL       │  │        Redis         │  │      Qdrant       │  │
+│   │   Primary Database   │  │   Cache &amp; Streams    │  │  Vector Database  │  │
+│   │                      │  │                      │  │                   │  │
+│   │ ┌──────────────────┐ │  │ ┌──────────────────┐ │  │ ┌───────────────┐ │  │
+│   │ │   User Data      │ │  │ │  Session Cache   │ │  │ │ Vector        │ │  │
+│   │ ├──────────────────┤ │  │ ├──────────────────┤ │  │ │ Embeddings    │ │  │
+│   │ │   Project Info   │ │  │ │  Message Streams │ │  │ ├───────────────┤ │  │
+│   │ ├──────────────────┤ │  │ ├──────────────────┤ │  │ │ Semantic      │ │  │
+│   │ │   System Config  │ │  │ │  Real-time Data  │ │  │ │ Search        │ │  │
+│   │ ├──────────────────┤ │  │ ├──────────────────┤ │  │ ├───────────────┤ │  │
+│   │ │   Relationships  │ │  │ │  Task Queues     │ │  │ │ Context Store │ │  │
+│   │ └──────────────────┘ │  │ └──────────────────┘ │  │ └───────────────┘ │  │
+│   └──────────────────────┘  └──────────────────────┘  └──────────────────┘  │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="user-interfaces-layer">User Interfaces Layer</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌───────────────────────────────────────────────────────────────────────────────┐
+│                           USER INTERFACES LAYER                               │
+│                                                                               │
+│   ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────┐  │
+│   │   Next.js Web App    │  │  VS Code Extension   │  │     CLI Tool      │  │
+│   │                      │  │                      │  │                   │  │
+│   │ • React Components   │  │ • Code Analysis      │  │ • Quick Commands  │  │
+│   │ • Server-side Render │  │ • AI Assistance      │  │ • System Mgmt     │  │
+│   │ • API Integration    │  │ • Project Management │  │ • Dev Tools       │  │
+│   │                      │  │                      │  │                   │  │
+│   │  [Browser-based UI]  │  │   [IDE Integration]  │  │  [Terminal App]   │  │
+│   └───────────┬──────────┘  └───────────┬──────────┘  └─────────┬────────┘  │
+│               │                          │                        │           │
+│               └──────────────────────────┼────────────────────────┘           │
+│                                         │                                     │
+└─────────────────────────────────────────┼─────────────────────────────────────┘
+                                          │
+                                          ▼
+                                    [API Gateway]
+</code></pre></div></div>
+
+<h2 id="key-components">Key Components</h2>
+
+<h3 id="1-dns--load-balancing">1. DNS &amp; Load Balancing</h3>
+<ul>
+  <li>DNS management</li>
+  <li>CDN/Edge caching for static assets</li>
+  <li>Load balancer for request distribution</li>
+</ul>
+
+<h3 id="2-api-gateway-port-8080">2. API Gateway (Port 8080)</h3>
+<ul>
+  <li>Central entry point for all requests</li>
+  <li>Authentication middleware</li>
+  <li>Rate limiting</li>
+  <li>Request logging</li>
+  <li>Route distribution</li>
+</ul>
+
+<h3 id="3-core-services-1">3. Core Services</h3>
+<ul>
+  <li><strong>AI Gateway (3001)</strong>: AI orchestration and agent management</li>
+  <li><strong>Auth Service (3002)</strong>: User authentication and authorization</li>
+  <li><strong>Memory Service (3003)</strong>: Vector storage and RAG operations</li>
+  <li><strong>Project Service (3005)</strong>: Project management and analysis</li>
+</ul>
+
+<h3 id="4-ai-services-1">4. AI Services</h3>
+<ul>
+  <li>LLM Orchestrator: Manages AI model interactions</li>
+  <li>Agent System: Autonomous AI agents for different tasks</li>
+  <li>Memory Bank: Long-term context storage</li>
+  <li>Code Analyzer: Code analysis and suggestions</li>
+</ul>
+
+<h3 id="5-storage-layer-1">5. Storage Layer</h3>
+<ul>
+  <li><strong>PostgreSQL</strong>: Primary relational database</li>
+  <li><strong>Redis</strong>: Caching and message streams</li>
+  <li><strong>Qdrant</strong>: Vector database for embeddings</li>
+</ul>
+
+<h3 id="6-user-interfaces">6. User Interfaces</h3>
+<ul>
+  <li>Next.js Web Application</li>
+  <li>VS Code Extension</li>
+  <li>CLI Tool</li>
+</ul>
+
+<h2 id="key-features">Key Features</h2>
+
+<h3 id="load-balancing">Load Balancing</h3>
+<ul>
+  <li>Round-robin distribution</li>
+  <li>Health checks</li>
+  <li>Automatic failover</li>
+  <li>Session persistence</li>
+</ul>
+
+<h3 id="caching-strategy-1">Caching Strategy</h3>
+<ul>
+  <li>CDN for static assets</li>
+  <li>Redis for application cache</li>
+  <li>Distributed caching</li>
+  <li>Cache invalidation protocols</li>
+</ul>
+
+<h3 id="security-1">Security</h3>
+<ul>
+  <li>JWT authentication</li>
+  <li>Role-based access control</li>
+  <li>Rate limiting</li>
+  <li>Request validation</li>
+  <li>SSL/TLS encryption</li>
+</ul>
+
+<h3 id="scalability">Scalability</h3>
+<ul>
+  <li>Horizontal scaling of services</li>
+  <li>Message queues for async operations</li>
+  <li>Distributed caching</li>
+  <li>Load balancing</li>
+</ul>
+
+<h3 id="monitoring">Monitoring</h3>
+<ul>
+  <li>Request logging</li>
+  <li>Performance metrics</li>
+  <li>Error tracking</li>
+  <li>System health monitoring</li>
+</ul>
+
+<h2 id="data-flow">Data Flow</h2>
+
+<ol>
+  <li><strong>Request Initiation</strong>
+    <ul>
+      <li>Client makes request through DNS</li>
+      <li>Request routed through CDN/Load Balancer</li>
+      <li>API Gateway receives request</li>
+    </ul>
+  </li>
+  <li><strong>Request Processing</strong>
+    <ul>
+      <li>Authentication/Authorization check</li>
+      <li>Rate limiting verification</li>
+      <li>Route to appropriate service</li>
+    </ul>
+  </li>
+  <li><strong>Service Execution</strong>
+    <ul>
+      <li>Service processes request</li>
+      <li>Interacts with databases/cache</li>
+      <li>Returns response</li>
+    </ul>
+  </li>
+  <li><strong>Response Delivery</strong>
+    <ul>
+      <li>Response processed through API Gateway</li>
+      <li>Delivered back to client</li>
+      <li>Cached if applicable</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="scaling-considerations">Scaling Considerations</h2>
+
+<h3 id="horizontal-scaling-1">Horizontal Scaling</h3>
+<ul>
+  <li>Services can be scaled independently</li>
+  <li>Container orchestration ready</li>
+  <li>Stateless design</li>
+</ul>
+
+<h3 id="vertical-scaling-1">Vertical Scaling</h3>
+<ul>
+  <li>Database optimization</li>
+  <li>Cache utilization</li>
+  <li>Resource allocation</li>
+</ul>
+
+<h3 id="bottleneck-prevention">Bottleneck Prevention</h3>
+<ul>
+  <li>Rate limiting</li>
+  <li>Cache strategies</li>
+  <li>Async processing</li>
+  <li>Load distribution</li>
+</ul>
+
+<h2 id="deployment-architecture">Deployment Architecture</h2>
+
+<h3 id="development">Development</h3>
+<ul>
+  <li>Local Docker environment</li>
+  <li>Mock services</li>
+  <li>Development databases</li>
+</ul>
+
+<h3 id="staging">Staging</h3>
+<ul>
+  <li>Kubernetes cluster</li>
+  <li>Reduced replicas</li>
+  <li>Test data</li>
+</ul>
+
+<h3 id="production">Production</h3>
+<ul>
+  <li>Full Kubernetes deployment</li>
+  <li>Multiple replicas</li>
+  <li>High availability</li>
+  <li>Disaster recovery</li>
+</ul>
+
+<h2 id="future-considerations">Future Considerations</h2>
+
+<ol>
+  <li><strong>Service Mesh Integration</strong>
+    <ul>
+      <li>Enhanced service discovery</li>
+      <li>Better traffic management</li>
+      <li>Advanced monitoring</li>
+    </ul>
+  </li>
+  <li><strong>Additional AI Capabilities</strong>
+    <ul>
+      <li>More specialized agents</li>
+      <li>Enhanced code analysis</li>
+      <li>Improved context understanding</li>
+    </ul>
+  </li>
+  <li><strong>Enhanced Scalability</strong>
+    <ul>
+      <li>Global distribution</li>
+      <li>More edge locations</li>
+      <li>Enhanced caching strategies</li>
+    </ul>
+  </li>
+  <li><strong>Advanced Monitoring</strong>
+    <ul>
+      <li>APM integration</li>
+      <li>Enhanced logging</li>
+      <li>Better analytics</li>
+    </ul>
+  </li>
+</ol>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / designpatterns/SYSTEM_DESIGN_BLUEPRINT.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>learning-engine-architecture | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/learning-engine/learning-engine-architecture.md</span>
+</div>
+
+<h1>learning-engine-architecture</h1>
+
+
+<h1 id="learning-engine-system-design">Learning Engine System Design</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    DevMentor Learning Engine Architecture
+                                                                    DesignGurus.io
+                              Client
+                                🖥️
+                          ────────────────
+                                │
+                                ▼
+                         ◇─────────────◇
+                        ╱  Load         ╲
+                       ╱   Balancer      ╲───────────────────────────┐
+                      ╱                   ╲                          │
+                     ◇─────────────────────◇                         │
+                                │                                    │
+                                ▼                                    ▼
+                    ┌──────────────────────┐              ┌─────────────────┐
+                    │ Learning Engine 1    │              │Learning Engine 2 │
+                    │      (Port 3005)     │              │   (Port 3005)   │
+                    └──────────────────────┘              └─────────────────┘
+                          Control │ Data                         │
+                                  ▼                              │
+     ┌──────────────────────────────────────────────────────────┼────────────┐
+     │                                                           │            │
+     │  ┌─────────────────────────────────────────────────────────────────┐  │
+     │  │                  LEARNING ENGINE CORE                           │  │
+     │  │                                                                 │  │
+     │  │  ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+     │  │  │ Adaptive    │        │   Quiz      │       │   Progress  │ │  │
+┌────────┐ │  Learning   │        │  Generator  │       │   Tracker   │ │  │
+│Search  │ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+│Index   │                                                                │  │
+│(Elastic│ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+│Search) │ │Recommendation│       │  Skill      │       │Gamification │ │  │
+└────────┘ │   Engine    │        │ Assessment  │       │   System    │ │  │
+     │     └─────────────┘        └─────────────┘       └─────────────┘ │  │
+┌────────┐                                                                │  │
+│ Cache  │ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+│(Redis) │ │  Monitoring │        │   Logging   │       │   Tracing   │ │  │
+└────────┘ │             │        │  (Winston)  │       │(OpenTelemetry│ │  │
+     │     └─────────────┘        └─────────────┘       └─────────────┘ │  │
+┌────────┐                                                                │  │
+│Learning│ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+│  Path  │ │ Serverless  │        │  Learning   │       │     XP      │ │  │
+│ Store  │ │  Functions  │        │  Analytics  │       │   Manager   │ │  │
+└────────┘ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+     ▲     └─────────────────────────────────────────────────────────────┘  │
+     │                                                                       │
+     │                            ┌──────────────┐                          │
+     │     ┌──────────────┐      │              │      ┌──────────────┐    │
+     │     │              │◄──────│   Learning   │─────►│              │    │
+     │     │ Personalized│       │ Orchestrator │      │   Content    │    │
+     │     │    Paths    │       │              │      │   Library    │    │
+     │     │              │       └──────────────┘      │              │    │
+     │     └──────────────┘              ▲              └──────────────┘    │
+     │            │                      │                      │           │
+     │            │              Learning Adaptation            │           │
+     │            │                      │                      │           │
+     │            ▼                      ▼                      ▼           │
+     │  ┌─────────────────────────────────────────────────────────────┐    │
+     │  │                                                             │    │
+     │  │                   🎓 Learning Models 🎓                    │    │
+     │  │           (Spaced Repetition, Mastery Learning)            │    │
+     │  │                                                             │    │
+     │  └─────────────────────────────────────────────────────────┘    │
+     │            │                                              │           │
+     │            │                                              │           │
+     └────────────┼──────────────────────────────────────────────┼──────────┘
+                  │                                              │
+                  ▼                                              ▼
+     ┌────────────────────────────┐                ┌─────────────────────────┐
+     │                            │                │                         │
+     │   Content Processing       │                │    Assessment Pipeline  │
+     │       Pipeline             │                │                         │
+     │                            │                │                         │
+     └────────────────────────────┘                └─────────────────────────┘
+                  │                                              │
+                  │                                              │
+     ┌────────────┼────────────┐                   ┌────────────┼────────────┐
+     │            │            │                   │            │            │
+     ▼            ▼            ▼                   ▼            ▼            ▼
+┌──────────┐ ┌──────────┐ ┌──────────┐      ┌──────────┐ ┌──────────┐ ┌──────────┐
+│          │ │          │ │          │      │  Quiz    │ │  Score   │ │ Feedback │
+│ Courses  │ │ Modules  │ │ Lessons  │      │  Engine  │ │ Tracker  │ │  System  │
+│   Store  │ │  Store   │ │  Store   │      │          │ │          │ │          │
+│          │ │          │ │          │      │          │ │          │ │          │
+└──────────┘ └──────────┘ └──────────┘      └──────────┘ └──────────┘ └──────────┘
+     │            │            │                   │            │            │
+     └────────────┼────────────┘                   └────────────┼────────────┘
+                  │                                              │
+                  ▼                                              ▼
+     ┌────────────────────────────┐                ┌─────────────────────────┐
+     │  🗄️ PostgreSQL Database    │                │  📊 Analytics Storage   │
+     │                            │                │                         │
+     │  • User Progress           │                │  • Learning Analytics   │
+     │  • Course Enrollment       │                │  • Performance Metrics  │
+     │  • Quiz Results            │                │  • Engagement Data      │
+     │  • XP &amp; Achievements       │                │  • Skill Assessment     │
+     │  • Learning Paths          │                │  • Time Tracking        │
+     └────────────────────────────┘                └─────────────────────────┘
+                  │                                              │
+                  └──────────────────┬───────────────────────────┘
+                                     │
+                                     ▼
+                  ┌──────────────────────────────────────┐
+                  │                                      │
+                  │     Machine Learning Pipeline        │
+                  │                                      │
+                  │  (Recommendation, Personalization)   │
+                  │                                      │
+                  └──────────────────────────────────────┘
+                           │                    │
+                           ▼                    ▼
+                  ┌──────────────┐     ┌──────────────┐
+                  │              │     │              │
+                  │   ML Model   │     │  Prediction  │
+                  │   Training   │     │    Engine    │
+                  │              │     │              │
+                  └──────────────┘     └──────────────┘
+                           │                    │
+                           └────────┬───────────┘
+                                    │
+                                    ▼
+                           ┌──────────────┐
+                           │              │
+                           │ Personalized │
+                           │Recommendations│
+                           │              │
+                           └──────────────┘
+                                    │
+                                    │ Output
+                                    ▼
+                           ┌──────────────┐
+                           │              │
+                           │   Learning   │─────────────────┐
+                           │  Dashboard   │                 │
+                           └──────────────┘                 │
+                                    │                       ▼
+                                    │              ┌──────────────┐
+                                    │              │  Achievement │
+                                    └─────────────►│   Rewards    │
+                                                   │              │
+                                                   └──────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Service Components                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  🎓 Learning Features                                               │
+│  ├── Adaptive Learning Paths                                        │
+│  ├── Spaced Repetition Algorithm                                    │
+│  ├── Mastery-Based Progression                                      │
+│  ├── Personalized Recommendations                                   │
+│  └── Multi-modal Content Support                                    │
+│                                                                      │
+│  📊 Assessment &amp; Analytics                                          │
+│  ├── Dynamic Quiz Generation                                        │
+│  ├── Skill Assessment Matrix                                        │
+│  ├── Learning Analytics Dashboard                                   │
+│  ├── Progress Tracking                                              │
+│  └── Performance Predictions                                        │
+│                                                                      │
+│  🎮 Gamification System                                             │
+│  ├── XP Points &amp; Leveling                                          │
+│  ├── Achievement Badges                                             │
+│  ├── Leaderboards                                                   │
+│  ├── Streaks &amp; Challenges                                           │
+│  └── Reward System                                                  │
+│                                                                      │
+│  🤖 AI-Powered Features                                            │
+│  ├── Content Recommendation Engine                                  │
+│  ├── Difficulty Adjustment                                          │
+│  ├── Learning Style Detection                                       │
+│  ├── Predictive Performance Modeling                                │
+│  └── Automated Feedback Generation                                  │
+│                                                                      │
+│  🔄 Integration Points                                              │
+│  ├── AI Gateway (Port 3001)                                        │
+│  ├── Auth Service (Port 3002)                                      │
+│  ├── Memory Service (Port 3003)                                    │
+│  └── Project Service (Port 3004)                                   │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Data Flow Patterns                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  Learning Path Flow:                                                │
+│  User Profile → Skill Assessment → Path Generation                  │
+│     ↓                                                               │
+│  Content Selection → Progress Tracking → Adaptation                 │
+│     ↓                                                               │
+│  Achievement Unlock → XP Award → Level Up                           │
+│                                                                      │
+│  Quiz Generation Flow:                                              │
+│  Topic Selection → Difficulty Analysis → Question Bank              │
+│     ↓                                                               │
+│  Dynamic Generation → User Response → Scoring                       │
+│     ↓                                                               │
+│  Feedback Generation → Progress Update → Next Question              │
+│                                                                      │
+│  Recommendation Flow:                                               │
+│  User History → Pattern Analysis → ML Model                         │
+│     ↓                                                               │
+│  Content Matching → Ranking → Personalized Feed                     │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="system-components-legend">System Components Legend</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Description</th>
+      <th>Technology</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🖥️ Client</td>
+      <td>Web/Mobile/CLI Applications</td>
+      <td>React, Mobile Apps</td>
+    </tr>
+    <tr>
+      <td>◇ Load Balancer</td>
+      <td>Traffic Distribution</td>
+      <td>NGINX/HAProxy</td>
+    </tr>
+    <tr>
+      <td>🎓 Learning</td>
+      <td>Educational Engine</td>
+      <td>Node.js/Python</td>
+    </tr>
+    <tr>
+      <td>📊 Analytics</td>
+      <td>Learning Analytics</td>
+      <td>TensorFlow/PyTorch</td>
+    </tr>
+    <tr>
+      <td>🎮 Gamification</td>
+      <td>Game Mechanics</td>
+      <td>Redis/PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>🗄️ Database</td>
+      <td>Progress Storage</td>
+      <td>PostgreSQL</td>
+    </tr>
+    <tr>
+      <td>🤖 ML</td>
+      <td>Machine Learning</td>
+      <td>Python/Scikit-learn</td>
+    </tr>
+    <tr>
+      <td>⚡ Cache</td>
+      <td>Fast Access</td>
+      <td>Redis</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="service-ports--endpoints">Service Ports &amp; Endpoints</h2>
+
+<ul>
+  <li><strong>Learning Engine</strong>: Port 3005</li>
+  <li><strong>Health Check</strong>: <code class="language-plaintext highlighter-rouge">/health</code></li>
+  <li><strong>Learning Paths</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/paths</code></li>
+  <li><strong>Quiz API</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/quiz/*</code></li>
+  <li><strong>Progress</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/progress</code></li>
+  <li><strong>XP System</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/xp</code></li>
+  <li><strong>Recommendations</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/recommendations</code></li>
+  <li><strong>Analytics</strong>: <code class="language-plaintext highlighter-rouge">/api/learning/analytics</code></li>
+  <li><strong>Metrics</strong>: <code class="language-plaintext highlighter-rouge">/metrics</code></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/learning-engine/learning-engine-architecture.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

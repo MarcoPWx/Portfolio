@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>monitoring-service-architecture | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/monitoring-service/monitoring-service-architecture.md</span>
+</div>
+
+<h1>monitoring-service-architecture</h1>
+
+
+<h1 id="monitoring-service-system-design">Monitoring Service System Design</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    DevMentor Monitoring Service Architecture
+                                                                    DesignGurus.io
+                              Client
+                                🖥️
+                          ────────────────
+                                │
+                                ▼
+                         ◇─────────────◇
+                        ╱  Load         ╲
+                       ╱   Balancer      ╲───────────────────────────┐
+                      ╱                   ╲                          │
+                     ◇─────────────────────◇                         │
+                                │                                    │
+                                ▼                                    ▼
+                    ┌──────────────────────┐              ┌─────────────────┐
+                    │ Monitoring Service 1 │              │Monitoring Service 2│
+                    │      (Port 3006)     │              │   (Port 3006)   │
+                    └──────────────────────┘              └─────────────────┘
+                          Control │ Data                         │
+                                  ▼                              │
+     ┌──────────────────────────────────────────────────────────┼────────────┐
+     │                                                           │            │
+     │  ┌─────────────────────────────────────────────────────────────────┐  │
+     │  │                  MONITORING SERVICE CORE                        │  │
+     │  │                                                                 │  │
+     │  │  ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+     │  │  │   Metrics   │        │   Health    │       │   Alert     │ │  │
+┌────────┐ │  Collector  │        │   Checker   │       │   Manager   │ │  │
+│Prometheus └─────────────┘        └─────────────┘       └─────────────┘ │  │
+│Scraper │                                                                │  │
+└────────┘ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+     │     │   Incident  │        │  Predictive │       │   Auto      │ │  │
+┌────────┐ │  Management │        │   Analysis  │       │   Healing   │ │  │
+│ Grafana│ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+│Dashboard                                                                │  │
+└────────┘ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+     │     │   Logging   │        │   Tracing   │       │  Anomaly    │ │  │
+┌────────┐ │ Aggregator  │        │  Collector  │       │  Detection  │ │  │
+│  Loki  │ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+│  Logs  │                                                                │  │
+└────────┘ ┌─────────────┐        ┌─────────────┐       ┌─────────────┐ │  │
+     │     │  Real-time  │        │   Service   │       │ Performance │ │  │
+┌────────┐ │  Dashboard  │        │   Topology  │       │  Analytics  │ │  │
+│ Jaeger │ └─────────────┘        └─────────────┘       └─────────────┘ │  │
+│ Traces │ └─────────────────────────────────────────────────────────────┘  │
+└────────┘                                                                   │
+     ▲                            ┌──────────────┐                          │
+     │     ┌──────────────┐      │              │      ┌──────────────┐    │
+     │     │              │◄──────│ Observability│─────►│              │    │
+     │     │   Service    │       │ Orchestrator │      │    Alert     │    │
+     │     │   Registry   │       │              │      │   Router     │    │
+     │     │              │       └──────────────┘      │              │    │
+     │     └──────────────┘              ▲              └──────────────┘    │
+     │            │                      │                      │           │
+     │            │              Data Aggregation               │           │
+     │            │                      │                      │           │
+     │            ▼                      ▼                      ▼           │
+     │  ┌─────────────────────────────────────────────────────────────┐    │
+     │  │                                                             │    │
+     │  │                   📊 Metrics Pipeline 📊                    │    │
+     │  │              (Collection, Processing, Storage)              │    │
+     │  │                                                             │    │
+     │  └─────────────────────────────────────────────────────────┘    │
+     │            │                                              │           │
+     │            │                                              │           │
+     └────────────┼──────────────────────────────────────────────┼──────────┘
+                  │                                              │
+                  ▼                                              ▼
+     ┌────────────────────────────┐                ┌─────────────────────────┐
+     │                            │                │                         │
+     │    Data Collection         │                │    Alert Processing     │
+     │       Pipeline             │                │       Pipeline          │
+     │                            │                │                         │
+     └────────────────────────────┘                └─────────────────────────┘
+                  │                                              │
+                  │                                              │
+     ┌────────────┼────────────┐                   ┌────────────┼────────────┐
+     │            │            │                   │            │            │
+     ▼            ▼            ▼                   ▼            ▼            ▼
+┌──────────┐ ┌──────────┐ ┌──────────┐      ┌──────────┐ ┌──────────┐ ┌──────────┐
+│          │ │          │ │          │      │  Alert   │ │  Incident│ │Notification│
+│ Service  │ │Container │ │  System  │      │  Rules   │ │  Tickets │ │  Channels │
+│ Metrics  │ │ Metrics  │ │ Metrics  │      │  Engine  │ │          │ │           │
+│          │ │          │ │          │      │          │ │          │ │           │
+└──────────┘ └──────────┘ └──────────┘      └──────────┘ └──────────┘ └──────────┘
+     │            │            │                   │            │            │
+     └────────────┼────────────┘                   └────────────┼────────────┘
+                  │                                              │
+                  ▼                                              ▼
+     ┌────────────────────────────┐                ┌─────────────────────────┐
+     │   📈 Time Series Database   │                │  🔔 Alert Storage       │
+     │       (Prometheus)         │                │                         │
+     │                            │                │  • Alert History        │
+     │  • Service Metrics         │                │  • Incident Records     │
+     │  • Container Metrics       │                │  • Resolution Logs      │
+     │  • Custom Metrics          │                │  • Escalation Chains    │
+     │  • Application Metrics     │                │  • On-call Schedules    │
+     └────────────────────────────┘                └─────────────────────────┘
+                  │                                              │
+                  └──────────────────┬───────────────────────────┘
+                                     │
+                                     ▼
+                  ┌──────────────────────────────────────┐
+                  │                                      │
+                  │     AI-Powered Analysis Engine       │
+                  │                                      │
+                  │  (Anomaly Detection, Prediction)     │
+                  │                                      │
+                  └──────────────────────────────────────┘
+                           │                    │
+                           ▼                    ▼
+                  ┌──────────────┐     ┌──────────────┐
+                  │              │     │              │
+                  │   Pattern    │     │  Predictive  │
+                  │ Recognition  │     │   Modeling   │
+                  │              │     │              │
+                  └──────────────┘     └──────────────┘
+                           │                    │
+                           └────────┬───────────┘
+                                    │
+                                    ▼
+                           ┌──────────────┐
+                           │              │
+                           │  Automated   │
+                           │   Actions    │
+                           │              │
+                           └──────────────┘
+                                    │
+                                    │ Output
+                                    ▼
+                           ┌──────────────┐
+                           │              │
+                           │  Dashboard   │─────────────────┐
+                           │   &amp; Alerts   │                 │
+                           └──────────────┘                 │
+                                    │                       ▼
+                                    │              ┌──────────────┐
+                                    │              │   Auto-Fix   │
+                                    └─────────────►│   Actions    │
+                                                   │              │
+                                                   └──────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Service Components                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  📊 Metrics Collection                                              │
+│  ├── Prometheus Scraping                                            │
+│  ├── Custom Metrics API                                             │
+│  ├── Application Performance Monitoring (APM)                       │
+│  ├── Infrastructure Monitoring                                      │
+│  └── Business Metrics Tracking                                      │
+│                                                                      │
+│  🔔 Alerting &amp; Incident Management                                  │
+│  ├── Alert Rule Engine                                              │
+│  ├── Multi-channel Notifications (Email, Slack, PagerDuty)         │
+│  ├── Incident Creation &amp; Tracking                                   │
+│  ├── Escalation Policies                                            │
+│  └── On-call Management                                              │
+│                                                                      │
+│  📈 Visualization &amp; Dashboards                                      │
+│  ├── Grafana Dashboards                                             │
+│  ├── Real-time Metrics Display                                      │
+│  ├── Service Dependency Graphs                                      │
+│  ├── SLA/SLO Tracking                                               │
+│  └── Custom Report Generation                                       │
+│                                                                      │
+│  🤖 AI-Powered Features                                            │
+│  ├── Anomaly Detection                                              │
+│  ├── Predictive Maintenance                                         │
+│  ├── Root Cause Analysis                                            │
+│  ├── Auto-healing Capabilities                                      │
+│  └── Capacity Planning                                              │
+│                                                                      │
+│  🔄 Integration Points                                              │
+│  ├── All Microservices (Metrics Collection)                         │
+│  ├── Kubernetes API (Pod/Node Monitoring)                           │
+│  ├── Docker API (Container Monitoring)                              │
+│  └── Cloud Provider APIs (AWS/GCP/Azure)                           │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Data Flow Patterns                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  Metrics Collection Flow:                                           │
+│  Service Endpoint → Prometheus Scrape → Time Series Storage         │
+│     ↓                                                               │
+│  Aggregation → Rule Evaluation → Alert Generation                   │
+│     ↓                                                               │
+│  Notification → Incident Creation → Resolution                       │
+│                                                                      │
+│  Anomaly Detection Flow:                                            │
+│  Historical Data → Pattern Analysis → ML Model                      │
+│     ↓                                                               │
+│  Anomaly Detection → Alert → Investigation → Auto-healing           │
+│                                                                      │
+│  Dashboard Update Flow:                                             │
+│  Metrics Query → Data Processing → Visualization                    │
+│     ↓                                                               │
+│  Real-time Update → WebSocket Push → Dashboard Refresh              │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="system-components-legend">System Components Legend</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Description</th>
+      <th>Technology</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🖥️ Client</td>
+      <td>Monitoring Dashboards</td>
+      <td>Grafana UI</td>
+    </tr>
+    <tr>
+      <td>◇ Load Balancer</td>
+      <td>Traffic Distribution</td>
+      <td>NGINX/HAProxy</td>
+    </tr>
+    <tr>
+      <td>📊 Metrics</td>
+      <td>Time Series Data</td>
+      <td>Prometheus</td>
+    </tr>
+    <tr>
+      <td>📈 Visualization</td>
+      <td>Dashboards</td>
+      <td>Grafana</td>
+    </tr>
+    <tr>
+      <td>🔔 Alerting</td>
+      <td>Alert Management</td>
+      <td>AlertManager</td>
+    </tr>
+    <tr>
+      <td>📝 Logging</td>
+      <td>Log Aggregation</td>
+      <td>Loki/ELK</td>
+    </tr>
+    <tr>
+      <td>🔍 Tracing</td>
+      <td>Distributed Tracing</td>
+      <td>Jaeger</td>
+    </tr>
+    <tr>
+      <td>🤖 AI</td>
+      <td>Predictive Analytics</td>
+      <td>Python/TensorFlow</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="service-ports--endpoints">Service Ports &amp; Endpoints</h2>
+
+<ul>
+  <li><strong>Monitoring Service</strong>: Port 3006</li>
+  <li><strong>Health Check</strong>: <code class="language-plaintext highlighter-rouge">/health</code></li>
+  <li><strong>Metrics Endpoint</strong>: <code class="language-plaintext highlighter-rouge">/metrics</code></li>
+  <li><strong>Service Status</strong>: <code class="language-plaintext highlighter-rouge">/api/services</code></li>
+  <li><strong>Incidents API</strong>: <code class="language-plaintext highlighter-rouge">/api/incidents</code></li>
+  <li><strong>Predictions</strong>: <code class="language-plaintext highlighter-rouge">/api/predictions</code></li>
+  <li><strong>Dashboard</strong>: <code class="language-plaintext highlighter-rouge">/dashboard</code></li>
+  <li><strong>WebSocket</strong>: <code class="language-plaintext highlighter-rouge">ws://localhost:3006</code></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/monitoring-service/monitoring-service-architecture.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

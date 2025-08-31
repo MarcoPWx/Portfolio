@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-08-21-mesh-ollama-observability | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">devlog/2025-08-21-mesh-ollama-observability.md</span>
+</div>
+
+<h1>2025-08-21-mesh-ollama-observability</h1>
+
+
+<h1 id="devlog--2025-08-21--mesh-injection-ai-gateway-sidecar-fix-ollama-scaling-observability-updates">DevLog — 2025-08-21 — Mesh injection, AI Gateway sidecar fix, Ollama scaling, observability updates</h1>
+
+<p>Date: 2025-08-21
+Author: DevMentor Platform</p>
+
+<p>Summary</p>
+<ul>
+  <li>Enabled Istio sidecar injection on the devmentor namespace and restarted deployments</li>
+  <li>Removed ai-gateway sidecar override annotation and verified sidecar injection (2/2 Running)</li>
+  <li>Scaled ollama deployment to 1 replica to resolve Pending pod due to resource pressure</li>
+  <li>Updated EPIC_MANAGEMENT to include a Kubernetes Deployment Snapshot and references</li>
+  <li>Confirmed postgres and redis healthy; auth-service with sidecar; ai-gateway healthy with sidecar</li>
+  <li>Prepared next steps to deploy monitoring-service to Kubernetes and consolidate observability</li>
+</ul>
+
+<p>Commands Executed</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl label ns devmentor istio-injection<span class="o">=</span>enabled <span class="nt">--overwrite</span>
+kubectl get deploy <span class="nt">-n</span> devmentor <span class="nt">-o</span> name | xargs <span class="nt">-r</span> <span class="nt">-n1</span> kubectl rollout restart <span class="nt">-n</span> devmentor
+kubectl patch deploy/ai-gateway <span class="nt">-n</span> devmentor <span class="nt">--type</span><span class="o">=</span>json <span class="nt">-p</span><span class="o">=</span><span class="s1">'[{"op":"remove","path":"/spec/template/metadata/annotations/sidecar.istio.io~1inject"}]'</span>
+kubectl rollout restart deploy/ai-gateway <span class="nt">-n</span> devmentor
+kubectl rollout status deployment/ai-gateway <span class="nt">-n</span> devmentor <span class="nt">--timeout</span><span class="o">=</span>120s
+kubectl get pods <span class="nt">-n</span> devmentor <span class="nt">-o</span> wide | <span class="nb">grep </span>ai-gateway
+kubectl scale deploy/ollama <span class="nt">-n</span> devmentor <span class="nt">--replicas</span><span class="o">=</span>1
+kubectl get deploy/ollama <span class="nt">-n</span> devmentor <span class="nt">-o</span> custom-columns<span class="o">=</span>NAME:.metadata.name,REPLICAS:.spec.replicas,AVAILABLE:.status.availableReplicas <span class="nt">--no-headers</span>
+</code></pre></div></div>
+
+<p>Verification</p>
+<ul>
+  <li>ai-gateway pod shows 2/2 containers running with sidecar injected</li>
+  <li>ollama deployment now 1/1 available</li>
+  <li>auth-service shows 2/2 Running</li>
+  <li>postgres and redis 1/1 Running</li>
+</ul>
+
+<p>Next Steps</p>
+<ul>
+  <li>Deploy monitoring-service manifests: infrastructure/k8s/services/monitoring-service/</li>
+  <li>Verify monitoring-service service and deployment in devmentor namespace</li>
+  <li>Confirm Grafana provisioning loads enhanced dashboards and data sources</li>
+  <li>Continue Keycloak deployment and apply Istio RequestAuthentication and AuthorizationPolicy</li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / devlog/2025-08-21-mesh-ollama-observability.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

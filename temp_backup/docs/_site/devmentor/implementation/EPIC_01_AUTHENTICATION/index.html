@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPIC 01 AUTHENTICATION | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">implementation/EPIC_01_AUTHENTICATION.md</span>
+</div>
+
+<h1>EPIC 01 AUTHENTICATION</h1>
+
+
+<h1 id="-epic-1-authentication-implementation-guide">🔐 EPIC 1: Authentication Implementation Guide</h1>
+<h2 id="github-oauth--supabase-integration">GitHub OAuth + Supabase Integration</h2>
+
+<h2 id="current-status">Current Status</h2>
+<ul>
+  <li>✅ Frontend components exist (GitHubConnectButton, LoginPage, etc.)</li>
+  <li>✅ Auth service has GitHub OAuth methods defined</li>
+  <li>✅ Callback page exists at <code class="language-plaintext highlighter-rouge">/auth/github/callback</code></li>
+  <li>❌ No Supabase configuration yet</li>
+  <li>❌ No GitHub OAuth app registered</li>
+  <li>❌ Backend endpoints not connected</li>
+</ul>
+
+<h2 id="implementation-steps">Implementation Steps</h2>
+
+<h3 id="step-1-set-up-supabase-30-mins">Step 1: Set Up Supabase (30 mins)</h3>
+
+<ol>
+  <li><strong>Create Supabase Project</strong>
+    <ul>
+      <li>Go to https://supabase.com</li>
+      <li>Create new project “devmentor-beta”</li>
+      <li>Note down:
+        <ul>
+          <li>Project URL</li>
+          <li>Anon Key</li>
+          <li>Service Role Key (keep secret!)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Configure Auth Settings</strong>
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- In Supabase SQL Editor</span>
+   
+<span class="c1">-- Create profiles table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">profiles</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">username</span> <span class="nb">TEXT</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">full_name</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">avatar_url</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">github_username</span> <span class="nb">TEXT</span><span class="p">,</span>
+  <span class="n">github_id</span> <span class="nb">INTEGER</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="n">timezone</span><span class="p">(</span><span class="s1">'utc'</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span> <span class="n">now</span><span class="p">()),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">WITH</span> <span class="nb">TIME</span> <span class="k">ZONE</span> <span class="k">DEFAULT</span> <span class="n">timezone</span><span class="p">(</span><span class="s1">'utc'</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span> <span class="n">now</span><span class="p">()),</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Enable RLS</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">profiles</span> <span class="n">ENABLE</span> <span class="k">ROW</span> <span class="k">LEVEL</span> <span class="k">SECURITY</span><span class="p">;</span>
+
+<span class="c1">-- Create policies</span>
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Public profiles are viewable by everyone"</span> 
+  <span class="k">ON</span> <span class="n">profiles</span> <span class="k">FOR</span> <span class="k">SELECT</span> 
+  <span class="k">USING</span> <span class="p">(</span><span class="k">true</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="n">POLICY</span> <span class="nv">"Users can update own profile"</span> 
+  <span class="k">ON</span> <span class="n">profiles</span> <span class="k">FOR</span> <span class="k">UPDATE</span> 
+  <span class="k">USING</span> <span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">=</span> <span class="n">id</span><span class="p">);</span>
+
+<span class="c1">-- Create trigger for updated_at</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">handle_updated_at</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="k">NEW</span><span class="p">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">now</span><span class="p">();</span>
+  <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">profiles_updated_at</span>
+  <span class="k">BEFORE</span> <span class="k">UPDATE</span> <span class="k">ON</span> <span class="n">profiles</span>
+  <span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span>
+  <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="n">handle_updated_at</span><span class="p">();</span>
+
+<span class="c1">-- Create function to handle new users</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">handle_new_user</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">public</span><span class="p">.</span><span class="n">profiles</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">avatar_url</span><span class="p">)</span>
+  <span class="k">VALUES</span> <span class="p">(</span>
+    <span class="k">new</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+    <span class="k">new</span><span class="p">.</span><span class="n">raw_user_meta_data</span><span class="o">-&gt;&gt;</span><span class="s1">'user_name'</span><span class="p">,</span>
+    <span class="k">new</span><span class="p">.</span><span class="n">raw_user_meta_data</span><span class="o">-&gt;&gt;</span><span class="s1">'full_name'</span><span class="p">,</span>
+    <span class="k">new</span><span class="p">.</span><span class="n">raw_user_meta_data</span><span class="o">-&gt;&gt;</span><span class="s1">'avatar_url'</span>
+  <span class="p">);</span>
+  <span class="k">RETURN</span> <span class="k">new</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span> <span class="k">SECURITY</span> <span class="k">DEFINER</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">on_auth_user_created</span>
+  <span class="k">AFTER</span> <span class="k">INSERT</span> <span class="k">ON</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span>
+  <span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span>
+  <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="n">handle_new_user</span><span class="p">();</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-2-register-github-oauth-app-10-mins">Step 2: Register GitHub OAuth App (10 mins)</h3>
+
+<ol>
+  <li><strong>Go to GitHub Settings</strong>
+    <ul>
+      <li>https://github.com/settings/developers</li>
+      <li>Click “New OAuth App”</li>
+    </ul>
+  </li>
+  <li><strong>Configure OAuth App</strong>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Application name: DevMentor Beta
+Homepage URL: http://localhost:3000
+Authorization callback URL: http://localhost:3000/auth/github/callback
+   
+For production later:
+Authorization callback URL: https://devmentor.app/auth/github/callback
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Note Credentials</strong>
+    <ul>
+      <li>Client ID: (copy this)</li>
+      <li>Client Secret: (generate and copy)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-3-configure-environment-variables-5-mins">Step 3: Configure Environment Variables (5 mins)</h3>
+
+<p>Add to <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/.env.local</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Supabase</span>
+<span class="nv">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">=</span>https://[PROJECT_REF].supabase.co
+<span class="nv">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">=[</span>ANON_KEY]
+<span class="nv">SUPABASE_SERVICE_ROLE_KEY</span><span class="o">=[</span>SERVICE_KEY]  <span class="c"># Server-side only!</span>
+
+<span class="c"># GitHub OAuth</span>
+<span class="nv">GITHUB_CLIENT_ID</span><span class="o">=[</span>YOUR_CLIENT_ID]
+<span class="nv">GITHUB_CLIENT_SECRET</span><span class="o">=[</span>YOUR_CLIENT_SECRET]
+<span class="nv">NEXT_PUBLIC_GITHUB_CLIENT_ID</span><span class="o">=[</span>YOUR_CLIENT_ID]
+
+<span class="c"># Auth URLs</span>
+<span class="nv">NEXT_PUBLIC_AUTH_CALLBACK_URL</span><span class="o">=</span>http://localhost:3000/auth/github/callback
+</code></pre></div></div>
+
+<h3 id="step-4-install-supabase-client-5-mins">Step 4: Install Supabase Client (5 mins)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>frontend/devmentor-ui
+npm <span class="nb">install</span> @supabase/supabase-js @supabase/auth-helpers-nextjs
+</code></pre></div></div>
+
+<h3 id="step-5-create-supabase-client-10-mins">Step 5: Create Supabase Client (10 mins)</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/lib/supabase/client.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createBrowserClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/ssr</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">createClient</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">createBrowserClient</span><span class="p">(</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span>
+  <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Create <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/lib/supabase/server.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createServerClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/ssr</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">cookies</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/headers</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">createClient</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">cookieStore</span> <span class="o">=</span> <span class="nx">cookies</span><span class="p">()</span>
+
+  <span class="k">return</span> <span class="nx">createServerClient</span><span class="p">(</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span><span class="p">,</span>
+    <span class="p">{</span>
+      <span class="na">cookies</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">getAll</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">cookieStore</span><span class="p">.</span><span class="nx">getAll</span><span class="p">()</span>
+        <span class="p">},</span>
+        <span class="nx">setAll</span><span class="p">(</span><span class="nx">cookiesToSet</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">try</span> <span class="p">{</span>
+            <span class="nx">cookiesToSet</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">options</span> <span class="p">})</span> <span class="o">=&gt;</span>
+              <span class="nx">cookieStore</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+            <span class="p">)</span>
+          <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+            <span class="c1">// The `setAll` method was called from a Server Component.</span>
+            <span class="c1">// This can be ignored if you have middleware refreshing</span>
+            <span class="c1">// user sessions.</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+      <span class="p">},</span>
+    <span class="p">}</span>
+  <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-6-create-auth-api-routes-20-mins">Step 6: Create Auth API Routes (20 mins)</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/app/api/auth/github/route.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/server</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">GET</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">requestUrl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URL</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">requestUrl</span><span class="p">.</span><span class="nx">searchParams</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">code</span><span class="dl">'</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">next</span> <span class="o">=</span> <span class="nx">requestUrl</span><span class="p">.</span><span class="nx">searchParams</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">next</span><span class="dl">'</span><span class="p">)</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">/</span><span class="dl">'</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">()</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">exchangeCodeForSession</span><span class="p">(</span><span class="nx">code</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">forwardedHost</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">x-forwarded-host</span><span class="dl">'</span><span class="p">)</span>
+      <span class="kd">const</span> <span class="nx">isLocalEnv</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">isLocalEnv</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">requestUrl</span><span class="p">.</span><span class="nx">origin</span><span class="p">}${</span><span class="nx">next</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">forwardedHost</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="s2">`https://</span><span class="p">${</span><span class="nx">forwardedHost</span><span class="p">}${</span><span class="nx">next</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">requestUrl</span><span class="p">.</span><span class="nx">origin</span><span class="p">}${</span><span class="nx">next</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Return the user to an error page with instructions</span>
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">requestUrl</span><span class="p">.</span><span class="nx">origin</span><span class="p">}</span><span class="s2">/auth/auth-error`</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Create <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/app/api/auth/login/route.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/server</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">email</span><span class="p">,</span> <span class="nx">password</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">()</span>
+
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+    <span class="nx">email</span><span class="p">,</span>
+    <span class="nx">password</span><span class="p">,</span>
+  <span class="p">})</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">},</span> <span class="p">{</span> <span class="na">status</span><span class="p">:</span> <span class="mi">401</span> <span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> 
+    <span class="na">user</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">,</span>
+    <span class="na">session</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">session</span> 
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-7-update-auth-service-15-mins">Step 7: Update Auth Service (15 mins)</h3>
+
+<p>Update <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/services/authService.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/client</span><span class="dl">'</span>
+
+<span class="kd">class</span> <span class="nx">AuthService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">()</span>
+
+  <span class="k">async</span> <span class="nx">loginWithGitHub</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithOAuth</span><span class="p">({</span>
+      <span class="na">provider</span><span class="p">:</span> <span class="dl">'</span><span class="s1">github</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">redirectTo</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">}</span><span class="s2">/auth/github/callback`</span><span class="p">,</span>
+        <span class="na">scopes</span><span class="p">:</span> <span class="dl">'</span><span class="s1">read:user user:email repo</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="nx">error</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">redirectUrl</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
+      <span class="na">success</span><span class="p">:</span> <span class="o">!!</span><span class="nx">data</span><span class="p">.</span><span class="nx">url</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">getCurrentUser</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">user</span> <span class="p">}</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getUser</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nx">user</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">logout</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signOut</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="nx">isAuthenticated</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span>
+      <span class="p">({</span> <span class="nx">data</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="o">!!</span><span class="nx">data</span><span class="p">.</span><span class="nx">session</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nx">getRepositories</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// This would call your backend API that uses the stored GitHub token</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/github/repos</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">credentials</span><span class="p">:</span> <span class="dl">'</span><span class="s1">include</span><span class="dl">'</span>
+    <span class="p">})</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to fetch repositories</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">authService</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AuthService</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="step-8-create-protected-route-middleware-10-mins">Step 8: Create Protected Route Middleware (10 mins)</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/middleware.ts</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createServerClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/ssr</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">NextResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span>
+<span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">NextRequest</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">next/server</span><span class="dl">'</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">middleware</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">NextRequest</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">supabaseResponse</span> <span class="o">=</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">next</span><span class="p">({</span>
+    <span class="nx">request</span><span class="p">,</span>
+  <span class="p">})</span>
+
+  <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createServerClient</span><span class="p">(</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span><span class="p">,</span>
+    <span class="p">{</span>
+      <span class="na">cookies</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">getAll</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">request</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">getAll</span><span class="p">()</span>
+        <span class="p">},</span>
+        <span class="nx">setAll</span><span class="p">(</span><span class="nx">cookiesToSet</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">cookiesToSet</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">options</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="nx">request</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">))</span>
+          <span class="nx">supabaseResponse</span> <span class="o">=</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">next</span><span class="p">({</span>
+            <span class="nx">request</span><span class="p">,</span>
+          <span class="p">})</span>
+          <span class="nx">cookiesToSet</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">options</span> <span class="p">})</span> <span class="o">=&gt;</span>
+            <span class="nx">supabaseResponse</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+          <span class="p">)</span>
+        <span class="p">},</span>
+      <span class="p">},</span>
+    <span class="p">}</span>
+  <span class="p">)</span>
+
+  <span class="c1">// Check auth for protected routes</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">user</span> <span class="p">}</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getUser</span><span class="p">()</span>
+
+  <span class="c1">// Protected routes</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">nextUrl</span><span class="p">.</span><span class="nx">pathname</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="dl">'</span><span class="s1">/dashboard</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">nextUrl</span><span class="p">.</span><span class="nx">clone</span><span class="p">()</span>
+      <span class="nx">url</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">/login</span><span class="dl">'</span>
+      <span class="k">return</span> <span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">supabaseResponse</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">matcher</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">/dashboard/:path*</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">/api/:path*</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">/auth/:path*</span><span class="dl">'</span><span class="p">,</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="step-9-test-the-flow-10-mins">Step 9: Test the Flow (10 mins)</h3>
+
+<ol>
+  <li><strong>Start the dev server</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run dev
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Test authentication flow</strong>
+    <ul>
+      <li>Go to http://localhost:3000/login</li>
+      <li>Click “Sign in with GitHub”</li>
+      <li>Should redirect to GitHub</li>
+      <li>After authorization, should return to callback</li>
+      <li>Should redirect to dashboard</li>
+      <li>Check browser DevTools &gt; Application &gt; Cookies for session</li>
+    </ul>
+  </li>
+  <li><strong>Test protected routes</strong>
+    <ul>
+      <li>Try accessing /dashboard without login</li>
+      <li>Should redirect to /login</li>
+      <li>After login, should access dashboard</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="step-10-add-session-management-10-mins">Step 10: Add Session Management (10 mins)</h3>
+
+<p>Create <code class="language-plaintext highlighter-rouge">/frontend/devmentor-ui/src/contexts/AuthContext.tsx</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="dl">'</span><span class="s1">use client</span><span class="dl">'</span>
+
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createContext</span><span class="p">,</span> <span class="nx">useContext</span><span class="p">,</span> <span class="nx">useEffect</span><span class="p">,</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">User</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@supabase/supabase-js</span><span class="dl">'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/client</span><span class="dl">'</span>
+
+<span class="kd">type</span> <span class="nx">AuthContextType</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">user</span><span class="p">:</span> <span class="nx">User</span> <span class="o">|</span> <span class="kc">null</span>
+  <span class="na">loading</span><span class="p">:</span> <span class="nx">boolean</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">AuthContext</span> <span class="o">=</span> <span class="nx">createContext</span><span class="o">&lt;</span><span class="nx">AuthContextType</span><span class="o">&gt;</span><span class="p">({</span>
+  <span class="na">user</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="na">loading</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">AuthProvider</span><span class="p">({</span> <span class="nx">children</span> <span class="p">}:</span> <span class="p">{</span> <span class="nl">children</span><span class="p">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ReactNode</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">user</span><span class="p">,</span> <span class="nx">setUser</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="nx">User</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">loading</span><span class="p">,</span> <span class="nx">setLoading</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">()</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Get initial session</span>
+    <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">then</span><span class="p">(({</span> <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">session</span> <span class="p">}</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">setUser</span><span class="p">(</span><span class="nx">session</span><span class="p">?.</span><span class="nx">user</span> <span class="o">??</span> <span class="kc">null</span><span class="p">)</span>
+      <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="c1">// Listen for auth changes</span>
+    <span class="kd">const</span> <span class="p">{</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="nx">subscription</span> <span class="p">},</span>
+    <span class="p">}</span> <span class="o">=</span> <span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">onAuthStateChange</span><span class="p">((</span><span class="nx">_event</span><span class="p">,</span> <span class="nx">session</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">setUser</span><span class="p">(</span><span class="nx">session</span><span class="p">?.</span><span class="nx">user</span> <span class="o">??</span> <span class="kc">null</span><span class="p">)</span>
+      <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">subscription</span><span class="p">.</span><span class="nx">unsubscribe</span><span class="p">()</span>
+  <span class="p">},</span> <span class="p">[])</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">AuthContext</span><span class="p">.</span><span class="nx">Provider</span> <span class="nx">value</span><span class="o">=</span><span class="p">{{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">loading</span> <span class="p">}}</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">children</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/AuthContext.Provider</span><span class="err">&gt;
+</span>  <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">useAuth</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">useContext</span><span class="p">(</span><span class="nx">AuthContext</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<ol>
+  <li><strong>GitHub OAuth redirect mismatch</strong>
+    <ul>
+      <li>Make sure callback URL in GitHub app matches exactly</li>
+      <li>Include port number for localhost</li>
+    </ul>
+  </li>
+  <li><strong>Supabase session not persisting</strong>
+    <ul>
+      <li>Check cookies are being set</li>
+      <li>Ensure middleware is running</li>
+      <li>Check CORS settings</li>
+    </ul>
+  </li>
+  <li><strong>Protected routes not working</strong>
+    <ul>
+      <li>Verify middleware.ts is in root of src/</li>
+      <li>Check matcher patterns</li>
+      <li>Ensure cookies are being passed</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>After authentication is working:</p>
+<ol>
+  <li>Add user profile page</li>
+  <li>Implement repository selection</li>
+  <li>Add session refresh logic</li>
+  <li>Set up role-based access control</li>
+  <li>Add email/password registration</li>
+</ol>
+
+<h2 id="success-criteria">Success Criteria</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User can click “Sign in with GitHub”</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GitHub OAuth flow completes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User session persists across refreshes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Protected routes redirect to login</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logout clears session</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />User profile data is stored</li>
+</ul>
+
+<hr />
+
+<p><strong>Estimated Time</strong>: 2-3 hours
+<strong>Dependencies</strong>: Supabase account, GitHub account
+<strong>Next Epic</strong>: EPIC 2 - Learning Session MVP</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / implementation/EPIC_01_AUTHENTICATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

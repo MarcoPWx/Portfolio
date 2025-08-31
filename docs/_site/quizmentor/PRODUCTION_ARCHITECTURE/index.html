@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRODUCTION ARCHITECTURE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">PRODUCTION_ARCHITECTURE.md</span>
+</div>
+
+<h1>PRODUCTION ARCHITECTURE</h1>
+
+
+<h1 id="quizmentor-production-architecture">QuizMentor Production Architecture</h1>
+
+<h2 id="-critical-issues-youve-identified">🚨 Critical Issues You’ve Identified</h2>
+
+<ol>
+  <li><strong>Scraper &amp; Cron Jobs</strong> - Need separate hosting</li>
+  <li><strong>Remote Config Dashboard</strong> - Change settings without redeploy</li>
+  <li><strong>Database Performance</strong> - PostgreSQL vs NoSQL vs Vector DB</li>
+  <li><strong>AI Engine Latency</strong> - Can’t have 5-second response times</li>
+  <li><strong>Verification &amp; Testing</strong> - Must test before production</li>
+</ol>
+
+<p>Let’s solve each properly.</p>
+
+<hr />
+
+<h2 id="️-complete-production-architecture">🏗️ Complete Production Architecture</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────┐
+│                   CloudFlare CDN                         │
+│                 (Static Assets + DDoS)                   │
+└─────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────┐
+│              Next.js App (Vercel Edge)                   │
+│                  - Frontend (React)                      │
+│                  - API Routes (Edge Runtime)             │
+│                  - ISR for cached pages                  │
+└─────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   Supabase      │  │  Upstash Redis  │  │    Qdrant       │
+│  (Auth + SQL)   │  │  (Cache + Queue)│  │ (Vector Search) │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  GitHub Actions │  │   QStash        │  │   Modal/Railway │
+│   (Scrapers)    │  │  (Cron Jobs)    │  │  (AI Processing)│
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="1️⃣-database-architecture-hybrid-approach">1️⃣ Database Architecture (Hybrid Approach)</h2>
+
+<h3 id="why-hybrid">Why Hybrid?</h3>
+<ul>
+  <li><strong>PostgreSQL (Supabase)</strong>: User data, sessions, auth - needs ACID</li>
+  <li><strong>Redis (Upstash)</strong>: Hot questions cache, leaderboards - needs speed</li>
+  <li><strong>Qdrant</strong>: Question similarity search, AI embeddings - needs vectors</li>
+</ul>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/db/hybrid-store.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">HybridDataStore</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">supabase</span><span class="p">:</span> <span class="nx">SupabaseClient</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">qdrant</span><span class="p">:</span> <span class="nx">QdrantClient</span><span class="p">;</span>
+  
+  <span class="c1">// Fast question retrieval - Redis first, then PostgreSQL</span>
+  <span class="k">async</span> <span class="nx">getQuestion</span><span class="p">(</span><span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// L1 Cache: Redis (&lt; 1ms)</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`q:</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
+    
+    <span class="c1">// L2 Storage: PostgreSQL (5-10ms)</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">questions</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+    
+    <span class="c1">// Cache for next time</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="s2">`q:</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Bulk question loading for sessions</span>
+  <span class="k">async</span> <span class="nx">getQuestionBatch</span><span class="p">(</span><span class="nx">ids</span><span class="p">:</span> <span class="kr">string</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="c1">// Use Redis pipeline for efficiency</span>
+    <span class="kd">const</span> <span class="nx">pipeline</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">pipeline</span><span class="p">();</span>
+    <span class="nx">ids</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">id</span> <span class="o">=&gt;</span> <span class="nx">pipeline</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`q:</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">));</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">pipeline</span><span class="p">.</span><span class="nx">exec</span><span class="p">();</span>
+    
+    <span class="c1">// Get missing from PostgreSQL</span>
+    <span class="kd">const</span> <span class="nx">missing</span> <span class="o">=</span> <span class="nx">ids</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">id</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">!</span><span class="nx">cached</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">missing</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">supabase</span>
+        <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">questions</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="k">in</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">missing</span><span class="p">);</span>
+      
+      <span class="c1">// Cache them</span>
+      <span class="kd">const</span> <span class="nx">cachePipeline</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">pipeline</span><span class="p">();</span>
+      <span class="nx">data</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">q</span> <span class="o">=&gt;</span> <span class="nx">cachePipeline</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="s2">`q:</span><span class="p">${</span><span class="nx">q</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">q</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">}));</span>
+      <span class="k">await</span> <span class="nx">cachePipeline</span><span class="p">.</span><span class="nx">exec</span><span class="p">();</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">mergeResults</span><span class="p">(</span><span class="nx">cached</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Similar questions using vector search</span>
+  <span class="k">async</span> <span class="nx">findSimilarQuestions</span><span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Get embedding from OpenAI</span>
+    <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getEmbedding</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+    
+    <span class="c1">// Search in Qdrant</span>
+    <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">qdrant</span><span class="p">.</span><span class="nx">search</span><span class="p">({</span>
+      <span class="na">collection</span><span class="p">:</span> <span class="dl">'</span><span class="s1">questions</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">embedding</span><span class="p">,</span>
+      <span class="nx">limit</span><span class="p">,</span>
+      <span class="na">with_payload</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">results</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">r</span> <span class="o">=&gt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">payload</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="database-schema-optimizations">Database Schema Optimizations</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Partitioned tables for scale</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">quiz_sessions</span> <span class="p">(</span>
+  <span class="c1">-- ... columns ...</span>
+<span class="p">)</span> <span class="k">PARTITION</span> <span class="k">BY</span> <span class="k">RANGE</span> <span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
+
+<span class="c1">-- Create monthly partitions</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">quiz_sessions_2024_01</span> <span class="k">PARTITION</span> <span class="k">OF</span> <span class="n">quiz_sessions</span>
+  <span class="k">FOR</span> <span class="k">VALUES</span> <span class="k">FROM</span> <span class="p">(</span><span class="s1">'2024-01-01'</span><span class="p">)</span> <span class="k">TO</span> <span class="p">(</span><span class="s1">'2024-02-01'</span><span class="p">);</span>
+
+<span class="c1">-- Materialized views for analytics</span>
+<span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">user_stats</span> <span class="k">AS</span>
+<span class="k">SELECT</span> 
+  <span class="n">user_id</span><span class="p">,</span>
+  <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">total_sessions</span><span class="p">,</span>
+  <span class="k">AVG</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="k">as</span> <span class="n">avg_score</span><span class="p">,</span>
+  <span class="k">MAX</span><span class="p">(</span><span class="n">streak_days</span><span class="p">)</span> <span class="k">as</span> <span class="n">best_streak</span>
+<span class="k">FROM</span> <span class="n">quiz_sessions</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">user_id</span><span class="p">;</span>
+
+<span class="c1">-- Refresh periodically</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">refresh_user_stats</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="n">void</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="n">REFRESH</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">CONCURRENTLY</span> <span class="n">user_stats</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
+
+<span class="c1">-- Index for faster queries</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">CONCURRENTLY</span> <span class="n">idx_questions_composite</span> 
+  <span class="k">ON</span> <span class="n">questions</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">difficulty</span><span class="p">,</span> <span class="n">bloom_level</span><span class="p">)</span> 
+  <span class="k">WHERE</span> <span class="n">is_active</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2️⃣-scraper--cron-job-architecture">2️⃣ Scraper &amp; Cron Job Architecture</h2>
+
+<h3 id="option-a-github-actions-free-simple">Option A: GitHub Actions (Free, Simple)</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .github/workflows/scraper.yml</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">Question Scraper</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">schedule</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">cron</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0</span><span class="nv"> </span><span class="s">*/6</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*'</span>  <span class="c1"># Every 6 hours</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span>  <span class="c1"># Manual trigger</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">scrape</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+      
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup Node</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-node@v3</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">node-version</span><span class="pi">:</span> <span class="m">18</span>
+      
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install dependencies</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">npm ci</span>
+      
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Run scraper</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">SUPABASE_URL</span><span class="pi">:</span> <span class="s">${{ secrets.SUPABASE_URL }}</span>
+          <span class="na">SUPABASE_SERVICE_KEY</span><span class="pi">:</span> <span class="s">${{ secrets.SUPABASE_SERVICE_KEY }}</span>
+          <span class="na">OPENAI_API_KEY</span><span class="pi">:</span> <span class="s">${{ secrets.OPENAI_API_KEY }}</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">node scripts/scraper.js</span>
+      
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Validate scraped content</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">node scripts/validate-scraped.js</span>
+      
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Send notification</span>
+        <span class="na">if</span><span class="pi">:</span> <span class="s">failure()</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">8398a7/action-slack@v3</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">status</span><span class="pi">:</span> <span class="s">${{ job.status }}</span>
+          <span class="na">text</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Scraper</span><span class="nv"> </span><span class="s">failed!'</span>
+</code></pre></div></div>
+
+<h3 id="option-b-qstash-serverless-cron">Option B: QStash (Serverless Cron)</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/cron/scrape/route.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">verifySignature</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@upstash/qstash/nextjs</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">POST</span> <span class="o">=</span> <span class="nx">verifySignature</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// This runs on schedule via QStash</span>
+  <span class="kd">const</span> <span class="nx">scraper</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">QuestionScraper</span><span class="p">();</span>
+  
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Scrape in chunks to avoid timeout</span>
+    <span class="kd">const</span> <span class="nx">sources</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getScrapeSources</span><span class="p">();</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">source</span> <span class="k">of</span> <span class="nx">sources</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Queue each source as separate job</span>
+      <span class="k">await</span> <span class="nx">qstash</span><span class="p">.</span><span class="nx">publishJSON</span><span class="p">({</span>
+        <span class="na">url</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_URL</span><span class="p">}</span><span class="s2">/api/jobs/scrape-source`</span><span class="p">,</span>
+        <span class="na">body</span><span class="p">:</span> <span class="p">{</span> <span class="nx">source</span> <span class="p">},</span>
+        <span class="na">retries</span><span class="p">:</span> <span class="mi">3</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">Response</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">queued</span><span class="p">:</span> <span class="nx">sources</span><span class="p">.</span><span class="nx">length</span> <span class="p">});</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">notifyError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// app/api/jobs/scrape-source/route.ts</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">POST</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">source</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  
+  <span class="c1">// Scrape with timeout protection</span>
+  <span class="kd">const</span> <span class="nx">timeout</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> 
+    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">reject</span><span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Timeout</span><span class="dl">'</span><span class="p">)),</span> <span class="mi">25000</span><span class="p">)</span>
+  <span class="p">);</span>
+  
+  <span class="kd">const</span> <span class="nx">scrape</span> <span class="o">=</span> <span class="nx">scrapeSource</span><span class="p">(</span><span class="nx">source</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">race</span><span class="p">([</span><span class="nx">scrape</span><span class="p">,</span> <span class="nx">timeout</span><span class="p">]);</span>
+  
+  <span class="c1">// Process with AI</span>
+  <span class="kd">const</span> <span class="nx">validated</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">validateWithBloom</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+  
+  <span class="c1">// Store in database</span>
+  <span class="k">await</span> <span class="nx">storeQuestions</span><span class="p">(</span><span class="nx">validated</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="nx">Response</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">processed</span><span class="p">:</span> <span class="nx">validated</span><span class="p">.</span><span class="nx">length</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="option-c-railway-dedicated-workers">Option C: Railway (Dedicated Workers)</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// workers/scraper/index.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">CronJob</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">cron</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Worker</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">bullmq</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Background worker that runs continuously</span>
+<span class="kd">const</span> <span class="nx">scraperWorker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="dl">'</span><span class="s1">scraper</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">job</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">selector</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+  
+  <span class="c1">// Use Puppeteer for dynamic content</span>
+  <span class="kd">const</span> <span class="nx">browser</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">puppeteer</span><span class="p">.</span><span class="nx">launch</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">page</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nx">newPage</span><span class="p">();</span>
+  <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">goto</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+  
+  <span class="kd">const</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">$$eval</span><span class="p">(</span><span class="nx">selector</span><span class="p">,</span> <span class="nx">elements</span> <span class="o">=&gt;</span> 
+    <span class="nx">elements</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">el</span> <span class="o">=&gt;</span> <span class="nx">el</span><span class="p">.</span><span class="nx">textContent</span><span class="p">)</span>
+  <span class="p">);</span>
+  
+  <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+  
+  <span class="c1">// Process and validate</span>
+  <span class="kd">const</span> <span class="nx">questions</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">processContent</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+  <span class="k">await</span> <span class="nx">validateQuestions</span><span class="p">(</span><span class="nx">questions</span><span class="p">);</span>
+  
+  <span class="k">return</span> <span class="p">{</span> <span class="na">processed</span><span class="p">:</span> <span class="nx">questions</span><span class="p">.</span><span class="nx">length</span> <span class="p">};</span>
+<span class="p">},</span> <span class="p">{</span>
+  <span class="na">connection</span><span class="p">:</span> <span class="nx">redis</span><span class="p">,</span>
+  <span class="na">concurrency</span><span class="p">:</span> <span class="mi">5</span>
+<span class="p">});</span>
+
+<span class="c1">// Schedule jobs</span>
+<span class="k">new</span> <span class="nx">CronJob</span><span class="p">(</span><span class="dl">'</span><span class="s1">0 */6 * * *</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">sources</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getSources</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">source</span> <span class="k">of</span> <span class="nx">sources</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">scraperQueue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">scrape</span><span class="dl">'</span><span class="p">,</span> <span class="nx">source</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3️⃣-remote-config-dashboard">3️⃣ Remote Config Dashboard</h2>
+
+<h3 id="dynamic-configuration-system">Dynamic Configuration System</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/config/remote-config.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">RemoteConfig</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="k">static</span> <span class="nx">instance</span><span class="p">:</span> <span class="nx">RemoteConfig</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">any</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="k">private</span> <span class="nx">lastFetch</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">CACHE_TTL</span> <span class="o">=</span> <span class="mi">60000</span><span class="p">;</span> <span class="c1">// 1 minute</span>
+  
+  <span class="k">static</span> <span class="nx">getInstance</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RemoteConfig</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">instance</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="kd">get</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">defaultValue</span><span class="p">:</span> <span class="nx">T</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Check cache first</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastFetch</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">CACHE_TTL</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Fetch from Supabase</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">supabase</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">config</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">value</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">key</span><span class="dl">'</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+    
+    <span class="kd">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">data</span><span class="p">?.</span><span class="nx">value</span> <span class="o">??</span> <span class="nx">defaultValue</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">lastFetch</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+    
+    <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Real-time updates</span>
+  <span class="nx">subscribe</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">callback</span><span class="p">:</span> <span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">supabase</span>
+      <span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="dl">'</span><span class="s1">config_changes</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">postgres_changes</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">UPDATE</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">schema</span><span class="p">:</span> <span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">table</span><span class="p">:</span> <span class="dl">'</span><span class="s1">config</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">filter</span><span class="p">:</span> <span class="s2">`key=eq.</span><span class="p">${</span><span class="nx">key</span><span class="p">}</span><span class="s2">`</span>
+      <span class="p">},</span> <span class="nx">payload</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">payload</span><span class="p">.</span><span class="k">new</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="k">new</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">subscribe</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage in your engine</span>
+<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">RemoteConfig</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">getAdaptiveSettings</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">flowThreshold</span><span class="p">:</span> <span class="k">await</span> <span class="nx">config</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">adaptive.flow_threshold</span><span class="dl">'</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">),</span>
+    <span class="na">difficultyStep</span><span class="p">:</span> <span class="k">await</span> <span class="nx">config</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">adaptive.difficulty_step</span><span class="dl">'</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+    <span class="na">spacedRepetitionEnabled</span><span class="p">:</span> <span class="k">await</span> <span class="nx">config</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">features.spaced_repetition</span><span class="dl">'</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span>
+    <span class="na">aiValidationEnabled</span><span class="p">:</span> <span class="k">await</span> <span class="nx">config</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">features.ai_validation</span><span class="dl">'</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span>
+    <span class="na">scraperEnabled</span><span class="p">:</span> <span class="k">await</span> <span class="nx">config</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">scraper.enabled</span><span class="dl">'</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span>
+    <span class="na">scraperSources</span><span class="p">:</span> <span class="k">await</span> <span class="nx">config</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">scraper.sources</span><span class="dl">'</span><span class="p">,</span> <span class="p">[])</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="admin-dashboard">Admin Dashboard</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/admin/config/page.tsx</span>
+<span class="dl">'</span><span class="s1">use client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/lib/supabase/client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">ConfigDashboard</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">configs</span><span class="p">,</span> <span class="nx">setConfigs</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([]);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">testMode</span><span class="p">,</span> <span class="nx">setTestMode</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">supabase</span> <span class="o">=</span> <span class="nx">createClient</span><span class="p">();</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Load configs</span>
+    <span class="nx">loadConfigs</span><span class="p">();</span>
+    
+    <span class="c1">// Subscribe to changes</span>
+    <span class="kd">const</span> <span class="nx">subscription</span> <span class="o">=</span> <span class="nx">supabase</span>
+      <span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="dl">'</span><span class="s1">config_updates</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">postgres_changes</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> 
+        <span class="na">event</span><span class="p">:</span> <span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span> 
+        <span class="na">schema</span><span class="p">:</span> <span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">,</span> 
+        <span class="na">table</span><span class="p">:</span> <span class="dl">'</span><span class="s1">config</span><span class="dl">'</span> 
+      <span class="p">},</span> <span class="nx">handleConfigChange</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">subscribe</span><span class="p">();</span>
+    
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">subscription</span><span class="p">.</span><span class="nx">unsubscribe</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+  
+  <span class="kd">const</span> <span class="nx">updateConfig</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Test mode: preview changes without saving</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">testMode</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">testConfigChange</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Update in database</span>
+    <span class="k">await</span> <span class="nx">supabase</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">config</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">upsert</span><span class="p">({</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="na">updated_at</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span> <span class="p">});</span>
+    
+    <span class="c1">// Invalidate CDN cache</span>
+    <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/cache/purge</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="na">keys</span><span class="p">:</span> <span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">})</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">p-8</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Remote</span> <span class="nx">Configuration</span> <span class="nx">Dashboard</span><span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>      
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">mb-4</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">label</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">input</span> 
+            <span class="kd">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">checkbox</span><span class="dl">"</span> 
+            <span class="nx">checked</span><span class="o">=</span><span class="p">{</span><span class="nx">testMode</span><span class="p">}</span>
+            <span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">setTestMode</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">checked</span><span class="p">)}</span>
+          <span class="sr">/</span><span class="err">&gt;
+</span>          <span class="nx">Test</span> <span class="nx">Mode</span> <span class="p">(</span><span class="nx">preview</span> <span class="nx">without</span> <span class="nx">saving</span><span class="p">)</span>
+        <span class="o">&lt;</span><span class="sr">/label</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">grid gap-4</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">ConfigSection</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">AI Engine Settings</span><span class="dl">"</span>
+          <span class="nx">configs</span><span class="o">=</span><span class="p">{[</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ai.model</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">select</span><span class="dl">'</span><span class="p">,</span> <span class="na">options</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">gpt-3.5</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">gpt-4</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">claude</span><span class="dl">'</span><span class="p">]</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ai.temperature</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">slider</span><span class="dl">'</span><span class="p">,</span> <span class="na">min</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">max</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">step</span><span class="p">:</span> <span class="mf">0.1</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ai.cache_ttl</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">number</span><span class="dl">'</span><span class="p">,</span> <span class="na">unit</span><span class="p">:</span> <span class="dl">'</span><span class="s1">seconds</span><span class="dl">'</span> <span class="p">}</span>
+          <span class="p">]}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>        
+        <span class="o">&lt;</span><span class="nx">ConfigSection</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">Adaptive Learning</span><span class="dl">"</span>
+          <span class="nx">configs</span><span class="o">=</span><span class="p">{[</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">adaptive.flow_threshold</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">slider</span><span class="dl">'</span><span class="p">,</span> <span class="na">min</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">max</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">adaptive.difficulty_adjustment_rate</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">number</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">adaptive.min_questions_per_session</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">number</span><span class="dl">'</span> <span class="p">}</span>
+          <span class="p">]}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>        
+        <span class="o">&lt;</span><span class="nx">ConfigSection</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">Scraper Settings</span><span class="dl">"</span>
+          <span class="nx">configs</span><span class="o">=</span><span class="p">{[</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">scraper.enabled</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">toggle</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">scraper.schedule</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cron</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">scraper.sources</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">json</span><span class="dl">'</span><span class="p">,</span> <span class="na">schema</span><span class="p">:</span> <span class="nx">scraperSourceSchema</span> <span class="p">}</span>
+          <span class="p">]}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>        
+        <span class="o">&lt;</span><span class="nx">ConfigSection</span> 
+          <span class="nx">title</span><span class="o">=</span><span class="dl">"</span><span class="s2">Feature Flags</span><span class="dl">"</span>
+          <span class="nx">configs</span><span class="o">=</span><span class="p">{[</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">features.new_ui</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">toggle</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">features.beta_engine</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">percentage</span><span class="dl">'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="dl">'</span><span class="s1">features.maintenance_mode</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">toggle</span><span class="dl">'</span><span class="p">,</span> <span class="na">critical</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+          <span class="p">]}</span>
+        <span class="sr">/</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      
+      <span class="o">&lt;</span><span class="nx">MonitoringPanel</span> <span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4️⃣-performance-optimization-strategy">4️⃣ Performance Optimization Strategy</h2>
+
+<h3 id="multi-level-caching">Multi-Level Caching</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/cache/multi-level.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">MultiLevelCache</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">l1</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">any</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="p">();</span> <span class="c1">// Memory (&lt; 1ms)</span>
+  <span class="k">private</span> <span class="nx">l2</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>                        <span class="c1">// Redis (1-5ms)</span>
+  <span class="k">private</span> <span class="nx">l3</span><span class="p">:</span> <span class="nx">SupabaseClient</span><span class="p">;</span>              <span class="c1">// PostgreSQL (5-50ms)</span>
+  
+  <span class="k">async</span> <span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// L1: Memory cache</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">l1</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">l1</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// L2: Redis</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l2</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">l1</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">cached</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// L3: Database</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l3</span>
+      <span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">cache</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="dl">'</span><span class="s1">value</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">eq</span><span class="p">(</span><span class="dl">'</span><span class="s1">key</span><span class="dl">'</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">single</span><span class="p">();</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Populate upper levels</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l2</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">});</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">l1</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">data</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">ttl</span> <span class="o">=</span> <span class="mi">3600</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Write to all levels</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">l1</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l2</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="p">{</span> <span class="na">ex</span><span class="p">:</span> <span class="nx">ttl</span> <span class="p">});</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l3</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="dl">'</span><span class="s1">cache</span><span class="dl">'</span><span class="p">).</span><span class="nx">upsert</span><span class="p">({</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="edge-optimization">Edge Optimization</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// app/api/questions/[id]/route.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">runtime</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">edge</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// Runs at edge locations</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">GET</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="p">{</span> <span class="nx">params</span> <span class="p">}:</span> <span class="p">{</span> <span class="nl">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="c1">// Use edge KV for ultra-low latency</span>
+  <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">env</span><span class="p">.</span><span class="nx">KV</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`question:</span><span class="p">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Response</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">cached</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Cache-Control</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">public, max-age=3600, stale-while-revalidate=86400</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">CDN-Cache-Control</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">max-age=86400</span><span class="dl">'</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Fallback to origin</span>
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetchFromOrigin</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+  
+  <span class="c1">// Cache at edge</span>
+  <span class="k">await</span> <span class="nx">env</span><span class="p">.</span><span class="nx">KV</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s2">`question:</span><span class="p">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="p">{</span> <span class="na">expirationTtl</span><span class="p">:</span> <span class="mi">3600</span> <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="nx">Response</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5️⃣-pre-production-testing--verification">5️⃣ Pre-Production Testing &amp; Verification</h2>
+
+<h3 id="staging-environment">Staging Environment</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/env/staging.ts</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">getStagingConfig</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">supabase</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_STAGING_SUPABASE_URL</span><span class="p">,</span>
+      <span class="na">anonKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_STAGING_SUPABASE_ANON_KEY</span>
+    <span class="p">},</span>
+    <span class="na">redis</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">STAGING_REDIS_URL</span>
+    <span class="p">},</span>
+    <span class="na">ai</span><span class="p">:</span> <span class="p">{</span>
+      <span class="c1">// Use cheaper models in staging</span>
+      <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-3.5-turbo</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">mockResponses</span><span class="p">:</span> <span class="kc">true</span> <span class="c1">// Use mock responses for testing</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// Staging-only routes</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VERCEL_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">preview</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Enable debug endpoints</span>
+  <span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/debug/cache</span><span class="dl">'</span><span class="p">,</span> <span class="nx">debugCacheHandler</span><span class="p">);</span>
+  <span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/debug/config</span><span class="dl">'</span><span class="p">,</span> <span class="nx">debugConfigHandler</span><span class="p">);</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/debug/reset</span><span class="dl">'</span><span class="p">,</span> <span class="nx">resetStagingData</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="load-testing">Load Testing</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// tests/load/k6-test.js</span>
+<span class="k">import</span> <span class="nx">http</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">k6/http</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">check</span><span class="p">,</span> <span class="nx">sleep</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">k6</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">stages</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">duration</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2m</span><span class="dl">'</span><span class="p">,</span> <span class="na">target</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="c1">// Ramp up</span>
+    <span class="p">{</span> <span class="na">duration</span><span class="p">:</span> <span class="dl">'</span><span class="s1">5m</span><span class="dl">'</span><span class="p">,</span> <span class="na">target</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span> <span class="c1">// Stay at 100 users</span>
+    <span class="p">{</span> <span class="na">duration</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2m</span><span class="dl">'</span><span class="p">,</span> <span class="na">target</span><span class="p">:</span> <span class="mi">200</span> <span class="p">},</span> <span class="c1">// Scale to 200</span>
+    <span class="p">{</span> <span class="na">duration</span><span class="p">:</span> <span class="dl">'</span><span class="s1">5m</span><span class="dl">'</span><span class="p">,</span> <span class="na">target</span><span class="p">:</span> <span class="mi">200</span> <span class="p">},</span> <span class="c1">// Stay at 200</span>
+    <span class="p">{</span> <span class="na">duration</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2m</span><span class="dl">'</span><span class="p">,</span> <span class="na">target</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>   <span class="c1">// Ramp down</span>
+  <span class="p">],</span>
+  <span class="na">thresholds</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">http_req_duration</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">p(95)&lt;500</span><span class="dl">'</span><span class="p">],</span> <span class="c1">// 95% of requests under 500ms</span>
+    <span class="na">http_req_failed</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">rate&lt;0.1</span><span class="dl">'</span><span class="p">],</span>    <span class="c1">// Error rate under 10%</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Test question fetching</span>
+  <span class="kd">const</span> <span class="nx">questionRes</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://staging.quizmentor.app/api/questions/random</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">check</span><span class="p">(</span><span class="nx">questionRes</span><span class="p">,</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">question fetched</span><span class="dl">'</span><span class="p">:</span> <span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">fast response</span><span class="dl">'</span><span class="p">:</span> <span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">timings</span><span class="p">.</span><span class="nx">duration</span> <span class="o">&lt;</span> <span class="mi">200</span><span class="p">,</span>
+  <span class="p">});</span>
+  
+  <span class="c1">// Test session creation</span>
+  <span class="kd">const</span> <span class="nx">sessionRes</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://staging.quizmentor.app/api/sessions/start</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">topic</span><span class="p">:</span> <span class="dl">'</span><span class="s1">math</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">difficulty</span><span class="p">:</span> <span class="mi">3</span>
+  <span class="p">});</span>
+  <span class="nx">check</span><span class="p">(</span><span class="nx">sessionRes</span><span class="p">,</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">session created</span><span class="dl">'</span><span class="p">:</span> <span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">201</span><span class="p">,</span>
+  <span class="p">});</span>
+  
+  <span class="nx">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="synthetic-monitoring">Synthetic Monitoring</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// monitoring/synthetic.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">chromium</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">playwright</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">runSyntheticTest</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">browser</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">chromium</span><span class="p">.</span><span class="nx">launch</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">page</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nx">newPage</span><span class="p">();</span>
+  
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Test critical user journey</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">goto</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://staging.quizmentor.app</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// Login</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-test="login-github"]</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">waitForURL</span><span class="p">(</span><span class="dl">'</span><span class="s1">**/dashboard</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// Start quiz</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-test="start-quiz"]</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">waitForSelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-test="question-card"]</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// Answer question</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-test="answer-option-0"]</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-test="submit-answer"]</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="c1">// Check adaptation happened</span>
+    <span class="kd">const</span> <span class="nx">difficulty</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="dl">'</span><span class="s1">[data-test="difficulty-indicator"]</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">data-level</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">difficulty</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Adaptation failed</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Report success</span>
+    <span class="k">await</span> <span class="nx">reportMetric</span><span class="p">(</span><span class="dl">'</span><span class="s1">synthetic.test.success</span><span class="dl">'</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">reportMetric</span><span class="p">(</span><span class="dl">'</span><span class="s1">synthetic.test.failure</span><span class="dl">'</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">await</span> <span class="nx">notifyOncall</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Run every 5 minutes</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">runSyntheticTest</span><span class="p">,</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="6️⃣-vector-database-qdrant-integration">6️⃣ Vector Database (Qdrant) Integration</h2>
+
+<h3 id="when-you-need-it">When You Need It</h3>
+<ul>
+  <li>Semantic question search</li>
+  <li>Finding similar questions</li>
+  <li>AI-powered recommendations</li>
+  <li>Duplicate detection</li>
+</ul>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/vector/qdrant.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">QdrantClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@qdrant/js-client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">qdrant</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">QdrantClient</span><span class="p">({</span>
+  <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">QDRANT_URL</span><span class="p">,</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">QDRANT_API_KEY</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">indexQuestion</span><span class="p">(</span><span class="nx">question</span><span class="p">:</span> <span class="nx">Question</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Generate embedding</span>
+  <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">embeddings</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text-embedding-3-small</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">input</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+  <span class="p">});</span>
+  
+  <span class="c1">// Store in Qdrant</span>
+  <span class="k">await</span> <span class="nx">qdrant</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+    <span class="na">collection_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">questions</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">points</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">vector</span><span class="p">:</span> <span class="nx">embedding</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">embedding</span><span class="p">,</span>
+      <span class="na">payload</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">text</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+        <span class="na">category</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">category</span><span class="p">,</span>
+        <span class="na">difficulty</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">difficulty</span><span class="p">,</span>
+        <span class="na">bloom_level</span><span class="p">:</span> <span class="nx">question</span><span class="p">.</span><span class="nx">bloom_level</span>
+      <span class="p">}</span>
+    <span class="p">}]</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">findSimilar</span><span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">filters</span><span class="p">?:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">embeddings</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text-embedding-3-small</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">input</span><span class="p">:</span> <span class="nx">text</span><span class="p">,</span>
+  <span class="p">});</span>
+  
+  <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">qdrant</span><span class="p">.</span><span class="nx">search</span><span class="p">({</span>
+    <span class="na">collection_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">questions</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">vector</span><span class="p">:</span> <span class="nx">embedding</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">embedding</span><span class="p">,</span>
+    <span class="na">limit</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="na">filter</span><span class="p">:</span> <span class="nx">filters</span><span class="p">,</span>
+    <span class="na">with_payload</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">});</span>
+  
+  <span class="k">return</span> <span class="nx">results</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-deployment-checklist">🚀 Deployment Checklist</h2>
+
+<h3 id="pre-launch">Pre-Launch</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Load test with expected traffic (k6/Artillery)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security audit (OWASP scan)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Database indexes optimized</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CDN configured (CloudFlare)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Error tracking setup (Sentry)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Analytics configured (Mixpanel/Amplitude)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitoring dashboards ready (Grafana)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Runbooks documented</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Backup strategy tested</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />DDoS protection enabled</li>
+</ul>
+
+<h3 id="launch-day">Launch Day</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Feature flags set to gradual rollout</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Support team briefed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitoring alerts configured</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Database connection pooling verified</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cache warmed up</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Synthetic tests running</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rollback plan ready</li>
+</ul>
+
+<h3 id="post-launch">Post-Launch</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor error rates</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check response times</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review user feedback</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Scale resources if needed</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Document lessons learned</li>
+</ul>
+
+<hr />
+
+<h2 id="-cost-optimization">💰 Cost Optimization</h2>
+
+<h3 id="estimated-monthly-costs">Estimated Monthly Costs</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vercel Pro:         $20  (Frontend + API)
+Supabase Pro:       $25  (Auth + PostgreSQL)
+Upstash:           $10  (Redis + QStash)
+Qdrant Cloud:      $25  (Vector search)
+OpenAI:            $50  (AI validation)
+CloudFlare:        $20  (CDN + DDoS)
+Monitoring:        $0   (Free tiers)
+----------------------------
+Total:             ~$150/month for production
+</code></pre></div></div>
+
+<h3 id="scaling-costs">Scaling Costs</h3>
+<ul>
+  <li>10K users: ~$150/month</li>
+  <li>100K users: ~$500/month</li>
+  <li>1M users: ~$2000/month</li>
+</ul>
+
+<hr />
+
+<p><strong>The key insight</strong>: Start with PostgreSQL + Redis cache. Add Qdrant only when you need semantic search. Use GitHub Actions for scrapers initially. Upgrade to dedicated workers only at scale.</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / PRODUCTION_ARCHITECTURE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

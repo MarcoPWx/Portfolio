@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEBSOCKET INTEGRATION</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">frontend/WEBSOCKET_INTEGRATION.md</span>
+</div>
+
+<h1>WEBSOCKET INTEGRATION</h1>
+
+
+<h1 id="websocket-integration-documentation">WebSocket Integration Documentation</h1>
+
+<h2 id="overview">Overview</h2>
+<p>This document describes the WebSocket implementation for real-time updates in the DevMentor platform, including architecture, usage, testing, and deployment considerations.</p>
+
+<p><strong>Last Updated</strong>: 2025-08-25 14:30 UTC<br />
+<strong>Status</strong>: ✅ IMPLEMENTED AND TESTED</p>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+  <li><a href="#architecture">Architecture</a></li>
+  <li><a href="#implementation">Implementation</a></li>
+  <li><a href="#components">Components</a></li>
+  <li><a href="#testing">Testing</a></li>
+  <li><a href="#configuration">Configuration</a></li>
+  <li><a href="#deployment">Deployment</a></li>
+  <li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+
+<h2 id="architecture">Architecture</h2>
+
+<h3 id="technology-stack">Technology Stack</h3>
+<ul>
+  <li><strong>Client</strong>: Socket.io-client v4.8.1</li>
+  <li><strong>Server</strong>: Socket.io (port 8002)</li>
+  <li><strong>Protocol</strong>: WebSocket with HTTP polling fallback</li>
+  <li><strong>Rooms</strong>: Project and Sprint-based isolation</li>
+</ul>
+
+<h3 id="data-flow">Data Flow</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User Action → WebSocket Event → Server Broadcast → All Connected Clients Update
+</code></pre></div></div>
+
+<h3 id="event-types">Event Types</h3>
+<p>| Event | Direction | Description |
+|——-|———–|————-|
+| <code class="language-plaintext highlighter-rouge">task:created</code> | Server→Client | New task created |
+| <code class="language-plaintext highlighter-rouge">task:updated</code> | Server→Client | Task properties updated |
+| <code class="language-plaintext highlighter-rouge">task:deleted</code> | Server→Client | Task removed |
+| <code class="language-plaintext highlighter-rouge">task:status_changed</code> | Server→Client | Task status changed |
+| <code class="language-plaintext highlighter-rouge">epic:created</code> | Server→Client | New epic created |
+| <code class="language-plaintext highlighter-rouge">epic:updated</code> | Server→Client | Epic properties updated |
+| <code class="language-plaintext highlighter-rouge">project:updated</code> | Server→Client | Project properties changed |
+| <code class="language-plaintext highlighter-rouge">connection:status</code> | Internal | Connection state change |</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="service-layer-websocketservicets">Service Layer (<code class="language-plaintext highlighter-rouge">websocket.service.ts</code>)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Singleton WebSocket service</span>
+<span class="k">import</span> <span class="nx">websocketService</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/services/websocket.service</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Connect to WebSocket server</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+
+<span class="c1">// Subscribe to events</span>
+<span class="kd">const</span> <span class="nx">unsubscribe</span> <span class="o">=</span> <span class="nx">websocketService</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:updated</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Task updated:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Join a project room for scoped updates</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">joinProject</span><span class="p">(</span><span class="dl">'</span><span class="s1">project-123</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Send events to server</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:update</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">task-1</span><span class="dl">'</span><span class="p">,</span> <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">completed</span><span class="dl">'</span> <span class="p">});</span>
+
+<span class="c1">// Cleanup</span>
+<span class="nx">unsubscribe</span><span class="p">();</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="react-hooks">React Hooks</h3>
+
+<h4 id="basic-websocket-hook">Basic WebSocket Hook</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useWebSocket</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/hooks/useWebSocket</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">MyComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">isConnected</span><span class="p">,</span> <span class="nx">subscribe</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useWebSocket</span><span class="p">(</span><span class="dl">'</span><span class="s1">project-123</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">unsub</span> <span class="o">=</span> <span class="nx">subscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:created</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">task</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// Handle new task</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">unsub</span><span class="p">;</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">subscribe</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="task-specific-hook">Task-Specific Hook</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useTaskWebSocket</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@/hooks/useWebSocket</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">TaskList</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">tasks</span><span class="p">,</span> <span class="nx">setTasks</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([]);</span>
+  
+  <span class="nx">useTaskWebSocket</span><span class="p">((</span><span class="nx">update</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">update</span><span class="p">.</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">created</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">setTasks</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">prev</span><span class="p">,</span> <span class="nx">update</span><span class="p">.</span><span class="nx">data</span><span class="p">]);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">updated</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">setTasks</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">t</span> <span class="o">=&gt;</span> 
+          <span class="nx">t</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">update</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">id</span> <span class="p">?</span> <span class="nx">update</span><span class="p">.</span><span class="nx">data</span> <span class="p">:</span> <span class="nx">t</span>
+        <span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">deleted</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">setTasks</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">t</span> <span class="o">=&gt;</span> <span class="nx">t</span><span class="p">.</span><span class="nx">id</span> <span class="o">!==</span> <span class="nx">update</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">id</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="components">Components</h2>
+
+<h3 id="projecttaskswidget">ProjectTasksWidget</h3>
+<p><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">src/features/projects/ProjectTasksWidget.tsx</code></p>
+
+<p>Features:</p>
+<ul>
+  <li>Real-time task updates</li>
+  <li>Visual connection status indicator (Live/Polling)</li>
+  <li>Automatic fallback to 30-second polling</li>
+  <li>Mock data support</li>
+</ul>
+
+<h3 id="taskboard">TaskBoard</h3>
+<p><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">src/features/projects/TaskBoard.tsx</code></p>
+
+<p>Features:</p>
+<ul>
+  <li>Drag-and-drop with real-time sync</li>
+  <li>Three-column kanban board</li>
+  <li>WebSocket updates for all task changes</li>
+  <li>Visual feedback during operations</li>
+</ul>
+
+<h3 id="taskformmodal">TaskFormModal</h3>
+<p><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">src/components/modals/TaskFormModal.tsx</code></p>
+
+<p>Features:</p>
+<ul>
+  <li>Create/Edit tasks</li>
+  <li>Real-time form submission</li>
+  <li>Error handling</li>
+  <li>Loading states</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="unit-tests">Unit Tests</h3>
+<p><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">tests/unit/services/websocket.service.test.ts</code></p>
+
+<p>Coverage:</p>
+<ul>
+  <li>Connection management</li>
+  <li>Event subscription/unsubscription</li>
+  <li>Room management</li>
+  <li>Error handling</li>
+  <li>Mock socket behavior</li>
+</ul>
+
+<p>Run tests:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run <span class="nb">test</span>:unit:services
+</code></pre></div></div>
+
+<h3 id="e2e-tests">E2E Tests</h3>
+<p><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">tests/playwright/e2e/realtime-updates.spec.ts</code></p>
+
+<p>Test scenarios:</p>
+<ul>
+  <li>WebSocket connection status display</li>
+  <li>Drag-and-drop task management</li>
+  <li>Real-time updates across multiple clients</li>
+  <li>Fallback to polling</li>
+  <li>Error recovery</li>
+</ul>
+
+<p>Run E2E tests:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run <span class="nb">test</span>:e2e
+<span class="c"># Or specific test file</span>
+npx playwright <span class="nb">test </span>realtime-updates.spec.ts
+</code></pre></div></div>
+
+<h3 id="testing-real-time-features-locally">Testing Real-time Features Locally</h3>
+<ol>
+  <li>Open two browser windows</li>
+  <li>Navigate both to http://localhost:3001/projects</li>
+  <li>Make changes in one window</li>
+  <li>Observe updates in the other window</li>
+</ol>
+
+<h2 id="configuration">Configuration</h2>
+
+<h3 id="environment-variables">Environment Variables</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.local</span>
+<span class="nv">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="o">=</span>http://localhost:8002
+<span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">NEXT_PUBLIC_MOCK_MODE</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div></div>
+
+<h3 id="websocket-configuration">WebSocket Configuration</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="p">,</span>
+  <span class="na">autoConnect</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">reconnection</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="na">reconnectionAttempts</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">reconnectionDelay</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="na">transports</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">websocket</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">polling</span><span class="dl">'</span><span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="deployment">Deployment</h2>
+
+<h3 id="development">Development</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start WebSocket server (if running separately)</span>
+<span class="nb">cd </span>services/websocket-gateway
+npm run dev
+
+<span class="c"># Start frontend with WebSocket enabled</span>
+<span class="nb">cd </span>frontend/devmentor-ui
+<span class="nv">NEXT_PUBLIC_ENABLE_REALTIME</span><span class="o">=</span><span class="nb">true </span>npm run dev
+</code></pre></div></div>
+
+<h3 id="production-considerations">Production Considerations</h3>
+
+<h4 id="scaling">Scaling</h4>
+<ul>
+  <li>Use Redis adapter for Socket.io to support multiple server instances</li>
+  <li>Implement sticky sessions for load balancing</li>
+  <li>Consider horizontal scaling with Kubernetes</li>
+</ul>
+
+<h4 id="security">Security</h4>
+<ul>
+  <li>Implement JWT authentication for WebSocket connections</li>
+  <li>Use WSS (WebSocket Secure) in production</li>
+  <li>Rate limit WebSocket events</li>
+  <li>Validate all incoming events</li>
+</ul>
+
+<h4 id="monitoring">Monitoring</h4>
+<ul>
+  <li>Track connection count</li>
+  <li>Monitor event throughput</li>
+  <li>Log disconnection reasons</li>
+  <li>Alert on high reconnection rates</li>
+</ul>
+
+<h3 id="kubernetes-deployment">Kubernetes Deployment</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">websocket-gateway</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor-app</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">websocket-gateway</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">websocket-gateway</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">websocket-gateway</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/websocket-gateway:latest</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8002</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">REDIS_URL</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">secretKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">redis-credentials</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">url</span>
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<h4 id="connection-not-establishing">Connection Not Establishing</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Check WebSocket status</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Connected:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">websocketService</span><span class="p">.</span><span class="nx">getConnectionStatus</span><span class="p">());</span>
+
+<span class="c1">// Verify URL</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">WebSocket URL:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_WEBSOCKET_URL</span><span class="p">);</span>
+
+<span class="c1">// Check browser console for errors</span>
+<span class="c1">// Look for CORS issues or connection refused</span>
+</code></pre></div></div>
+
+<h4 id="events-not-received">Events Not Received</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Verify subscription</span>
+<span class="kd">const</span> <span class="nx">unsub</span> <span class="o">=</span> <span class="nx">websocketService</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:updated</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Received:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Check room membership</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">joinProject</span><span class="p">(</span><span class="dl">'</span><span class="s1">project-id</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Verify server is broadcasting</span>
+<span class="c1">// Check server logs for event emission</span>
+</code></pre></div></div>
+
+<h4 id="polling-instead-of-websocket">Polling Instead of WebSocket</h4>
+<ul>
+  <li>Check <code class="language-plaintext highlighter-rouge">NEXT_PUBLIC_ENABLE_REALTIME</code> is set to <code class="language-plaintext highlighter-rouge">true</code></li>
+  <li>Verify WebSocket server is running</li>
+  <li>Check for proxy/firewall blocking WebSocket upgrade</li>
+  <li>Look for “Polling” indicator in UI</li>
+</ul>
+
+<h3 id="debug-mode">Debug Mode</h3>
+<p>Enable verbose logging:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In websocket.service.ts constructor</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="p">...</span><span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`WebSocket Event: </span><span class="p">${</span><span class="nx">event</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="performance-optimization">Performance Optimization</h3>
+
+<h4 id="debouncing-updates">Debouncing Updates</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">debounce</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">lodash</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">debouncedUpdate</span> <span class="o">=</span> <span class="nx">debounce</span><span class="p">((</span><span class="nx">updates</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">setTasks</span><span class="p">(</span><span class="nx">updates</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+
+<span class="nx">useTaskWebSocket</span><span class="p">((</span><span class="nx">update</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Batch updates</span>
+  <span class="nx">debouncedUpdate</span><span class="p">(</span><span class="nx">update</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="selective-subscriptions">Selective Subscriptions</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Only subscribe to relevant events</span>
+<span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">projectId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">websocketService</span><span class="p">.</span><span class="nx">joinProject</span><span class="p">(</span><span class="nx">projectId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">websocketService</span><span class="p">.</span><span class="nx">leaveProject</span><span class="p">(</span><span class="nx">projectId</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">projectId</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<h2 id="api-reference">API Reference</h2>
+
+<h3 id="websocketservice-methods">WebSocketService Methods</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Parameters</th>
+      <th>Returns</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">connect()</code></td>
+      <td>-</td>
+      <td>void</td>
+      <td>Establish WebSocket connection</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">disconnect()</code></td>
+      <td>-</td>
+      <td>void</td>
+      <td>Close WebSocket connection</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">on(event, callback)</code></td>
+      <td>string, Function</td>
+      <td>Function</td>
+      <td>Subscribe to event, returns unsubscribe</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">send(event, data)</code></td>
+      <td>string, any</td>
+      <td>void</td>
+      <td>Send event to server</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">joinProject(id)</code></td>
+      <td>string</td>
+      <td>void</td>
+      <td>Join project room</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">leaveProject(id)</code></td>
+      <td>string</td>
+      <td>void</td>
+      <td>Leave project room</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">getConnectionStatus()</code></td>
+      <td>-</td>
+      <td>boolean</td>
+      <td>Get connection state</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="react-hooks-1">React Hooks</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hook</th>
+      <th>Parameters</th>
+      <th>Returns</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">useWebSocket</code></td>
+      <td>projectId?</td>
+      <td>{isConnected, subscribe}</td>
+      <td>Base WebSocket hook</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">useTaskWebSocket</code></td>
+      <td>onUpdate?</td>
+      <td>{lastUpdate}</td>
+      <td>Task-specific events</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">useEpicWebSocket</code></td>
+      <td>onUpdate?</td>
+      <td>{lastUpdate}</td>
+      <td>Epic-specific events</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">useProjectWebSocket</code></td>
+      <td>onUpdate?</td>
+      <td>{lastUpdate}</td>
+      <td>Project-specific events</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Always clean up subscriptions</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">unsub</span> <span class="o">=</span> <span class="nx">subscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">event</span><span class="dl">'</span><span class="p">,</span> <span class="nx">handler</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">unsub</span><span class="p">;</span> <span class="c1">// Clean up on unmount</span>
+<span class="p">},</span> <span class="p">[]);</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Handle connection failures gracefully</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">isConnected</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useWebSocket</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isConnected</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">PollingIndicator</span> <span class="o">/&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Optimize re-renders</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">handleUpdate</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">((</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Process update</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">dependencies</span><span class="p">]);</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Use room-based isolation</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Join specific project room</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">joinProject</span><span class="p">(</span><span class="nx">projectId</span><span class="p">);</span>
+<span class="c1">// Only receive events for this project</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Implement optimistic updates</strong>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Update UI immediately</span>
+<span class="nx">setTasks</span><span class="p">(</span><span class="nx">optimisticUpdate</span><span class="p">);</span>
+<span class="c1">// Send to server</span>
+<span class="nx">websocketService</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">task:update</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+<span class="c1">// Revert on error</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="migration-guide">Migration Guide</h2>
+
+<h3 id="from-polling-to-websocket">From Polling to WebSocket</h3>
+<ol>
+  <li>Set <code class="language-plaintext highlighter-rouge">NEXT_PUBLIC_ENABLE_REALTIME=true</code></li>
+  <li>Deploy WebSocket server</li>
+  <li>Update components to use WebSocket hooks</li>
+  <li>Remove polling intervals</li>
+  <li>Add connection status indicators</li>
+</ol>
+
+<h3 id="from-mock-to-real-data">From Mock to Real Data</h3>
+<ol>
+  <li>Set <code class="language-plaintext highlighter-rouge">NEXT_PUBLIC_MOCK_MODE=false</code></li>
+  <li>Ensure backend services are running</li>
+  <li>Configure service URLs in <code class="language-plaintext highlighter-rouge">.env.local</code></li>
+  <li>Test with real API endpoints</li>
+  <li>Keep mock data as fallback</li>
+</ol>
+
+<h2 id="support">Support</h2>
+
+<p>For issues or questions:</p>
+<ul>
+  <li>Check <a href="../status/SYSTEM_STATUS.md">SYSTEM_STATUS.md</a> for current status</li>
+  <li>Review <a href="../status/EPIC_MANAGEMENT.md">EPIC_MANAGEMENT.md</a> for planned improvements</li>
+  <li>Contact the Frontend Team for component issues</li>
+  <li>Contact the Platform Team for WebSocket server issues</li>
+</ul>
+
+<hr />
+
+<p><em>This documentation is part of the DevMentor Frontend Integration effort completed on 2025-08-25.</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / frontend/WEBSOCKET_INTEGRATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

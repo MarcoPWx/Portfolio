@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEMORY SERVICE BETA READINESS</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/memory-service/MEMORY_SERVICE_BETA_READINESS.md</span>
+</div>
+
+<h1>MEMORY SERVICE BETA READINESS</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="memory-service-beta-readiness-assessment">Memory Service Beta Readiness Assessment</h1>
+
+<p><strong>Service</strong>: Memory Service<br />
+<strong>Port</strong>: 3003<br />
+<strong>Date</strong>: August 16, 2025<br />
+<strong>Status</strong>: 🔄 <strong>PARTIALLY READY</strong> - Core functional, needs production hardening<br />
+<strong>Beta Target</strong>: Production-grade RAG and semantic memory system</p>
+
+<hr />
+
+<h2 id="-what-is-the-memory-service">📚 <strong>What is the Memory Service?</strong></h2>
+
+<p>The Memory Service is DevMentor’s cognitive backbone - a sophisticated Retrieval-Augmented Generation (RAG) system that provides persistent, searchable, and contextual memory for AI-assisted development. Think of it as the “long-term memory” for your development environment that remembers:</p>
+
+<ul>
+  <li><strong>Code patterns</strong> you’ve used across projects</li>
+  <li><strong>Decisions</strong> you’ve made and their rationale</li>
+  <li><strong>Errors</strong> you’ve encountered and how you fixed them</li>
+  <li><strong>Documentation</strong> and knowledge from your repositories</li>
+  <li><strong>Context</strong> from your development sessions</li>
+</ul>
+
+<h3 id="why-do-we-need-this"><strong>Why Do We Need This?</strong></h3>
+
+<ol>
+  <li><strong>Context Persistence</strong>: LLMs are stateless - they forget everything between sessions. Memory Service bridges this gap.</li>
+  <li><strong>Knowledge Retrieval</strong>: Instead of reprocessing entire codebases, we store and retrieve relevant chunks on-demand.</li>
+  <li><strong>Cost Optimization</strong>: Reduce API calls by caching and reusing computed embeddings.</li>
+  <li><strong>Personalization</strong>: Build user-specific knowledge bases that improve over time.</li>
+  <li><strong>Learning Acceleration</strong>: Learn from past mistakes and successes without repeating work.</li>
+</ol>
+
+<h3 id="how-we-use-it"><strong>How We Use It</strong></h3>
+
+<h4 id="1-development-context"><strong>1. Development Context</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Developer writes code</span>
+Editor: <span class="s2">"Implementing authentication..."</span>
+  ↓
+Memory Service: Stores pattern
+  ↓
+Next Session: <span class="s2">"How did I implement auth last time?"</span>
+  ↓
+Memory Service: Retrieves relevant patterns
+</code></pre></div></div>
+
+<h4 id="2-error-resolution"><strong>2. Error Resolution</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Developer encounters error</span>
+Error: <span class="s2">"TypeError: Cannot read property 'x' of undefined"</span>
+  ↓
+Memory Service: Searches similar errors
+  ↓
+Returns: <span class="s2">"You fixed this in project-X by adding null check"</span>
+</code></pre></div></div>
+
+<h4 id="3-documentation-rag"><strong>3. Documentation RAG</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Developer asks question</span>
+Query: <span class="s2">"How do we handle database migrations?"</span>
+  ↓
+Memory Service: Semantic search across docs
+  ↓
+Returns: Relevant chunks from README, wikis, past discussions
+</code></pre></div></div>
+
+<h4 id="4-code-intelligence"><strong>4. Code Intelligence</strong></h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># IDE integration</span>
+VS Code: User types <span class="s2">"useAuth"</span>
+  ↓
+Memory Service: Retrieves similar implementations
+  ↓
+Suggests: Complete auth hook based on past usage
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️-architecture-overview">🏗️ <strong>Architecture Overview</strong></h2>
+
+<h3 id="complete-memory-service-architecture-ascii"><strong>Complete Memory Service Architecture (ASCII)</strong></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                                   CLIENT LAYER                                       │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│  DevMentor UI         VS Code Extension        Scripts           API Clients         │
+│  (Next.js:3001)       (memoryProvider.ts)      (index-docs)     (curl/SDK)          │
+└────────┬──────────────────────┬──────────────────┬─────────────────┬────────────────┘
+         │                      │                  │                 │
+         └──────────────────────┴──────────────────┴─────────────────┘
+                                        │
+                                        │ HTTP/REST
+                                        ▼
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                              API GATEWAY (Optional)                                  │
+│                                   Port: 8080                                         │
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  ┌──────────────────────┐     │
+│  │ Auth/JWT    │  │ Rate Limiter │  │ Load Balance│  │ Request Transform    │     │
+│  └─────────────┘  └──────────────┘  └─────────────┘  └──────────────────────┘     │
+└────────────────────────────────────────┬────────────────────────────────────────────┘
+                                         │
+                                         │ Proxied/Direct
+                                         ▼
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                            MEMORY SERVICE (Express)                                  │
+│                                  Port: 3003                                          │
+│                                                                                      │
+│  ┌────────────────────────────────────────────────────────────────────────────┐     │
+│  │                           REQUEST HANDLERS                                 │     │
+│  │                                                                            │     │
+│  │  GET  /health                    - Service health check                   │     │
+│  │  POST /memories/store            - Store memory with metadata             │     │
+│  │  GET  /memories/search           - Semantic search (query → results)      │     │
+│  │  POST /rag/query                 - RAG-powered AI response               │     │
+│  │  POST /memories/bulk-ingest      - Batch document ingestion              │     │
+│  │  POST /api/memory/index-doc      - Index file from path                 │     │
+│  │  POST /api/memory/index-raw      - Index raw content                    │     │
+│  │  POST /admin/reset-collection    - Reset Qdrant collection              │     │
+│  │  GET  /admin/collection-info     - Get collection metadata              │     │
+│  │  POST /memory/demo/feature       - Demo feature storage                │     │
+│  └────────────────────────────────────────────────────────────────────────┘     │
+│                                         │                                        │
+│                                         ▼                                        │
+│  ┌────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        DevMentorAI RAG Engine                              │ │
+│  │                     (devmentorAI-qdrant.ts)                               │ │
+│  │                                                                            │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  ┌──────────────┐  │ │
+│  │  │ Text Chunker │→ │ Embedding    │→ │ Vector      │→ │ Guardrails   │  │ │
+│  │  │ (1500/200)   │  │ Generator    │  │ Storage     │  │ &amp; Filters    │  │ │
+│  │  └──────────────┘  └──────────────┘  └─────────────┘  └──────────────┘  │ │
+│  │                                                                            │ │
+│  │  ┌────────────────────────────────────────────────────────────────────┐  │ │
+│  │  │                          Core Methods                               │  │ │
+│  │  │                                                                     │  │ │
+│  │  │  • query()                 - RAG query with context                │  │ │
+│  │  │  • ingestDocument()        - Store document with chunking          │  │ │
+│  │  │  • retrieveRelevantChunks() - Semantic search                      │  │ │
+│  │  │  • resetCollection()       - Clear and rebuild collection          │  │ │
+│  │  │  • getCollectionInfo()     - Get stats and metadata               │  │ │
+│  │  └────────────────────────────────────────────────────────────────────┘  │ │
+│  │                                                                            │ │
+│  │  ┌────────────────────────────────────────────────────────────────────┐  │ │
+│  │  │                         Guardrails Config                           │  │ │
+│  │  │                                                                     │  │ │
+│  │  │  • maxContextTokens: 3000    • piiDetection: true                 │  │ │
+│  │  │  • contentFiltering: true    • responseModeration: true           │  │ │
+│  │  │  • fallbackResponse: "I'm sorry, I can't provide..."             │  │ │
+│  │  └────────────────────────────────────────────────────────────────────┘  │ │
+│  └────────────────────────────────────────────────────────────────────────────┘ │
+└───────────────────────┬────────────────────────────────┬────────────────────────┘
+                        │                                │
+                        ▼                                ▼
+┌───────────────────────────────────┐   ┌──────────────────────────────────────┐
+│         OLLAMA SERVICE            │   │         QDRANT SERVICE                │
+│         localhost:11434           │   │         localhost:6333                │
+│                                   │   │                                       │
+│  ┌─────────────────────────────┐ │   │  ┌─────────────────────────────────┐ │
+│  │    Embedding Models         │ │   │  │     Vector Collections          │ │
+│  │  • nomic-embed-text (768d)  │ │   │  │  • devmentor_memories           │ │
+│  │  • mxbai-embed-large        │ │   │  │  • devmentor_docs               │ │
+│  │  • all-minilm                │ │   │  │  • Size: 768 dimensions        │ │
+│  └─────────────────────────────┘ │   │  │  • Distance: Cosine             │ │
+│                                   │   │  └─────────────────────────────────┘ │
+│  ┌─────────────────────────────┐ │   │                                       │
+│  │    Generation Models        │ │   │  ┌─────────────────────────────────┐ │
+│  │  • llama2                   │ │   │  │     Payload Structure           │ │
+│  │  • codellama                │ │   │  │  • content: string              │ │
+│  │  • mistral                  │ │   │  │  • source: string               │ │
+│  └─────────────────────────────┘ │   │  │  • metadata: {                  │ │
+└───────────────────────────────────┘   │  │    - chunkIndex                 │ │
+                                        │  │    - totalChunks                │ │
+                                        │  │    - ingestedAt                 │ │
+                                        │  │    - tags[]                     │ │
+                                        │  │    - path                       │ │
+                                        │  │  }                              │ │
+                                        │  └─────────────────────────────────┘ │
+                                        └──────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                              DATA FLOW EXAMPLES                                      │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                      │
+│  1. SEARCH FLOW:                                                                    │
+│     Client → GET /memories/search?query=react+hooks&amp;limit=5                         │
+│     → DevMentorAI.retrieveRelevantChunks()                                         │
+│     → Ollama.embedTexts(["react hooks"])                                           │
+│     → Qdrant.search(vector, limit=5, threshold=0.7)                                │
+│     → Return [{id, content, score, metadata}...]                                   │
+│                                                                                      │
+│  2. INGEST FLOW:                                                                    │
+│     Script → POST /api/memory/index-doc {path: "README.md"}                        │
+│     → Read file content                                                            │
+│     → DevMentorAI.ingestDocument()                                                 │
+│     → Chunk text (1500 chars, 200 overlap)                                         │
+│     → Ollama.embedTexts(chunks)                                                    │
+│     → Qdrant.upsert(points with vectors + payloads)                               │
+│                                                                                      │
+│  3. RAG FLOW:                                                                       │
+│     Client → POST /rag/query {prompt: "How to handle auth?"}                       │
+│     → DevMentorAI.query()                                                          │
+│     → (Optional) retrieveRelevantChunks() for context                              │
+│     → Ollama.generate(prompt + context)                                            │
+│     → Apply guardrails (PII, content filtering)                                    │
+│     → Return {response, sources, metadata}                                         │
+│                                                                                      │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="detailed-component-architecture"><strong>Detailed Component Architecture</strong></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                           MEMORY SERVICE INTERNAL ARCHITECTURE                        │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                            INPUT PROCESSING LAYER                            │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │                                                                              │     │
+│  │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                 │     │
+│  │  │   Request    │───▶│   Request    │───▶│   Content    │                 │     │
+│  │  │  Validation  │    │  Sanitizer   │    │  Normalizer  │                 │     │
+│  │  └──────────────┘    └──────────────┘    └──────────────┘                 │     │
+│  │       │                    │                    │                          │     │
+│  │       ▼                    ▼                    ▼                          │     │
+│  │  ┌──────────────────────────────────────────────────────────┐             │     │
+│  │  │              Unified Processing Pipeline                 │             │     │
+│  │  │  • Type detection (code/text/markdown/json)             │             │     │
+│  │  │  • Language detection (programming language)            │             │     │
+│  │  │  • Metadata extraction (author, date, version)          │             │     │
+│  │  │  • Content classification (pattern/error/decision)      │             │     │
+│  │  └──────────────────────────────────────────────────────────┘             │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                         │                                             │
+│                                         ▼                                             │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                          CHUNKING &amp; EMBEDDING LAYER                         │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │                                                                              │     │
+│  │  ┌────────────────┐        ┌────────────────┐        ┌────────────────┐   │     │
+│  │  │ Smart Chunker  │        │ Context Window │        │   Embedding    │   │     │
+│  │  │                │───────▶│   Manager      │───────▶│   Generator    │   │     │
+│  │  │ • Code-aware   │        │                │        │                │   │     │
+│  │  │ • Markdown     │        │ • Token count  │        │ • Batch proc   │   │     │
+│  │  │ • Overlap mgmt │        │ • Truncation   │        │ • Model select │   │     │
+│  │  └────────────────┘        └────────────────┘        └────────────────┘   │     │
+│  │                                                               │             │     │
+│  │                                                               ▼             │     │
+│  │  ┌──────────────────────────────────────────────────────────────────────┐ │     │
+│  │  │                      Embedding Cache (LRU)                          │ │     │
+│  │  │  • Hash-based lookup  • TTL management  • Hit rate tracking        │ │     │
+│  │  └──────────────────────────────────────────────────────────────────────┘ │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                         │                                             │
+│                                         ▼                                             │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                           STORAGE &amp; RETRIEVAL LAYER                         │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │                                                                              │     │
+│  │     ┌──────────────┐         ┌──────────────┐         ┌──────────────┐    │     │
+│  │     │   Vector     │◀───────▶│    Index     │◀───────▶│   Metadata   │    │     │
+│  │     │   Storage    │         │   Manager    │         │    Store     │    │     │
+│  │     │              │         │              │         │              │    │     │
+│  │     │ • Qdrant     │         │ • HNSW       │         │ • PostgreSQL │    │     │
+│  │     │ • 768 dims   │         │ • Cosine     │         │ • JSON       │    │     │
+│  │     │ • Sharding   │         │ • Reindex    │         │ • Relations  │    │     │
+│  │     └──────────────┘         └──────────────┘         └──────────────┘    │     │
+│  │                                       │                                     │     │
+│  │                                       ▼                                     │     │
+│  │  ┌──────────────────────────────────────────────────────────────────────┐ │     │
+│  │  │                     Query Optimization Engine                       │ │     │
+│  │  │  • Query expansion  • Synonym matching  • Relevance boosting       │ │     │
+│  │  └──────────────────────────────────────────────────────────────────────┘ │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                         │                                             │
+│                                         ▼                                             │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                             GUARDRAILS &amp; SECURITY                           │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │                                                                              │     │
+│  │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                 │     │
+│  │  │     PII      │    │   Content    │    │   Response   │                 │     │
+│  │  │   Scanner    │───▶│   Filter     │───▶│  Moderator   │                 │     │
+│  │  └──────────────┘    └──────────────┘    └──────────────┘                 │     │
+│  │                                                                              │     │
+│  │  ┌──────────────────────────────────────────────────────────────────────┐ │     │
+│  │  │                        Security Policies                            │ │     │
+│  │  │  • Rate limiting per user  • Token budget  • Access control        │ │     │
+│  │  └──────────────────────────────────────────────────────────────────────┘ │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                                                                       │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="memory-types-and-use-cases"><strong>Memory Types and Use Cases</strong></h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                              MEMORY TAXONOMY &amp; STORAGE                                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                           CODE PATTERNS MEMORY                              │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │  Type: 'pattern'                                                            │     │
+│  │  Examples:                                                                  │     │
+│  │    • React hooks implementations                                            │     │
+│  │    • Authentication flows                                                   │     │
+│  │    • Database connection patterns                                           │     │
+│  │    • Error handling strategies                                              │     │
+│  │  Storage: Vector embeddings + code AST                                     │     │
+│  │  Retrieval: Semantic similarity + language matching                        │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                           DECISION MEMORY                                   │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │  Type: 'decision'                                                           │     │
+│  │  Schema:                                                                    │     │
+│  │    {                                                                        │     │
+│  │      question: string,        // What was decided                          │     │
+│  │      options: Array&lt;{         // Alternatives considered                   │     │
+│  │        name: string,                                                       │     │
+│  │        pros: string[],                                                     │     │
+│  │        cons: string[],                                                     │     │
+│  │        selected: boolean                                                   │     │
+│  │      }&gt;,                                                                   │     │
+│  │      rationale: string,       // Why this choice                           │     │
+│  │      outcome: string,         // What happened                             │     │
+│  │      timestamp: Date                                                       │     │
+│  │    }                                                                        │     │
+│  │  Use Cases: Architecture decisions, library choices, design patterns       │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                            ERROR MEMORY                                     │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │  Type: 'error'                                                              │     │
+│  │  Schema:                                                                    │     │
+│  │    {                                                                        │     │
+│  │      error: string,           // Error message                             │     │
+│  │      stackTrace: string,      // Full stack                                │     │
+│  │      context: {               // When/where it occurred                    │     │
+│  │        file: string,                                                       │     │
+│  │        line: number,                                                       │     │
+│  │        function: string                                                    │     │
+│  │      },                                                                    │     │
+│  │      resolution: string,      // How it was fixed                          │     │
+│  │      prevention: string[],    // How to avoid                              │     │
+│  │      relatedErrors: string[]  // Similar issues                            │     │
+│  │    }                                                                        │     │
+│  │  Indexing: Error signature extraction, stack trace analysis                │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                          DOCUMENTATION MEMORY                               │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │  Type: 'documentation'                                                      │     │
+│  │  Sources:                                                                   │     │
+│  │    • README files            • API documentation                           │     │
+│  │    • Code comments           • Wiki pages                                  │     │
+│  │    • Issue discussions       • PR descriptions                             │     │
+│  │  Processing:                                                               │     │
+│  │    • Markdown parsing        • Link extraction                             │     │
+│  │    • Code block detection    • Hierarchy preservation                      │     │
+│  │  Special Handling: Maintains document structure for context                │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐     │
+│  │                           CONTEXT MEMORY                                    │     │
+│  ├─────────────────────────────────────────────────────────────────────────────┤     │
+│  │  Type: 'context'                                                            │     │
+│  │  Captures:                                                                  │     │
+│  │    • Project state           • Environment config                          │     │
+│  │    • User preferences        • Session history                             │     │
+│  │    • Tool configurations     • Dependencies                                │     │
+│  │  Temporal Aspects:                                                         │     │
+│  │    • Time-series storage     • Session boundaries                          │     │
+│  │    • Context switching       • State transitions                           │     │
+│  └─────────────────────────────────────────────────────────────────────────────┘     │
+│                                                                                       │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-current-implementation-status">📊 <strong>Current Implementation Status</strong></h2>
+
+<h3 id="-whats-working"><strong>✅ What’s Working</strong></h3>
+<ol>
+  <li><strong>Core Memory Operations</strong>
+    <ul>
+      <li>Store memories with metadata</li>
+      <li>Semantic search with scoring</li>
+      <li>Document ingestion and chunking</li>
+      <li>Collection management (reset, info)</li>
+    </ul>
+  </li>
+  <li><strong>RAG Engine Integration</strong>
+    <ul>
+      <li>Ollama embedding generation (nomic-embed-text, 768d)</li>
+      <li>Qdrant vector storage and retrieval</li>
+      <li>Basic guardrails configuration</li>
+      <li>Fallback response handling</li>
+    </ul>
+  </li>
+  <li><strong>API Endpoints</strong>
+    <ul>
+      <li>All 10 core endpoints implemented</li>
+      <li>Express server with CORS, helmet, rate limiting</li>
+      <li>Health check and monitoring</li>
+      <li>Swagger/OpenAPI documentation endpoint</li>
+    </ul>
+  </li>
+  <li><strong>Data Processing</strong>
+    <ul>
+      <li>Text chunking (1500 chars, 200 overlap)</li>
+      <li>Embedding generation via Ollama</li>
+      <li>Vector similarity search (Cosine distance)</li>
+      <li>Payload metadata management</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="-what-needs-work"><strong>🔄 What Needs Work</strong></h3>
+
+<h4 id="1-production-hardening"><strong>1. Production Hardening</strong></h4>
+<ul>
+  <li><strong>Authentication</strong>: No JWT validation (relies on Gateway)</li>
+  <li><strong>Multi-tenancy</strong>: Single collection for all users</li>
+  <li><strong>Error Recovery</strong>: Limited retry logic for Ollama/Qdrant failures</li>
+  <li><strong>Connection Pooling</strong>: No connection pool for Qdrant</li>
+  <li><strong>Graceful Degradation</strong>: Hard failures when Ollama unavailable</li>
+</ul>
+
+<h4 id="2-performance-optimization"><strong>2. Performance Optimization</strong></h4>
+<ul>
+  <li><strong>Batch Processing</strong>: Serial embedding generation (not batched)</li>
+  <li><strong>Caching Layer</strong>: No Redis cache for frequent queries</li>
+  <li><strong>Async Queue</strong>: Synchronous ingestion blocks requests</li>
+  <li><strong>Resource Limits</strong>: No request size validation</li>
+  <li><strong>Index Optimization</strong>: No periodic collection optimization</li>
+</ul>
+
+<h4 id="3-observability"><strong>3. Observability</strong></h4>
+<ul>
+  <li><strong>Metrics</strong>: Basic logging only, no Prometheus metrics</li>
+  <li><strong>Tracing</strong>: No distributed tracing (OpenTelemetry)</li>
+  <li><strong>Alerting</strong>: No alert thresholds or PagerDuty integration</li>
+  <li><strong>Dashboard</strong>: No Grafana dashboards for monitoring</li>
+  <li><strong>Audit Trail</strong>: Limited audit logging for compliance</li>
+</ul>
+
+<h4 id="4-security"><strong>4. Security</strong></h4>
+<ul>
+  <li><strong>Input Validation</strong>: Basic validation, needs strengthening</li>
+  <li><strong>Rate Limiting</strong>: Only at Gateway level, not service level</li>
+  <li><strong>Encryption</strong>: No encryption at rest for sensitive metadata</li>
+  <li><strong>RBAC</strong>: No role-based access control</li>
+  <li><strong>API Keys</strong>: No service-specific API key management</li>
+</ul>
+
+<hr />
+
+<h2 id="-beta-requirements-gap-analysis">🎯 <strong>Beta Requirements Gap Analysis</strong></h2>
+
+<h3 id="p0---critical-must-have-for-beta"><strong>P0 - CRITICAL (Must Have for Beta)</strong></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Requirement</th>
+      <th>Status</th>
+      <th>Gap</th>
+      <th>Action Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Service Running</strong></td>
+      <td>✅</td>
+      <td>None</td>
+      <td>Already on port 3003</td>
+    </tr>
+    <tr>
+      <td><strong>Vector Search</strong></td>
+      <td>✅</td>
+      <td>None</td>
+      <td>Qdrant integration working</td>
+    </tr>
+    <tr>
+      <td><strong>Document Ingestion</strong></td>
+      <td>✅</td>
+      <td>None</td>
+      <td>Index endpoints functional</td>
+    </tr>
+    <tr>
+      <td><strong>Error Handling</strong></td>
+      <td>🔄</td>
+      <td>Weak retry logic</td>
+      <td>Add exponential backoff</td>
+    </tr>
+    <tr>
+      <td><strong>Multi-tenancy</strong></td>
+      <td>❌</td>
+      <td>Single collection</td>
+      <td>Implement user collections</td>
+    </tr>
+    <tr>
+      <td><strong>Authentication</strong></td>
+      <td>❌</td>
+      <td>No JWT validation</td>
+      <td>Add auth middleware</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="p1---high-should-have-for-beta"><strong>P1 - HIGH (Should Have for Beta)</strong></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Requirement</th>
+      <th>Status</th>
+      <th>Gap</th>
+      <th>Action Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Performance</strong></td>
+      <td>🔄</td>
+      <td>No caching</td>
+      <td>Add Redis cache layer</td>
+    </tr>
+    <tr>
+      <td><strong>Monitoring</strong></td>
+      <td>🔄</td>
+      <td>Basic logs only</td>
+      <td>Add Prometheus metrics</td>
+    </tr>
+    <tr>
+      <td><strong>Batch Operations</strong></td>
+      <td>❌</td>
+      <td>Serial processing</td>
+      <td>Implement batch embeddings</td>
+    </tr>
+    <tr>
+      <td><strong>Rate Limiting</strong></td>
+      <td>🔄</td>
+      <td>Gateway only</td>
+      <td>Add service-level limits</td>
+    </tr>
+    <tr>
+      <td><strong>Graceful Degradation</strong></td>
+      <td>❌</td>
+      <td>Hard failures</td>
+      <td>Add fallback strategies</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="p2---medium-nice-to-have"><strong>P2 - MEDIUM (Nice to Have)</strong></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Requirement</th>
+      <th>Status</th>
+      <th>Gap</th>
+      <th>Action Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Distributed Tracing</strong></td>
+      <td>❌</td>
+      <td>Not implemented</td>
+      <td>Add OpenTelemetry</td>
+    </tr>
+    <tr>
+      <td><strong>Advanced Guardrails</strong></td>
+      <td>🔄</td>
+      <td>Basic only</td>
+      <td>Enhance PII detection</td>
+    </tr>
+    <tr>
+      <td><strong>Auto-scaling</strong></td>
+      <td>❌</td>
+      <td>Fixed resources</td>
+      <td>Add HPA configuration</td>
+    </tr>
+    <tr>
+      <td><strong>Backup/Recovery</strong></td>
+      <td>❌</td>
+      <td>No backups</td>
+      <td>Implement backup strategy</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-beta-readiness-action-plan">🚀 <strong>Beta Readiness Action Plan</strong></h2>
+
+<h3 id="phase-1-critical-fixes-1-2-days"><strong>Phase 1: Critical Fixes (1-2 days)</strong></h3>
+
+<h4 id="11-add-multi-tenancy-support"><strong>1.1 Add Multi-tenancy Support</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Update DevMentorAI to support user-specific collections</span>
+<span class="kd">class</span> <span class="nx">DevMentorAI</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">getCollectionName</span><span class="p">(</span><span class="nx">userId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">userId</span> <span class="p">?</span> <span class="s2">`memories_</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span> <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">collectionName</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">retrieveRelevantChunks</span><span class="p">(</span>
+    <span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">k</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">scoreThreshold</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
+    <span class="nx">userId</span><span class="p">?:</span> <span class="kr">string</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">RetrievedChunk</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">collectionName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCollectionName</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">ensureCollection</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="nx">collectionName</span><span class="p">);</span>
+    <span class="c1">// ... rest of implementation</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="12-add-authentication-middleware"><strong>1.2 Add Authentication Middleware</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add JWT validation middleware</span>
+<span class="k">import</span> <span class="nx">jwt</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">authMiddleware</span> <span class="o">=</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">authorization</span><span class="p">?.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">token</span><span class="p">)</span> <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Unauthorized</span><span class="dl">'</span> <span class="p">});</span>
+  
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">decoded</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">);</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">userId</span> <span class="o">=</span> <span class="nx">decoded</span><span class="p">.</span><span class="nx">userId</span><span class="p">;</span>
+    <span class="nx">next</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid token</span><span class="dl">'</span> <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Apply to protected endpoints</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/memories/store</span><span class="dl">'</span><span class="p">,</span> <span class="nx">authMiddleware</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Use req.userId for multi-tenancy</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="13-add-retry-logic"><strong>1.3 Add Retry Logic</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add exponential backoff for external service calls</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">retryWithBackoff</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span>
+  <span class="nx">fn</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="nx">maxRetries</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">baseDelay</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">maxRetries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">await</span> <span class="nx">fn</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="nx">maxRetries</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+      <span class="kd">const</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nx">baseDelay</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">i</span><span class="p">);</span>
+      <span class="k">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="o">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">delay</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Max retries exceeded</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Use in embedding generation</span>
+<span class="k">private</span> <span class="k">async</span> <span class="nx">embedTexts</span><span class="p">(</span><span class="nx">texts</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">number</span><span class="p">[][]</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">retryWithBackoff</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">ollamaUrl</span><span class="p">}</span><span class="s2">/api/embeddings`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="na">model</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">embedModel</span><span class="p">,</span> <span class="na">input</span><span class="p">:</span> <span class="nx">texts</span> <span class="p">})</span>
+    <span class="p">});</span>
+    <span class="c1">// ... rest of implementation</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="phase-2-performance-improvements-2-3-days"><strong>Phase 2: Performance Improvements (2-3 days)</strong></h3>
+
+<h4 id="21-add-redis-caching"><strong>2.1 Add Redis Caching</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Redis</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ioredis</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">CacheManager</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">redis</span><span class="p">:</span> <span class="nx">Redis</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">ttl</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="mi">3600</span><span class="p">;</span> <span class="c1">// 1 hour</span>
+  
+  <span class="k">async</span> <span class="nx">getCachedSearch</span><span class="p">(</span><span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`search:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">md5</span><span class="dl">'</span><span class="p">).</span><span class="nx">update</span><span class="p">(</span><span class="nx">query</span><span class="p">).</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">cached</span> <span class="p">?</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">:</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">setCachedSearch</span><span class="p">(</span><span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">results</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="s2">`search:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">md5</span><span class="dl">'</span><span class="p">).</span><span class="nx">update</span><span class="p">(</span><span class="nx">query</span><span class="p">).</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">redis</span><span class="p">.</span><span class="nx">setex</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">ttl</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">results</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="22-add-batch-processing"><strong>2.2 Add Batch Processing</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Batch embedding generation</span>
+<span class="kd">class</span> <span class="nx">BatchProcessor</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">queue</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="p">{</span> <span class="na">texts</span><span class="p">:</span> <span class="kr">string</span><span class="p">[],</span> <span class="na">resolve</span><span class="p">:</span> <span class="nb">Function</span><span class="p">,</span> <span class="na">reject</span><span class="p">:</span> <span class="nb">Function</span> <span class="p">}</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">private</span> <span class="nx">processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">addBatch</span><span class="p">(</span><span class="nx">texts</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">number</span><span class="p">[][]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span> <span class="nx">texts</span><span class="p">,</span> <span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span> <span class="p">});</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">processQueue</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">private</span> <span class="k">async</span> <span class="nx">processQueue</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">processing</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">processing</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// Process up to 10 requests</span>
+    <span class="kd">const</span> <span class="nx">allTexts</span> <span class="o">=</span> <span class="nx">batch</span><span class="p">.</span><span class="nx">flatMap</span><span class="p">(</span><span class="nx">b</span> <span class="o">=&gt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">texts</span><span class="p">);</span>
+    
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">embeddings</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">embedTexts</span><span class="p">(</span><span class="nx">allTexts</span><span class="p">);</span>
+      <span class="kd">let</span> <span class="nx">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      
+      <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">item</span> <span class="k">of</span> <span class="nx">batch</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">count</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">texts</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+        <span class="nx">item</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">embeddings</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">offset</span><span class="p">,</span> <span class="nx">offset</span> <span class="o">+</span> <span class="nx">count</span><span class="p">));</span>
+        <span class="nx">offset</span> <span class="o">+=</span> <span class="nx">count</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">batch</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">));</span>
+    <span class="p">}</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">processQueue</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="23-add-metrics-collection"><strong>2.3 Add Metrics Collection</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">register</span><span class="p">,</span> <span class="nx">Counter</span><span class="p">,</span> <span class="nx">Histogram</span><span class="p">,</span> <span class="nx">Gauge</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">prom-client</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">requestCount</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Counter</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">memory_service_requests_total</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Total requests</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">labelNames</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">method</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">endpoint</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">status</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}),</span>
+  <span class="na">requestDuration</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Histogram</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">memory_service_request_duration_seconds</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Request duration</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">labelNames</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">method</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">endpoint</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}),</span>
+  <span class="na">vectorSearchLatency</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Histogram</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">memory_service_vector_search_latency_seconds</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Vector search latency</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  <span class="na">embeddingQueueSize</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Gauge</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">memory_service_embedding_queue_size</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Current embedding queue size</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">};</span>
+
+<span class="c1">// Add metrics endpoint</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/metrics</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="nx">register</span><span class="p">.</span><span class="nx">contentType</span><span class="p">);</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">register</span><span class="p">.</span><span class="nx">metrics</span><span class="p">());</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="phase-3-operational-excellence-3-5-days"><strong>Phase 3: Operational Excellence (3-5 days)</strong></h3>
+
+<h4 id="31-add-health-checks"><strong>3.1 Add Health Checks</strong></h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">HealthStatus</span> <span class="p">{</span>
+  <span class="nl">service</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">healthy</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">degraded</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">unhealthy</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">dependencies</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">ollama</span><span class="p">:</span> <span class="dl">'</span><span class="s1">up</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">qdrant</span><span class="p">:</span> <span class="dl">'</span><span class="s1">up</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">redis</span><span class="p">?:</span> <span class="dl">'</span><span class="s1">up</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">};</span>
+  <span class="nl">metrics</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">totalMemories</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">avgResponseTime</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">errorRate</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/health/detailed</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="na">health</span><span class="p">:</span> <span class="nx">HealthStatus</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">memory-service</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">healthy</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">dependencies</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ollama</span><span class="p">:</span> <span class="k">await</span> <span class="nx">checkOllama</span><span class="p">()</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">up</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">qdrant</span><span class="p">:</span> <span class="k">await</span> <span class="nx">checkQdrant</span><span class="p">()</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">up</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">redis</span><span class="p">:</span> <span class="k">await</span> <span class="nx">checkRedis</span><span class="p">()</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">up</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">metrics</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getServiceMetrics</span><span class="p">()</span>
+  <span class="p">};</span>
+  
+  <span class="c1">// Determine overall health</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">health</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">ollama</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span> <span class="o">||</span> <span class="nx">health</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">qdrant</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">health</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">unhealthy</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">health</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">redis</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">down</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">health</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">degraded</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="kd">const</span> <span class="nx">statusCode</span> <span class="o">=</span> <span class="nx">health</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">healthy</span><span class="dl">'</span> <span class="p">?</span> <span class="mi">200</span> <span class="p">:</span> <span class="mi">503</span><span class="p">;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="nx">statusCode</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">health</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="32-add-deployment-configuration"><strong>3.2 Add Deployment Configuration</strong></h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># k8s/memory-service-deployment.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">memory-service</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/memory-service:latest</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3003</span>
+        <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">QDRANT_HOST</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">qdrant-service"</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">OLLAMA_URL</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://ollama-service:11434"</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">REDIS_HOST</span>
+          <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">redis-service"</span>
+        <span class="na">resources</span><span class="pi">:</span>
+          <span class="na">requests</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">512Mi"</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">250m"</span>
+          <span class="na">limits</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+        <span class="na">livenessProbe</span><span class="pi">:</span>
+          <span class="na">httpGet</span><span class="pi">:</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s">/health</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="m">3003</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">30</span>
+          <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">10</span>
+        <span class="na">readinessProbe</span><span class="pi">:</span>
+          <span class="na">httpGet</span><span class="pi">:</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s">/health/detailed</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="m">3003</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">10</span>
+          <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">5</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">autoscaling/v2</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">HorizontalPodAutoscaler</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service-hpa</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">scaleTargetRef</span><span class="pi">:</span>
+    <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">minReplicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">maxReplicas</span><span class="pi">:</span> <span class="m">10</span>
+  <span class="na">metrics</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">type</span><span class="pi">:</span> <span class="s">Resource</span>
+    <span class="na">resource</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s">cpu</span>
+      <span class="na">target</span><span class="pi">:</span>
+        <span class="na">type</span><span class="pi">:</span> <span class="s">Utilization</span>
+        <span class="na">averageUtilization</span><span class="pi">:</span> <span class="m">70</span>
+  <span class="pi">-</span> <span class="na">type</span><span class="pi">:</span> <span class="s">Resource</span>
+    <span class="na">resource</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s">memory</span>
+      <span class="na">target</span><span class="pi">:</span>
+        <span class="na">type</span><span class="pi">:</span> <span class="s">Utilization</span>
+        <span class="na">averageUtilization</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-testing-requirements">📋 <strong>Testing Requirements</strong></h2>
+
+<h3 id="unit-tests"><strong>Unit Tests</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Required test coverage: 80%</span>
+npm <span class="nb">test</span> <span class="nt">--</span> <span class="nt">--coverage</span>
+
+<span class="c"># Key test areas:</span>
+- Text chunking algorithm
+- Embedding mock responses
+- Error handling scenarios
+- Guardrail enforcement
+- Multi-tenancy logic
+</code></pre></div></div>
+
+<h3 id="integration-tests"><strong>Integration Tests</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Test with real services</span>
+npm run <span class="nb">test</span>:integration
+
+<span class="c"># Test scenarios:</span>
+- Ollama connectivity
+- Qdrant operations
+- End-to-end search flow
+- Bulk ingestion
+- Collection management
+</code></pre></div></div>
+
+<h3 id="load-tests"><strong>Load Tests</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Performance benchmarks</span>
+npm run <span class="nb">test</span>:load
+
+<span class="c"># Target metrics:</span>
+- 100 concurrent <span class="nb">users</span>
+- &lt; 200ms p95 search latency
+- &lt; 500ms p95 ingestion latency
+- 0% error rate under normal load
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-beta-launch-checklist">🎯 <strong>Beta Launch Checklist</strong></h2>
+
+<h3 id="week-1-critical-path"><strong>Week 1: Critical Path</strong></h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement multi-tenancy (user collections)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add JWT authentication middleware</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add retry logic with exponential backoff</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy to Kubernetes with proper config</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run integration tests with real services</li>
+</ul>
+
+<h3 id="week-2-performance--monitoring"><strong>Week 2: Performance &amp; Monitoring</strong></h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add Redis caching layer</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement batch embedding processing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add Prometheus metrics</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create Grafana dashboards</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Load test with 100 concurrent users</li>
+</ul>
+
+<h3 id="week-3-production-hardening"><strong>Week 3: Production Hardening</strong></h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add comprehensive error handling</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Implement graceful degradation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Add request validation and sanitization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Set up alerting rules</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Document runbook for operations</li>
+</ul>
+
+<h3 id="beta-success-metrics"><strong>Beta Success Metrics</strong></h3>
+<ul>
+  <li><strong>Availability</strong>: 99.5% uptime</li>
+  <li><strong>Performance</strong>: &lt; 200ms p95 latency</li>
+  <li><strong>Scale</strong>: Handle 1000 req/min</li>
+  <li><strong>Quality</strong>: &lt; 0.1% error rate</li>
+  <li><strong>Storage</strong>: 1M+ vectors indexed</li>
+</ul>
+
+<hr />
+
+<h2 id="-risk-assessment">🚨 <strong>Risk Assessment</strong></h2>
+
+<h3 id="high-risk"><strong>High Risk</strong></h3>
+<ol>
+  <li><strong>Ollama Dependency</strong>: Single point of failure for embeddings
+    <ul>
+      <li><strong>Mitigation</strong>: Add fallback to OpenAI API</li>
+    </ul>
+  </li>
+  <li><strong>Single Collection</strong>: Performance degradation with scale
+    <ul>
+      <li><strong>Mitigation</strong>: Implement sharding strategy</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="medium-risk"><strong>Medium Risk</strong></h3>
+<ol>
+  <li><strong>Memory Leaks</strong>: Potential with large document processing
+    <ul>
+      <li><strong>Mitigation</strong>: Add memory monitoring and limits</li>
+    </ul>
+  </li>
+  <li><strong>Token Limits</strong>: Context window constraints
+    <ul>
+      <li><strong>Mitigation</strong>: Implement smart chunking and summarization</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="low-risk"><strong>Low Risk</strong></h3>
+<ol>
+  <li><strong>Qdrant Availability</strong>: Vector DB downtime
+    <ul>
+      <li><strong>Mitigation</strong>: Add Qdrant clustering</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-advanced-architecture-memory-bank">🔬 <strong>Advanced Architecture: Memory Bank</strong></h2>
+
+<h3 id="executive-summary">Executive Summary</h3>
+<p>The Memory Bank represents the advanced, production-grade evolution of the Memory Service. It provides intelligent memory storage and retrieval capabilities through a hybrid architecture combining PostgreSQL, Redis, Qdrant vector database, and AI embeddings.</p>
+
+<p><strong>Target Beta Date:</strong> January 2025<br />
+<strong>Current Status:</strong> 40% Complete - Core structure exists, needs implementation completion<br />
+<strong>Risk Level:</strong> Medium - Dependencies on infrastructure components</p>
+
+<h3 id="advanced-architecture-overview">Advanced Architecture Overview</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌────────────────────────── Memory Bank Service ──────────────────────────┐
+│                                                                          │
+│  API Layer (Fastify)                                                    │
+│  ┌────────────────────────────────────────────────────────────────┐    │
+│  │  /api/v1/memory/store    - Store new memories                  │    │
+│  │  /api/v1/memory/recall   - Semantic memory retrieval           │    │
+│  │  /api/v1/memory/search   - Advanced search with filters        │    │
+│  │  /api/v1/memory/compress - Memory compression &amp; optimization   │    │
+│  │  /health                 - Service health monitoring           │    │
+│  └────────────────────────────────────────────────────────────────┘    │
+│                                     │                                   │
+│                          ┌──────────┴──────────┐                       │
+│                          │   Memory Service    │                       │
+│                          └──────────┬──────────┘                       │
+│                                     │                                   │
+│        ┌──────────────┬─────────────┼─────────────┬──────────────┐    │
+│        ▼              ▼             ▼             ▼              ▼    │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐│
+│  │  Redis   │  │PostgreSQL│  │  Qdrant  │  │  Ollama  │  │  OpenAI  ││
+│  │  Cache   │  │   OLTP   │  │  Vector  │  │  Local   │  │Embeddings││
+│  │          │  │          │  │    DB    │  │    LLM   │  │ (Future) ││
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘│
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="core-advanced-features">Core Advanced Features</h3>
+
+<h4 id="1-multi-tier-memory-architecture">1. Multi-tier Memory Architecture</h4>
+<ul>
+  <li><strong>Hot Cache (Redis)</strong>
+    <ul>
+      <li>In-memory storage for frequent access</li>
+      <li>TTL-based eviction</li>
+      <li>Session context preservation</li>
+    </ul>
+  </li>
+  <li><strong>Warm Storage (PostgreSQL)</strong>
+    <ul>
+      <li>Structured memory storage</li>
+      <li>Relationship tracking</li>
+      <li>Access patterns analysis</li>
+    </ul>
+  </li>
+  <li><strong>Cold Archive (Future)</strong>
+    <ul>
+      <li>S3/Object storage integration</li>
+      <li>Long-term memory preservation</li>
+      <li>Cost-optimized storage</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="2-advanced-intelligence-features">2. Advanced Intelligence Features</h4>
+<ul>
+  <li><strong>Auto-Categorization</strong>: Automatic type detection and tagging</li>
+  <li><strong>Memory Compression</strong>: Intelligent summarization of related memories</li>
+  <li><strong>Relevance Scoring</strong>: Dynamic ranking based on access patterns</li>
+  <li><strong>Context Linking</strong>: Graph-based relationships between memories</li>
+</ul>
+
+<h4 id="3-enterprise-grade-performance">3. Enterprise-grade Performance</h4>
+<ul>
+  <li><strong>Response Time</strong>: &lt;100ms for hot cache, &lt;500ms for semantic search</li>
+  <li><strong>Throughput</strong>: 1000+ ops/second per instance</li>
+  <li><strong>Storage</strong>: 10GB+ per user with compression</li>
+  <li><strong>Concurrent Users</strong>: 100+ beta users</li>
+</ul>
+
+<h3 id="database-schema">Database Schema</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Main memories table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memories</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">project_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="k">type</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">content</span> <span class="n">JSONB</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">embedding</span> <span class="n">VECTOR</span><span class="p">(</span><span class="mi">768</span><span class="p">),</span>
+  <span class="n">access_count</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">last_accessed</span> <span class="nb">TIMESTAMP</span><span class="p">,</span>
+  <span class="n">metadata</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">INDEX</span> <span class="n">idx_user_project</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">project_id</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="n">idx_type</span> <span class="p">(</span><span class="k">type</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="n">idx_created</span> <span class="p">(</span><span class="n">created_at</span> <span class="k">DESC</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Memory relationships</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memory_links</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">source_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">memories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">target_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">memories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">relationship_type</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">strength</span> <span class="nb">FLOAT</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Access logs for analytics</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">memory_access_logs</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">memory_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">memories</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">user_id</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="n">action</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+  <span class="n">context</span> <span class="n">JSONB</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="advanced-api-endpoints">Advanced API Endpoints</h3>
+
+<h4 id="store-memory-with-relationships">Store Memory with Relationships</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/memory/store
+<span class="o">{</span>
+  <span class="s2">"userId"</span>: <span class="s2">"user123"</span>,
+  <span class="s2">"projectId"</span>: <span class="s2">"project456"</span>,
+  <span class="s2">"type"</span>: <span class="s2">"decision"</span>,
+  <span class="s2">"content"</span>: <span class="o">{</span>
+    <span class="s2">"decision"</span>: <span class="s2">"Use Redis for caching"</span>,
+    <span class="s2">"reasoning"</span>: <span class="s2">"Low latency requirements"</span>,
+    <span class="s2">"context"</span>: <span class="s2">"Performance optimization"</span>
+  <span class="o">}</span>,
+  <span class="s2">"metadata"</span>: <span class="o">{</span>
+    <span class="s2">"tags"</span>: <span class="o">[</span><span class="s2">"architecture"</span>, <span class="s2">"performance"</span><span class="o">]</span>,
+    <span class="s2">"importance"</span>: 8
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="semantic-memory-recall">Semantic Memory Recall</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/memory/recall
+<span class="o">{</span>
+  <span class="s2">"userId"</span>: <span class="s2">"user123"</span>,
+  <span class="s2">"query"</span>: <span class="s2">"caching strategies for low latency"</span>,
+  <span class="s2">"limit"</span>: 5,
+  <span class="s2">"threshold"</span>: 0.7
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="advanced-search-with-filters">Advanced Search with Filters</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/memory/search
+<span class="o">{</span>
+  <span class="s2">"userId"</span>: <span class="s2">"user123"</span>,
+  <span class="s2">"query"</span>: <span class="s2">"redis"</span>,
+  <span class="s2">"type"</span>: <span class="s2">"decision"</span>,
+  <span class="s2">"projectId"</span>: <span class="s2">"project456"</span>,
+  <span class="s2">"startTime"</span>: <span class="s2">"2024-01-01T00:00:00Z"</span>,
+  <span class="s2">"limit"</span>: 10
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="enterprise-environment-configuration">Enterprise Environment Configuration</h3>
+<pre><code class="language-env"># Service Configuration
+NODE_ENV=production
+PORT=3003
+LOG_LEVEL=info
+
+# Database
+DATABASE_URL=postgresql://user:pass@postgres:5432/memories
+DATABASE_POOL_SIZE=20
+
+# Redis
+REDIS_URL=redis://redis:6379
+REDIS_TTL=3600
+
+# Qdrant
+QDRANT_URL=http://qdrant:6333
+QDRANT_COLLECTION=memories
+
+# Embeddings
+OLLAMA_URL=http://ollama:11434
+EMBEDDING_MODEL=nomic-embed-text
+EMBEDDING_DIMENSION=768
+
+# Security
+JWT_SECRET=&lt;secure-random&gt;
+ENCRYPTION_KEY=&lt;secure-random&gt;
+
+# Limits
+MAX_MEMORY_SIZE=10MB
+MAX_MEMORIES_PER_USER=10000
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=60
+</code></pre>
+
+<h3 id="advanced-architecture-diagram">Advanced Architecture Diagram</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User Request → API Gateway → Memory Bank Service
+                                    ↓
+                            [Request Validation]
+                                    ↓
+                            [Memory Service Layer]
+                                    ↓
+                ┌───────────────────┼───────────────────┐
+                ↓                   ↓                   ↓
+        [Hot Cache Check]   [Embedding Generation]  [Access Logging]
+          (Redis)              (Ollama/OpenAI)       (PostgreSQL)
+                ↓                   ↓                   ↓
+        [Vector Search]      [Warm Storage]      [Pattern Analysis]
+          (Qdrant)           (PostgreSQL)         (Analytics DB)
+                ↓                   ↓                   ↓
+                └───────────────────┼───────────────────┘
+                                    ↓
+                            [Result Aggregation]
+                                    ↓
+                            [Response Formatting]
+                                    ↓
+                              User Response
+</code></pre></div></div>
+
+<h3 id="advanced-technical-requirements">Advanced Technical Requirements</h3>
+
+<h4 id="infrastructure">Infrastructure</h4>
+<ul>
+  <li>PostgreSQL 15+ for OLTP</li>
+  <li>Redis 7+ for caching</li>
+  <li>Qdrant 1.7+ for vectors</li>
+  <li>Ollama for local embeddings</li>
+  <li>OpenAI API (future option)</li>
+</ul>
+
+<h4 id="libraries">Libraries</h4>
+<ul>
+  <li>Fastify 4.x (web framework)</li>
+  <li>Qdrant-js (vector client)</li>
+  <li>ioredis (Redis client)</li>
+  <li>pg (PostgreSQL client)</li>
+  <li>Zod (validation)</li>
+  <li>Pino (logging)</li>
+</ul>
+
+<hr />
+
+<h2 id="-real-world-integration-examples">🌍 <strong>Real-World Integration Examples</strong></h2>
+
+<h3 id="example-1-vs-code-extension-integration"><strong>Example 1: VS Code Extension Integration</strong></h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vscode-extension/src/memoryIntegration.ts</span>
+<span class="k">import</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">vscode</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">vscode</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">MemoryIntegration</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">memoryServiceUrl</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">http://localhost:3003</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">private</span> <span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  
+  <span class="k">async</span> <span class="nx">onCodeSelection</span><span class="p">(</span><span class="nx">editor</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">TextEditor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">selection</span> <span class="o">=</span> <span class="nx">editor</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getText</span><span class="p">(</span><span class="nx">editor</span><span class="p">.</span><span class="nx">selection</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">language</span> <span class="o">=</span> <span class="nx">editor</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">languageId</span><span class="p">;</span>
+    
+    <span class="c1">// Store code pattern</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">storePattern</span><span class="p">({</span>
+      <span class="na">content</span><span class="p">:</span> <span class="nx">selection</span><span class="p">,</span>
+      <span class="nx">language</span><span class="p">,</span>
+      <span class="na">file</span><span class="p">:</span> <span class="nx">editor</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">fileName</span><span class="p">,</span>
+      <span class="na">tags</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">vscode</span><span class="dl">'</span><span class="p">,</span> <span class="nx">language</span><span class="p">]</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">onError</span><span class="p">(</span><span class="nx">error</span><span class="p">:</span> <span class="nb">Error</span><span class="p">,</span> <span class="nx">context</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Search for similar errors</span>
+    <span class="kd">const</span> <span class="nx">similar</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">searchMemories</span><span class="p">({</span>
+      <span class="na">query</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">limit</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">});</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">similar</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">showInformationMessage</span><span class="p">(</span>
+        <span class="s2">`Found </span><span class="p">${</span><span class="nx">similar</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2"> similar errors with solutions`</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">suggestCode</span><span class="p">(</span><span class="nx">context</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">memoryServiceUrl</span><span class="p">}</span><span class="s2">/rag/query`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">prompt</span><span class="p">:</span> <span class="nx">context</span><span class="p">,</span>
+      <span class="na">context</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">currentFile</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nb">window</span><span class="p">.</span><span class="nx">activeTextEditor</span><span class="p">?.</span><span class="nb">document</span><span class="p">.</span><span class="nx">fileName</span><span class="p">,</span>
+        <span class="na">projectType</span><span class="p">:</span> <span class="nx">vscode</span><span class="p">.</span><span class="nx">workspace</span><span class="p">.</span><span class="nx">workspaceFolders</span><span class="p">?.[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">suggestions</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="example-2-cicd-pipeline-integration"><strong>Example 2: CI/CD Pipeline Integration</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># .github/workflows/index-docs.yml</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">Index Documentation</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">paths</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">docs/**'</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">README.md'</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">*.md'</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">index</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+      
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Index Documentation</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">for file in $(find . -name "*.md"); do</span>
+            <span class="s">curl -X POST http://memory-service:3003/api/memory/index-doc \</span>
+              <span class="s">-H "Content-Type: application/json" \</span>
+              <span class="s">-H "Authorization: Bearer ${{ secrets.MEMORY_SERVICE_TOKEN }}" \</span>
+              <span class="s">-d "{</span>
+                <span class="s">\"path\": \"$file\",</span>
+                <span class="s">\"tags\": [\"docs\", \"${{ github.ref }}\"],</span>
+                <span class="s">\"source\": \"github-action\"</span>
+              <span class="s">}"</span>
+          <span class="s">done</span>
+</code></pre></div></div>
+
+<h3 id="example-3-react-application-integration"><strong>Example 3: React Application Integration</strong></h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// frontend/src/hooks/useMemory.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useCallback</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useAuth</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./useAuth</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useMemory</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">token</span><span class="p">,</span> <span class="nx">userId</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useAuth</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">loading</span><span class="p">,</span> <span class="nx">setLoading</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  
+  <span class="kd">const</span> <span class="nx">searchCode</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setLoading</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/memories/search?</span><span class="dl">'</span> <span class="o">+</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">({</span>
+        <span class="nx">query</span><span class="p">,</span>
+        <span class="na">limit</span><span class="p">:</span> <span class="dl">'</span><span class="s1">10</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">scoreThreshold</span><span class="p">:</span> <span class="dl">'</span><span class="s1">0.7</span><span class="dl">'</span>
+      <span class="p">}),</span> <span class="p">{</span>
+        <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+          <span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">:</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      
+      <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+      <span class="k">return</span> <span class="nx">data</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">r</span> <span class="o">=&gt;</span> <span class="p">({</span>
+        <span class="na">code</span><span class="p">:</span> <span class="nx">r</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+        <span class="na">score</span><span class="p">:</span> <span class="nx">r</span><span class="p">.</span><span class="nx">score</span><span class="p">,</span>
+        <span class="na">language</span><span class="p">:</span> <span class="nx">r</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">language</span><span class="p">,</span>
+        <span class="na">source</span><span class="p">:</span> <span class="nx">r</span><span class="p">.</span><span class="nx">source</span>
+      <span class="p">}));</span>
+    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+      <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">token</span><span class="p">]);</span>
+  
+  <span class="kd">const</span> <span class="nx">storeDecision</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">decision</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/memories/store</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">:</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span>
+      <span class="p">},</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="na">content</span><span class="p">:</span> <span class="nx">decision</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">decision</span><span class="dl">'</span><span class="p">,</span>
+          <span class="nx">userId</span><span class="p">,</span>
+          <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">token</span><span class="p">,</span> <span class="nx">userId</span><span class="p">]);</span>
+  
+  <span class="kd">const</span> <span class="nx">getAISuggestion</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">context</span><span class="p">?:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/rag/query</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">:</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span>
+      <span class="p">},</span>
+      <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="nx">prompt</span><span class="p">,</span>
+        <span class="nx">context</span><span class="p">,</span>
+        <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">k</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+          <span class="na">includeMetadata</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+    <span class="p">});</span>
+    
+    <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">suggestion</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">,</span>
+      <span class="na">sources</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">sources</span><span class="p">,</span>
+      <span class="na">confidence</span><span class="p">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">confidence</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">token</span><span class="p">]);</span>
+  
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">searchCode</span><span class="p">,</span>
+    <span class="nx">storeDecision</span><span class="p">,</span>
+    <span class="nx">getAISuggestion</span><span class="p">,</span>
+    <span class="nx">loading</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage in component</span>
+<span class="kd">function</span> <span class="nx">CodeEditor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">searchCode</span><span class="p">,</span> <span class="nx">getAISuggestion</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useMemory</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">code</span><span class="p">,</span> <span class="nx">setCode</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="dl">''</span><span class="p">);</span>
+  
+  <span class="kd">const</span> <span class="nx">handleAutocomplete</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">suggestions</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">searchCode</span><span class="p">(</span><span class="nx">code</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">));</span>
+    <span class="c1">// Show suggestions to user</span>
+  <span class="p">};</span>
+  
+  <span class="kd">const</span> <span class="nx">handleAIAssist</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">suggestion</span><span class="p">,</span> <span class="nx">sources</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getAISuggestion</span><span class="p">(</span>
+      <span class="s2">`Complete this code: </span><span class="p">${</span><span class="nx">code</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="p">{</span> <span class="na">language</span><span class="p">:</span> <span class="dl">'</span><span class="s1">typescript</span><span class="dl">'</span><span class="p">,</span> <span class="na">framework</span><span class="p">:</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span> <span class="p">}</span>
+    <span class="p">);</span>
+    <span class="c1">// Display AI suggestion with sources</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="example-4-cli-tool-integration"><strong>Example 4: CLI Tool Integration</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c"># devmentor-cli/memory-commands.sh</span>
+
+<span class="c"># Store current git diff as a pattern</span>
+devmentor_store_diff<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">local </span><span class="nv">diff</span><span class="o">=</span><span class="si">$(</span>git diff <span class="nt">--cached</span><span class="si">)</span>
+  <span class="nb">local </span><span class="nv">branch</span><span class="o">=</span><span class="si">$(</span>git branch <span class="nt">--show-current</span><span class="si">)</span>
+  
+  curl <span class="nt">-X</span> POST http://localhost:3003/memories/store <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$DEVMENTOR_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-d</span> <span class="s2">"{
+      </span><span class="se">\"</span><span class="s2">content</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$diff</span><span class="se">\"</span><span class="s2">,
+      </span><span class="se">\"</span><span class="s2">metadata</span><span class="se">\"</span><span class="s2">: {
+        </span><span class="se">\"</span><span class="s2">type</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">pattern</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">branch</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$branch</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">timestamp</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="si">$(</span><span class="nb">date</span> <span class="nt">-u</span> +<span class="se">\"</span>%Y-%m-%dT%H:%M:%SZ<span class="se">\"</span><span class="si">)</span><span class="se">\"</span><span class="s2">
+      }
+    }"</span>
+<span class="o">}</span>
+
+<span class="c"># Search for similar code patterns</span>
+devmentor_search<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">local </span><span class="nv">query</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+  
+  curl <span class="nt">-G</span> http://localhost:3003/memories/search <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$DEVMENTOR_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">--data-urlencode</span> <span class="s2">"query=</span><span class="nv">$query</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">--data-urlencode</span> <span class="s2">"limit=5"</span> | jq <span class="s1">'.results[] | {content: .content, score: .score}'</span>
+<span class="o">}</span>
+
+<span class="c"># Get AI help with context</span>
+devmentor_ai_help<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">local </span><span class="nv">prompt</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+  <span class="nb">local </span><span class="nv">current_dir</span><span class="o">=</span><span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>
+  <span class="nb">local </span><span class="nv">git_status</span><span class="o">=</span><span class="si">$(</span>git status <span class="nt">--short</span><span class="si">)</span>
+  
+  curl <span class="nt">-X</span> POST http://localhost:3003/rag/query <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$DEVMENTOR_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-d</span> <span class="s2">"{
+      </span><span class="se">\"</span><span class="s2">prompt</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$prompt</span><span class="se">\"</span><span class="s2">,
+      </span><span class="se">\"</span><span class="s2">context</span><span class="se">\"</span><span class="s2">: {
+        </span><span class="se">\"</span><span class="s2">currentDir</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$current_dir</span><span class="se">\"</span><span class="s2">,
+        </span><span class="se">\"</span><span class="s2">gitStatus</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="nv">$git_status</span><span class="se">\"</span><span class="s2">
+      }
+    }"</span> | jq <span class="s1">'.response'</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-production-deployment-guide">📦 <strong>Production Deployment Guide</strong></h2>
+
+<h3 id="docker-compose-setup"><strong>Docker Compose Setup</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.yml</span>
+<span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.8'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">memory-service</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./services/memory-service</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3003:3003"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
+      <span class="pi">-</span> <span class="s">QDRANT_HOST=qdrant</span>
+      <span class="pi">-</span> <span class="s">QDRANT_PORT=6333</span>
+      <span class="pi">-</span> <span class="s">OLLAMA_URL=http://ollama:11434</span>
+      <span class="pi">-</span> <span class="s">REDIS_HOST=redis</span>
+      <span class="pi">-</span> <span class="s">JWT_SECRET=${JWT_SECRET}</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">qdrant</span>
+      <span class="pi">-</span> <span class="s">ollama</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./logs:/app/logs</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+    <span class="na">healthcheck</span><span class="pi">:</span>
+      <span class="na">test</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">CMD"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">curl"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">-f"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">http://localhost:3003/health"</span><span class="pi">]</span>
+      <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
+      <span class="na">timeout</span><span class="pi">:</span> <span class="s">10s</span>
+      <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
+
+  <span class="na">qdrant</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">qdrant/qdrant:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6333:6333"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">qdrant_data:/qdrant/storage</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">QDRANT__SERVICE__HTTP_PORT=6333</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+
+  <span class="na">ollama</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">ollama/ollama:latest</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">11434:11434"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">ollama_models:/root/.ollama</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">serve</span>
+
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:alpine</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">6379:6379"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis_data:/data</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">redis-server --appendonly yes</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">qdrant_data</span><span class="pi">:</span>
+  <span class="na">ollama_models</span><span class="pi">:</span>
+  <span class="na">redis_data</span><span class="pi">:</span>
+</code></pre></div></div>
+
+<h3 id="kubernetes-production-deployment"><strong>Kubernetes Production Deployment</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># k8s/production/memory-service-complete.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Namespace</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service-config</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">QDRANT_HOST</span><span class="pi">:</span> <span class="s2">"</span><span class="s">qdrant-service"</span>
+  <span class="na">QDRANT_PORT</span><span class="pi">:</span> <span class="s2">"</span><span class="s">6333"</span>
+  <span class="na">OLLAMA_URL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://ollama-service:11434"</span>
+  <span class="na">REDIS_HOST</span><span class="pi">:</span> <span class="s2">"</span><span class="s">redis-service"</span>
+  <span class="na">NODE_ENV</span><span class="pi">:</span> <span class="s2">"</span><span class="s">production"</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Secret</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service-secrets</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">Opaque</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">JWT_SECRET</span><span class="pi">:</span> <span class="c1"># base64 encoded secret</span>
+  <span class="na">QDRANT_API_KEY</span><span class="pi">:</span> <span class="c1"># base64 encoded key</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">memory-service</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">devmentor/memory-service:v1.0.0</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">3003</span>
+        <span class="na">envFrom</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">configMapRef</span><span class="pi">:</span>
+            <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service-config</span>
+        <span class="pi">-</span> <span class="na">secretRef</span><span class="pi">:</span>
+            <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service-secrets</span>
+        <span class="na">resources</span><span class="pi">:</span>
+          <span class="na">requests</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+          <span class="na">limits</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2Gi"</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+        <span class="na">livenessProbe</span><span class="pi">:</span>
+          <span class="na">httpGet</span><span class="pi">:</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s">/health</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="m">3003</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">30</span>
+          <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">10</span>
+        <span class="na">readinessProbe</span><span class="pi">:</span>
+          <span class="na">httpGet</span><span class="pi">:</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s">/health/detailed</span>
+            <span class="na">port</span><span class="pi">:</span> <span class="m">3003</span>
+          <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">10</span>
+          <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">5</span>
+        <span class="na">volumeMounts</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">logs</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/app/logs</span>
+      <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">logs</span>
+        <span class="na">persistentVolumeClaim</span><span class="pi">:</span>
+          <span class="na">claimName</span><span class="pi">:</span> <span class="s">memory-service-logs-pvc</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">memory-service</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">3003</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">3003</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">ClusterIP</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service-ingress</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">devmentor</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">nginx.ingress.kubernetes.io/rate-limit</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
+    <span class="na">nginx.ingress.kubernetes.io/ssl-redirect</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">tls</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">memory.devmentor.com</span>
+    <span class="na">secretName</span><span class="pi">:</span> <span class="s">memory-service-tls</span>
+  <span class="na">rules</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">host</span><span class="pi">:</span> <span class="s">memory.devmentor.com</span>
+    <span class="na">http</span><span class="pi">:</span>
+      <span class="na">paths</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
+        <span class="na">pathType</span><span class="pi">:</span> <span class="s">Prefix</span>
+        <span class="na">backend</span><span class="pi">:</span>
+          <span class="na">service</span><span class="pi">:</span>
+            <span class="na">name</span><span class="pi">:</span> <span class="s">memory-service</span>
+            <span class="na">port</span><span class="pi">:</span>
+              <span class="na">number</span><span class="pi">:</span> <span class="m">3003</span>
+</code></pre></div></div>
+
+<h3 id="monitoring-setup-prometheus--grafana"><strong>Monitoring Setup (Prometheus + Grafana)</strong></h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># monitoring/prometheus-config.yaml</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus-config</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">monitoring</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">prometheus.yml</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">global:</span>
+      <span class="s">scrape_interval: 15s</span>
+    <span class="s">scrape_configs:</span>
+    <span class="s">- job_name: 'memory-service'</span>
+      <span class="s">kubernetes_sd_configs:</span>
+      <span class="s">- role: pod</span>
+        <span class="s">namespaces:</span>
+          <span class="s">names:</span>
+          <span class="s">- devmentor</span>
+      <span class="s">relabel_configs:</span>
+      <span class="s">- source_labels: [__meta_kubernetes_pod_label_app]</span>
+        <span class="s">action: keep</span>
+        <span class="s">regex: memory-service</span>
+      <span class="s">- source_labels: [__meta_kubernetes_pod_name]</span>
+        <span class="s">target_label: pod</span>
+      <span class="s">- source_labels: [__meta_kubernetes_namespace]</span>
+        <span class="s">target_label: namespace</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-performance-benchmarks">📊 <strong>Performance Benchmarks</strong></h2>
+
+<h3 id="current-performance"><strong>Current Performance</strong></h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────────────────────────────┐
+│                          PERFORMANCE METRICS                                  │
+├───────────────────────────────────┬───────────────┬───────────────┬───────────────┤
+│ Operation                          │ Current       │ Target        │ Status        │
+├───────────────────────────────────┼───────────────┼───────────────┼───────────────┤
+│ Search Latency (p50)               │ 85ms          │ 50ms          │ 🔄 Needs Work│
+│ Search Latency (p95)               │ 250ms         │ 200ms         │ 🔄 Close      │
+│ Search Latency (p99)               │ 500ms         │ 500ms         │ ✅ On Target  │
+│ Ingestion Throughput               │ 100 docs/sec  │ 500 docs/sec  │ ❌ Needs Work│
+│ Embedding Generation               │ 50ms/chunk    │ 20ms/chunk    │ 🔄 Needs Work│
+│ Memory Usage                       │ 800MB         │ 1GB           │ ✅ Good       │
+│ CPU Usage (avg)                    │ 40%           │ 50%           │ ✅ Good       │
+│ Concurrent Users                   │ 50            │ 100           │ 🔄 Needs Work│
+│ Cache Hit Rate                     │ 0%            │ 60%           │ ❌ Not Impl   │
+│ Error Rate                         │ 0.5%          │ 0.1%          │ 🔄 Needs Work│
+└───────────────────────────────────┴───────────────┴───────────────┴───────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-summary">😨 <strong>Summary</strong></h2>
+
+<h3 id="current-state--partially-ready"><strong>Current State</strong>: 🔄 PARTIALLY READY</h3>
+<ul>
+  <li>Core functionality working</li>
+  <li>Basic RAG pipeline operational</li>
+  <li>Missing production features</li>
+  <li>Performance needs optimization</li>
+</ul>
+
+<h3 id="beta-target--production-ready"><strong>Beta Target</strong>: ✅ PRODUCTION READY</h3>
+<ul>
+  <li>Multi-tenant support</li>
+  <li>Performance optimization</li>
+  <li>Complete observability</li>
+  <li>Security hardening</li>
+  <li>Real-world integrations tested</li>
+</ul>
+
+<h3 id="time-to-beta-2-3-weeks"><strong>Time to Beta</strong>: 2-3 weeks</h3>
+<ul>
+  <li>Week 1: Critical fixes (auth, multi-tenancy, retry)</li>
+  <li>Week 2: Performance &amp; monitoring (cache, batch, metrics)</li>
+  <li>Week 3: Production hardening (health, deploy, test)</li>
+</ul>
+
+<h3 id="next-steps"><strong>Next Steps</strong>:</h3>
+<ol>
+  <li><strong>Immediate</strong>: Add multi-tenancy and auth middleware</li>
+  <li><strong>This Week</strong>: Deploy to K8s with monitoring</li>
+  <li><strong>Next Week</strong>: Performance optimization with Redis cache</li>
+  <li><strong>Beta Week</strong>: Load testing and production hardening</li>
+</ol>
+
+<h3 id="success-criteria-for-beta"><strong>Success Criteria for Beta</strong>:</h3>
+<ul>
+  <li>☑️ 100 concurrent users supported</li>
+  <li>☑️ &lt; 200ms p95 search latency</li>
+  <li>☑️ 99.5% uptime over 7 days</li>
+  <li>☑️ &lt; 0.1% error rate</li>
+  <li>☑️ Multi-tenant isolation working</li>
+  <li>☑️ JWT authentication enforced</li>
+  <li>☑️ Prometheus metrics exposed</li>
+  <li>☑️ Grafana dashboards created</li>
+  <li>☑️ Integration tests passing</li>
+  <li>☑️ Documentation complete</li>
+</ul>
+
+<hr />
+
+<p><strong>Document Version</strong>: 2.0<br />
+<strong>Last Updated</strong>: August 16, 2025<br />
+<strong>Author</strong>: DevMentor Team<br />
+<strong>Review Status</strong>: Ready for Technical Review<br />
+<strong>File Path</strong>: <code class="language-plaintext highlighter-rouge">docs/02-development/MEMORY_SERVICE_BETA_READINESS.md</code></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/memory-service/MEMORY_SERVICE_BETA_READINESS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

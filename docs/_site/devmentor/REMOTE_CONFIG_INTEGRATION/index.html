@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REMOTE CONFIG INTEGRATION</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">REMOTE_CONFIG_INTEGRATION.md</span>
+</div>
+
+<h1>REMOTE CONFIG INTEGRATION</h1>
+
+
+<h1 id="️-devmentor-remote-configuration-integration">🎛️ DevMentor Remote Configuration Integration</h1>
+<h2 id="adapting-quizmentor-admin-dashboard-for-devmentor">Adapting QuizMentor Admin Dashboard for DevMentor</h2>
+
+<h2 id="overview">Overview</h2>
+
+<p>The QuizMentor admin dashboard is <strong>PERFECT</strong> for DevMentor! It already has:</p>
+<ul>
+  <li>✅ Secrets Management (Supabase Vault)</li>
+  <li>✅ Feature Flags with rollout percentages</li>
+  <li>✅ Real-time updates via WebSocket</li>
+  <li>✅ Analytics Dashboard</li>
+  <li>✅ A/B Testing support</li>
+  <li>✅ System Health monitoring</li>
+</ul>
+
+<p>We can reuse 90% of this code with DevMentor-specific adaptations!</p>
+
+<h2 id="-integration-strategy">🔄 Integration Strategy</h2>
+
+<h3 id="what-we-keep-no-changes-needed">What We Keep (No Changes Needed)</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// These services work as-is!</span>
+<span class="o">-</span> <span class="nx">SupabaseVault</span> <span class="kd">class</span>
+<span class="o">-</span> <span class="nx">FeatureFlagsService</span> <span class="kd">class</span> 
+<span class="o">-</span> <span class="nx">Analytics</span> <span class="nx">base</span> <span class="nx">infrastructure</span>
+<span class="o">-</span> <span class="nx">UI</span> <span class="nx">components</span> <span class="p">(</span><span class="nx">Tremor</span><span class="p">,</span> <span class="nx">layouts</span><span class="p">)</span>
+<span class="o">-</span> <span class="nx">Real</span><span class="o">-</span><span class="nx">time</span> <span class="nx">WebSocket</span> <span class="nx">updates</span>
+</code></pre></div></div>
+
+<h3 id="what-we-adapt-for-devmentor">What We Adapt for DevMentor</h3>
+
+<h4 id="1-feature-flags-for-learning-features">1. Feature Flags for Learning Features</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// DevMentor-specific feature flags</span>
+<span class="kd">const</span> <span class="nx">devMentorFeatures</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Learning Engine Features</span>
+  <span class="dl">'</span><span class="s1">adaptive-learning-v2</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Adaptive Learning V2</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">New ML-powered learning path algorithm</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">rollout_percentage</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="na">conditions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">min_user_sessions</span><span class="p">:</span> <span class="mi">5</span>  <span class="c1">// Only for experienced users</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// PBML Features</span>
+  <span class="dl">'</span><span class="s1">pattern-detection-realtime</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Real-time Pattern Detection</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Detect patterns as user codes</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">rollout_percentage</span><span class="p">:</span> <span class="mi">50</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// Repo Analyzer Features</span>
+  <span class="dl">'</span><span class="s1">repo-analyzer-deep-scan</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Deep Repository Analysis</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Full AST analysis vs quick scan</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">rollout_percentage</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="na">conditions</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">repo_size_max_mb</span><span class="p">:</span> <span class="mi">100</span>  <span class="c1">// Only for smaller repos</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// AI Features</span>
+  <span class="dl">'</span><span class="s1">gpt4-responses</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">GPT-4 Responses</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Use GPT-4 instead of GPT-3.5</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">rollout_percentage</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="na">user_overrides</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">premium_users</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// UI Features</span>
+  <span class="dl">'</span><span class="s1">new-dashboard-layout</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">New Dashboard Layout</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Redesigned dashboard with DevLogs</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">rollout_percentage</span><span class="p">:</span> <span class="mi">100</span>  <span class="c1">// Fully rolled out</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="2-secrets-management-for-devmentor">2. Secrets Management for DevMentor</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// DevMentor secrets structure</span>
+<span class="kd">const</span> <span class="nx">devMentorSecrets</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// API Keys</span>
+  <span class="dl">'</span><span class="s1">OPENAI_API_KEY</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rotation_period</span><span class="p">:</span> <span class="dl">'</span><span class="s1">90 days</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">services</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">learning-service</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">pbml-engine</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="dl">'</span><span class="s1">GITHUB_APP_PRIVATE_KEY</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rotation_period</span><span class="p">:</span> <span class="dl">'</span><span class="s1">365 days</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">services</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">repo-analyzer</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// Service Tokens</span>
+  <span class="dl">'</span><span class="s1">LEARNING_SERVICE_TOKEN</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rotation_period</span><span class="p">:</span> <span class="dl">'</span><span class="s1">30 days</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">auto_rotate</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+  <span class="dl">'</span><span class="s1">PBML_ENGINE_TOKEN</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rotation_period</span><span class="p">:</span> <span class="dl">'</span><span class="s1">30 days</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">auto_rotate</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+  
+  <span class="c1">// Database</span>
+  <span class="dl">'</span><span class="s1">DATABASE_URL</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rotation_period</span><span class="p">:</span> <span class="dl">'</span><span class="s1">180 days</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">notify_before_rotation</span><span class="p">:</span> <span class="dl">'</span><span class="s1">7 days</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="3-analytics-dashboard-adaptation">3. Analytics Dashboard Adaptation</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// DevMentor-specific metrics</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">DevMentorAnalytics</span> <span class="kd">extends</span> <span class="nx">AnalyticsService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getLearningMetrics</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">rpc</span><span class="p">(</span><span class="dl">'</span><span class="s1">get_learning_metrics</span><span class="dl">'</span><span class="p">);</span>
+    <span class="c1">// Returns:</span>
+    <span class="c1">// - Active learners</span>
+    <span class="c1">// - Patterns detected</span>
+    <span class="c1">// - Learning paths completed</span>
+    <span class="c1">// - Average skill improvement</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getPBMLMetrics</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">rpc</span><span class="p">(</span><span class="dl">'</span><span class="s1">get_pbml_metrics</span><span class="dl">'</span><span class="p">);</span>
+    <span class="c1">// Returns:</span>
+    <span class="c1">// - Patterns stored</span>
+    <span class="c1">// - Pattern matches/day</span>
+    <span class="c1">// - Storage utilization</span>
+    <span class="c1">// - Query performance</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getRepoAnalyzerMetrics</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">rpc</span><span class="p">(</span><span class="dl">'</span><span class="s1">get_repo_metrics</span><span class="dl">'</span><span class="p">);</span>
+    <span class="c1">// Returns:</span>
+    <span class="c1">// - Repos analyzed</span>
+    <span class="c1">// - Average analysis time</span>
+    <span class="c1">// - Languages detected</span>
+    <span class="c1">// - Insights generated</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getSystemMetrics</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">rpc</span><span class="p">(</span><span class="dl">'</span><span class="s1">get_system_metrics</span><span class="dl">'</span><span class="p">);</span>
+    <span class="c1">// Returns:</span>
+    <span class="c1">// - Service health</span>
+    <span class="c1">// - Response times</span>
+    <span class="c1">// - Error rates</span>
+    <span class="c1">// - Resource usage</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-devmentor-admin-dashboard-structure">📊 DevMentor Admin Dashboard Structure</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>devmentor/admin-dashboard/
+├── src/
+│   ├── app/
+│   │   ├── dashboard/
+│   │   │   ├── page.tsx              # Overview with DevMentor metrics
+│   │   │   ├── learning/             # Learning engine controls
+│   │   │   │   ├── page.tsx          # Learning metrics
+│   │   │   │   └── patterns.tsx      # Pattern management
+│   │   │   ├── pbml/                 # PBML engine controls
+│   │   │   │   ├── page.tsx          # PBML dashboard
+│   │   │   │   └── vectors.tsx       # Vector storage stats
+│   │   │   ├── repos/                # Repo analyzer
+│   │   │   │   ├── page.tsx          # Analysis queue
+│   │   │   │   └── insights.tsx      # Generated insights
+│   │   │   ├── features/             # Feature flags (reused)
+│   │   │   ├── secrets/              # Secrets (reused)
+│   │   │   ├── users/                # User management
+│   │   │   ├── devlogs/              # DevLogs viewer
+│   │   │   └── health/               # System health
+│   │   └── layout.tsx
+│   ├── components/
+│   │   ├── metrics/                  # DevMentor metric cards
+│   │   ├── learning/                 # Learning components
+│   │   └── shared/                   # Reused from QuizMentor
+│   └── lib/
+│       ├── supabase.ts               # Extended with DevMentor
+│       └── devmentor-services.ts     # DevMentor-specific
+└── package.json
+</code></pre></div></div>
+
+<h2 id="-implementation-plan">🚀 Implementation Plan</h2>
+
+<h3 id="phase-1-direct-migration-week-1">Phase 1: Direct Migration (Week 1)</h3>
+<ol>
+  <li>Copy QuizMentor admin dashboard to DevMentor</li>
+  <li>Update branding and navigation</li>
+  <li>Connect to DevMentor Supabase instance</li>
+  <li>Deploy on same infrastructure</li>
+</ol>
+
+<h3 id="phase-2-devmentor-features-week-2">Phase 2: DevMentor Features (Week 2)</h3>
+<ol>
+  <li>Add learning metrics dashboard</li>
+  <li>Add PBML control panel</li>
+  <li>Add repo analyzer queue viewer</li>
+  <li>Integrate with DevLogs</li>
+</ol>
+
+<h3 id="phase-3-advanced-features-week-3">Phase 3: Advanced Features (Week 3)</h3>
+<ol>
+  <li>Pattern library management</li>
+  <li>Learning path editor</li>
+  <li>A/B testing for learning algorithms</li>
+  <li>Cost tracking dashboard</li>
+</ol>
+
+<h2 id="-database-schema-extensions">💾 Database Schema Extensions</h2>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Add to existing QuizMentor schema</span>
+
+<span class="c1">-- DevMentor-specific tables</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">devmentor_metrics</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">uuid</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">()</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">metric_type</span> <span class="nb">text</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span> <span class="c1">-- 'learning', 'pbml', 'repo', 'system'</span>
+  <span class="n">metric_name</span> <span class="nb">text</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">metric_value</span> <span class="nb">numeric</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">metadata</span> <span class="n">jsonb</span> <span class="k">DEFAULT</span> <span class="s1">'{}'</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">timestamptz</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Learning configuration</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">learning_config</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">uuid</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">()</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="k">key</span> <span class="nb">text</span> <span class="k">UNIQUE</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">value</span> <span class="n">jsonb</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="nb">text</span><span class="p">,</span>
+  <span class="n">updated_at</span> <span class="n">timestamptz</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">(),</span>
+  <span class="n">updated_by</span> <span class="n">uuid</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Pattern management</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">pattern_library</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">uuid</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">()</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">pattern_name</span> <span class="nb">text</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">pattern_type</span> <span class="nb">text</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">pattern_data</span> <span class="n">jsonb</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">usage_count</span> <span class="nb">integer</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">timestamptz</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Service configuration</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">service_config</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">uuid</span> <span class="k">DEFAULT</span> <span class="n">gen_random_uuid</span><span class="p">()</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">service_name</span> <span class="nb">text</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span> <span class="c1">-- 'learning', 'pbml', 'repo-analyzer'</span>
+  <span class="n">config</span> <span class="n">jsonb</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">version</span> <span class="nb">integer</span> <span class="k">DEFAULT</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">active</span> <span class="nb">boolean</span> <span class="k">DEFAULT</span> <span class="k">true</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="n">timestamptz</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Create views for dashboard</span>
+<span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">dashboard_overview</span> <span class="k">AS</span>
+<span class="k">SELECT</span> 
+  <span class="p">(</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">)</span> <span class="k">as</span> <span class="n">total_users</span><span class="p">,</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span> <span class="k">WHERE</span> <span class="n">last_sign_in_at</span> <span class="o">&gt;</span> <span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">interval</span> <span class="s1">'24 hours'</span><span class="p">)</span> <span class="k">as</span> <span class="n">active_today</span><span class="p">,</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">pattern_library</span><span class="p">)</span> <span class="k">as</span> <span class="n">total_patterns</span><span class="p">,</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="k">AVG</span><span class="p">(</span><span class="n">metric_value</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">devmentor_metrics</span> <span class="k">WHERE</span> <span class="n">metric_type</span> <span class="o">=</span> <span class="s1">'learning'</span> <span class="k">AND</span> <span class="n">metric_name</span> <span class="o">=</span> <span class="s1">'skill_improvement'</span><span class="p">)</span> <span class="k">as</span> <span class="n">avg_improvement</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="-service-integration">🔌 Service Integration</h2>
+
+<h3 id="1-feature-flag-integration-in-services">1. Feature Flag Integration in Services</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// learning-service/src/index.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">FeatureFlagClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@devmentor/admin-sdk</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FeatureFlagClient</span><span class="p">({</span>
+  <span class="na">supabaseUrl</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SUPABASE_URL</span><span class="p">,</span>
+  <span class="na">supabaseKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SUPABASE_SERVICE_KEY</span><span class="p">,</span>
+  <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">learning-service</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="c1">// Check feature flag before using new algorithm</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">processLearning</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">useV2</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">flags</span><span class="p">.</span><span class="nx">check</span><span class="p">(</span><span class="dl">'</span><span class="s1">adaptive-learning-v2</span><span class="dl">'</span><span class="p">,</span> <span class="nx">userId</span><span class="p">);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">useV2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">adaptiveLearningV2</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">adaptiveLearningV1</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-secret-rotation-handling">2. Secret Rotation Handling</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Auto-rotation handler</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">handleSecretRotation</span><span class="p">(</span><span class="nx">secretName</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">services</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getServicesUsingSecret</span><span class="p">(</span><span class="nx">secretName</span><span class="p">);</span>
+  
+  <span class="c1">// Generate new secret</span>
+  <span class="kd">const</span> <span class="nx">newSecret</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">generateNewSecret</span><span class="p">(</span><span class="nx">secretName</span><span class="p">);</span>
+  
+  <span class="c1">// Update in vault</span>
+  <span class="k">await</span> <span class="nx">vault</span><span class="p">.</span><span class="nx">rotateSecret</span><span class="p">(</span><span class="nx">secretName</span><span class="p">,</span> <span class="nx">newSecret</span><span class="p">);</span>
+  
+  <span class="c1">// Notify services to reload</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">service</span> <span class="k">of</span> <span class="nx">services</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">notifyService</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="dl">'</span><span class="s1">SECRET_ROTATED</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">secretName</span> <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Log rotation</span>
+  <span class="k">await</span> <span class="nx">auditLog</span><span class="p">.</span><span class="nx">record</span><span class="p">(</span><span class="dl">'</span><span class="s1">SECRET_ROTATION</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">secret</span><span class="p">:</span> <span class="nx">secretName</span><span class="p">,</span>
+    <span class="na">services</span><span class="p">:</span> <span class="nx">services</span><span class="p">,</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-ui-components-to-reuse">🎨 UI Components to Reuse</h2>
+
+<h3 id="from-quizmentor--devmentor">From QuizMentor → DevMentor</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>QuizMentor Component</th>
+      <th>DevMentor Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feature Flag Toggle</td>
+      <td>Same - control rollouts</td>
+    </tr>
+    <tr>
+      <td>Secrets Vault UI</td>
+      <td>Same - manage API keys</td>
+    </tr>
+    <tr>
+      <td>Analytics Cards</td>
+      <td>Adapt - show learning metrics</td>
+    </tr>
+    <tr>
+      <td>System Health</td>
+      <td>Extend - add service health</td>
+    </tr>
+    <tr>
+      <td>User Management</td>
+      <td>Extend - add learning profiles</td>
+    </tr>
+    <tr>
+      <td>A/B Test Results</td>
+      <td>New - test learning algorithms</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="-security-considerations">🔐 Security Considerations</h2>
+
+<h3 id="admin-access-control">Admin Access Control</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Middleware for admin routes</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">requireAdmin</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">req</span><span class="p">);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">roles</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">admin</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unauthorized</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Log admin action</span>
+  <span class="k">await</span> <span class="nx">auditLog</span><span class="p">.</span><span class="nx">record</span><span class="p">(</span><span class="dl">'</span><span class="s1">ADMIN_ACCESS</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">user_id</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="na">path</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
+    <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="secret-access-patterns">Secret Access Patterns</h3>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Services never see actual secrets</span>
+<span class="kd">class</span> <span class="nx">SecretProxy</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getSecret</span><span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">serviceId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Verify service has permission</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">await</span> <span class="nx">canAccessSecret</span><span class="p">(</span><span class="nx">serviceId</span><span class="p">,</span> <span class="nx">name</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Access denied</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Return encrypted reference, not actual value</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">ref</span><span class="p">:</span> <span class="s2">`vault://</span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="na">expires</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3600000</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-monitoring-integration">📈 Monitoring Integration</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Connect admin dashboard to monitoring</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">MonitoringIntegration</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getMetrics</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">[</span><span class="nx">learning</span><span class="p">,</span> <span class="nx">pbml</span><span class="p">,</span> <span class="nx">repo</span><span class="p">,</span> <span class="nx">system</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+      <span class="nx">prometheus</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="dl">'</span><span class="s1">learning_requests_total</span><span class="dl">'</span><span class="p">),</span>
+      <span class="nx">prometheus</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="dl">'</span><span class="s1">pbml_patterns_stored</span><span class="dl">'</span><span class="p">),</span>
+      <span class="nx">prometheus</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="dl">'</span><span class="s1">repo_analyses_completed</span><span class="dl">'</span><span class="p">),</span>
+      <span class="nx">prometheus</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="dl">'</span><span class="s1">system_uptime</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">]);</span>
+    
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">learning</span><span class="p">,</span> <span class="nx">pbml</span><span class="p">,</span> <span class="nx">repo</span><span class="p">,</span> <span class="nx">system</span> <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getAlerts</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">alertmanager</span><span class="p">.</span><span class="nx">getActiveAlerts</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">getLogs</span><span class="p">(</span><span class="nx">service</span><span class="p">?:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">loki</span><span class="p">.</span><span class="nx">query</span><span class="p">({</span>
+      <span class="nx">service</span><span class="p">,</span>
+      <span class="na">limit</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="na">direction</span><span class="p">:</span> <span class="dl">'</span><span class="s1">backward</span><span class="dl">'</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-quick-start">🚦 Quick Start</h2>
+
+<h3 id="1-copy-admin-dashboard">1. Copy Admin Dashboard</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Copy from QuizMentor to DevMentor</span>
+<span class="nb">cp</span> <span class="nt">-r</span> ../QuizMentor/admin-dashboard ./devmentor/
+
+<span class="c"># Update package.json name</span>
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'s/quizmentor-admin/devmentor-admin/g'</span> package.json
+
+<span class="c"># Update branding</span>
+find <span class="nb">.</span> <span class="nt">-type</span> f <span class="nt">-name</span> <span class="s2">"*.tsx"</span> <span class="nt">-exec</span> <span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'s/QuizMentor/DevMentor/g'</span> <span class="o">{}</span> +
+</code></pre></div></div>
+
+<h3 id="2-install--configure">2. Install &amp; Configure</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>devmentor/admin-dashboard
+npm <span class="nb">install</span>
+
+<span class="c"># Configure environment</span>
+<span class="nb">cp</span> .env.local.example .env.local
+<span class="c"># Add DevMentor Supabase credentials</span>
+</code></pre></div></div>
+
+<h3 id="3-run-migrations">3. Run Migrations</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Run in Supabase SQL editor</span>
+<span class="c1">-- Includes all tables from above</span>
+</code></pre></div></div>
+
+<h3 id="4-deploy">4. Deploy</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Deploy to Vercel (recommended for admin)</span>
+vercel <span class="nt">--prod</span>
+
+<span class="c"># Or Digital Ocean</span>
+doctl apps create <span class="nt">--spec</span> .do/admin-app.yaml
+</code></pre></div></div>
+
+<h2 id="-benefits-of-reusing-quizmentor-admin">🎯 Benefits of Reusing QuizMentor Admin</h2>
+
+<ol>
+  <li><strong>Time Saved</strong>: ~2 weeks of development</li>
+  <li><strong>Proven Code</strong>: Already tested in production</li>
+  <li><strong>Familiar UI</strong>: Same Tremor components</li>
+  <li><strong>Easy Migration</strong>: 90% code reuse</li>
+  <li><strong>Immediate Value</strong>: Deploy today, customize tomorrow</li>
+</ol>
+
+<h2 id="summary">Summary</h2>
+
+<p>The QuizMentor admin dashboard is a <strong>perfect fit</strong> for DevMentor! We can:</p>
+<ul>
+  <li>Deploy it immediately with minimal changes</li>
+  <li>Add DevMentor-specific features progressively</li>
+  <li>Use the same Supabase infrastructure</li>
+  <li>Maintain consistent UI/UX across products</li>
+</ul>
+
+<p>This gives us remote configuration, feature flags, and monitoring <strong>TODAY</strong> instead of weeks from now!</p>
+
+<hr />
+
+<p><strong>Next Steps</strong>:</p>
+<ol>
+  <li>Copy admin dashboard to DevMentor</li>
+  <li>Update branding and navigation</li>
+  <li>Deploy to Vercel</li>
+  <li>Start using feature flags for rollouts</li>
+  <li>Add DevMentor-specific metrics</li>
+</ol>
+
+<p><strong>Estimated Time</strong>: 2-3 days to full integration!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / REMOTE_CONFIG_INTEGRATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

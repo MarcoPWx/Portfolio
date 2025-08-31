@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBSERVABILITY INTEGRATION</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/monitoring/OBSERVABILITY_INTEGRATION.md</span>
+</div>
+
+<h1>OBSERVABILITY INTEGRATION</h1>
+
+
+<h1 id="-observability-integration-guide">🔭 Observability Integration Guide</h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>This document describes how the monitoring service integrates with the broader DevMentor observability ecosystem, including events, metrics, logs, and traces.</p>
+
+<h2 id="the-four-pillars-of-observability">The Four Pillars of Observability</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌────────────────────────────────────────────────────────────────────┐
+│                     DEVMENTOR OBSERVABILITY STACK                  │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────┐│
+│  │   METRICS    │  │     LOGS     │  │   TRACES     │  │ EVENTS ││
+│  │              │  │              │  │              │  │        ││
+│  │ Prometheus   │  │   Winston    │  │ OpenTelemetry│  │WebSocket│
+│  │   Grafana    │  │     ELK      │  │    Jaeger    │  │  Redis ││
+│  └──────────────┘  └──────────────┘  └──────────────┘  └────────┘│
+│         │                 │                 │               │      │
+│         └─────────────────┴─────────────────┴───────────────┘      │
+│                                 │                                   │
+│                    ┌────────────────────────┐                      │
+│                    │  MONITORING SERVICE    │                      │
+│                    │   (Aggregation Hub)    │                      │
+│                    └────────────────────────┘                      │
+│                                 │                                   │
+│                    ┌────────────────────────┐                      │
+│                    │    UNIFIED DASHBOARD   │                      │
+│                    └────────────────────────┘                      │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h2 id="event-system-integration">Event System Integration</h2>
+
+<h3 id="event-sources-and-consumers">Event Sources and Consumers</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Event flow through the system</span>
+<span class="kd">const</span> <span class="nx">eventFlow</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">producers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">auth-service</span><span class="dl">'</span><span class="p">,</span>      <span class="c1">// Login/logout events</span>
+    <span class="dl">'</span><span class="s1">memory-service</span><span class="dl">'</span><span class="p">,</span>    <span class="c1">// Knowledge updates</span>
+    <span class="dl">'</span><span class="s1">ai-gateway</span><span class="dl">'</span><span class="p">,</span>        <span class="c1">// AI decisions</span>
+    <span class="dl">'</span><span class="s1">project-service</span><span class="dl">'</span><span class="p">,</span>   <span class="c1">// Project changes</span>
+    <span class="dl">'</span><span class="s1">monitoring-service</span><span class="dl">'</span> <span class="c1">// System events</span>
+  <span class="p">],</span>
+  
+  <span class="na">broker</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Redis Pub/Sub</span><span class="dl">'</span><span class="p">,</span>
+  
+  <span class="na">consumers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">monitoring-service</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Processes all events</span>
+    <span class="dl">'</span><span class="s1">frontend-dashboard</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Real-time updates</span>
+    <span class="dl">'</span><span class="s1">notification-service</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Alerts</span>
+    <span class="dl">'</span><span class="s1">audit-service</span><span class="dl">'</span>      <span class="c1">// Compliance logging</span>
+  <span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="event-types-and-handlers">Event Types and Handlers</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Core event types from /docs/events/EMITTERS.md</span>
+<span class="kd">const</span> <span class="nx">SystemEvents</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Service Lifecycle</span>
+  <span class="dl">'</span><span class="s1">service.started</span><span class="dl">'</span><span class="p">:</span> <span class="nx">handleServiceStart</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">service.stopped</span><span class="dl">'</span><span class="p">:</span> <span class="nx">handleServiceStop</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">service.crashed</span><span class="dl">'</span><span class="p">:</span> <span class="nx">handleServiceCrash</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">service.recovered</span><span class="dl">'</span><span class="p">:</span> <span class="nx">handleServiceRecovery</span><span class="p">,</span>
+  
+  <span class="c1">// Health Events</span>
+  <span class="dl">'</span><span class="s1">health.check.passed</span><span class="dl">'</span><span class="p">:</span> <span class="nx">updateHealthStatus</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">health.check.failed</span><span class="dl">'</span><span class="p">:</span> <span class="nx">triggerHealthAlert</span><span class="p">,</span>
+  
+  <span class="c1">// Performance Events</span>
+  <span class="dl">'</span><span class="s1">performance.threshold.exceeded</span><span class="dl">'</span><span class="p">:</span> <span class="nx">handlePerformanceIssue</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">performance.anomaly.detected</span><span class="dl">'</span><span class="p">:</span> <span class="nx">investigateAnomaly</span><span class="p">,</span>
+  
+  <span class="c1">// Security Events</span>
+  <span class="dl">'</span><span class="s1">security.breach.attempted</span><span class="dl">'</span><span class="p">:</span> <span class="nx">handleSecurityEvent</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">security.audit.completed</span><span class="dl">'</span><span class="p">:</span> <span class="nx">logAuditResult</span><span class="p">,</span>
+  
+  <span class="c1">// AI Events (from LEARNING.md)</span>
+  <span class="dl">'</span><span class="s1">ai.prediction.generated</span><span class="dl">'</span><span class="p">:</span> <span class="nx">processPrediction</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">ai.pattern.detected</span><span class="dl">'</span><span class="p">:</span> <span class="nx">analyzePattern</span><span class="p">,</span>
+  <span class="dl">'</span><span class="s1">ai.model.updated</span><span class="dl">'</span><span class="p">:</span> <span class="nx">refreshModels</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="websocket-event-broadcasting">WebSocket Event Broadcasting</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// From /docs/events/WEBSOCKET.md integration</span>
+<span class="kd">class</span> <span class="nx">EventBroadcaster</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">io</span> <span class="o">=</span> <span class="nx">io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Broadcast to specific rooms</span>
+  <span class="nx">broadcastToRoom</span><span class="p">(</span><span class="nx">room</span><span class="p">,</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="nx">room</span><span class="p">).</span><span class="nx">emit</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(),</span>
+      <span class="na">source</span><span class="p">:</span> <span class="dl">'</span><span class="s1">monitoring-service</span><span class="dl">'</span><span class="p">,</span>
+      <span class="nx">data</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Broadcast to subscribers</span>
+  <span class="nx">broadcastToSubscribers</span><span class="p">(</span><span class="nx">eventType</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">subscribers</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">eventType</span><span class="p">)</span> <span class="o">||</span> <span class="p">[];</span>
+    <span class="nx">subscribers</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">socketId</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">to</span><span class="p">(</span><span class="nx">socketId</span><span class="p">).</span><span class="nx">emit</span><span class="p">(</span><span class="nx">eventType</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Handle subscription management</span>
+  <span class="nx">subscribe</span><span class="p">(</span><span class="nx">socketId</span><span class="p">,</span> <span class="nx">eventTypes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">eventTypes</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">type</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">type</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Set</span><span class="p">());</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">type</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="nx">socketId</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="metrics-collection-and-aggregation">Metrics Collection and Aggregation</h2>
+
+<h3 id="prometheus-integration">Prometheus Integration</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># prometheus.yml configuration</span>
+<span class="na">global</span><span class="pi">:</span>
+  <span class="na">scrape_interval</span><span class="pi">:</span> <span class="s">15s</span>
+  <span class="na">evaluation_interval</span><span class="pi">:</span> <span class="s">15s</span>
+
+<span class="na">scrape_configs</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">job_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">monitoring-service'</span>
+    <span class="na">static_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">targets</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">localhost:3006'</span><span class="pi">]</span>
+    <span class="na">metrics_path</span><span class="pi">:</span> <span class="s1">'</span><span class="s">/metrics'</span>
+    
+  <span class="pi">-</span> <span class="na">job_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">auth-service'</span>
+    <span class="na">static_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">targets</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">localhost:3002'</span><span class="pi">]</span>
+      
+  <span class="pi">-</span> <span class="na">job_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">memory-service'</span>
+    <span class="na">static_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">targets</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">localhost:3003'</span><span class="pi">]</span>
+      
+  <span class="pi">-</span> <span class="na">job_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">ai-gateway'</span>
+    <span class="na">static_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">targets</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">localhost:3004'</span><span class="pi">]</span>
+      
+  <span class="pi">-</span> <span class="na">job_name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">project-service'</span>
+    <span class="na">static_configs</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">targets</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">localhost:3005'</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h3 id="custom-metrics">Custom Metrics</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Application-specific metrics</span>
+<span class="kd">const</span> <span class="nx">customMetrics</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Business metrics</span>
+  <span class="na">activeUsers</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Gauge</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor_active_users</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Number of active users</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  
+  <span class="na">aiRequestsTotal</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Counter</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor_ai_requests_total</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Total AI requests processed</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  
+  <span class="na">projectsCreated</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Counter</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor_projects_created_total</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Total projects created</span><span class="dl">'</span>
+  <span class="p">}),</span>
+  
+  <span class="c1">// Performance metrics</span>
+  <span class="na">apiLatency</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Histogram</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor_api_latency_seconds</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">API endpoint latency</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">labelNames</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">method</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">endpoint</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">status</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}),</span>
+  
+  <span class="c1">// Resource metrics</span>
+  <span class="na">memoryUsage</span><span class="p">:</span> <span class="k">new</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Gauge</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor_memory_usage_bytes</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Memory usage in bytes</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">labelNames</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">service</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">})</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="logging-architecture">Logging Architecture</h2>
+
+<h3 id="centralized-logging-with-elk-stack">Centralized Logging with ELK Stack</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Winston transport for Elasticsearch</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">ElasticsearchTransport</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">winston-elasticsearch</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">esTransport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ElasticsearchTransport</span><span class="p">({</span>
+  <span class="na">level</span><span class="p">:</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">clientOpts</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">node</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:9200</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">elastic</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">password</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ELASTIC_PASSWORD</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">index</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor-logs</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">format</span><span class="p">:</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">combine</span><span class="p">(</span>
+    <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">(),</span>
+    <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="p">)</span>
+<span class="p">});</span>
+
+<span class="c1">// Structured logging</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Service health check</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">auth</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">healthy</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">responseTime</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+  <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">version</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">environment</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="log-aggregation-pipeline">Log Aggregation Pipeline</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Services → Filebeat → Logstash → Elasticsearch → Kibana
+     ↓                    ↓            ↓            ↓
+  Log Files           Processing    Storage    Visualization
+</code></pre></div></div>
+
+<h3 id="logstash-configuration">Logstash Configuration</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># logstash.conf</span>
+<span class="n">input</span> <span class="p">{</span>
+  <span class="n">beats</span> <span class="p">{</span>
+    <span class="n">port</span> <span class="o">=&gt;</span> <span class="mi">5044</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">filter</span> <span class="p">{</span>
+  <span class="n">json</span> <span class="p">{</span>
+    <span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">"message"</span>
+  <span class="p">}</span>
+  
+  <span class="n">date</span> <span class="p">{</span>
+    <span class="n">match</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s2">"timestamp"</span><span class="p">,</span> <span class="s2">"ISO8601"</span> <span class="p">]</span>
+  <span class="p">}</span>
+  
+  <span class="n">mutate</span> <span class="p">{</span>
+    <span class="n">add_field</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">"environment"</span> <span class="o">=&gt;</span> <span class="s2">"${NODE_ENV:development}"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">if</span> <span class="p">[</span><span class="n">level</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"error"</span> <span class="p">{</span>
+    <span class="n">mutate</span> <span class="p">{</span>
+      <span class="n">add_tag</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s2">"alert"</span> <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">output</span> <span class="p">{</span>
+  <span class="n">elasticsearch</span> <span class="p">{</span>
+    <span class="n">hosts</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"localhost:9200"</span><span class="p">]</span>
+    <span class="n">index</span> <span class="o">=&gt;</span> <span class="s2">"devmentor-%{+YYYY.MM.dd}"</span>
+  <span class="p">}</span>
+  
+  <span class="k">if</span> <span class="s2">"alert"</span> <span class="k">in</span> <span class="p">[</span><span class="n">tags</span><span class="p">]</span> <span class="p">{</span>
+    <span class="n">email</span> <span class="p">{</span>
+      <span class="n">to</span> <span class="o">=&gt;</span> <span class="s2">"ops@devmentor.ai"</span>
+      <span class="n">subject</span> <span class="o">=&gt;</span> <span class="s2">"Error Alert: %{service}"</span>
+      <span class="n">body</span> <span class="o">=&gt;</span> <span class="s2">"%{message}"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="distributed-tracing">Distributed Tracing</h2>
+
+<h3 id="opentelemetry-integration-future">OpenTelemetry Integration (Future)</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Tracing setup</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">NodeTracerProvider</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@opentelemetry/node</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">Resource</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@opentelemetry/resources</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">SemanticResourceAttributes</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@opentelemetry/semantic-conventions</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">JaegerExporter</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@opentelemetry/exporter-jaeger</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">provider</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeTracerProvider</span><span class="p">({</span>
+  <span class="na">resource</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Resource</span><span class="p">({</span>
+    <span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_NAME</span><span class="p">]:</span> <span class="dl">'</span><span class="s1">monitoring-service</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="p">]:</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span><span class="p">,</span>
+  <span class="p">}),</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">jaegerExporter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JaegerExporter</span><span class="p">({</span>
+  <span class="na">endpoint</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http://localhost:14268/api/traces</span><span class="dl">'</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">provider</span><span class="p">.</span><span class="nx">addSpanProcessor</span><span class="p">(</span>
+  <span class="k">new</span> <span class="nx">BatchSpanProcessor</span><span class="p">(</span><span class="nx">jaegerExporter</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="nx">provider</span><span class="p">.</span><span class="nx">register</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="trace-context-propagation">Trace Context Propagation</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Propagate trace context across services</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">trace</span><span class="p">,</span> <span class="nx">propagation</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@opentelemetry/api</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">makeServiceCall</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">,</span> <span class="nx">endpoint</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">tracer</span> <span class="o">=</span> <span class="nx">trace</span><span class="p">.</span><span class="nx">getTracer</span><span class="p">(</span><span class="dl">'</span><span class="s1">monitoring-service</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">span</span> <span class="o">=</span> <span class="nx">tracer</span><span class="p">.</span><span class="nx">startSpan</span><span class="p">(</span><span class="s2">`call-</span><span class="p">${</span><span class="nx">serviceName</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">propagation</span><span class="p">.</span><span class="nx">inject</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">active</span><span class="p">(),</span> <span class="nx">headers</span><span class="p">);</span>
+    
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">,</span> <span class="p">{</span> <span class="nx">headers</span> <span class="p">});</span>
+    
+    <span class="nx">span</span><span class="p">.</span><span class="nx">setAttributes</span><span class="p">({</span>
+      <span class="dl">'</span><span class="s1">http.status_code</span><span class="dl">'</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">http.url</span><span class="dl">'</span><span class="p">:</span> <span class="nx">endpoint</span><span class="p">,</span>
+      <span class="dl">'</span><span class="s1">service.name</span><span class="dl">'</span><span class="p">:</span> <span class="nx">serviceName</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">span</span><span class="p">.</span><span class="nx">recordException</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+    <span class="nx">span</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">({</span> <span class="na">code</span><span class="p">:</span> <span class="nx">SpanStatusCode</span><span class="p">.</span><span class="nx">ERROR</span> <span class="p">});</span>
+    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+    <span class="nx">span</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="alerting-and-notification-system">Alerting and Notification System</h2>
+
+<h3 id="alert-rules">Alert Rules</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># alerts.yml</span>
+<span class="na">groups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">service_alerts</span>
+    <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
+    <span class="na">rules</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">ServiceDown</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">up == </span><span class="m">0</span>
+        <span class="na">for</span><span class="pi">:</span> <span class="s">1m</span>
+        <span class="na">labels</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">critical</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down"</span>
+          <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">down</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">more</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">minute"</span>
+      
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">HighMemoryUsage</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes &gt; </span><span class="m">0.9</span>
+        <span class="na">for</span><span class="pi">:</span> <span class="s">5m</span>
+        <span class="na">labels</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">warning</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">detected"</span>
+          <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">90%</span><span class="nv"> </span><span class="s">(current:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}})"</span>
+      
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">HighErrorRate</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">rate(http_requests_total{status=~"5.."}[5m]) &gt; </span><span class="m">0.05</span>
+        <span class="na">for</span><span class="pi">:</span> <span class="s">5m</span>
+        <span class="na">labels</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">warning</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected"</span>
+          <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">5%</span><span class="nv"> </span><span class="s">(current:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}})"</span>
+</code></pre></div></div>
+
+<h3 id="notification-channels">Notification Channels</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Multi-channel notification system</span>
+<span class="kd">class</span> <span class="nx">NotificationManager</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">channels</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">slack</span><span class="p">:</span> <span class="k">new</span> <span class="nx">SlackNotifier</span><span class="p">(),</span>
+      <span class="na">email</span><span class="p">:</span> <span class="k">new</span> <span class="nx">EmailNotifier</span><span class="p">(),</span>
+      <span class="na">pagerduty</span><span class="p">:</span> <span class="k">new</span> <span class="nx">PagerDutyNotifier</span><span class="p">(),</span>
+      <span class="na">webhook</span><span class="p">:</span> <span class="k">new</span> <span class="nx">WebhookNotifier</span><span class="p">()</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">sendAlert</span><span class="p">(</span><span class="nx">alert</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">channels</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getChannelsForSeverity</span><span class="p">(</span><span class="nx">alert</span><span class="p">.</span><span class="nx">severity</span><span class="p">);</span>
+    
+    <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span>
+      <span class="nx">channels</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">channel</span> <span class="o">=&gt;</span> 
+        <span class="k">this</span><span class="p">.</span><span class="nx">channels</span><span class="p">[</span><span class="nx">channel</span><span class="p">].</span><span class="nx">send</span><span class="p">(</span><span class="nx">alert</span><span class="p">)</span>
+      <span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="nx">getChannelsForSeverity</span><span class="p">(</span><span class="nx">severity</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">severity</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">critical</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="dl">'</span><span class="s1">slack</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">pagerduty</span><span class="dl">'</span><span class="p">];</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">high</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="dl">'</span><span class="s1">slack</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">];</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">medium</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="dl">'</span><span class="s1">slack</span><span class="dl">'</span><span class="p">];</span>
+      <span class="k">case</span> <span class="dl">'</span><span class="s1">low</span><span class="dl">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="dl">'</span><span class="s1">webhook</span><span class="dl">'</span><span class="p">];</span>
+      <span class="nl">default</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="dl">'</span><span class="s1">webhook</span><span class="dl">'</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="dashboard-integration">Dashboard Integration</h2>
+
+<h3 id="grafana-dashboard-configuration">Grafana Dashboard Configuration</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"dashboard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DevMentor Monitoring Dashboard"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"panels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Health Status"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stat"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"up"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"legendFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ job }}"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Request Rate"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rate(http_requests_total[5m])"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"legendFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ method }} {{ route }}"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Error Rate"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rate(http_requests_total{status=~</span><span class="se">\"</span><span class="s2">5..</span><span class="se">\"</span><span class="s2">}[5m])"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"legendFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ service }}"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Response Time (p95)"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"histogram_quantile(0.95, http_request_duration_seconds_bucket)"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"legendFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ service }}"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="custom-dashboard-api">Custom Dashboard API</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// API for custom dashboard data</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/dashboard/overview</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">services</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getServicesStatus</span><span class="p">(),</span>
+    <span class="na">metrics</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">requests</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getTotalRequests</span><span class="p">(),</span>
+      <span class="na">errors</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getErrorRate</span><span class="p">(),</span>
+      <span class="na">latency</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getAverageLatency</span><span class="p">()</span>
+    <span class="p">},</span>
+    <span class="na">incidents</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getActiveIncidents</span><span class="p">(),</span>
+    <span class="na">predictions</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getLatestPredictions</span><span class="p">(),</span>
+    <span class="na">alerts</span><span class="p">:</span> <span class="k">await</span> <span class="nx">getActiveAlerts</span><span class="p">()</span>
+  <span class="p">};</span>
+  
+  <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="data-retention-and-storage">Data Retention and Storage</h2>
+
+<h3 id="time-series-data-management">Time-Series Data Management</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Data retention policies</span>
+<span class="kd">const</span> <span class="nx">retentionPolicies</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">raw</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">resolution</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1s</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">retention</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1h</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">aggregated_5m</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">resolution</span><span class="p">:</span> <span class="dl">'</span><span class="s1">5m</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">retention</span><span class="p">:</span> <span class="dl">'</span><span class="s1">24h</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">aggregated_1h</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">resolution</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1h</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">retention</span><span class="p">:</span> <span class="dl">'</span><span class="s1">7d</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">aggregated_1d</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">resolution</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1d</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">retention</span><span class="p">:</span> <span class="dl">'</span><span class="s1">30d</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Automatic data aggregation</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">aggregateMetrics</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">rawData</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getMetrics</span><span class="p">(</span><span class="dl">'</span><span class="s1">1s</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">-1h</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="c1">// 5-minute aggregation</span>
+  <span class="kd">const</span> <span class="nx">aggregated5m</span> <span class="o">=</span> <span class="nx">aggregate</span><span class="p">(</span><span class="nx">rawData</span><span class="p">,</span> <span class="dl">'</span><span class="s1">5m</span><span class="dl">'</span><span class="p">,</span> <span class="p">[</span><span class="dl">'</span><span class="s1">avg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">max</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">min</span><span class="dl">'</span><span class="p">]);</span>
+  <span class="k">await</span> <span class="nx">storeMetrics</span><span class="p">(</span><span class="nx">aggregated5m</span><span class="p">,</span> <span class="dl">'</span><span class="s1">aggregated_5m</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="c1">// Hourly aggregation</span>
+  <span class="kd">const</span> <span class="nx">aggregated1h</span> <span class="o">=</span> <span class="nx">aggregate</span><span class="p">(</span><span class="nx">rawData</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1h</span><span class="dl">'</span><span class="p">,</span> <span class="p">[</span><span class="dl">'</span><span class="s1">avg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">max</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">min</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">p95</span><span class="dl">'</span><span class="p">]);</span>
+  <span class="k">await</span> <span class="nx">storeMetrics</span><span class="p">(</span><span class="nx">aggregated1h</span><span class="p">,</span> <span class="dl">'</span><span class="s1">aggregated_1h</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="c1">// Daily aggregation</span>
+  <span class="kd">const</span> <span class="nx">aggregated1d</span> <span class="o">=</span> <span class="nx">aggregate</span><span class="p">(</span><span class="nx">rawData</span><span class="p">,</span> <span class="dl">'</span><span class="s1">1d</span><span class="dl">'</span><span class="p">,</span> <span class="p">[</span><span class="dl">'</span><span class="s1">avg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">max</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">min</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">p95</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">p99</span><span class="dl">'</span><span class="p">]);</span>
+  <span class="k">await</span> <span class="nx">storeMetrics</span><span class="p">(</span><span class="nx">aggregated1d</span><span class="p">,</span> <span class="dl">'</span><span class="s1">aggregated_1d</span><span class="dl">'</span><span class="p">);</span>
+  
+  <span class="c1">// Clean up old data</span>
+  <span class="k">await</span> <span class="nx">cleanupOldData</span><span class="p">(</span><span class="nx">retentionPolicies</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="security-and-compliance">Security and Compliance</h2>
+
+<h3 id="audit-logging">Audit Logging</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Audit trail for compliance</span>
+<span class="kd">class</span> <span class="nx">AuditLogger</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">auditEntry</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(),</span>
+      <span class="na">eventType</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+      <span class="na">userId</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">userId</span><span class="p">,</span>
+      <span class="na">service</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">service</span><span class="p">,</span>
+      <span class="na">action</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">action</span><span class="p">,</span>
+      <span class="na">result</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">result</span><span class="p">,</span>
+      <span class="na">metadata</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">metadata</span><span class="p">,</span>
+      <span class="na">ipAddress</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">ipAddress</span><span class="p">,</span>
+      <span class="na">userAgent</span><span class="p">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">userAgent</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// Store in immutable log</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">writeToImmutableLog</span><span class="p">(</span><span class="nx">auditEntry</span><span class="p">);</span>
+    
+    <span class="c1">// Send to SIEM if configured</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SIEM_ENABLED</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendToSIEM</span><span class="p">(</span><span class="nx">auditEntry</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="data-privacy">Data Privacy</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// PII data masking</span>
+<span class="kd">function</span> <span class="nx">maskSensitiveData</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">masked</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">data</span> <span class="p">};</span>
+  
+  <span class="c1">// Mask email addresses</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">masked</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">masked</span><span class="p">.</span><span class="nx">email</span> <span class="o">=</span> <span class="nx">masked</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">(</span><span class="sr">.</span><span class="se">{2})</span><span class="sr">.*</span><span class="se">(</span><span class="sr">@.*</span><span class="se">)</span><span class="sr">/</span><span class="p">,</span> <span class="dl">'</span><span class="s1">$1***$2</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Mask API keys</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">masked</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">masked</span><span class="p">.</span><span class="nx">apiKey</span> <span class="o">=</span> <span class="nx">masked</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">...</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Remove passwords completely</span>
+  <span class="k">delete</span> <span class="nx">masked</span><span class="p">.</span><span class="nx">password</span><span class="p">;</span>
+  
+  <span class="k">return</span> <span class="nx">masked</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="performance-optimization">Performance Optimization</h2>
+
+<h3 id="metric-sampling">Metric Sampling</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Adaptive sampling based on load</span>
+<span class="kd">class</span> <span class="nx">AdaptiveSampler</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sampleRate</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span> <span class="c1">// Start with 100% sampling</span>
+  <span class="p">}</span>
+  
+  <span class="nx">shouldSample</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">sampleRate</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="nx">adjustSampleRate</span><span class="p">(</span><span class="nx">load</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">load</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sampleRate</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">sampleRate</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">load</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sampleRate</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">sampleRate</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="batch-processing">Batch Processing</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Batch event processing for efficiency</span>
+<span class="kd">class</span> <span class="nx">EventBatcher</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">batchSize</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">flushInterval</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batchSize</span> <span class="o">=</span> <span class="nx">batchSize</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">flushInterval</span> <span class="o">=</span> <span class="nx">flushInterval</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">startFlushTimer</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="nx">add</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">batchSize</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">flush</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">events</span> <span class="o">=</span> <span class="p">[...</span><span class="k">this</span><span class="p">.</span><span class="nx">batch</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">batch</span> <span class="o">=</span> <span class="p">[];</span>
+    
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">processBatch</span><span class="p">(</span><span class="nx">events</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="nx">startFlushTimer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">flush</span><span class="p">(),</span> <span class="k">this</span><span class="p">.</span><span class="nx">flushInterval</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="integration-testing">Integration Testing</h2>
+
+<h3 id="end-to-end-observability-tests">End-to-End Observability Tests</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Test complete observability pipeline</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Observability Integration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Event flows through entire pipeline</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Generate test event</span>
+    <span class="kd">const</span> <span class="nx">testEvent</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test.event</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test-service</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">test</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="c1">// Emit event</span>
+    <span class="k">await</span> <span class="nx">eventEmitter</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="nx">testEvent</span><span class="p">);</span>
+    
+    <span class="c1">// Verify metric was recorded</span>
+    <span class="kd">const</span> <span class="nx">metrics</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getMetrics</span><span class="p">(</span><span class="dl">'</span><span class="s1">test_event_total</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">value</span><span class="p">).</span><span class="nx">toBeGreaterThan</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    
+    <span class="c1">// Verify log was created</span>
+    <span class="kd">const</span> <span class="nx">logs</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">searchLogs</span><span class="p">({</span> <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test-service</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">logs</span><span class="p">).</span><span class="nx">toContainEqual</span><span class="p">(</span><span class="nx">expect</span><span class="p">.</span><span class="nx">objectContaining</span><span class="p">({</span>
+      <span class="na">event_type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test.event</span><span class="dl">'</span>
+    <span class="p">}));</span>
+    
+    <span class="c1">// Verify trace was created</span>
+    <span class="kd">const</span> <span class="nx">traces</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getTraces</span><span class="p">({</span> <span class="na">service</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test-service</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">traces</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBeGreaterThan</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    
+    <span class="c1">// Verify dashboard updated</span>
+    <span class="kd">const</span> <span class="nx">dashboard</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getDashboardData</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">dashboard</span><span class="p">.</span><span class="nx">events</span><span class="p">).</span><span class="nx">toContainEqual</span><span class="p">(</span>
+      <span class="nx">expect</span><span class="p">.</span><span class="nx">objectContaining</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test.event</span><span class="dl">'</span> <span class="p">})</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<h3 id="1-structured-data">1. Structured Data</h3>
+<ul>
+  <li>Use consistent field names across all services</li>
+  <li>Include correlation IDs in all events/logs</li>
+  <li>Add metadata for context</li>
+</ul>
+
+<h3 id="2-performance">2. Performance</h3>
+<ul>
+  <li>Sample high-volume metrics</li>
+  <li>Use batch processing for events</li>
+  <li>Implement circuit breakers for external calls</li>
+</ul>
+
+<h3 id="3-security">3. Security</h3>
+<ul>
+  <li>Mask sensitive data</li>
+  <li>Use TLS for all connections</li>
+  <li>Implement rate limiting</li>
+</ul>
+
+<h3 id="4-reliability">4. Reliability</h3>
+<ul>
+  <li>Implement retry logic with exponential backoff</li>
+  <li>Use dead letter queues for failed events</li>
+  <li>Have fallback mechanisms</li>
+</ul>
+
+<h3 id="5-cost-optimization">5. Cost Optimization</h3>
+<ul>
+  <li>Implement data retention policies</li>
+  <li>Use appropriate storage tiers</li>
+  <li>Aggregate old data</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The monitoring service serves as the central hub for DevMentor’s observability stack, integrating:</p>
+<ul>
+  <li><strong>Events</strong> from all services</li>
+  <li><strong>Metrics</strong> via Prometheus</li>
+  <li><strong>Logs</strong> through Winston/ELK</li>
+  <li><strong>Traces</strong> with OpenTelemetry</li>
+</ul>
+
+<p>This comprehensive approach ensures complete visibility into system behavior, enabling proactive issue detection and rapid incident response.</p>
+
+<hr />
+
+<p><strong>Related Documentation:</strong></p>
+<ul>
+  <li><a href="../events/EMITTERS.md">Event System</a></li>
+  <li><a href="../events/WEBSOCKET.md">WebSocket Events</a></li>
+  <li><a href="../events/LEARNING.md">Learning Events</a></li>
+  <li><a href="../operations/DEVMENTOR_OPERATIONS_GUIDE.md">Operations Guide</a></li>
+</ul>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/monitoring/OBSERVABILITY_INTEGRATION.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

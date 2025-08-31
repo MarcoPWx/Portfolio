@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API GATEWAY BETA READINESS | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">infrastructure/services/api-gateway/API_GATEWAY_BETA_READINESS.md</span>
+</div>
+
+<h1>API GATEWAY BETA READINESS</h1>
+
+
+<p>CURRENT ARCHITECTURE</p>
+
+<h1 id="ai_gateway_beta_readiness---devmentor-platform">AI_GATEWAY_BETA_READINESS - DevMentor Platform</h1>
+
+<p><strong>Version:</strong> 2.0.0 (Merged Analysis)<br />
+<strong>Date:</strong> August 16, 2025<br />
+<strong>Status:</strong> 🟡 <strong>45% READY - AI Gateway Enhancement Required</strong><br />
+<strong>Target Beta Date:</strong> September 30, 2025<br />
+<strong>Readiness Score:</strong> 45/100</p>
+
+<hr />
+
+<h2 id="-executive-summary">🎯 Executive Summary</h2>
+
+<p>DevMentor needs significant AI Gateway enhancements to reach beta readiness. While the platform has solid infrastructure (Kubernetes, microservices, authentication), the AI Gateway itself is limited to Ollama integration only. To be a true enterprise AI gateway, we need multi-provider support, security controls, cost management, and comprehensive observability.</p>
+
+<h2 id="-understanding-ai-gateways-a-developers-guide">📚 Understanding AI Gateways: A Developer’s Guide</h2>
+
+<h3 id="the-problem-direct-ai-integration">The Problem: Direct AI Integration</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your App                         AI Providers
+    │                               │
+    ├─────OpenAI API Key──────────&gt;├─OpenAI
+    │                               │
+    ├─Anthropic API Key──────────&gt;├─Anthropic
+    │                               │
+    └─────Azure API Key──────────&gt;└─Azure AI
+
+Problems:
+• Managing multiple API keys
+• Different API formats
+• No unified error handling
+• Cost tracking nightmare
+• Security risks
+</code></pre></div></div>
+
+<h3 id="the-solution-ai-gateway-pattern">The Solution: AI Gateway Pattern</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Apps          AI Gateway           Providers
+    │                  │                    │
+    ├──Single Key────&gt;├───OpenAI Key────&gt;├─OpenAI
+    │                  │                    │
+    │                  ├──Anthropic Key──&gt;├─Anthropic
+    │                  │                    │
+    └──────────────&gt;└───Azure Key────&gt;└─Azure AI
+                      │
+              ┌───────┴───────┐
+              │  Automatic:   │
+              │ • Security    │
+              │ • Routing     │
+              │ • Caching     │
+              │ • Monitoring  │
+              └───────────────┘
+</code></pre></div></div>
+
+<h3 id="quick-start-examples-by-language">Quick Start Examples by Language</h3>
+
+<h4 id="typescriptjavascript-nodejs">TypeScript/JavaScript (Node.js)</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">DevMentorAI</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@devmentor/ai-gateway</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Initialize the client</span>
+<span class="kd">const</span> <span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DEVMENTOR_API_KEY</span>
+<span class="p">});</span>
+
+<span class="c1">// Simple completion</span>
+<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+  <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Hello!</span><span class="dl">'</span> <span class="p">}]</span>
+<span class="p">});</span>
+
+<span class="c1">// Advanced features</span>
+<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+  <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Analyze this code.</span><span class="dl">'</span> <span class="p">}],</span>
+  <span class="na">routing</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">anthropic</span><span class="dl">'</span><span class="p">],</span>
+    <span class="na">strategy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cost_optimized</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">cache</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">ttl</span><span class="p">:</span> <span class="mi">3600</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Streaming response</span>
+<span class="nx">ai</span><span class="p">.</span><span class="nx">stream</span><span class="p">({</span>
+  <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Tell me a story</span><span class="dl">'</span> <span class="p">}],</span>
+  <span class="na">onChunk</span><span class="p">:</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chunk</span><span class="p">),</span>
+  <span class="na">onDone</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Done!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="python">Python</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">devmentor_ai</span> <span class="kn">import</span> <span class="n">DevMentorAI</span>
+
+<span class="c1"># Initialize the client
+</span><span class="n">ai</span> <span class="o">=</span> <span class="n">DevMentorAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s">'your-key'</span><span class="p">)</span>
+
+<span class="c1"># Simple completion
+</span><span class="n">response</span> <span class="o">=</span> <span class="n">ai</span><span class="p">.</span><span class="n">complete</span><span class="p">(</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">'role'</span><span class="p">:</span> <span class="s">'user'</span><span class="p">,</span> <span class="s">'content'</span><span class="p">:</span> <span class="s">'Hello!'</span><span class="p">}]</span>
+<span class="p">)</span>
+
+<span class="c1"># Advanced features
+</span><span class="n">response</span> <span class="o">=</span> <span class="n">ai</span><span class="p">.</span><span class="n">complete</span><span class="p">(</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">'role'</span><span class="p">:</span> <span class="s">'user'</span><span class="p">,</span> <span class="s">'content'</span><span class="p">:</span> <span class="s">'Analyze this.'</span><span class="p">}],</span>
+    <span class="n">routing</span><span class="o">=</span><span class="p">{</span>
+        <span class="s">'providers'</span><span class="p">:</span> <span class="p">[</span><span class="s">'openai'</span><span class="p">,</span> <span class="s">'anthropic'</span><span class="p">],</span>
+        <span class="s">'strategy'</span><span class="p">:</span> <span class="s">'cost_optimized'</span>
+    <span class="p">},</span>
+    <span class="n">cache</span><span class="o">=</span><span class="p">{</span>
+        <span class="s">'enabled'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s">'ttl'</span><span class="p">:</span> <span class="mi">3600</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Streaming response
+</span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">ai</span><span class="p">.</span><span class="n">stream</span><span class="p">(</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">'role'</span><span class="p">:</span> <span class="s">'user'</span><span class="p">,</span> <span class="s">'content'</span><span class="p">:</span> <span class="s">'Tell me a story'</span><span class="p">}]</span>
+<span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="go">Go</h4>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"github.com/devmentor/ai-gateway-go"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Initialize client</span>
+    <span class="n">ai</span> <span class="o">:=</span> <span class="n">devmentor</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span>
+        <span class="n">devmentor</span><span class="o">.</span><span class="n">WithAPIKey</span><span class="p">(</span><span class="s">"your-key"</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c">// Simple completion</span>
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ai</span><span class="o">.</span><span class="n">Complete</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">devmentor</span><span class="o">.</span><span class="n">CompletionRequest</span><span class="p">{</span>
+        <span class="n">Messages</span><span class="o">:</span> <span class="p">[]</span><span class="n">devmentor</span><span class="o">.</span><span class="n">Message</span><span class="p">{{</span>
+            <span class="n">Role</span><span class="o">:</span>    <span class="s">"user"</span><span class="p">,</span>
+            <span class="n">Content</span><span class="o">:</span> <span class="s">"Hello!"</span><span class="p">,</span>
+        <span class="p">}},</span>
+    <span class="p">})</span>
+
+    <span class="c">// Advanced features</span>
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ai</span><span class="o">.</span><span class="n">Complete</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">devmentor</span><span class="o">.</span><span class="n">CompletionRequest</span><span class="p">{</span>
+        <span class="n">Messages</span><span class="o">:</span> <span class="p">[]</span><span class="n">devmentor</span><span class="o">.</span><span class="n">Message</span><span class="p">{{</span>
+            <span class="n">Role</span><span class="o">:</span>    <span class="s">"user"</span><span class="p">,</span>
+            <span class="n">Content</span><span class="o">:</span> <span class="s">"Analyze this."</span><span class="p">,</span>
+        <span class="p">}},</span>
+        <span class="n">Routing</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">devmentor</span><span class="o">.</span><span class="n">RoutingConfig</span><span class="p">{</span>
+            <span class="n">Providers</span><span class="o">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"openai"</span><span class="p">,</span> <span class="s">"anthropic"</span><span class="p">},</span>
+            <span class="n">Strategy</span><span class="o">:</span>  <span class="s">"cost_optimized"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">Cache</span><span class="o">:</span> <span class="o">&amp;</span><span class="n">devmentor</span><span class="o">.</span><span class="n">CacheConfig</span><span class="p">{</span>
+            <span class="n">Enabled</span><span class="o">:</span> <span class="no">true</span><span class="p">,</span>
+            <span class="n">TTL</span><span class="o">:</span>     <span class="m">3600</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">})</span>
+
+    <span class="c">// Streaming response</span>
+    <span class="n">stream</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ai</span><span class="o">.</span><span class="n">Stream</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">devmentor</span><span class="o">.</span><span class="n">CompletionRequest</span><span class="p">{</span>
+        <span class="n">Messages</span><span class="o">:</span> <span class="p">[]</span><span class="n">devmentor</span><span class="o">.</span><span class="n">Message</span><span class="p">{{</span>
+            <span class="n">Role</span><span class="o">:</span>    <span class="s">"user"</span><span class="p">,</span>
+            <span class="n">Content</span><span class="o">:</span> <span class="s">"Tell me a story"</span><span class="p">,</span>
+        <span class="p">}},</span>
+    <span class="p">})</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">chunk</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Recv</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="n">io</span><span class="o">.</span><span class="n">EOF</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">Content</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="http-rest-api">HTTP REST API</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Simple completion</span>
+curl <span class="nt">-X</span> POST https://api.devmentor.ai/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$DEVMENTOR_API_KEY</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'</span>
+
+<span class="c"># Advanced features</span>
+curl <span class="nt">-X</span> POST https://api.devmentor.ai/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$DEVMENTOR_API_KEY</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "messages": [
+      {"role": "user", "content": "Analyze this."}
+    ],
+    "routing": {
+      "providers": ["openai", "anthropic"],
+      "strategy": "cost_optimized"
+    },
+    "cache": {
+      "enabled": true,
+      "ttl": 3600
+    }
+  }'</span>
+
+<span class="c"># Streaming response</span>
+curl <span class="nt">-X</span> POST https://api.devmentor.ai/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$DEVMENTOR_API_KEY</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "messages": [
+      {"role": "user", "content": "Tell me a story"}
+    ],
+    "stream": true
+  }'</span>
+</code></pre></div></div>
+
+<h3 id="framework-integration-examples">Framework Integration Examples</h3>
+
+<h4 id="nextjsreact">Next.js/React</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// hooks/useAI.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">DevMentorAI</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@devmentor/ai-gateway</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_DEVMENTOR_API_KEY</span>
+<span class="p">});</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useAI</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">loading</span><span class="p">,</span> <span class="nx">setLoading</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">error</span><span class="p">,</span> <span class="nx">setError</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="nb">Error</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">complete</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="nx">setLoading</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+        <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+        <span class="na">routing</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">strategy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">balanced</span><span class="dl">'</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">content</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">setError</span><span class="p">(</span><span class="nx">err</span> <span class="k">as</span> <span class="nb">Error</span><span class="p">);</span>
+      <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+      <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">onChunk</span><span class="p">:</span> <span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">stream</span><span class="p">({</span>
+      <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+      <span class="nx">onChunk</span><span class="p">,</span>
+      <span class="na">onError</span><span class="p">:</span> <span class="nx">setError</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="p">{</span> <span class="nx">complete</span><span class="p">,</span> <span class="nx">stream</span><span class="p">,</span> <span class="nx">loading</span><span class="p">,</span> <span class="nx">error</span> <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// pages/chat.tsx</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">ChatPage</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">complete</span><span class="p">,</span> <span class="nx">stream</span><span class="p">,</span> <span class="nx">loading</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useAI</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">messages</span><span class="p">,</span> <span class="nx">setMessages</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
+  
+  <span class="kd">const</span> <span class="nx">handleSubmit</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Simple completion</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">complete</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+    <span class="nx">setMessages</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">prev</span><span class="p">,</span> <span class="nx">response</span><span class="p">]);</span>
+    
+    <span class="c1">// Or streaming</span>
+    <span class="k">await</span> <span class="nx">stream</span><span class="p">(</span><span class="nx">prompt</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">setMessages</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">prev</span><span class="p">,</span> <span class="nx">chunk</span><span class="p">]);</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">messages</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">msg</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+      <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">onSubmit</span><span class="o">=</span><span class="p">{</span><span class="nx">handleSubmit</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>      <span class="p">{</span><span class="nx">loading</span> <span class="o">&amp;&amp;</span> <span class="o">&lt;</span><span class="nx">Spinner</span> <span class="o">/&gt;</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="expressjs-backend">Express.js Backend</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// src/middleware/ai.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">DevMentorAI</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@devmentor/ai-gateway</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DEVMENTOR_API_KEY</span><span class="p">,</span>
+  <span class="c1">// Enable all safety features for backend use</span>
+  <span class="na">safety</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">piiDetection</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">contentFiltering</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">promptInjectionCheck</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Middleware to handle AI completions</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nx">aiCompletionMiddleware</span><span class="p">(</span>
+  <span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span>
+  <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span>
+  <span class="nx">next</span><span class="p">:</span> <span class="nx">NextFunction</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">prompt</span><span class="p">,</span> <span class="nx">options</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+    
+    <span class="c1">// Check user's quota and permissions</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span> <span class="k">as</span> <span class="nx">User</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">canAccessAI</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">No AI access</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Stream response back to client</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">text/event-stream</span><span class="dl">'</span><span class="p">);</span>
+    
+    <span class="k">await</span> <span class="nx">ai</span><span class="p">.</span><span class="nx">stream</span><span class="p">({</span>
+      <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="nx">prompt</span> <span class="p">}],</span>
+      <span class="na">routing</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// Use user's tier settings</span>
+        <span class="na">preferredModels</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">allowedModels</span><span class="p">,</span>
+        <span class="na">strategy</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">tier</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">premium</span><span class="dl">'</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">quality</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">cost_optimized</span><span class="dl">'</span>
+      <span class="p">},</span>
+      <span class="na">onChunk</span><span class="p">:</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">`data: </span><span class="p">${</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="na">text</span><span class="p">:</span> <span class="nx">chunk</span> <span class="p">})}</span><span class="s2">\n\n`</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">onDone</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// src/routes/ai.ts</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/complete</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">authMiddleware</span><span class="p">,</span>           <span class="c1">// Verify JWT</span>
+  <span class="nx">quotaMiddleware</span><span class="p">,</span>          <span class="c1">// Check rate limits</span>
+  <span class="nx">aiCompletionMiddleware</span>    <span class="c1">// Handle AI completion</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="fastapi-python">FastAPI (Python)</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Request</span>
+<span class="kn">from</span> <span class="nn">devmentor_ai</span> <span class="kn">import</span> <span class="n">DevMentorAI</span>
+<span class="kn">from</span> <span class="nn">sse_starlette.sse</span> <span class="kn">import</span> <span class="n">EventSourceResponse</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<span class="n">ai</span> <span class="o">=</span> <span class="n">DevMentorAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">settings</span><span class="p">.</span><span class="n">DEVMENTOR_API_KEY</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"/api/ai/complete"</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">ai_completion</span><span class="p">(</span>
+    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="p">):</span>
+    <span class="c1"># Get user from JWT
+</span>    <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">user</span>
+    
+    <span class="c1"># If streaming requested
+</span>    <span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">event_generator</span><span class="p">():</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">ai</span><span class="p">.</span><span class="n">stream</span><span class="p">(</span>
+                <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+                <span class="n">routing</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s">"preferred_models"</span><span class="p">:</span> <span class="n">user</span><span class="p">.</span><span class="n">allowed_models</span><span class="p">,</span>
+                    <span class="s">"strategy"</span><span class="p">:</span> <span class="s">"balanced"</span>
+                <span class="p">}</span>
+            <span class="p">):</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s">"event"</span><span class="p">:</span> <span class="s">"chunk"</span><span class="p">,</span>
+                    <span class="s">"data"</span><span class="p">:</span> <span class="n">chunk</span>
+                <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">EventSourceResponse</span><span class="p">(</span><span class="n">event_generator</span><span class="p">())</span>
+    
+    <span class="c1"># Regular completion
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ai</span><span class="p">.</span><span class="n">complete</span><span class="p">(</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+        <span class="n">routing</span><span class="o">=</span><span class="p">{</span>
+            <span class="s">"preferred_models"</span><span class="p">:</span> <span class="n">user</span><span class="p">.</span><span class="n">allowed_models</span><span class="p">,</span>
+            <span class="s">"strategy"</span><span class="p">:</span> <span class="s">"balanced"</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{</span><span class="s">"text"</span><span class="p">:</span> <span class="n">response</span><span class="p">.</span><span class="n">content</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="django">Django</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ai/views.py
+</span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">StreamingHttpResponse</span>
+<span class="kn">from</span> <span class="nn">devmentor_ai</span> <span class="kn">import</span> <span class="n">DevMentorAI</span>
+
+<span class="n">ai</span> <span class="o">=</span> <span class="n">DevMentorAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">settings</span><span class="p">.</span><span class="n">DEVMENTOR_API_KEY</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">AICompletionView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="c1"># Get user from session
+</span>        <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">user</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">.</span><span class="n">has_ai_access</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponseForbidden</span><span class="p">()</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'prompt'</span><span class="p">]</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'stream'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">StreamingHttpResponse</span><span class="p">(</span>
+                <span class="n">streaming_content</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">stream_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">user</span><span class="p">),</span>
+                <span class="n">content_type</span><span class="o">=</span><span class="s">'text/event-stream'</span>
+            <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">complete_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">user</span><span class="p">))</span>
+    
+    <span class="k">def</span> <span class="nf">stream_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">ai</span><span class="p">.</span><span class="n">stream</span><span class="p">(</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+            <span class="n">routing</span><span class="o">=</span><span class="p">{</span>
+                <span class="s">"preferred_models"</span><span class="p">:</span> <span class="n">user</span><span class="p">.</span><span class="n">allowed_models</span><span class="p">,</span>
+                <span class="s">"strategy"</span><span class="p">:</span> <span class="s">"balanced"</span>
+            <span class="p">}</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s">"data: </span><span class="si">{</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="si">{</span><span class="s">'text'</span><span class="si">:</span> <span class="n">chunk</span><span class="si">}</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s">"</span>
+    
+    <span class="k">def</span> <span class="nf">complete_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ai</span><span class="p">.</span><span class="n">complete</span><span class="p">(</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+            <span class="n">routing</span><span class="o">=</span><span class="p">{</span>
+                <span class="s">"preferred_models"</span><span class="p">:</span> <span class="n">user</span><span class="p">.</span><span class="n">allowed_models</span><span class="p">,</span>
+                <span class="s">"strategy"</span><span class="p">:</span> <span class="s">"balanced"</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"text"</span><span class="p">:</span> <span class="n">response</span><span class="p">.</span><span class="n">content</span><span class="p">}</span>
+
+<span class="c1"># urls.py
+</span><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'api/ai/complete'</span><span class="p">,</span>
+         <span class="n">login_required</span><span class="p">(</span><span class="n">AICompletionView</span><span class="p">.</span><span class="n">as_view</span><span class="p">()),</span>
+         <span class="n">name</span><span class="o">=</span><span class="s">'ai_completion'</span><span class="p">)</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="real-world-integration-examples">Real-World Integration Examples</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Without AI Gateway</span>
+<span class="kd">const</span> <span class="nx">messages</span> <span class="o">=</span> <span class="p">[{</span> <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span> <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Hello!</span><span class="dl">'</span> <span class="p">}];</span>
+
+<span class="c1">// Need different clients for each provider</span>
+<span class="kd">const</span> <span class="nx">openaiResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">openai</span><span class="p">.</span><span class="nx">createChatCompletion</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">gpt-4</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">messages</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">anthropicResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">anthropic</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="dl">'</span><span class="s1">claude-3</span><span class="dl">'</span><span class="p">,</span>
+  <span class="nx">messages</span>
+<span class="p">});</span>
+
+<span class="c1">// With AI Gateway</span>
+<span class="kd">const</span> <span class="nx">gateway</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+  <span class="na">apiKey</span><span class="p">:</span> <span class="dl">'</span><span class="s1">your-single-key</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="c1">// One unified interface for all providers</span>
+<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">gateway</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+  <span class="nx">messages</span><span class="p">,</span>
+  <span class="c1">// Optional: specify provider preferences</span>
+  <span class="na">routing</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">openai</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">anthropic</span><span class="dl">'</span><span class="p">],</span>
+    <span class="na">strategy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cost_optimized</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="real-world-integration-example">Real-World Integration Example</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example: AI-powered customer support app</span>
+
+<span class="k">import</span> <span class="p">{</span> <span class="nx">DevMentorAI</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@devmentor/ai-gateway</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">CustomerSupportBot</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="nx">ai</span><span class="p">:</span> <span class="nx">DevMentorAI</span><span class="p">;</span>
+  
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ai</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DevMentorAI</span><span class="p">({</span>
+      <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DEVMENTOR_API_KEY</span><span class="p">,</span>
+      <span class="c1">// Enable safety features</span>
+      <span class="na">safety</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">piiDetection</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">contentFiltering</span><span class="p">:</span> <span class="kc">true</span>
+      <span class="p">},</span>
+      <span class="c1">// Set cost limits</span>
+      <span class="na">budget</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">maxCostPerRequest</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
+        <span class="na">maxCostPerDay</span><span class="p">:</span> <span class="mf">50.00</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">handleCustomerQuery</span><span class="p">(</span><span class="nx">query</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Gateway handles:</span>
+      <span class="c1">// - PII redaction</span>
+      <span class="c1">// - Provider selection</span>
+      <span class="c1">// - Caching similar queries</span>
+      <span class="c1">// - Cost tracking</span>
+      <span class="c1">// - Error handling</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">ai</span><span class="p">.</span><span class="nx">complete</span><span class="p">({</span>
+        <span class="na">messages</span><span class="p">:</span> <span class="p">[{</span>
+          <span class="na">role</span><span class="p">:</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">content</span><span class="p">:</span> <span class="nx">query</span>
+        <span class="p">}],</span>
+        <span class="c1">// Use semantic caching</span>
+        <span class="na">cache</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+          <span class="na">similarityThreshold</span><span class="p">:</span> <span class="mf">0.95</span>
+        <span class="p">},</span>
+        <span class="c1">// Specify model preferences</span>
+        <span class="na">routing</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">preferredModels</span><span class="p">:</span> <span class="p">[</span>
+            <span class="dl">'</span><span class="s1">gpt-4-turbo</span><span class="dl">'</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">claude-3-opus</span><span class="dl">'</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">mistral</span><span class="dl">'</span>
+          <span class="p">],</span>
+          <span class="na">strategy</span><span class="p">:</span> <span class="dl">'</span><span class="s1">balanced</span><span class="dl">'</span> <span class="c1">// cost vs quality</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="na">answer</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+        <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">provider</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">provider</span><span class="p">,</span>
+          <span class="na">cost</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">cost</span><span class="p">,</span>
+          <span class="na">cached</span><span class="p">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">cached</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Gateway provides standardized errors</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">BUDGET_EXCEEDED</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Handle budget exceeded</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">SAFETY_VIOLATION</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Handle safety issues</span>
+      <span class="p">}</span>
+      <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="what-does-the-ai-gateway-handle">What Does the AI Gateway Handle?</h3>
+
+<h3 id="definition">Definition</h3>
+<p>An <strong>AI Gateway</strong> is a centralized API management layer that sits between your applications and multiple AI/LLM providers. It acts as a single entry point for all AI operations, providing abstraction, control, and governance over AI model usage across your organization.</p>
+
+<h3 id="why-do-you-need-an-ai-gateway">Why Do You Need an AI Gateway?</h3>
+
+<h4 id="1-provider-independence">1. <strong>Provider Independence</strong></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Without Gateway:                With Gateway:
+App1 → OpenAI API              App1 ─┐
+App2 → Anthropic API           App2 ─┼→ AI Gateway → Multiple Providers
+App3 → Azure OpenAI            App3 ─┘
+</code></pre></div></div>
+<ul>
+  <li><strong>Problem</strong>: Direct provider coupling, vendor lock-in, complex migrations</li>
+  <li><strong>Solution</strong>: Single API interface, easy provider switching, A/B testing</li>
+</ul>
+
+<h4 id="2-cost-control">2. <strong>Cost Control</strong></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Without Gateway:                With Gateway:
+$$$$ Untracked spending        $ Monitored &amp; controlled
+- No visibility                - Real-time cost tracking
+- Bill surprises               - Budget limits
+- No optimization              - Cost-optimized routing
+</code></pre></div></div>
+
+<h4 id="3-security--compliance">3. <strong>Security &amp; Compliance</strong></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Without Gateway:                With Gateway:
+⚠️ Data leaks possible          ✅ PII auto-redacted
+⚠️ No audit trail               ✅ Complete audit logs
+⚠️ Prompt injection risks       ✅ Security filters
+</code></pre></div></div>
+
+<h4 id="4-performance-optimization">4. <strong>Performance Optimization</strong></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Without Gateway:                With Gateway:
+🐌 Repeated API calls           ⚡ Semantic caching
+🐌 Single provider latency      ⚡ Multi-provider failover
+🐌 No response optimization     ⚡ Smart routing
+</code></pre></div></div>
+
+<h3 id="real-world-use-cases">Real-World Use Cases</h3>
+
+<h4 id="use-case-1-multi-application-ai-integration">Use Case 1: Multi-Application AI Integration</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Scenario</span><span class="pi">:</span> <span class="s">Enterprise with 10+ applications using AI</span>
+<span class="na">Problem</span><span class="pi">:</span> <span class="s">Each app has different API keys, no central control</span>
+<span class="na">Solution</span><span class="pi">:</span> <span class="na">AI Gateway provides</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Single API endpoint for all apps</span>
+  <span class="pi">-</span> <span class="s">Centralized key management</span>
+  <span class="pi">-</span> <span class="s">Usage tracking per application</span>
+  <span class="pi">-</span> <span class="s">Cost allocation to departments</span>
+</code></pre></div></div>
+
+<h4 id="use-case-2-regulatory-compliance-hipaagdpr">Use Case 2: Regulatory Compliance (HIPAA/GDPR)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Scenario</span><span class="pi">:</span> <span class="s">Healthcare app using AI for patient data</span>
+<span class="na">Problem</span><span class="pi">:</span> <span class="s">Risk of PII exposure to AI providers</span>
+<span class="na">Solution</span><span class="pi">:</span> <span class="na">AI Gateway provides</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Automatic PII detection and redaction</span>
+  <span class="pi">-</span> <span class="s">Data residency controls</span>
+  <span class="pi">-</span> <span class="s">Audit logs for compliance</span>
+  <span class="pi">-</span> <span class="s">Encryption at rest and in transit</span>
+</code></pre></div></div>
+
+<h4 id="use-case-3-cost-optimization">Use Case 3: Cost Optimization</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Scenario</span><span class="pi">:</span> <span class="s">Startup with $10K/month AI budget</span>
+<span class="na">Problem</span><span class="pi">:</span> <span class="s">Costs spiraling out of control</span>
+<span class="na">Solution</span><span class="pi">:</span> <span class="na">AI Gateway provides</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Real-time cost monitoring</span>
+  <span class="pi">-</span> <span class="s">Automatic provider switching based on cost</span>
+  <span class="pi">-</span> <span class="s">Usage quotas and alerts</span>
+  <span class="pi">-</span> <span class="s">Cheaper model fallbacks for non-critical tasks</span>
+</code></pre></div></div>
+
+<h4 id="use-case-4-high-availability">Use Case 4: High Availability</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Scenario</span><span class="pi">:</span> <span class="s">Production app requiring 99.99% uptime</span>
+<span class="na">Problem</span><span class="pi">:</span> <span class="s">Provider outages cause service disruption</span>
+<span class="na">Solution</span><span class="pi">:</span> <span class="na">AI Gateway provides</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Automatic failover to backup providers</span>
+  <span class="pi">-</span> <span class="s">Response caching for common queries</span>
+  <span class="pi">-</span> <span class="s">Circuit breakers for failing providers</span>
+  <span class="pi">-</span> <span class="s">Load balancing across providers</span>
+</code></pre></div></div>
+
+<h3 id="quick-readiness-dashboard">Quick Readiness Dashboard</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Component                    Progress  Status
+─────────────────────────────────────────────
+Core Infrastructure         [######----] 60%  ✅ Good
+AI Gateway Features         [####------] 40%  🔴 Critical
+Security &amp; Governance       [###-------] 30%  🔴 Critical  
+Enterprise Features         [##--------] 20%  🔴 Critical
+Developer Experience        [####------] 40%  🟡 Needs Work
+Documentation              [####------] 40%  🟡 Needs Work
+─────────────────────────────────────────────
+OVERALL AI GATEWAY READY:   [####------] 45%  🔴 NOT READY
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️-current-state-analysis">🏗️ Current State Analysis</h2>
+
+<h3 id="detailed-service-assessment">Detailed Service Assessment</h3>
+
+<h4 id="1-basic-ai-gateway-service-servicesai-gateway">1. <strong>Basic AI Gateway Service</strong> (<code class="language-plaintext highlighter-rouge">/services/ai-gateway/</code>)</h4>
+<ul>
+  <li><strong>Ollama Integration</strong>: Local LLM support via Ollama (llama2, codellama, mistral)</li>
+  <li><strong>Chat Completions</strong>: Working <code class="language-plaintext highlighter-rouge">/api/chat/completions</code> endpoint</li>
+  <li><strong>Code Analysis</strong>: Basic code analysis endpoint for quality/security/performance</li>
+  <li><strong>Redis Integration</strong>: Basic caching and event streaming</li>
+  <li><strong>WebSocket Support</strong>: Real-time event streaming foundation</li>
+  <li><strong>Swagger Docs</strong>: Basic API documentation</li>
+</ul>
+
+<h4 id="2-api-gateway-layer-servicesapi-gateway">2. <strong>API Gateway Layer</strong> (<code class="language-plaintext highlighter-rouge">/services/api-gateway/</code>)</h4>
+<ul>
+  <li><strong>Service Mesh</strong>: Proxy routing to multiple services</li>
+  <li><strong>JWT Authentication</strong>: Basic auth middleware with token validation</li>
+  <li><strong>Rate Limiting</strong>: Redis-backed rate limiting (1000 req/15min)</li>
+  <li><strong>Health Checks</strong>: Service discovery and health monitoring</li>
+  <li><strong>Request Routing</strong>: Dynamic proxy to backend services</li>
+  <li><strong>CORS &amp; Security Headers</strong>: Basic security middleware (Helmet)</li>
+</ul>
+
+<h4 id="3-supporting-services">3. <strong>Supporting Services</strong></h4>
+<ul>
+  <li><strong>Auth Service</strong>: PostgreSQL-backed authentication with sessions and audit logs</li>
+  <li><strong>Memory Service</strong>: Vector memory integration (appears to use Qdrant)</li>
+  <li><strong>Learning Engine</strong>: Research agent system with workflow orchestration</li>
+  <li><strong>Project Service</strong>: Task and epic tracking capabilities</li>
+</ul>
+
+<h4 id="4-observability-basics">4. <strong>Observability Basics</strong></h4>
+<ul>
+  <li>Winston logging across services</li>
+  <li>Basic request/response tracking</li>
+  <li>Redis event streaming for AI interactions</li>
+</ul>
+
+<h3 id="whats-working-">What’s Working ✅</h3>
+
+<h4 id="infrastructure-layer">Infrastructure Layer</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">api-gateway</span><span class="pi">:</span>          <span class="s">✅ JWT auth, rate limiting, proxy routing</span>
+<span class="na">auth-service</span><span class="pi">:</span>         <span class="s">✅ PostgreSQL, sessions, audit logs</span>  
+<span class="na">memory-service</span><span class="pi">:</span>       <span class="s">✅ Qdrant vector DB integration</span>
+<span class="na">redis</span><span class="pi">:</span>               <span class="s">✅ Caching and event streaming</span>
+<span class="na">websockets</span><span class="pi">:</span>          <span class="s">✅ Real-time communication</span>
+<span class="na">kubernetes</span><span class="pi">:</span>          <span class="s">✅ Container orchestration ready</span>
+</code></pre></div></div>
+
+<h4 id="ai-gateway-basic-features">AI Gateway Basic Features</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Current capabilities in /services/ai-gateway/</span>
+<span class="err">✅</span> <span class="nx">Ollama</span> <span class="nx">integration</span> <span class="p">(</span><span class="nx">llama2</span><span class="p">,</span> <span class="nx">codellama</span><span class="p">,</span> <span class="nx">mistral</span><span class="p">)</span>
+<span class="err">✅</span> <span class="nx">Chat</span> <span class="nx">completions</span> <span class="nx">endpoint</span>
+<span class="err">✅</span> <span class="nx">Code</span> <span class="nx">analysis</span> <span class="nx">endpoint</span>  
+<span class="err">✅</span> <span class="nx">Redis</span> <span class="nx">event</span> <span class="nx">streaming</span>
+<span class="err">✅</span> <span class="nx">Basic</span> <span class="nx">Swagger</span> <span class="nx">documentation</span>
+<span class="err">✅</span> <span class="nx">Health</span> <span class="nx">checks</span>
+</code></pre></div></div>
+
+<h3 id="critical-gaps-">Critical Gaps ❌</h3>
+
+<h4 id="1-multi-provider-support-critical">1. Multi-Provider Support (CRITICAL)</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MISSING - Need to implement:</span>
+<span class="err">❌</span> <span class="nx">OpenAI</span> <span class="p">(</span><span class="nx">GPT</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="nx">GPT</span><span class="o">-</span><span class="mf">3.5</span><span class="p">)</span>
+<span class="err">❌</span> <span class="nx">Anthropic</span> <span class="p">(</span><span class="nx">Claude</span> <span class="mi">3</span> <span class="nx">Opus</span><span class="p">,</span> <span class="nx">Sonnet</span><span class="p">)</span>
+<span class="err">❌</span> <span class="nx">Google</span> <span class="p">(</span><span class="nx">Gemini</span><span class="p">,</span> <span class="nx">PaLM</span><span class="p">)</span>
+<span class="err">❌</span> <span class="nx">Azure</span> <span class="nx">OpenAI</span> <span class="nx">Service</span>
+<span class="err">❌</span> <span class="nx">AWS</span> <span class="nx">Bedrock</span>
+<span class="err">❌</span> <span class="nx">Cohere</span>
+<span class="err">❌</span> <span class="nx">Hugging</span> <span class="nx">Face</span> <span class="nx">Inference</span>
+</code></pre></div></div>
+
+<h4 id="2-enterprise-security-critical">2. Enterprise Security (CRITICAL)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">MISSING</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">PII detection and redaction</span>
+  <span class="pi">-</span> <span class="s">Prompt injection protection</span>
+  <span class="pi">-</span> <span class="s">API key vault management</span>
+  <span class="pi">-</span> <span class="s">Content filtering</span>
+  <span class="pi">-</span> <span class="s">Data residency controls</span>
+  <span class="pi">-</span> <span class="s">Compliance reporting</span>
+  <span class="pi">-</span> <span class="s">End-to-end encryption</span>
+</code></pre></div></div>
+
+<h4 id="3-cost--resource-management-high">3. Cost &amp; Resource Management (HIGH)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">MISSING</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Token counting and tracking</span>
+  <span class="pi">-</span> <span class="s">Cost calculation per request</span>
+  <span class="pi">-</span> <span class="s">Budget limits and alerts</span>
+  <span class="pi">-</span> <span class="s">Usage quotas per user/team</span>
+  <span class="pi">-</span> <span class="s">Chargeback/showback reports</span>
+  <span class="pi">-</span> <span class="s">Model cost optimization</span>
+  <span class="pi">-</span> <span class="s">Spend analytics dashboard</span>
+</code></pre></div></div>
+
+<h4 id="4-advanced-orchestration-high">4. Advanced Orchestration (HIGH)</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">MISSING</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Semantic caching</span>
+  <span class="pi">-</span> <span class="s">RAG pipeline integration</span>
+  <span class="pi">-</span> <span class="s">Function/tool calling</span>
+  <span class="pi">-</span> <span class="s">Prompt templates</span>
+  <span class="pi">-</span> <span class="s">Model routing logic</span>
+  <span class="pi">-</span> <span class="s">Streaming aggregation</span>
+  <span class="pi">-</span> <span class="s">Batch processing</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-ai-gateway-architecture-target-state">📊 AI Gateway Architecture (Target State)</h2>
+
+<h3 id="high-level-architecture">High-Level Architecture</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌───────────────────────────────────────────────────────────────┐
+│                         CLIENTS                              │
+│   Web Apps | Mobile | CLI | SDKs | VSCode | Notebooks       │
+└────────────────┬─────────────────────────────────────────────┘
+                 │ HTTPS/WSS
+┌────────────────▼─────────────────────────────────────────────┐
+│                    AI GATEWAY LAYER                          │
+├───────────────────────────────────────────────────────────────┤
+│ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐        │
+│ │   Auth &amp;    │ │   Request    │ │    Response    │        │
+│ │   Rate      │ │   Pipeline   │ │   Processing   │        │
+│ │   Limiting  │ │   &amp; Routing  │ │   &amp; Caching    │        │
+│ └─────────────┘ └──────────────┘ └────────────────┘        │
+│                                                              │
+│ ┌───────────────────────────────────────────────────┐        │
+│ │            SECURITY &amp; GOVERNANCE                 │        │
+│ │  • PII Detection  • Prompt Filtering            │        │
+│ │  • Audit Logging  • Compliance Controls         │        │
+│ └───────────────────────────────────────────────────┘        │
+└────────────────┬─────────────────────────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────────────────────────┐
+│                    PROVIDER ABSTRACTION                      │
+├───────────────────────────────────────────────────────────────┤
+│  ┌──────┐ ┌──────────┐ ┌────────┐ ┌──────┐ ┌────────┐     │
+│  │OpenAI│ │Anthropic │ │ Google │ │Azure │ │ Ollama │     │
+│  └──────┘ └──────────┘ └────────┘ └──────┘ └────────┘     │
+└───────────────────────────────────────────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────────────────────────┐
+│                    SUPPORTING SERVICES                       │
+├───────────────────────────────────────────────────────────────┤
+│  Vector DB  │  Redis Cache  │  Metrics  │  Logging         │
+│  (Qdrant)   │  (Semantic)   │  (Prom)   │  (Winston)       │
+└───────────────────────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<h3 id="detailed-request-flow-architecture">Detailed Request Flow Architecture</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌────────────────────────────────────────────────────────────────────────┐
+│                           REQUEST FLOW DETAIL                          │
+└────────────────────────────────────────────────────────────────────────┘
+
+1. CLIENT REQUEST
+   ┌───────────────┐
+   │    Client     │────POST /api/chat/completions─────╮
+   │   (App/SDK)   │    {prompt, model?, options}         │
+   └───────────────┘                                       ↓
+                                                           ↓
+2. AUTHENTICATION &amp; RATE LIMITING                          ↓
+   ┌────────────────────────────────────────────────────────╮
+   │  ┌─────────────────┐   ┌───────────────────┐   │←────┘
+   │  │  Verify JWT    │→→→│  Check Rate      │   │
+   │  │  or API Key    │   │  Limits (Redis)  │   │
+   │  └─────────────────┘   └───────────────────┘   │
+   └────────────────────────────────────────────────────────┘
+                                                           ↓
+3. SECURITY &amp; COMPLIANCE LAYER                             ↓
+   ┌────────────────────────────────────────────────────────╮
+   │  ┌───────────────┐   ┌─────────────────┐     │←────┘
+   │  │ PII Detection │→→→│ Prompt Injection│     │
+   │  │ &amp; Redaction   │   │ Detection       │     │
+   │  └───────────────┘   └─────────────────┘     │
+   │           ↓                      ↓                  │
+   │  ┌──────────────────────────────────────┐     │
+   │  │         Audit Log (PostgreSQL)         │     │
+   │  └──────────────────────────────────────┘     │
+   └────────────────────────────────────────────────────────┘
+                                                           ↓
+4. CACHE CHECK                                             ↓
+   ┌────────────────────────────────────────────────────────╮
+   │  ┌──────────────────────────────────────┐     │←────┘
+   │  │  Semantic Cache (Redis + Qdrant)      │     │
+   │  │  - Generate embedding                  │     │
+   │  │  - Search similar prompts (&gt;0.95)      │     │
+   │  │  - Return if cache hit                 │─────╪───→ CACHE HIT
+   │  └──────────────────────────────────────┘     │      (Return)
+   └────────────────────────────────────────────────────────┘
+                                                           ↓ CACHE MISS
+5. PROVIDER ROUTING &amp; EXECUTION                            ↓
+   ┌────────────────────────────────────────────────────────╮
+   │  ┌──────────────────────────────────────┐     │←────┘
+   │  │  Provider Selection Logic               │     │
+   │  │  - Cost optimization                    │     │
+   │  │  - Latency optimization                 │     │
+   │  │  - Capability matching                  │     │
+   │  │  - Availability check                   │     │
+   │  └─────────────────┬────────────────────┘     │
+   │                       ↓                              │
+   │  ┌──────────────────────────────────────┐     │
+   │  │  Execute Request with Retry Logic      │     │
+   │  │  - Primary: OpenAI                     │     │
+   │  │  - Fallback 1: Anthropic               │     │
+   │  │  - Fallback 2: Ollama                  │     │
+   │  └──────────────────────────────────────┘     │
+   └────────────────────────────────────────────────────────┘
+                                                           ↓
+6. POST-PROCESSING &amp; RESPONSE                              ↓
+   ┌────────────────────────────────────────────────────────╮
+   │  ┌──────────────────────────────────────┐     │←────┘
+   │  │  - Store in cache                      │     │
+   │  │  - Track token usage                   │     │
+   │  │  - Calculate cost                      │     │
+   │  │  - Update metrics                      │     │
+   │  │  - Format response                     │     │
+   │  └──────────────────────────────────────┘     │
+   └────────────────────────────────────────────────────────┘
+                                                           ↓
+                                                     RETURN TO CLIENT
+</code></pre></div></div>
+
+<h3 id="component-interaction-diagram">Component Interaction Diagram</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌──────────────────────────────────────────────────────────────────┐
+│                    COMPONENT INTERACTIONS                      │
+└──────────────────────────────────────────────────────────────────┘
+
+     ┌───────────────┐                          ┌───────────────┐
+     │  AI Gateway   │←───────JWT/API Key─────╪ Auth Service  │
+     │   (3004)      │                          │   (3002)      │
+     └────┬─────────┘                          └───────────────┘
+          │                                                │
+          │                                           PostgreSQL
+          │                                           (Sessions)
+          │
+     Rate Limiting                                  Vector Search
+          │                                                │
+          ↓                                                ↓
+     ┌───────────────┐                          ┌───────────────┐
+     │ Redis Cache   │←──────Semantic Cache────→│ Qdrant Vector │
+     │   (6379)      │                          │   (6333)      │
+     └───────────────┘                          └───────────────┘
+          │                                                │
+    Event Streaming                                   Embeddings
+          │                                                │
+          ↓                                                ↓
+     ┌───────────────┐                          ┌───────────────┐
+     │ Learning      │                          │ Memory        │
+     │ Engine (3005) │←────────────────────────→│ Service(3003) │
+     └───────────────┘                          └───────────────┘
+
+     ┌───────────────┐                          ┌───────────────┐
+     │ Prometheus    │←────────Metrics─────────→│ Grafana       │
+     │   (9090)      │                          │   (3000)      │
+     └───────────────┘                          └───────────────┘
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-6-week-beta-implementation-roadmap">🚀 6-Week Beta Implementation Roadmap</h2>
+
+<h3 id="week-1-2-multi-provider-foundation">Week 1-2: Multi-Provider Foundation</h3>
+<p><strong>September 2-15, 2025</strong></p>
+
+<h4 id="priority-1-provider-integration">Priority 1: Provider Integration</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// File: services/ai-gateway/src/providers/openai.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">OpenAIProvider</span> <span class="k">implements</span> <span class="nx">AIProvider</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">complete</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">CompletionRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">CompletionResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Implementation with retry logic, error handling</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// File: services/ai-gateway/src/providers/anthropic.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">AnthropicProvider</span> <span class="k">implements</span> <span class="nx">AIProvider</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">complete</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">CompletionRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">CompletionResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Claude integration with proper formatting</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Deliverables:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />OpenAI provider with GPT-4/GPT-3.5</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Anthropic provider with Claude 3</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Unified request/response interface</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Provider failover mechanism</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cost calculation per provider</li>
+</ul>
+
+<h4 id="priority-2-security-basics">Priority 2: Security Basics</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// File: services/ai-gateway/src/security/pii-detector.ts</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">PIIDetector</span> <span class="p">{</span>
+  <span class="nx">patterns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">ssn</span><span class="p">:</span> <span class="sr">/</span><span class="se">\b\d{3}</span><span class="sr">-</span><span class="se">\d{2}</span><span class="sr">-</span><span class="se">\d{4}\b</span><span class="sr">/</span><span class="p">,</span>
+    <span class="na">email</span><span class="p">:</span> <span class="sr">/</span><span class="se">\b[</span><span class="sr">A-Za-z0-9._%+-</span><span class="se">]</span><span class="sr">+@</span><span class="se">[</span><span class="sr">A-Za-z0-9.-</span><span class="se">]</span><span class="sr">+</span><span class="se">\.[</span><span class="sr">A-Z|a-z</span><span class="se">]{2,}\b</span><span class="sr">/</span><span class="p">,</span>
+    <span class="na">phone</span><span class="p">:</span> <span class="sr">/</span><span class="se">\b\d{3}[</span><span class="sr">-.</span><span class="se">]?\d{3}[</span><span class="sr">-.</span><span class="se">]?\d{4}\b</span><span class="sr">/</span><span class="p">,</span>
+    <span class="na">creditCard</span><span class="p">:</span> <span class="sr">/</span><span class="se">\b\d{4}[\s</span><span class="sr">-</span><span class="se">]?\d{4}[\s</span><span class="sr">-</span><span class="se">]?\d{4}[\s</span><span class="sr">-</span><span class="se">]?\d{4}\b</span><span class="sr">/</span>
+  <span class="p">};</span>
+  
+  <span class="nx">detect</span><span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">PIIResult</span> <span class="p">{</span>
+    <span class="c1">// Scan and redact PII</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Deliverables:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />PII detection and redaction</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prompt injection detection</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Request/response encryption</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />API key management system</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Audit logging implementation</li>
+</ul>
+
+<h3 id="week-2-3-enterprise-features">Week 2-3: Enterprise Features</h3>
+<p><strong>September 16-22, 2025</strong></p>
+
+<h4 id="multi-tenancy--organizations">Multi-Tenancy &amp; Organizations</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">Organization</span> <span class="p">{</span>
+  <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">settings</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">allowedModels</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
+    <span class="nl">monthlyBudget</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">dataRetention</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">complianceMode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">HIPAA</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">GDPR</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">SOC2</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">NONE</span><span class="dl">'</span><span class="p">;</span>
+  <span class="p">};</span>
+  <span class="nl">limits</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">requestsPerMinute</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">tokensPerMonth</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">maxContextSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Deliverables:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Organization/workspace model</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Team-based access control</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Usage quotas and limits</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Budget tracking and alerts</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cost attribution system</li>
+</ul>
+
+<h4 id="advanced-caching">Advanced Caching</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Semantic caching with embeddings</span>
+<span class="kd">class</span> <span class="nx">SemanticCache</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="kd">get</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">CachedResponse</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">embedding</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">embed</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">similar</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">vectorDB</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">embedding</span><span class="p">,</span> <span class="na">threshold</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">similar</span><span class="p">[</span><span class="mi">0</span><span class="p">]?.</span><span class="nx">response</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Deliverables:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Semantic similarity caching</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cache warming strategies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />TTL-based invalidation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cross-request deduplication</li>
+</ul>
+
+<h3 id="week-3-4-observability--monitoring">Week 3-4: Observability &amp; Monitoring</h3>
+<p><strong>September 23-30, 2025</strong></p>
+
+<h4 id="metrics--dashboards">Metrics &amp; Dashboards</h4>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.monitoring.yml</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">prometheus</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">prom/prometheus:latest</span>
+    <span class="na">ports</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">9090:9090"</span><span class="pi">]</span>
+    
+  <span class="na">grafana</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">grafana/grafana:latest</span>
+    <span class="na">ports</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">3000:3000"</span><span class="pi">]</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./dashboards:/etc/grafana/provisioning/dashboards</span>
+      
+  <span class="na">jaeger</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">jaegertracing/all-in-one:latest</span>
+    <span class="na">ports</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">16686:16686"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<p><strong>Deliverables:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Prometheus metrics export</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Grafana dashboards (5+)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Distributed tracing with OpenTelemetry</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cost analytics dashboard</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance monitoring</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Alert rules configuration</li>
+</ul>
+
+<h3 id="week-5-developer-experience">Week 5: Developer Experience</h3>
+<p><strong>October 1-7, 2025</strong></p>
+
+<h4 id="sdk-development">SDK Development</h4>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// @devmentor/ai-gateway-sdk</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">DevMentorAI</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="p">{</span> <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">baseURL</span><span class="p">?:</span> <span class="kr">string</span> <span class="p">})</span> <span class="p">{}</span>
+  
+  <span class="k">async</span> <span class="nx">complete</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">options</span><span class="p">?:</span> <span class="nx">CompletionOptions</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Simplified API with retries, streaming, etc.</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">stream</span><span class="p">(</span><span class="nx">prompt</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">onChunk</span><span class="p">:</span> <span class="p">(</span><span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Streaming support</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Deliverables:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />TypeScript/JavaScript SDK</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Python SDK</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />API documentation (OpenAPI 3.1)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Interactive playground UI</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Code examples repository</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Migration guides</li>
+</ul>
+
+<h3 id="week-6-testing--launch-prep">Week 6: Testing &amp; Launch Prep</h3>
+<p><strong>October 8-14, 2025</strong></p>
+
+<p><strong>Testing Requirements:</strong></p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Load testing (1000+ concurrent users)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Integration tests (all providers)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security penetration testing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Chaos engineering tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Performance benchmarks</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Disaster recovery validation</li>
+</ul>
+
+<hr />
+
+<h2 id="-beta-launch-checklist">📋 Beta Launch Checklist</h2>
+
+<h3 id="must-have-critical-">Must Have (Critical) ✅</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Providers</span><span class="pi">:</span>
+  <span class="s">✅ At least 3 LLM providers integrated</span>
+  <span class="s">✅ Automatic failover between providers</span>
+  <span class="s">✅ Unified API format</span>
+
+<span class="na">Security</span><span class="pi">:</span>
+  <span class="s">✅ PII detection active</span>
+  <span class="s">✅ API authentication working</span>
+  <span class="s">✅ Rate limiting enforced</span>
+  <span class="s">✅ Audit logs enabled</span>
+
+<span class="na">Operations</span><span class="pi">:</span>
+  <span class="s">✅ Health monitoring for all services</span>
+  <span class="s">✅ Basic cost tracking</span>
+  <span class="s">✅ Error handling and recovery</span>
+  <span class="s">✅ 99.9% uptime capability</span>
+
+<span class="na">Documentation</span><span class="pi">:</span>
+  <span class="s">✅ API reference complete</span>
+  <span class="s">✅ Getting started guide</span>
+  <span class="s">✅ At least one SDK (JS or Python)</span>
+</code></pre></div></div>
+
+<h3 id="should-have-important-">Should Have (Important) 🟡</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Features</span><span class="pi">:</span>
+  <span class="s">🟡 Semantic caching</span>
+  <span class="s">🟡 Multi-tenancy support</span>
+  <span class="s">🟡 Budget controls</span>
+  <span class="s">🟡 Prompt templates</span>
+  
+<span class="na">Monitoring</span><span class="pi">:</span>
+  <span class="s">🟡 Grafana dashboards</span>
+  <span class="s">🟡 Distributed tracing</span>
+  <span class="s">🟡 Cost analytics</span>
+  
+<span class="na">Developer</span><span class="pi">:</span>
+  <span class="s">🟡 Both JS and Python SDKs</span>
+  <span class="s">🟡 Interactive playground</span>
+  <span class="s">🟡 Video tutorials</span>
+</code></pre></div></div>
+
+<h3 id="nice-to-have-">Nice to Have 🔵</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Advanced</span><span class="pi">:</span>
+  <span class="s">🔵 A/B testing framework</span>
+  <span class="s">🔵 Custom model fine-tuning</span>
+  <span class="s">🔵 Advanced RAG pipelines</span>
+  <span class="s">🔵 Mobile SDKs</span>
+  <span class="s">🔵 GraphQL API</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-implementation-tasks-priority-order">🔧 Implementation Tasks (Priority Order)</h2>
+
+<h3 id="day-1-immediate-actions">Day 1: Immediate Actions</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Create provider abstraction</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> services/ai-gateway/src/providers
+<span class="nb">touch </span>services/ai-gateway/src/providers/base.ts
+<span class="nb">touch </span>services/ai-gateway/src/providers/openai.ts
+
+<span class="c"># 2. Add PII detection</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> services/ai-gateway/src/security
+<span class="nb">touch </span>services/ai-gateway/src/security/pii-detector.ts
+
+<span class="c"># 3. Set up environment</span>
+<span class="nb">cat</span> <span class="o">&gt;&gt;</span> .env.example <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh">
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+PII_DETECTION_ENABLED=true
+COST_TRACKING_ENABLED=true
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h3 id="week-1-core-development">Week 1: Core Development</h3>
+<ol>
+  <li><strong>Monday-Tuesday</strong>: OpenAI provider integration</li>
+  <li><strong>Wednesday</strong>: Anthropic provider integration</li>
+  <li><strong>Thursday</strong>: PII detection and redaction</li>
+  <li><strong>Friday</strong>: Cost tracking foundation</li>
+</ol>
+
+<h3 id="week-2-features--testing">Week 2: Features &amp; Testing</h3>
+<ol>
+  <li><strong>Monday</strong>: Semantic caching implementation</li>
+  <li><strong>Tuesday</strong>: Multi-tenancy support</li>
+  <li><strong>Wednesday</strong>: Integration testing</li>
+  <li><strong>Thursday</strong>: Load testing setup</li>
+  <li><strong>Friday</strong>: Bug fixes and polish</li>
+</ol>
+
+<hr />
+
+<h2 id="-success-metrics">📈 Success Metrics</h2>
+
+<h3 id="technical-kpis">Technical KPIs</h3>
+<p>| Metric | Current | Beta Target | Launch Target |
+|——–|———|————-|—————|
+| Providers Supported | 1 | 3+ | 6+ |
+| Gateway Latency (p99) | 500ms | &lt;200ms | &lt;100ms |
+| Cache Hit Rate | 0% | &gt;60% | &gt;80% |
+| Uptime | 95% | 99.9% | 99.99% |
+| Error Rate | 2% | &lt;0.1% | &lt;0.01% |</p>
+
+<h3 id="business-kpis">Business KPIs</h3>
+<p>| Metric | Beta Target | Q4 2025 |
+|——–|————-|———|
+| Active Users | 50 | 500 |
+| API Calls/Day | 10,000 | 100,000 |
+| Cost Savings vs Direct | 20% | 40% |
+| Time to First Call | 30 min | 5 min |
+| Developer Satisfaction | 7/10 | 9/10 |</p>
+
+<hr />
+
+<h2 id="-risk-mitigation">🚨 Risk Mitigation</h2>
+
+<h3 id="high-risks">High Risks</h3>
+<ol>
+  <li><strong>Data Privacy Breach</strong>
+    <ul>
+      <li>Mitigation: Implement PII detection Day 1</li>
+      <li>Fallback: Manual review process</li>
+    </ul>
+  </li>
+  <li><strong>Cost Overrun</strong>
+    <ul>
+      <li>Mitigation: Add budget limits Week 1</li>
+      <li>Fallback: Emergency shutoff switch</li>
+    </ul>
+  </li>
+  <li><strong>Provider Outage</strong>
+    <ul>
+      <li>Mitigation: Multi-provider failover</li>
+      <li>Fallback: Cached responses</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="medium-risks">Medium Risks</h3>
+<ol>
+  <li><strong>Performance Issues</strong>
+    <ul>
+      <li>Mitigation: Semantic caching</li>
+      <li>Monitoring: Grafana dashboards</li>
+    </ul>
+  </li>
+  <li><strong>Security Vulnerabilities</strong>
+    <ul>
+      <li>Mitigation: Security audit Week 4</li>
+      <li>Response: Incident response plan</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-next-steps">🎬 Next Steps</h2>
+
+<h3 id="today-august-16">Today (August 16)</h3>
+<ol>
+  <li>Review this document with team</li>
+  <li>Set up development environment</li>
+  <li>Create provider abstraction interface</li>
+</ol>
+
+<h3 id="tomorrow-august-17">Tomorrow (August 17)</h3>
+<ol>
+  <li>Start OpenAI provider integration</li>
+  <li>Implement basic PII detection</li>
+  <li>Set up test framework</li>
+</ol>
+
+<h3 id="this-week">This Week</h3>
+<ol>
+  <li>Complete 2 provider integrations</li>
+  <li>Deploy PII detection</li>
+  <li>Add cost tracking</li>
+  <li>Create integration tests</li>
+</ol>
+
+<h3 id="next-week">Next Week</h3>
+<ol>
+  <li>Add third provider</li>
+  <li>Implement semantic caching</li>
+  <li>Deploy monitoring stack</li>
+  <li>Begin documentation</li>
+</ol>
+
+<hr />
+
+<h2 id="-configuration-template">📝 Configuration Template</h2>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># config/ai-gateway-beta.yaml</span>
+<span class="na">gateway</span><span class="pi">:</span>
+  <span class="na">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0.5-beta"</span>
+  <span class="na">environment</span><span class="pi">:</span> <span class="s2">"</span><span class="s">development"</span>
+
+<span class="na">providers</span><span class="pi">:</span>
+  <span class="na">openai</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">api_key</span><span class="pi">:</span> <span class="s">${OPENAI_API_KEY}</span>
+    <span class="na">models</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">gpt-4-turbo"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">gpt-3.5-turbo"</span><span class="pi">]</span>
+    <span class="na">rate_limit</span><span class="pi">:</span> <span class="s">1000/min</span>
+    <span class="na">timeout</span><span class="pi">:</span> <span class="s">30s</span>
+    
+  <span class="na">anthropic</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">api_key</span><span class="pi">:</span> <span class="s">${ANTHROPIC_API_KEY}</span>
+    <span class="na">models</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">claude-3-opus"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">claude-3-sonnet"</span><span class="pi">]</span>
+    <span class="na">rate_limit</span><span class="pi">:</span> <span class="s">500/min</span>
+    
+  <span class="na">ollama</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">url</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://localhost:11434"</span>
+    <span class="na">models</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">llama2"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">codellama"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">mistral"</span><span class="pi">]</span>
+
+<span class="na">security</span><span class="pi">:</span>
+  <span class="na">pii_detection</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">prompt_filtering</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">audit_logging</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">encryption</span><span class="pi">:</span> <span class="no">true</span>
+  
+<span class="na">routing</span><span class="pi">:</span>
+  <span class="na">default_provider</span><span class="pi">:</span> <span class="s2">"</span><span class="s">openai"</span>
+  <span class="na">fallback_chain</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">openai"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">anthropic"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">ollama"</span><span class="pi">]</span>
+  <span class="na">selection_strategy</span><span class="pi">:</span> <span class="s2">"</span><span class="s">cost_optimized"</span> <span class="c1"># or "latency_optimized", "quality_first"</span>
+  
+<span class="na">caching</span><span class="pi">:</span>
+  <span class="na">semantic</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">ttl</span><span class="pi">:</span> <span class="m">3600</span>
+  <span class="na">similarity_threshold</span><span class="pi">:</span> <span class="m">0.95</span>
+  
+<span class="na">monitoring</span><span class="pi">:</span>
+  <span class="na">prometheus</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">grafana</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">jaeger</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">log_level</span><span class="pi">:</span> <span class="s2">"</span><span class="s">info"</span>
+  
+<span class="na">limits</span><span class="pi">:</span>
+  <span class="na">max_tokens_per_request</span><span class="pi">:</span> <span class="m">4000</span>
+  <span class="na">max_requests_per_minute</span><span class="pi">:</span> <span class="m">100</span>
+  <span class="na">max_cost_per_day</span><span class="pi">:</span> <span class="m">100.00</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-resources--documentation">📚 Resources &amp; Documentation</h2>
+
+<h3 id="required-reading">Required Reading</h3>
+<ul>
+  <li><a href="https://platform.openai.com/docs">OpenAI API Documentation</a></li>
+  <li><a href="https://docs.anthropic.com">Anthropic API Reference</a></li>
+  <li><a href="https://python.langchain.com/docs">LangChain Gateway Patterns</a></li>
+  <li><a href="https://github.com/microsoft/ai-gateway">AI Gateway Best Practices</a></li>
+</ul>
+
+<h3 id="internal-documentation">Internal Documentation</h3>
+<ul>
+  <li><a href="./docs/architecture/">Architecture Diagrams</a></li>
+  <li><a href="./docs/api/">API Specifications</a></li>
+  <li><a href="./docs/security/">Security Policies</a></li>
+  <li><a href="./docs/runbooks/">Runbooks</a></li>
+</ul>
+
+<hr />
+
+<h2 id="-definition-of-beta-success">✅ Definition of Beta Success</h2>
+
+<p>The AI Gateway is considered beta-ready when:</p>
+
+<ol>
+  <li><strong>✅ 3+ LLM providers integrated and tested</strong></li>
+  <li><strong>✅ PII detection preventing data leaks</strong></li>
+  <li><strong>✅ Cost tracking and budget limits working</strong></li>
+  <li><strong>✅ 99.9% uptime over 7 days</strong></li>
+  <li><strong>✅ Gateway latency &lt;200ms (p99)</strong></li>
+  <li><strong>✅ Complete API documentation</strong></li>
+  <li><strong>✅ At least one SDK published</strong></li>
+  <li><strong>✅ 10+ beta users onboarded</strong></li>
+</ol>
+
+<hr />
+
+<h2 id="-team--support">📞 Team &amp; Support</h2>
+
+<h3 id="key-contacts">Key Contacts</h3>
+<ul>
+  <li><strong>Project Lead</strong>: [Your Name]</li>
+  <li><strong>AI Gateway Lead</strong>: [Lead Developer]</li>
+  <li><strong>Security Review</strong>: [Security Team]</li>
+  <li><strong>DevOps Support</strong>: [DevOps Team]</li>
+</ul>
+
+<h3 id="communication">Communication</h3>
+<ul>
+  <li><strong>Slack</strong>: #ai-gateway-beta</li>
+  <li><strong>GitHub</strong>: github.com/NatureQuest/devmentor</li>
+  <li><strong>Status</strong>: status.devmentor.ai</li>
+  <li><strong>Support</strong>: support@devmentor.ai</li>
+</ul>
+
+<hr />
+
+<p><em>Document Version: 2.0.0 (Comprehensive Merged Analysis)</em><br />
+<em>Last Updated: August 16, 2025</em><br />
+<em>Next Review: August 23, 2025</em><br />
+<em>Beta Target: September 30, 2025</em></p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / infrastructure/services/api-gateway/API_GATEWAY_BETA_READINESS.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>

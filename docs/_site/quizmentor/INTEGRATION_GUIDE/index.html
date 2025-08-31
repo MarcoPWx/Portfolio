@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTEGRATION GUIDE</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">QuizMentor</span> / 
+  <span style="color: #999;">INTEGRATION_GUIDE.md</span>
+</div>
+
+<h1>INTEGRATION GUIDE</h1>
+
+
+<h1 id="integration-guide---adding-smart-quiz-logic-to-your-app">Integration Guide - Adding Smart Quiz Logic to Your App</h1>
+
+<h2 id="quick-start---just-3-changes">Quick Start - Just 3 Changes!</h2>
+
+<h3 id="change-1-update-quizscreentsx">Change 1: Update QuizScreen.tsx</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// screens/QuizScreen.tsx</span>
+
+<span class="k">import</span> <span class="nx">SimpleQuizOptimizer</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../services/simpleQuizOptimizer</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">QuizScreen</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">route</span> <span class="o">=</span> <span class="nx">useRoute</span><span class="o">&lt;</span><span class="nx">QuizScreenRouteProp</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">questions</span><span class="p">,</span> <span class="nx">setQuestions</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="nx">Question</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([]);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">sessionConfig</span><span class="p">,</span> <span class="nx">setSessionConfig</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">currentQuestionIndex</span><span class="p">,</span> <span class="nx">setCurrentQuestionIndex</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">lives</span><span class="p">,</span> <span class="nx">setLives</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">encouragementMessage</span><span class="p">,</span> <span class="nx">setEncouragementMessage</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="o">&lt;</span><span class="kr">string</span> <span class="o">|</span> <span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  
+  <span class="c1">// NEW: Initialize optimizer</span>
+  <span class="kd">const</span> <span class="nx">optimizer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SimpleQuizOptimizer</span><span class="p">();</span>
+  
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">loadOptimizedQuiz</span><span class="p">();</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+  
+  <span class="c1">// NEW: Load optimized quiz instead of random questions</span>
+  <span class="kd">const</span> <span class="nx">loadOptimizedQuiz</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUserId</span><span class="p">();</span> <span class="c1">// Your existing auth</span>
+      <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">optimizer</span><span class="p">.</span><span class="nx">getOptimizedQuiz</span><span class="p">(</span>
+        <span class="nx">userId</span><span class="p">,</span>
+        <span class="nx">route</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">categoryId</span><span class="p">,</span>
+        <span class="nx">route</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">sessionType</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">normal</span><span class="dl">'</span>
+      <span class="p">);</span>
+      
+      <span class="nx">setQuestions</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">questions</span><span class="p">);</span>
+      <span class="nx">setSessionConfig</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">config</span><span class="p">);</span>
+      <span class="nx">setLives</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">livesAllowed</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to load quiz:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+      <span class="c1">// Fallback to existing logic</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  
+  <span class="c1">// UPDATED: Track answers for optimization</span>
+  <span class="kd">const</span> <span class="nx">handleAnswer</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">answerIndex</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">isCorrect</span> <span class="o">=</span> <span class="nx">answerIndex</span> <span class="o">===</span> <span class="nx">questions</span><span class="p">[</span><span class="nx">currentQuestionIndex</span><span class="p">].</span><span class="nx">correctAnswer</span><span class="p">;</span>
+    
+    <span class="c1">// Track for optimization</span>
+    <span class="kd">const</span> <span class="nx">rewards</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">optimizer</span><span class="p">.</span><span class="nx">trackAnswer</span><span class="p">(</span>
+      <span class="nx">userId</span><span class="p">,</span>
+      <span class="nx">questions</span><span class="p">[</span><span class="nx">currentQuestionIndex</span><span class="p">].</span><span class="nx">id</span><span class="p">,</span>
+      <span class="nx">route</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">categoryId</span><span class="p">,</span>
+      <span class="nx">isCorrect</span><span class="p">,</span>
+      <span class="nx">timeSpent</span><span class="p">,</span> <span class="c1">// You should track this</span>
+      <span class="nx">questions</span><span class="p">[</span><span class="nx">currentQuestionIndex</span><span class="p">].</span><span class="nx">difficulty</span>
+    <span class="p">);</span>
+    
+    <span class="c1">// Update UI with rewards</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isCorrect</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">showXPAnimation</span><span class="p">(</span><span class="nx">rewards</span><span class="p">.</span><span class="nx">xp</span><span class="p">);</span>
+      <span class="nx">showStarsAnimation</span><span class="p">(</span><span class="nx">rewards</span><span class="p">.</span><span class="nx">stars</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">setLives</span><span class="p">(</span><span class="nx">prev</span> <span class="o">=&gt;</span> <span class="nx">prev</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+      
+      <span class="c1">// Show encouragement if struggling</span>
+      <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">optimizer</span><span class="p">.</span><span class="nx">getEncouragementMessage</span><span class="p">(</span><span class="nx">consecutiveWrong</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">setEncouragementMessage</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Your existing logic...</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">View</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* NEW: Show session type */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">sessionConfig</span><span class="p">?.</span><span class="nx">questionCount</span><span class="p">}</span> <span class="nx">Questions</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* NEW: Show lives (hearts) */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">hearts</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="p">{</span><span class="nx">sessionConfig</span><span class="p">?.</span><span class="nx">livesAllowed</span> <span class="o">===</span> <span class="mi">999</span> <span class="p">?</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="err">♥️</span> <span class="err">∞</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="p">)</span> <span class="p">:</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="p">{</span><span class="dl">'</span><span class="s1">♥️</span><span class="dl">'</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="nx">lives</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="p">)}</span>
+      <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      
+      <span class="p">{</span><span class="cm">/* NEW: Show encouragement */</span><span class="p">}</span>
+      <span class="p">{</span><span class="nx">encouragementMessage</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">encouragement</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">encouragementMessage</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      <span class="p">)}</span>
+      
+      <span class="p">{</span><span class="cm">/* Your existing question display... */</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="change-2-update-categories-screen">Change 2: Update Categories Screen</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// screens/CategoriesScreen.tsx</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">CategoriesScreen</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">sessionTypeModal</span><span class="p">,</span> <span class="nx">setSessionTypeModal</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">selectedCategory</span><span class="p">,</span> <span class="nx">setSelectedCategory</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  
+  <span class="kd">const</span> <span class="nx">handleCategoryPress</span> <span class="o">=</span> <span class="p">(</span><span class="nx">category</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setSelectedCategory</span><span class="p">(</span><span class="nx">category</span><span class="p">);</span>
+    <span class="nx">setSessionTypeModal</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span> <span class="c1">// NEW: Show session type selection</span>
+  <span class="p">};</span>
+  
+  <span class="kd">const</span> <span class="nx">startQuiz</span> <span class="o">=</span> <span class="p">(</span><span class="nx">sessionType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">quick</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">normal</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">challenge</span><span class="dl">'</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="dl">'</span><span class="s1">Quiz</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">categoryId</span><span class="p">:</span> <span class="nx">selectedCategory</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="na">categoryName</span><span class="p">:</span> <span class="nx">selectedCategory</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      <span class="nx">sessionType</span> <span class="c1">// NEW: Pass session type</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">View</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* Your existing categories... */</span><span class="p">}</span>
+      
+      <span class="p">{</span><span class="cm">/* NEW: Session Type Modal */</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">Modal</span> <span class="nx">visible</span><span class="o">=</span><span class="p">{</span><span class="nx">sessionTypeModal</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">modal</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">modalTitle</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Choose</span> <span class="nx">Your</span> <span class="nx">Mode</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          
+          <span class="o">&lt;</span><span class="nx">TouchableOpacity</span> 
+            <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionOption</span><span class="p">}</span>
+            <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">startQuiz</span><span class="p">(</span><span class="dl">'</span><span class="s1">quick</span><span class="dl">'</span><span class="p">)}</span>
+          <span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionTitle</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Quick</span> <span class="nx">Practice</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>            <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionDesc</span><span class="p">}</span><span class="o">&gt;</span><span class="mi">5</span> <span class="nx">questions</span> <span class="err">•</span> <span class="nx">Unlimited</span> <span class="nx">lives</span> <span class="err">•</span> <span class="nx">No</span> <span class="nx">pressure</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/TouchableOpacity</span><span class="err">&gt;
+</span>          
+          <span class="o">&lt;</span><span class="nx">TouchableOpacity</span> 
+            <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionOption</span><span class="p">}</span>
+            <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">startQuiz</span><span class="p">(</span><span class="dl">'</span><span class="s1">normal</span><span class="dl">'</span><span class="p">)}</span>
+          <span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionTitle</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Normal</span> <span class="nx">Quiz</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>            <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionDesc</span><span class="p">}</span><span class="o">&gt;</span><span class="mi">7</span> <span class="nx">questions</span> <span class="err">•</span> <span class="mi">3</span> <span class="nx">lives</span> <span class="err">•</span> <span class="nx">Balanced</span> <span class="nx">challenge</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/TouchableOpacity</span><span class="err">&gt;
+</span>          
+          <span class="o">&lt;</span><span class="nx">TouchableOpacity</span> 
+            <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionOption</span><span class="p">}</span>
+            <span class="nx">onPress</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">startQuiz</span><span class="p">(</span><span class="dl">'</span><span class="s1">challenge</span><span class="dl">'</span><span class="p">)}</span>
+          <span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionTitle</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Challenge</span> <span class="nx">Mode</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>            <span class="o">&lt;</span><span class="nx">Text</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="nx">styles</span><span class="p">.</span><span class="nx">sessionDesc</span><span class="p">}</span><span class="o">&gt;</span><span class="mi">10</span> <span class="nx">questions</span> <span class="err">•</span> <span class="mi">1</span> <span class="nx">life</span> <span class="err">•</span> <span class="nx">Maximum</span> <span class="nx">rewards</span><span class="o">&lt;</span><span class="sr">/Text</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="sr">/TouchableOpacity</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/Modal</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/View</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="change-3-create-database-tables">Change 3: Create Database Tables</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Run these in Supabase SQL editor</span>
+
+<span class="c1">-- User progress tracking</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_progress</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">DEFAULT</span> <span class="n">uuid_generate_v4</span><span class="p">()</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">category_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">total_questions</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">correct_answers</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="n">current_level</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">unlocked_hints</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">unlocked_challenge</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">unlocked_multiplayer</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">false</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="n">updated_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">UNIQUE</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">category_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Question history for optimization</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">question_history</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">UUID</span> <span class="k">DEFAULT</span> <span class="n">uuid_generate_v4</span><span class="p">()</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">user_id</span> <span class="n">UUID</span> <span class="k">REFERENCES</span> <span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+  <span class="n">question_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">category_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">is_correct</span> <span class="nb">BOOLEAN</span><span class="p">,</span>
+  <span class="n">difficulty</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">time_spent</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">answered_at</span> <span class="nb">TIMESTAMP</span> <span class="k">DEFAULT</span> <span class="n">NOW</span><span class="p">(),</span>
+  <span class="k">INDEX</span> <span class="n">idx_user_category</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">category_id</span><span class="p">),</span>
+  <span class="k">INDEX</span> <span class="n">idx_answered_at</span> <span class="p">(</span><span class="n">answered_at</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- Add difficulty to questions if not exists</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">questions</span> 
+<span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">difficulty</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">2</span> <span class="k">CHECK</span> <span class="p">(</span><span class="n">difficulty</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">AND</span> <span class="n">difficulty</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">),</span>
+<span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">last_shown</span> <span class="nb">TIMESTAMP</span><span class="p">;</span>
+
+<span class="c1">-- RPC function to update progress</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">update_user_progress</span><span class="p">(</span>
+  <span class="n">p_user_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">p_category_id</span> <span class="n">UUID</span><span class="p">,</span>
+  <span class="n">p_correct</span> <span class="nb">INTEGER</span><span class="p">,</span>
+  <span class="n">p_total</span> <span class="nb">INTEGER</span>
+<span class="p">)</span>
+<span class="k">RETURNS</span> <span class="n">VOID</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">user_progress</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">category_id</span><span class="p">,</span> <span class="n">total_questions</span><span class="p">,</span> <span class="n">correct_answers</span><span class="p">)</span>
+  <span class="k">VALUES</span> <span class="p">(</span><span class="n">p_user_id</span><span class="p">,</span> <span class="n">p_category_id</span><span class="p">,</span> <span class="n">p_total</span><span class="p">,</span> <span class="n">p_correct</span><span class="p">)</span>
+  <span class="k">ON</span> <span class="n">CONFLICT</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">category_id</span><span class="p">)</span>
+  <span class="k">DO</span> <span class="k">UPDATE</span> <span class="k">SET</span>
+    <span class="n">total_questions</span> <span class="o">=</span> <span class="n">user_progress</span><span class="p">.</span><span class="n">total_questions</span> <span class="o">+</span> <span class="n">p_total</span><span class="p">,</span>
+    <span class="n">correct_answers</span> <span class="o">=</span> <span class="n">user_progress</span><span class="p">.</span><span class="n">correct_answers</span> <span class="o">+</span> <span class="n">p_correct</span><span class="p">,</span>
+    <span class="n">updated_at</span> <span class="o">=</span> <span class="n">NOW</span><span class="p">();</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="thats-it-">That’s It! 🎉</h2>
+
+<h3 id="what-you-get">What You Get:</h3>
+<p>✅ <strong>Smart question selection</strong> based on user performance
+✅ <strong>3 session types</strong> for different moods
+✅ <strong>Automatic difficulty adjustment</strong> 
+✅ <strong>Encouragement messages</strong> when struggling
+✅ <strong>Review of wrong answers</strong> (spaced repetition)
+✅ <strong>Progressive unlocking</strong> of features
+✅ <strong>XP and rewards</strong> that scale with difficulty</p>
+
+<h3 id="the-flow">The Flow:</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. User picks category → Shows 3 modes
+2. User picks mode → System checks their level
+3. System picks smart questions → Orders them well
+4. User answers → System tracks and adjusts
+5. User finishes → Gets appropriate rewards
+6. Next quiz → Even smarter selection
+</code></pre></div></div>
+
+<h2 id="testing-it-out">Testing It Out</h2>
+
+<h3 id="test-case-1-new-user">Test Case 1: New User</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Should get easy questions</span>
+<span class="c1">// Level 1, all normal difficulty</span>
+<span class="c1">// Unlimited lives in quick mode</span>
+</code></pre></div></div>
+
+<h3 id="test-case-2-struggling-user">Test Case 2: Struggling User</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Answer 2 wrong in a row</span>
+<span class="c1">// Next quiz should have easier questions</span>
+<span class="c1">// Should see encouragement message</span>
+</code></pre></div></div>
+
+<h3 id="test-case-3-expert-user">Test Case 3: Expert User</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 90%+ accuracy</span>
+<span class="c1">// Should get harder questions</span>
+<span class="c1">// Challenge mode unlocked</span>
+</code></pre></div></div>
+
+<h2 id="monitoring-success">Monitoring Success</h2>
+
+<p>Look for these metrics:</p>
+<ul>
+  <li><strong>Completion rate</strong> should increase (target: 80%+)</li>
+  <li><strong>Average accuracy</strong> should stay around 70-75%</li>
+  <li><strong>Session length</strong> should be consistent</li>
+  <li><strong>Return rate</strong> should improve</li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="questions-too-easy">“Questions too easy”</h3>
+<ul>
+  <li>Check if difficulty levels are set correctly in database</li>
+  <li>Ensure accuracy calculation is working</li>
+  <li>Verify recent performance tracking</li>
+</ul>
+
+<h3 id="questions-too-hard">“Questions too hard”</h3>
+<ul>
+  <li>Check comeback mechanics are triggering</li>
+  <li>Verify easier questions exist in database</li>
+  <li>Check if review questions are being included</li>
+</ul>
+
+<h3 id="same-questions-repeating">“Same questions repeating”</h3>
+<ul>
+  <li>Add more questions to database</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">last_shown</code> is being updated</li>
+  <li>Verify randomization in selection</li>
+</ul>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+  <li><strong>Add difficulty indicators</strong> to UI</li>
+  <li><strong>Show progress bars</strong> for unlocks</li>
+  <li><strong>Add achievement notifications</strong></li>
+  <li><strong>Create admin dashboard</strong> for monitoring</li>
+  <li><strong>A/B test</strong> different configurations</li>
+</ol>
+
+<p>This is a working system you can implement TODAY!</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: QuizMentor / INTEGRATION_GUIDE.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

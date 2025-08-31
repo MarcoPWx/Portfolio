@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTHENTICATION RUNBOOK</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <style>
+    /* Light mode variables */
+    :root {
+      --primary: #007AFF;
+      --primary-hover: #0051D5;
+      --success: #34C759;
+      --warning: #FF9500;
+      --danger: #FF3B30;
+      --text-primary: #000000;
+      --text-secondary: #3C3C43;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F2F2F7;
+      --bg-tertiary: #FFFFFF;
+      --bg-elevated: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --backdrop: rgba(255, 255, 255, 0.8);
+      --code-bg: #F7F7FA;
+      --code-border: rgba(0, 0, 0, 0.06);
+      --nav-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #FFFFFF;
+      --hover-bg: rgba(0, 122, 255, 0.08);
+    }
+    
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary: #0A84FF;
+      --primary-hover: #409CFF;
+      --success: #32D74B;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --text-primary: #FFFFFF;
+      --text-secondary: #EBEBF5;
+      --text-tertiary: #8E8E93;
+      --bg-primary: #000000;
+      --bg-secondary: #1C1C1E;
+      --bg-tertiary: #2C2C2E;
+      --bg-elevated: #1C1C1E;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --backdrop: rgba(28, 28, 30, 0.8);
+      --code-bg: #1C1C1E;
+      --code-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(28, 28, 30, 0.72);
+      --card-bg: #1C1C1E;
+      --hover-bg: rgba(10, 132, 255, 0.15);
+    }
+    
+    /* Auto theme based on system preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --primary: #0A84FF;
+        --primary-hover: #409CFF;
+        --success: #32D74B;
+        --warning: #FF9F0A;
+        --danger: #FF453A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #EBEBF5;
+        --text-tertiary: #8E8E93;
+        --bg-primary: #000000;
+        --bg-secondary: #1C1C1E;
+        --bg-tertiary: #2C2C2E;
+        --bg-elevated: #1C1C1E;
+        --border: rgba(255, 255, 255, 0.15);
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+        --backdrop: rgba(28, 28, 30, 0.8);
+        --code-bg: #1C1C1E;
+        --code-border: rgba(255, 255, 255, 0.08);
+        --nav-bg: rgba(28, 28, 30, 0.72);
+        --card-bg: #1C1C1E;
+        --hover-bg: rgba(10, 132, 255, 0.15);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Typography */
+    p {
+      margin: 1.2rem 0;
+      color: var(--text-secondary);
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+    
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: none;
+    }
+    
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+      margin-top: 3rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Lists */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+      color: var(--text-secondary);
+    }
+    
+    li {
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Navigation */
+    .nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    
+    nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    nav a:hover {
+      background: var(--hover-bg);
+      color: var(--primary);
+    }
+    
+    nav a:focus {
+      outline: none;
+    }
+    
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .theme-btn {
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .theme-btn:hover {
+      color: var(--text-secondary);
+    }
+    
+    .theme-btn.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid var(--code-border);
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      border: 1px solid var(--code-border);
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    td {
+      color: var(--text-secondary);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: var(--bg-secondary);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-secondary);
+      font-style: normal;
+    }
+    
+    blockquote p {
+      margin: 0.5rem 0;
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    
+    /* Main content */
+    main {
+      min-height: calc(100vh - 200px);
+      padding: 2rem 0;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    /* Grid for cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.375rem; }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrapper">
+    <div class="container">
+      <nav class="nav-content">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/architecture/">Architecture</a></li>
+          <li><a href="/all-docs/">All Docs</a></li>
+          <li><a href="/learning-roadmap/">Learning Roadmaps</a></li>
+          <li><a href="/devmentor/">DevMentor</a></li>
+          <li><a href="/quizmentor/">QuizMentor</a></li>
+          <li><a href="/harvest/">Harvest.ai</a></li>
+          <li><a href="/naturequest-auth/">Auth</a></li>
+          <li><a href="/infrastructure/">Infrastructure</a></li>
+        </ul>
+        <div class="theme-switcher" aria-label="Theme Switcher">
+          <button class="theme-btn" data-theme="light" aria-pressed="false" title="Light mode">🌞 Light</button>
+          <button class="theme-btn active" data-theme="auto" aria-pressed="true" title="Auto mode">🧭 Auto</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false" title="Dark mode">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">runbooks/AUTHENTICATION_RUNBOOK.md</span>
+</div>
+
+<h1>AUTHENTICATION RUNBOOK</h1>
+
+
+<h1 id="-authentication-system-runbook">🔐 Authentication System Runbook</h1>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#quick-start">Quick Start</a></li>
+  <li><a href="#setup-guide">Setup Guide</a></li>
+  <li><a href="#operations">Operations</a></li>
+  <li><a href="#troubleshooting">Troubleshooting</a></li>
+  <li><a href="#security-procedures">Security Procedures</a></li>
+  <li><a href="#monitoring">Monitoring</a></li>
+</ol>
+
+<h2 id="overview">Overview</h2>
+
+<p>DevMentor uses a dual-token authentication system that converts external OAuth tokens (GitHub, Auth0, Google) to internal cluster JWTs for secure microservice communication.</p>
+
+<h3 id="architecture-components">Architecture Components</h3>
+<ul>
+  <li><strong>Auth Gateway</strong>: Central authentication service</li>
+  <li><strong>Token Exchange</strong>: Converts external → internal tokens</li>
+  <li><strong>JWT Issuer</strong>: Generates cluster-specific JWTs</li>
+  <li><strong>Session Manager</strong>: Handles user sessions</li>
+  <li><strong>Token Revocation</strong>: Manages token blacklists</li>
+</ul>
+
+<h3 id="key-files--locations">Key Files &amp; Locations</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infrastructure/services/auth-gateway/
+├── src/
+│   ├── index.ts           # Main auth gateway
+│   ├── token-exchange.ts  # Token conversion logic
+│   ├── jwt-issuer.ts      # Internal JWT generation
+│   └── providers/         # OAuth provider integrations
+│       ├── github.ts
+│       ├── auth0.ts
+│       └── google.ts
+</code></pre></div></div>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<h3 id="1-environment-setup">1. Environment Setup</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Copy environment template</span>
+<span class="nb">cp</span> .env.example .env
+
+<span class="c"># Required environment variables</span>
+<span class="nv">INTERNAL_JWT_SECRET</span><span class="o">=</span>&lt;generate-256-bit-secret&gt;
+<span class="nv">GITHUB_CLIENT_ID</span><span class="o">=</span>&lt;from-github-oauth-app&gt;
+<span class="nv">GITHUB_CLIENT_SECRET</span><span class="o">=</span>&lt;from-github-oauth-app&gt;
+<span class="nv">AUTH0_DOMAIN</span><span class="o">=</span>&lt;your-auth0-domain&gt;
+<span class="nv">AUTH0_CLIENT_ID</span><span class="o">=</span>&lt;from-auth0&gt;
+<span class="nv">AUTH0_CLIENT_SECRET</span><span class="o">=</span>&lt;from-auth0&gt;
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost:6379
+</code></pre></div></div>
+
+<h3 id="2-generate-secrets">2. Generate Secrets</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Generate JWT secret</span>
+openssl rand <span class="nt">-base64</span> 32
+
+<span class="c"># Generate service secrets</span>
+npm run generate:service-secrets
+</code></pre></div></div>
+
+<h3 id="3-start-services">3. Start Services</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start auth gateway</span>
+<span class="nb">cd </span>infrastructure/services/auth-gateway
+npm <span class="nb">install
+</span>npm run dev
+
+<span class="c"># Start Redis (for token revocation)</span>
+docker run <span class="nt">-d</span> <span class="nt">-p</span> 6379:6379 redis:alpine
+</code></pre></div></div>
+
+<h2 id="setup-guide">Setup Guide</h2>
+
+<h3 id="step-1-configure-oauth-providers">Step 1: Configure OAuth Providers</h3>
+
+<h4 id="github-oauth-setup">GitHub OAuth Setup</h4>
+<ol>
+  <li>Go to GitHub Settings → Developer settings → OAuth Apps</li>
+  <li>Create new OAuth App:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Application name: DevMentor
+Homepage URL: https://devmentor.ai
+Authorization callback URL: https://devmentor.ai/auth/github/callback
+</code></pre></div>    </div>
+  </li>
+  <li>Copy Client ID and Client Secret to <code class="language-plaintext highlighter-rouge">.env</code></li>
+</ol>
+
+<h4 id="auth0-setup">Auth0 Setup</h4>
+<ol>
+  <li>Create Auth0 Application (Single Page Application)</li>
+  <li>Configure:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Allowed Callback URLs: https://devmentor.ai/auth/auth0/callback
+Allowed Logout URLs: https://devmentor.ai
+Allowed Web Origins: https://devmentor.ai
+</code></pre></div>    </div>
+  </li>
+  <li>Copy Domain, Client ID, and Client Secret</li>
+</ol>
+
+<h3 id="step-2-configure-internal-jwt">Step 2: Configure Internal JWT</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// config/jwt.config.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">jwtConfig</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">secret</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">INTERNAL_JWT_SECRET</span><span class="p">,</span>
+  <span class="na">issuer</span><span class="p">:</span> <span class="dl">'</span><span class="s1">devmentor-cluster</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">accessTokenExpiry</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2h</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">refreshTokenExpiry</span><span class="p">:</span> <span class="dl">'</span><span class="s1">7d</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">algorithm</span><span class="p">:</span> <span class="dl">'</span><span class="s1">HS256</span><span class="dl">'</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="step-3-setup-service-registry">Step 3: Setup Service Registry</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// config/services.config.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">services</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="dl">'</span><span class="s1">memory-service</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MEMORY_SERVICE_URL</span><span class="p">,</span>
+    <span class="na">secret</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MEMORY_SERVICE_SECRET</span><span class="p">,</span>
+    <span class="na">permissions</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">read</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">write</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="dl">'</span><span class="s1">learning-service</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">LEARNING_SERVICE_URL</span><span class="p">,</span>
+    <span class="na">secret</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">LEARNING_SERVICE_SECRET</span><span class="p">,</span>
+    <span class="na">permissions</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">read</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">write</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">analyze</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="c1">// ... other services</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="operations">Operations</h2>
+
+<h3 id="user-login-flow">User Login Flow</h3>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    User-&gt;&gt;Frontend: Click "Login with GitHub"
+    Frontend-&gt;&gt;GitHub: Redirect to OAuth
+    GitHub-&gt;&gt;User: Request authorization
+    User-&gt;&gt;GitHub: Approve
+    GitHub-&gt;&gt;Auth Gateway: Return with code
+    Auth Gateway-&gt;&gt;GitHub: Exchange code for token
+    Auth Gateway-&gt;&gt;Auth Gateway: Generate internal JWT
+    Auth Gateway-&gt;&gt;Frontend: Set cookies + user info
+    Frontend-&gt;&gt;User: Logged in
+</code></pre>
+
+<h3 id="token-exchange-process">Token Exchange Process</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. External token comes in</span>
+POST /api/auth/exchange
+<span class="o">{</span>
+  <span class="s2">"provider"</span>: <span class="s2">"github"</span>,
+  <span class="s2">"token"</span>: <span class="s2">"gho_xxxxxxxxxxxx"</span>
+<span class="o">}</span>
+
+<span class="c"># 2. Validate with provider</span>
+GET https://api.github.com/user
+Authorization: token gho_xxxxxxxxxxxx
+
+<span class="c"># 3. Map to internal user</span>
+<span class="o">{</span>
+  <span class="s2">"externalId"</span>: <span class="s2">"github_123456"</span>,
+  <span class="s2">"email"</span>: <span class="s2">"user@example.com"</span>,
+  <span class="s2">"internalId"</span>: <span class="s2">"user_abc123"</span>
+<span class="o">}</span>
+
+<span class="c"># 4. Generate internal JWT</span>
+<span class="o">{</span>
+  <span class="s2">"sub"</span>: <span class="s2">"user_abc123"</span>,
+  <span class="s2">"cluster"</span>: <span class="o">{</span>
+    <span class="s2">"services"</span>: <span class="o">[</span><span class="s2">"memory"</span>, <span class="s2">"learning"</span><span class="o">]</span>,
+    <span class="s2">"quotas"</span>: <span class="o">{</span> <span class="s2">"maxRepos"</span>: 10 <span class="o">}</span>
+  <span class="o">}</span>,
+  <span class="s2">"exp"</span>: 1234567890
+<span class="o">}</span>
+
+<span class="c"># 5. Set secure cookies</span>
+Set-Cookie: <span class="nv">devmentor_access</span><span class="o">=</span>xxx<span class="p">;</span> HttpOnly<span class="p">;</span> Secure<span class="p">;</span> <span class="nv">SameSite</span><span class="o">=</span>Strict
+Set-Cookie: <span class="nv">devmentor_refresh</span><span class="o">=</span>xxx<span class="p">;</span> HttpOnly<span class="p">;</span> Secure<span class="p">;</span> <span class="nv">Path</span><span class="o">=</span>/auth/refresh
+Set-Cookie: <span class="nv">devmentor_csrf</span><span class="o">=</span>xxx<span class="p">;</span> Secure<span class="p">;</span> <span class="nv">SameSite</span><span class="o">=</span>Strict
+</code></pre></div></div>
+
+<h3 id="token-refresh">Token Refresh</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Automatic refresh 5 minutes before expiry</span>
+POST /api/auth/refresh
+Cookie: <span class="nv">devmentor_refresh</span><span class="o">=</span>xxx
+X-CSRF-Token: xxx
+
+<span class="c"># Response: New access token in cookie</span>
+Set-Cookie: <span class="nv">devmentor_access</span><span class="o">=</span>new_token<span class="p">;</span> HttpOnly<span class="p">;</span> Secure
+</code></pre></div></div>
+
+<h3 id="logout-process">Logout Process</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Call logout endpoint</span>
+POST /api/auth/logout
+Cookie: <span class="nv">devmentor_access</span><span class="o">=</span>xxx
+X-CSRF-Token: xxx
+
+<span class="c"># 2. Revoke tokens</span>
+- Add access token to Redis blacklist
+- Add refresh token to Redis blacklist
+- Clear user sessions
+
+<span class="c"># 3. Clear cookies</span>
+Set-Cookie: <span class="nv">devmentor_access</span><span class="o">=</span><span class="p">;</span> Max-Age<span class="o">=</span>0
+Set-Cookie: <span class="nv">devmentor_refresh</span><span class="o">=</span><span class="p">;</span> Max-Age<span class="o">=</span>0
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<h4 id="issue-invalid-token-errors">Issue: “Invalid token” errors</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check token expiry</span>
+jwt decode &lt;token&gt;
+
+<span class="c"># Check if revoked</span>
+redis-cli GET <span class="s2">"revoked:&lt;token&gt;"</span>
+
+<span class="c"># Verify secret matches</span>
+<span class="nb">echo</span> <span class="nv">$INTERNAL_JWT_SECRET</span>
+</code></pre></div></div>
+
+<h4 id="issue-service-access-denied">Issue: “Service access denied”</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check service permissions in JWT</span>
+jwt decode &lt;token&gt; | jq <span class="s1">'.cluster.services'</span>
+
+<span class="c"># Verify service is registered</span>
+<span class="nb">cat </span>config/services.config.ts
+</code></pre></div></div>
+
+<h4 id="issue-oauth-callback-fails">Issue: OAuth callback fails</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check callback URL matches</span>
+curl https://api.github.com/applications/:client_id
+
+<span class="c"># Verify state parameter</span>
+redis-cli GET <span class="s2">"oauth_state:&lt;state&gt;"</span>
+
+<span class="c"># Check redirect URI</span>
+<span class="nb">echo</span> <span class="nv">$GITHUB_CALLBACK_URL</span>
+</code></pre></div></div>
+
+<h3 id="debug-mode">Debug Mode</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable debug logging</span>
+<span class="nv">DEBUG</span><span class="o">=</span>auth:<span class="k">*</span> npm start
+
+<span class="c"># Test token exchange</span>
+curl <span class="nt">-X</span> POST http://localhost:3000/api/auth/exchange <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"provider":"github","token":"xxx"}'</span>
+
+<span class="c"># Test JWT validation</span>
+curl http://localhost:3000/api/auth/verify <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Cookie: devmentor_access=xxx"</span>
+</code></pre></div></div>
+
+<h2 id="security-procedures">Security Procedures</h2>
+
+<h3 id="rotate-jwt-secret">Rotate JWT Secret</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Generate new secret</span>
+<span class="nv">NEW_SECRET</span><span class="o">=</span><span class="si">$(</span>openssl rand <span class="nt">-base64</span> 32<span class="si">)</span>
+
+<span class="c"># 2. Update dual-signing period (accept both)</span>
+<span class="nv">INTERNAL_JWT_SECRET</span><span class="o">=</span><span class="nv">$NEW_SECRET</span>
+<span class="nv">INTERNAL_JWT_SECRET_OLD</span><span class="o">=</span><span class="nv">$OLD_SECRET</span>
+
+<span class="c"># 3. Deploy to all services</span>
+kubectl <span class="nb">set env </span>deployment/auth-gateway <span class="nv">INTERNAL_JWT_SECRET</span><span class="o">=</span><span class="nv">$NEW_SECRET</span>
+
+<span class="c"># 4. After all tokens expire (2h), remove old secret</span>
+kubectl <span class="nb">set env </span>deployment/auth-gateway INTERNAL_JWT_SECRET_OLD-
+</code></pre></div></div>
+
+<h3 id="revoke-user-access">Revoke User Access</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Immediate revocation</span>
+redis-cli SADD <span class="s2">"revoked_users"</span> <span class="s2">"user_123"</span>
+
+<span class="c"># Revoke all user tokens</span>
+npm run revoke:user user_123
+
+<span class="c"># Block at gateway level</span>
+redis-cli HSET <span class="s2">"blocked_users"</span> <span class="s2">"user_123"</span> <span class="s2">"reason"</span>
+</code></pre></div></div>
+
+<h3 id="security-audit">Security Audit</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check for expired tokens still in use</span>
+npm run audit:tokens
+
+<span class="c"># List all active sessions</span>
+npm run list:sessions
+
+<span class="c"># Check for suspicious activity</span>
+npm run security:scan
+
+<span class="c"># Generate security report</span>
+npm run security:report
+</code></pre></div></div>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<h3 id="key-metrics">Key Metrics</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Prometheus metrics</span>
+<span class="s">auth_login_total{provider="github",status="success"}</span>
+<span class="s">auth_token_exchange_duration_seconds</span>
+<span class="s">auth_jwt_generation_duration_seconds</span>
+<span class="s">auth_token_refresh_total</span>
+<span class="s">auth_logout_total</span>
+<span class="s">auth_failed_attempts_total{reason="invalid_token"}</span>
+</code></pre></div></div>
+
+<h3 id="alerts">Alerts</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AlertManager rules</span>
+<span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">HighAuthFailureRate</span>
+  <span class="na">expr</span><span class="pi">:</span> <span class="s">rate(auth_failed_attempts_total[5m]) &gt; </span><span class="m">10</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">High</span><span class="nv"> </span><span class="s">authentication</span><span class="nv"> </span><span class="s">failure</span><span class="nv"> </span><span class="s">rate"</span>
+
+<span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">TokenRefreshFailures</span>
+  <span class="na">expr</span><span class="pi">:</span> <span class="s">rate(auth_token_refresh_total{status="failed"}[5m]) &gt; </span><span class="m">5</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Token</span><span class="nv"> </span><span class="s">refresh</span><span class="nv"> </span><span class="s">failures</span><span class="nv"> </span><span class="s">detected"</span>
+</code></pre></div></div>
+
+<h3 id="logs-to-monitor">Logs to Monitor</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Authentication logs</span>
+<span class="nb">tail</span> <span class="nt">-f</span> /var/log/auth-gateway/auth.log | <span class="nb">grep </span>ERROR
+
+<span class="c"># Successful logins</span>
+<span class="nb">grep</span> <span class="s2">"LOGIN_SUCCESS"</span> /var/log/auth-gateway/auth.log
+
+<span class="c"># Failed attempts</span>
+<span class="nb">grep</span> <span class="s2">"AUTH_FAILED"</span> /var/log/auth-gateway/auth.log
+
+<span class="c"># Token revocations</span>
+<span class="nb">grep</span> <span class="s2">"TOKEN_REVOKED"</span> /var/log/auth-gateway/auth.log
+</code></pre></div></div>
+
+<h2 id="maintenance-tasks">Maintenance Tasks</h2>
+
+<h3 id="daily">Daily</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check auth failure rate</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor active sessions count</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review security alerts</li>
+</ul>
+
+<h3 id="weekly">Weekly</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Audit user permissions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check token expiry distribution</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review OAuth provider status</li>
+</ul>
+
+<h3 id="monthly">Monthly</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rotate service secrets</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clean up expired sessions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security audit</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update OAuth provider settings</li>
+</ul>
+
+<h2 id="emergency-procedures">Emergency Procedures</h2>
+
+<h3 id="complete-auth-system-failure">Complete Auth System Failure</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Enable bypass mode (EMERGENCY ONLY)</span>
+kubectl <span class="nb">set env </span>deployment/auth-gateway <span class="nv">BYPASS_AUTH</span><span class="o">=</span><span class="nb">true</span>
+
+<span class="c"># 2. Investigate root cause</span>
+kubectl logs deployment/auth-gateway <span class="nt">--tail</span><span class="o">=</span>100
+
+<span class="c"># 3. Restore from backup if needed</span>
+kubectl apply <span class="nt">-f</span> backups/auth-gateway-backup.yaml
+
+<span class="c"># 4. Disable bypass mode</span>
+kubectl <span class="nb">set env </span>deployment/auth-gateway BYPASS_AUTH-
+</code></pre></div></div>
+
+<h3 id="mass-token-revocation">Mass Token Revocation</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Revoke all tokens (nuclear option)</span>
+redis-cli FLUSHDB
+
+<span class="c"># Restart all services to clear cache</span>
+kubectl rollout restart deployment/auth-gateway
+kubectl rollout restart deployment/api-gateway
+</code></pre></div></div>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="integration-tests">Integration Tests</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run auth integration tests</span>
+npm run <span class="nb">test</span>:integration
+
+<span class="c"># Test specific provider</span>
+npm run <span class="nb">test</span>:github
+npm run <span class="nb">test</span>:auth0
+
+<span class="c"># Load testing</span>
+npm run <span class="nb">test</span>:load
+</code></pre></div></div>
+
+<h3 id="manual-testing-checklist">Manual Testing Checklist</h3>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Login with GitHub</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Login with Auth0</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Token refresh works</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logout clears all cookies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rate limiting enforced</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Service-to-service auth works</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Token revocation immediate</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CSRF protection active</li>
+</ul>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="generate-test-tokens">Generate Test Tokens</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// scripts/generate-test-token.js</span>
+<span class="kd">const</span> <span class="nx">jwt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">({</span>
+  <span class="na">sub</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test_user</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test@example.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">cluster</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">services</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">memory</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">learning</span><span class="dl">'</span><span class="p">],</span>
+    <span class="na">quotas</span><span class="p">:</span> <span class="p">{</span> <span class="na">maxRepos</span><span class="p">:</span> <span class="mi">10</span> <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">},</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">INTERNAL_JWT_SECRET</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">expiresIn</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2h</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="validate-token">Validate Token</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Online JWT debugger (dev only!)</span>
+<span class="nb">echo</span> <span class="nv">$TOKEN</span> | pbcopy
+open https://jwt.io
+
+<span class="c"># CLI validation</span>
+jwt verify <span class="nt">-k</span> <span class="nv">$INTERNAL_JWT_SECRET</span> <span class="nv">$TOKEN</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><strong>Last Updated</strong>: 2025-08-25
+<strong>Version</strong>: 1.0
+<strong>Author</strong>: DevMentor Team</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / runbooks/AUTHENTICATION_RUNBOOK.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const buttons = [];
+      function setActive(theme) {
+        buttons.forEach(b => {
+          const active = b.dataset.theme === theme;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          html.removeAttribute('data-theme');
+          localStorage.removeItem('theme');
+        } else {
+          html.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+        setActive(theme);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          buttons.push(btn);
+          btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+        });
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          applyTheme('auto');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

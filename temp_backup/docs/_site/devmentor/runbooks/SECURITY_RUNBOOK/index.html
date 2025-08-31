@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SECURITY RUNBOOK | NatureQuest Documentation Hub</title>
+  
+  <!-- Google Fonts for better readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0969da;
+      --text-color: #24292f;
+      --text-light: #57606a;
+      --bg-light: #f6f8fa;
+      --border-color: #d1d9e0;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    
+    /* Typography improvements */
+    p {
+      margin: 1.25rem 0;
+      letter-spacing: -0.011em;
+    }
+    
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    
+    /* Improved headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+    
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Lists with better spacing */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+      line-height: 1.7;
+    }
+    
+    /* Strong text */
+    strong, b {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    
+    nav li {
+      margin: 0;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--primary-color);
+      text-decoration: none;
+      opacity: 1;
+    }
+    
+    /* Code blocks with JetBrains Mono */
+    pre {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg-light);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.875rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-light);
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: rgba(246, 248, 250, 0.5);
+    }
+    
+    /* Blockquotes */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--primary-color);
+      background: var(--bg-light);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Horizontal rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 2rem 0;
+    }
+    
+    /* Main content area */
+    main {
+      min-height: 60vh;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      <li><a href="/all-docs/">All Docs</a></li>
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/learning-roadmap/">Learning Roadmap</a></li>
+      
+      <li><a href="/devmentor/">DevMentor</a></li>
+      
+      <li><a href="/quizmentor/">QuizMentor</a></li>
+      
+      <li><a href="/harvest/">Harvest.ai</a></li>
+      
+      <li><a href="/naturequest-auth/">Auth</a></li>
+      
+      <li><a href="/infrastructure/">Infrastructure</a></li>
+      
+    </ul>
+  </nav>
+
+  <main>
+    <div class="product-header" style="background: #f6f8fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+  <span style="color: #666;">DevMentor</span> / 
+  <span style="color: #999;">runbooks/SECURITY_RUNBOOK.md</span>
+</div>
+
+<h1>SECURITY RUNBOOK</h1>
+
+
+<h1 id="-security--zero-knowledge-architecture-runbook">🔒 Security &amp; Zero-Knowledge Architecture Runbook</h1>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#zero-knowledge-implementation">Zero-Knowledge Implementation</a></li>
+  <li><a href="#secret-detection">Secret Detection</a></li>
+  <li><a href="#repository-analysis-security">Repository Analysis Security</a></li>
+  <li><a href="#data-privacy-controls">Data Privacy Controls</a></li>
+  <li><a href="#incident-response">Incident Response</a></li>
+  <li><a href="#compliance-procedures">Compliance Procedures</a></li>
+  <li><a href="#security-monitoring">Security Monitoring</a></li>
+</ol>
+
+<h2 id="overview">Overview</h2>
+
+<p>DevMentor implements a <strong>zero-knowledge security architecture</strong> where we analyze code patterns without storing source code or sensitive data.</p>
+
+<h3 id="security-principles">Security Principles</h3>
+<ol>
+  <li><strong>Minimal Data Collection</strong> - Only patterns, never source</li>
+  <li><strong>Secret Auto-Rejection</strong> - Automatic detection and blocking</li>
+  <li><strong>User-Controlled Access</strong> - Granular permission controls</li>
+  <li><strong>Encryption Everywhere</strong> - At rest and in transit</li>
+  <li><strong>Right to Deletion</strong> - Complete data removal on demand</li>
+</ol>
+
+<h3 id="key-security-components">Key Security Components</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>security/
+├── zero-knowledge-analyzer/   # Pattern extraction
+├── secret-detector/           # Secret scanning
+├── encryption-manager/        # Multi-layer encryption
+├── privacy-controls/          # User consent management
+└── audit-logger/             # Security event logging
+</code></pre></div></div>
+
+<h2 id="zero-knowledge-implementation">Zero-Knowledge Implementation</h2>
+
+<h3 id="pattern-extraction-pipeline">Pattern Extraction Pipeline</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// How we analyze without storing code</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">analyzeCode</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Step 1: Scan for secrets</span>
+  <span class="k">await</span> <span class="nx">secretDetector</span><span class="p">.</span><span class="nx">scan</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span> <span class="c1">// Throws if secrets found</span>
+  
+  <span class="c1">// Step 2: Sanitize</span>
+  <span class="kd">const</span> <span class="nx">sanitized</span> <span class="o">=</span> <span class="nx">sanitize</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+  
+  <span class="c1">// Step 3: Extract patterns only</span>
+  <span class="kd">const</span> <span class="nx">patterns</span> <span class="o">=</span> <span class="nx">extractPatterns</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">);</span>
+  
+  <span class="c1">// Step 4: Convert to vectors (one-way)</span>
+  <span class="kd">const</span> <span class="nx">vectors</span> <span class="o">=</span> <span class="nx">toVectors</span><span class="p">(</span><span class="nx">patterns</span><span class="p">);</span>
+  
+  <span class="c1">// Step 5: Destroy original</span>
+  <span class="nx">secureDelete</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+  <span class="nx">secureDelete</span><span class="p">(</span><span class="nx">sanitized</span><span class="p">);</span>
+  
+  <span class="c1">// Step 6: Store only vectors</span>
+  <span class="k">return</span> <span class="nx">encrypt</span><span class="p">(</span><span class="nx">vectors</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="what-we-extract-vs-what-we-dont">What We Extract vs What We Don’t</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ✅ We Extract (Patterns Only)</span>
+<span class="na">Patterns</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Indentation style (spaces/tabs)</span>
+  <span class="pi">-</span> <span class="s">Naming conventions (camelCase/snake_case)</span>
+  <span class="pi">-</span> <span class="s">Function length averages</span>
+  <span class="pi">-</span> <span class="s">Comment-to-code ratios</span>
+  <span class="pi">-</span> <span class="s">Framework usage patterns</span>
+  <span class="pi">-</span> <span class="s">Test coverage levels</span>
+  <span class="pi">-</span> <span class="s">Error handling styles</span>
+
+<span class="c1"># ❌ We Never Store</span>
+<span class="na">Never</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Actual source code</span>
+  <span class="pi">-</span> <span class="s">String literals</span>
+  <span class="pi">-</span> <span class="s">Variable values</span>
+  <span class="pi">-</span> <span class="s">API endpoints</span>
+  <span class="pi">-</span> <span class="s">Business logic</span>
+  <span class="pi">-</span> <span class="s">Comments content</span>
+  <span class="pi">-</span> <span class="s">File paths with PII</span>
+</code></pre></div></div>
+
+<h3 id="secure-pattern-storage">Secure Pattern Storage</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Pattern storage format</span>
+<span class="o">{</span>
+  <span class="s2">"userId"</span>: <span class="s2">"user_123"</span>,
+  <span class="s2">"patterns"</span>: <span class="o">{</span>
+    <span class="s2">"codingStyle"</span>: <span class="o">{</span>
+      <span class="s2">"vector"</span>: <span class="o">[</span>0.23, 0.45, 0.67, ...],  <span class="c"># One-way transformation</span>
+      <span class="s2">"confidence"</span>: 0.92
+    <span class="o">}</span>
+  <span class="o">}</span>,
+  <span class="s2">"metadata"</span>: <span class="o">{</span>
+    <span class="s2">"analyzed"</span>: <span class="s2">"2024-01-20T10:30:00Z"</span>,
+    <span class="s2">"filesProcessed"</span>: 45,
+    <span class="s2">"secretsDetected"</span>: 0
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="secret-detection">Secret Detection</h2>
+
+<h3 id="secret-scanner-configuration">Secret Scanner Configuration</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// config/secret-patterns.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">secretPatterns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="c1">// API Keys</span>
+  <span class="sr">/</span><span class="se">(?:</span><span class="sr">api</span><span class="se">[</span><span class="sr">_-</span><span class="se">]?</span><span class="sr">key|apikey</span><span class="se">)[</span><span class="sr">'</span><span class="se">\"]?\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">:=</span><span class="se">]\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">'</span><span class="se">\"]?([</span><span class="sr">A-Za-z0-9_</span><span class="se">\-]{20,})</span><span class="sr">/gi</span><span class="p">,</span>
+  
+  <span class="c1">// AWS</span>
+  <span class="sr">/AKIA</span><span class="se">[</span><span class="sr">0-9A-Z</span><span class="se">]{16}</span><span class="sr">/g</span><span class="p">,</span>
+  <span class="sr">/</span><span class="se">(</span><span class="sr">aws</span><span class="se">[</span><span class="sr">_-</span><span class="se">]?</span><span class="sr">secret</span><span class="se">[</span><span class="sr">_-</span><span class="se">]?</span><span class="sr">access</span><span class="se">[</span><span class="sr">_-</span><span class="se">]?</span><span class="sr">key</span><span class="se">)[</span><span class="sr">'</span><span class="se">\"]?\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">:=</span><span class="se">]\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">'</span><span class="se">\"]?([</span><span class="sr">A-Za-z0-9</span><span class="se">\/</span><span class="sr">+=</span><span class="se">]{40})</span><span class="sr">/gi</span><span class="p">,</span>
+  
+  <span class="c1">// Private Keys</span>
+  <span class="sr">/-----BEGIN </span><span class="se">(</span><span class="sr">RSA |EC |DSA |OPENSSH </span><span class="se">)?</span><span class="sr">PRIVATE KEY-----/g</span><span class="p">,</span>
+  
+  <span class="c1">// GitHub</span>
+  <span class="sr">/ghp_</span><span class="se">[</span><span class="sr">A-Za-z0-9</span><span class="se">]{36}</span><span class="sr">/g</span><span class="p">,</span>
+  <span class="sr">/gho_</span><span class="se">[</span><span class="sr">A-Za-z0-9</span><span class="se">]{36}</span><span class="sr">/g</span><span class="p">,</span>
+  
+  <span class="c1">// Generic Secrets</span>
+  <span class="sr">/</span><span class="se">(</span><span class="sr">password|passwd|pwd</span><span class="se">)[</span><span class="sr">'</span><span class="se">\"]?\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">:=</span><span class="se">]\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">'</span><span class="se">\"]([^</span><span class="sr">'</span><span class="se">\"]</span><span class="sr">+</span><span class="se">)[</span><span class="sr">'</span><span class="se">\"]?</span><span class="sr">/gi</span><span class="p">,</span>
+  <span class="sr">/</span><span class="se">(</span><span class="sr">secret|token</span><span class="se">)[</span><span class="sr">'</span><span class="se">\"]?\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">:=</span><span class="se">]\s</span><span class="sr">*</span><span class="se">[</span><span class="sr">'</span><span class="se">\"]([^</span><span class="sr">'</span><span class="se">\"]</span><span class="sr">+</span><span class="se">)[</span><span class="sr">'</span><span class="se">\"]?</span><span class="sr">/gi</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h3 id="secret-detection-workflow">Secret Detection Workflow</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Pre-scan file</span>
+npm run scan:secrets file.js
+
+<span class="c"># 2. If secrets detected</span>
+<span class="o">&gt;</span> SECRET DETECTED: Rejecting file
+<span class="o">&gt;</span> Type: API_KEY
+<span class="o">&gt;</span> Action: BLOCKED
+<span class="o">&gt;</span> File not processed
+
+<span class="c"># 3. Log detection (not the secret!)</span>
+<span class="o">{</span>
+  <span class="s2">"event"</span>: <span class="s2">"secret_detected"</span>,
+  <span class="s2">"timestamp"</span>: <span class="s2">"2024-01-20T10:30:00Z"</span>,
+  <span class="s2">"fileHash"</span>: <span class="s2">"abc123..."</span>,
+  <span class="s2">"secretType"</span>: <span class="s2">"api_key"</span>,
+  <span class="s2">"action"</span>: <span class="s2">"rejected"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="emergency-secret-response">Emergency Secret Response</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># If secret accidentally processed</span>
+npm run security:emergency
+
+<span class="c"># 1. Immediate actions</span>
+- Revoke user access
+- Purge all user data
+- Notify security team
+- Log incident
+
+<span class="c"># 2. Investigation</span>
+npm run security:investigate user_123
+
+<span class="c"># 3. Report generation</span>
+npm run security:report <span class="nt">--incident</span><span class="o">=</span>INC-001
+</code></pre></div></div>
+
+<h2 id="repository-analysis-security">Repository Analysis Security</h2>
+
+<h3 id="file-access-limits">File Access Limits</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// config/repo-limits.ts</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">repoLimits</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">files</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">maxFiles</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>              <span class="c1">// Per scan</span>
+    <span class="na">maxFileSize</span><span class="p">:</span> <span class="mi">500</span><span class="nx">_000</span><span class="p">,</span>       <span class="c1">// 500KB</span>
+    <span class="na">maxTotalSize</span><span class="p">:</span> <span class="mi">10</span><span class="nx">_000_000</span><span class="p">,</span>   <span class="c1">// 10MB</span>
+    <span class="na">timeout</span><span class="p">:</span> <span class="mi">30</span><span class="nx">_000</span>             <span class="c1">// 30 seconds per file</span>
+  <span class="p">},</span>
+  
+  <span class="na">excluded</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">*.env*</span><span class="dl">'</span><span class="p">,</span>         <span class="c1">// Environment files</span>
+    <span class="dl">'</span><span class="s1">*secret*</span><span class="dl">'</span><span class="p">,</span>       <span class="c1">// Secret files</span>
+    <span class="dl">'</span><span class="s1">*.key</span><span class="dl">'</span><span class="p">,</span>          <span class="c1">// Key files</span>
+    <span class="dl">'</span><span class="s1">*.pem</span><span class="dl">'</span><span class="p">,</span>          <span class="c1">// Certificates</span>
+    <span class="dl">'</span><span class="s1">node_modules/**</span><span class="dl">'</span><span class="p">,</span> <span class="c1">// Dependencies</span>
+    <span class="dl">'</span><span class="s1">.git/**</span><span class="dl">'</span><span class="p">,</span>        <span class="c1">// Git internals</span>
+    <span class="dl">'</span><span class="s1">dist/**</span><span class="dl">'</span><span class="p">,</span>        <span class="c1">// Build outputs</span>
+  <span class="p">],</span>
+  
+  <span class="na">rateLimits</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">scansPerHour</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="na">filesPerMinute</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="na">concurrentScans</span><span class="p">:</span> <span class="mi">3</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="github-oauth-security">GitHub OAuth Security</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Minimal permission scopes</span>
+<span class="nv">GITHUB_SCOPES</span><span class="o">=</span><span class="s2">"read:user public_repo"</span>  <span class="c"># Default</span>
+<span class="nv">GITHUB_SCOPES_PRIVATE</span><span class="o">=</span><span class="s2">"repo"</span>           <span class="c"># Only with explicit consent</span>
+
+<span class="c"># Token encryption</span>
+- Encrypted immediately after receipt
+- Stored with user-specific key
+- Auto-expires after 2 hours
+- Refresh requires re-authentication
+</code></pre></div></div>
+
+<h3 id="progressive-analysis-security">Progressive Analysis Security</h3>
+
+<pre><code class="language-mermaid">graph TD
+    A[GitHub URL] --&gt; B{Quick Scan}
+    B --&gt; C[Public Metadata Only]
+    C --&gt; D{User Consent}
+    D --&gt;|Yes| E[Sample Files]
+    D --&gt;|No| F[Stop]
+    E --&gt; G{Secret Scan}
+    G --&gt;|Clean| H[Extract Patterns]
+    G --&gt;|Secrets| I[Reject &amp; Alert]
+    H --&gt; J[Store Vectors]
+    I --&gt; K[Log Incident]
+</code></pre>
+
+<h2 id="data-privacy-controls">Data Privacy Controls</h2>
+
+<h3 id="user-consent-management">User Consent Management</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// User privacy settings</span>
+<span class="kr">interface</span> <span class="nx">PrivacySettings</span> <span class="p">{</span>
+  <span class="nl">allowPrivateRepos</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>      <span class="c1">// Default: false</span>
+  <span class="nl">sharePatterns</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>          <span class="c1">// Default: true (team only)</span>
+  <span class="nl">dataRetention</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>           <span class="c1">// Days (7, 30, 90)</span>
+  <span class="nl">autoDelete</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>             <span class="c1">// Default: true</span>
+  <span class="nl">excludedFiles</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>         <span class="c1">// User-defined exclusions</span>
+<span class="p">}</span>
+
+<span class="c1">// Consent levels</span>
+<span class="kr">enum</span> <span class="nx">ConsentLevel</span> <span class="p">{</span>
+  <span class="nx">MINIMAL</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">public_metadata_only</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">STANDARD</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">public_repos_patterns</span><span class="dl">"</span><span class="p">,</span>
+  <span class="nx">FULL</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">include_private_repos</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="data-retention-policy">Data Retention Policy</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Automatic data deletion</span>
+- User patterns: 30 days <span class="o">(</span>configurable<span class="o">)</span>
+- Session data: 7 days
+- Audit logs: 90 days
+- Encrypted tokens: 2 hours
+
+<span class="c"># Manual deletion</span>
+POST /api/privacy/delete-all
+<span class="o">{</span>
+  <span class="s2">"userId"</span>: <span class="s2">"user_123"</span>,
+  <span class="s2">"confirmation"</span>: <span class="s2">"DELETE_ALL_MY_DATA"</span>
+<span class="o">}</span>
+
+<span class="c"># Response</span>
+<span class="o">{</span>
+  <span class="s2">"deleted"</span>: <span class="o">{</span>
+    <span class="s2">"patterns"</span>: 45,
+    <span class="s2">"sessions"</span>: 3,
+    <span class="s2">"tokens"</span>: 2,
+    <span class="s2">"auditLogs"</span>: 156
+  <span class="o">}</span>,
+  <span class="s2">"timestamp"</span>: <span class="s2">"2024-01-20T10:30:00Z"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="gdpr-compliance">GDPR Compliance</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Data export (GDPR Article 20)</span>
+GET /api/privacy/export/user_123
+
+<span class="c"># Returns</span>
+<span class="o">{</span>
+  <span class="s2">"userData"</span>: <span class="o">{</span>...<span class="o">}</span>,
+  <span class="s2">"patterns"</span>: <span class="o">[</span>...],
+  <span class="s2">"activityLog"</span>: <span class="o">[</span>...],
+  <span class="s2">"format"</span>: <span class="s2">"json"</span>,
+  <span class="s2">"generated"</span>: <span class="s2">"2024-01-20T10:30:00Z"</span>
+<span class="o">}</span>
+
+<span class="c"># Right to be forgotten (Article 17)</span>
+DELETE /api/privacy/user/user_123
+
+<span class="c"># Deletion verification</span>
+npm run verify:deletion user_123
+</code></pre></div></div>
+
+<h2 id="incident-response">Incident Response</h2>
+
+<h3 id="security-incident-levels">Security Incident Levels</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Level 1 - Critical</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Source code exposure</span>
+  <span class="pi">-</span> <span class="s">Secret/credential leak</span>
+  <span class="pi">-</span> <span class="s">Data breach</span>
+  <span class="na">Response</span><span class="pi">:</span> <span class="s">Immediate shutdown, notify all stakeholders</span>
+
+<span class="na">Level 2 - High</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Unauthorized access attempt</span>
+  <span class="pi">-</span> <span class="s">Pattern injection attack</span>
+  <span class="pi">-</span> <span class="s">Rate limit bypass</span>
+  <span class="na">Response</span><span class="pi">:</span> <span class="s">Block source, investigate, patch</span>
+
+<span class="na">Level 3 - Medium</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Suspicious activity patterns</span>
+  <span class="pi">-</span> <span class="s">Failed authentication spikes</span>
+  <span class="na">Response</span><span class="pi">:</span> <span class="s">Monitor, investigate if persists</span>
+
+<span class="na">Level 4 - Low</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">Normal failed auth</span>
+  <span class="pi">-</span> <span class="s">Rate limit hits</span>
+  <span class="na">Response</span><span class="pi">:</span> <span class="s">Log and monitor</span>
+</code></pre></div></div>
+
+<h3 id="incident-response-procedure">Incident Response Procedure</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Detect incident</span>
+Alert received or detected
+
+<span class="c"># 2. Assess severity</span>
+npm run security:assess <span class="nt">--incident</span><span class="o">=</span>INC-001
+
+<span class="c"># 3. Contain</span>
+npm run security:contain <span class="nt">--user</span><span class="o">=</span>user_123 <span class="nt">--action</span><span class="o">=</span>block
+
+<span class="c"># 4. Investigate</span>
+npm run security:investigate <span class="nt">--from</span><span class="o">=</span><span class="s2">"2024-01-20"</span> <span class="nt">--to</span><span class="o">=</span><span class="s2">"2024-01-21"</span>
+
+<span class="c"># 5. Remediate</span>
+npm run security:patch <span class="nt">--issue</span><span class="o">=</span>SEC-001
+
+<span class="c"># 6. Report</span>
+npm run security:report <span class="nt">--incident</span><span class="o">=</span>INC-001 <span class="nt">--format</span><span class="o">=</span>pdf
+</code></pre></div></div>
+
+<h3 id="emergency-contacts">Emergency Contacts</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Security Team</span><span class="pi">:</span>
+  <span class="na">email</span><span class="pi">:</span> <span class="s">security@devmentor.ai</span>
+  <span class="na">slack</span><span class="pi">:</span> <span class="c1">#security-incidents</span>
+  <span class="na">pager</span><span class="pi">:</span> <span class="s">security-oncall</span>
+
+<span class="na">Data Protection Officer</span><span class="pi">:</span>
+  <span class="na">email</span><span class="pi">:</span> <span class="s">dpo@devmentor.ai</span>
+  <span class="na">phone</span><span class="pi">:</span> <span class="s">+1-xxx-xxx-xxxx</span>
+
+<span class="na">Legal</span><span class="pi">:</span>
+  <span class="na">email</span><span class="pi">:</span> <span class="s">legal@devmentor.ai</span>
+</code></pre></div></div>
+
+<h2 id="compliance-procedures">Compliance Procedures</h2>
+
+<h3 id="soc2-compliance">SOC2 Compliance</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Access controls</span>
+- Multi-factor authentication required
+- Role-based access control <span class="o">(</span>RBAC<span class="o">)</span>
+- Audit logging <span class="k">for </span>all access
+
+<span class="c"># Change management</span>
+- All changes require PR review
+- Security review <span class="k">for </span>sensitive changes
+- Automated testing required
+
+<span class="c"># Monitoring</span>
+- 24/7 security monitoring
+- Automated alerting
+- Incident response SLA: 1 hour
+</code></pre></div></div>
+
+<h3 id="privacy-shield--gdpr">Privacy Shield / GDPR</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Data minimization</span>
+- Only collect necessary patterns
+- Automatic data expiry
+- User-controlled retention
+
+<span class="c"># Transparency</span>
+- Clear privacy policy
+- Data processing notifications
+- Activity logs visible to <span class="nb">users</span>
+
+<span class="c"># Security measures</span>
+- Encryption at rest <span class="o">(</span>AES-256<span class="o">)</span>
+- Encryption <span class="k">in </span>transit <span class="o">(</span>TLS 1.3<span class="o">)</span>
+- Regular security audits
+</code></pre></div></div>
+
+<h2 id="security-monitoring">Security Monitoring</h2>
+
+<h3 id="real-time-monitoring">Real-time Monitoring</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Prometheus alerts</span>
+<span class="na">groups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">security</span>
+    <span class="na">rules</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">SecretDetected</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">secret_detection_total &gt; </span><span class="m">0</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">critical</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Secret</span><span class="nv"> </span><span class="s">detected</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">upload"</span>
+      
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">UnauthorizedAccess</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">rate(auth_failed_total[5m]) &gt; </span><span class="m">10</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">high</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Multiple</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">auth</span><span class="nv"> </span><span class="s">attempts"</span>
+      
+      <span class="pi">-</span> <span class="na">alert</span><span class="pi">:</span> <span class="s">DataExfiltration</span>
+        <span class="na">expr</span><span class="pi">:</span> <span class="s">rate(data_export_bytes[5m]) &gt; </span><span class="m">1000000000</span>
+        <span class="na">annotations</span><span class="pi">:</span>
+          <span class="na">severity</span><span class="pi">:</span> <span class="s">critical</span>
+          <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Unusual</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">export</span><span class="nv"> </span><span class="s">volume"</span>
+</code></pre></div></div>
+
+<h3 id="security-metrics-dashboard">Security Metrics Dashboard</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Key metrics to track</span>
+<span class="kd">const</span> <span class="nx">securityMetrics</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Detection metrics</span>
+  <span class="na">secretsDetected</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  <span class="na">patternsExtracted</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  <span class="na">filesRejected</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  
+  <span class="c1">// Access metrics</span>
+  <span class="na">authAttempts</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  <span class="na">authFailures</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  <span class="na">tokensRevoked</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  
+  <span class="c1">// Privacy metrics</span>
+  <span class="na">dataDeleted</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  <span class="na">gdprRequests</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  <span class="na">consentChanges</span><span class="p">:</span> <span class="nx">Counter</span><span class="p">,</span>
+  
+  <span class="c1">// Performance metrics</span>
+  <span class="na">scanDuration</span><span class="p">:</span> <span class="nx">Histogram</span><span class="p">,</span>
+  <span class="na">encryptionTime</span><span class="p">:</span> <span class="nx">Histogram</span><span class="p">,</span>
+  <span class="na">patternExtractionTime</span><span class="p">:</span> <span class="nx">Histogram</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="security-audit-logs">Security Audit Logs</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-20T10:30:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"security.scan.complete"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_123"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"filesScanned"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"secretsFound"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"patternsExtracted"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"rejected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"userAgent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mozilla/5.0..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_abc123"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="security-testing">Security Testing</h2>
+
+<h3 id="penetration-testing">Penetration Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run security test suite</span>
+npm run security:test
+
+<span class="c"># Specific tests</span>
+npm run <span class="nb">test</span>:secret-detection
+npm run <span class="nb">test</span>:pattern-extraction
+npm run <span class="nb">test</span>:encryption
+npm run <span class="nb">test</span>:rate-limiting
+
+<span class="c"># Load testing for DoS prevention</span>
+npm run <span class="nb">test</span>:load <span class="nt">--concurrent</span><span class="o">=</span>100 <span class="nt">--duration</span><span class="o">=</span>60s
+</code></pre></div></div>
+
+<h3 id="security-checklist">Security Checklist</h3>
+
+<h4 id="daily-checks">Daily Checks</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review security alerts</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check secret detection logs</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monitor auth failures</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify encryption status</li>
+</ul>
+
+<h4 id="weekly-checks">Weekly Checks</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Audit user permissions</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review access logs</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Check compliance metrics</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Update security rules</li>
+</ul>
+
+<h4 id="monthly-checks">Monthly Checks</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rotate secrets</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Security scan dependencies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Review security policies</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Conduct security training</li>
+</ul>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="generate-security-report">Generate Security Report</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c"># security-report.sh</span>
+
+<span class="nb">echo</span> <span class="s2">"DevMentor Security Report"</span>
+<span class="nb">echo</span> <span class="s2">"========================="</span>
+<span class="nb">echo</span> <span class="s2">"Date: </span><span class="si">$(</span><span class="nb">date</span><span class="si">)</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">""</span>
+
+<span class="nb">echo</span> <span class="s2">"Secret Detection Stats:"</span>
+redis-cli GET <span class="s2">"stats:secrets:detected"</span>
+
+<span class="nb">echo</span> <span class="s2">"Pattern Extraction Stats:"</span>
+redis-cli GET <span class="s2">"stats:patterns:extracted"</span>
+
+<span class="nb">echo</span> <span class="s2">"Active Sessions:"</span>
+redis-cli SCARD <span class="s2">"sessions:active"</span>
+
+<span class="nb">echo</span> <span class="s2">"Failed Auth Attempts (24h):"</span>
+redis-cli GET <span class="s2">"stats:auth:failed:daily"</span>
+
+<span class="nb">echo</span> <span class="s2">"GDPR Requests (30d):"</span>
+redis-cli GET <span class="s2">"stats:gdpr:requests:monthly"</span>
+</code></pre></div></div>
+
+<h3 id="emergency-shutdown">Emergency Shutdown</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c"># emergency-shutdown.sh</span>
+
+<span class="c"># Stop all services</span>
+kubectl scale deployment <span class="nt">--all</span> <span class="nt">--replicas</span><span class="o">=</span>0
+
+<span class="c"># Revoke all tokens</span>
+redis-cli FLUSHDB
+
+<span class="c"># Notify team</span>
+curl <span class="nt">-X</span> POST <span class="nv">$SLACK_WEBHOOK</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"text":"EMERGENCY: Security shutdown initiated"}'</span>
+
+<span class="c"># Generate incident report</span>
+npm run security:incident <span class="nt">--severity</span><span class="o">=</span>critical
+</code></pre></div></div>
+
+<hr />
+
+<p><strong>Last Updated</strong>: 2025-08-25
+<strong>Version</strong>: 1.0
+<strong>Classification</strong>: CONFIDENTIAL
+<strong>Author</strong>: DevMentor Security Team</p>
+
+
+
+<div style="margin-top: 3rem; padding: 1rem; background: #f6f8fa; border-radius: 5px;">
+  <p style="margin: 0; color: #666; font-size: 0.9em;">
+    📁 Source: DevMentor / runbooks/SECURITY_RUNBOOK.md
+  </p>
+</div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2024 NatureQuest. Documentation Hub v1.0.0</p>
+  </footer>
+</body>
+</html>
