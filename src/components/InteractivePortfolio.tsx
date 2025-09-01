@@ -1720,7 +1720,7 @@ export function InteractivePortfolio() {
     skills:
       '💻 Tech Stack:\n  Languages: TypeScript, Python, Go, Rust\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB',
     about:
-      '🌟 PixelQuest - Building the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Privacy-first, performance-optimized solutions\n  Team: Passionate developers and AI enthusiasts',
+      '🌟 PixelQuest - Exploring the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Developer experience and thoughtful solutions\n  Team: Passionate developers and AI enthusiasts',
     contact:
       "📬 Let's Connect:\n  Email: Marcowurtz@hotmail.com\n  GitHub: github.com/MarcoPWx\n  LinkedIn: linkedin.com/in/mapw",
     github: '🔗 Opening GitHub... github.com/MarcoPWx',
@@ -1781,7 +1781,6 @@ export function InteractivePortfolio() {
           'PostgreSQL',
         ],
         github: 'https://github.com/MarcoPWx/QuizMentor.ai',
-        live: 'https://quizmentor.app',
         icon: <Gamepad2 className="w-6 h-6" />,
         color: 'from-purple-600 to-pink-600',
       },
@@ -1799,7 +1798,7 @@ export function InteractivePortfolio() {
           'GDPR/CCPA compliant with PII filtering & attribution',
           'Scales to 50,000+ questions/day with 82% difficulty balance',
         ],
-        status: 'Production',
+        status: 'Beta',
         metrics: {
           'Sources': '120+',
           'Speed': '12q/s',
@@ -2395,7 +2394,7 @@ export function InteractivePortfolio() {
                 >
                   <Sparkles className="w-4 h-4 text-green-400" />
                   <span className="text-sm text-green-400">
-                    Building the future of developer tools
+                    Exploring the future of developer tools
                   </span>
                 </motion.div>
 
@@ -2436,8 +2435,7 @@ export function InteractivePortfolio() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7 }}
                 >
-                  Creating AI-powered developer tools that prioritize privacy, performance, and
-                  developer experience. From gamified learning to intelligent content
+                  Developer tools that prioritize developer experience. From gamified learning to intelligent content
                   transformation.
                 </motion.p>
 
@@ -2517,7 +2515,7 @@ export function InteractivePortfolio() {
                   transition={{ type: "spring", duration: 0.6 }}
                 >
                   <Sparkles className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm text-purple-400">7 Active Projects</span>
+                  <span className="text-sm text-purple-400">6 Active Projects</span>
                 </motion.div>
                 
                 <h2 className="text-5xl font-bold mb-4">
@@ -2525,7 +2523,6 @@ export function InteractivePortfolio() {
                     Projects
                   </span>
                 </h2>
-                <p className="text-gray-400 text-lg">Real products solving real problems</p>
                 
                 {focusedProject && (
                   <motion.div 
@@ -2562,7 +2559,6 @@ export function InteractivePortfolio() {
                     initial={{ opacity: 0, y: 20, rotateX: -10 }}
                     animate={{ opacity: 1, y: 0, rotateX: 0 }}
                     transition={{ delay: idx * 0.1, duration: 0.5, ease: 'easeOut' }}
-                    whileHover={{ y: -8, transition: { duration: 0.2 } }}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
                     <motion.div
@@ -2570,7 +2566,7 @@ export function InteractivePortfolio() {
                       layout
                       transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
                     >
-                      <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700 overflow-hidden w-full h-full shadow-2xl group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-shadow duration-300">
+                      <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700 overflow-hidden w-full h-full shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300">
                         {/* Animated gradient background */}
                         <motion.div
                           className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
@@ -2596,8 +2592,6 @@ export function InteractivePortfolio() {
                             <div className="flex items-center gap-4">
                               <motion.div
                                 className={`${focusedProject === project.id ? 'p-3' : 'p-3'} rounded-xl bg-gradient-to-br ${project.color} shadow-lg transition-all duration-300`}
-                                whileHover={{ rotate: 360, scale: 1.1 }}
-                                transition={{ duration: 0.6 }}
                               >
                                 {React.cloneElement(project.icon, {
                                   className: focusedProject === project.id ? 'w-7 h-7 text-white' : 'w-6 h-6 text-white',
@@ -3739,7 +3733,6 @@ export function InteractivePortfolio() {
                     10 Engineering Principles
                   </span>
                 </h2>
-                <p className="text-gray-400 text-lg">Learned from 10+ years of shipping production code</p>
               </motion.div>
 
               {/* Principles Grid */}
