@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ClientEcosystemWidget } from '@/components/ecosystem/ClientEcosystemWidget';
 
 // Force dynamic rendering and disable caching for all routes under /app
 export const dynamic = 'force-dynamic';
@@ -45,7 +44,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className={inter.className}>
         {children}
-        <ClientEcosystemWidget currentProduct="harvest" position="bottom-right" theme="dark" />
       </body>
     </html>
   );

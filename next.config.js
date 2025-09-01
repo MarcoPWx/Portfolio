@@ -9,8 +9,6 @@ const nextConfig = {
   reactStrictMode: true,
   // Helps Next find the correct workspace root in multi-lockfile environments
   outputFileTracingRoot: __dirname,
-  // Ensure HMR/transpile for local workspace packages
-  transpilePackages: ['@naturequest/ecosystem-widget'],
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

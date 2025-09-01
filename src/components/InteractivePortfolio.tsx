@@ -20,6 +20,7 @@ import {
   Clock,
   Tag,
   ArrowRight,
+  ArrowLeft,
   ExternalLink,
   User,
   Sparkles,
@@ -63,6 +64,7 @@ import {
   Home,
   BookOpenCheck,
   ScrollText,
+  Terminal,
   Map,
   MapPin,
   KeyRound,
@@ -144,8 +146,8 @@ import {
 } from 'lucide-react';
 // Defer loading of the heavy skills showcase until the user navigates to it
 import dynamic from 'next/dynamic';
-const DynamicComprehensiveSkillsV2 = dynamic(
-  () => import('./ComprehensiveSkillsV2').then((m) => m.ComprehensiveSkillsV2),
+const DynamicTechnicalStackV3 = dynamic(
+  () => import('./TechnicalStackV3').then((m) => m.TechnicalStackV3),
   {
     ssr: false,
     loading: () => <div style={{ minHeight: 320 }}>Loading skills…</div>,
@@ -342,6 +344,10 @@ function InteractiveTerminal({
   collapsible = false,
   defaultCollapsed = false,
   glowOnActivity = false,
+  controlledCollapsed,
+  onToggleCollapsed,
+  terminalIcon,
+  accentColor = 'green',
 }: {
   commands: Record<string, string>;
   title?: string;
@@ -359,6 +365,10 @@ function InteractiveTerminal({
   collapsible?: boolean;
   defaultCollapsed?: boolean;
   glowOnActivity?: boolean;
+  controlledCollapsed?: boolean;
+  onToggleCollapsed?: (next: boolean) => void;
+  terminalIcon?: React.ReactNode;
+  accentColor?: 'green' | 'blue' | 'purple' | 'amber';
 }) {
   const [input, setInput] = useState('');
   type HistoryEntry = { type: 'input' | 'output' | 'error'; text: string };
@@ -370,7 +380,14 @@ function InteractiveTerminal({
   const [stepIndex, setStepIndex] = useState(0);
   const runningRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [collapsed, setCollapsed] = useState<boolean>(defaultCollapsed);
+  const isControlled = typeof controlledCollapsed === 'boolean';
+  const [internalCollapsed, setInternalCollapsed] = useState<boolean>(defaultCollapsed);
+  const collapsed = isControlled ? (controlledCollapsed as boolean) : internalCollapsed;
+  const toggleCollapsed = () => {
+    const next = !collapsed;
+    if (onToggleCollapsed) onToggleCollapsed(next);
+    if (!isControlled) setInternalCollapsed(next);
+  };
   const [activityPulse, setActivityPulse] = useState<boolean>(false);
 
   const handleCommand = (cmd: string) => {
@@ -495,107 +512,133 @@ function InteractiveTerminal({
   }, [isPlaying, stepIndex, autoplay, JSON.stringify(script), runStep]);
 
   return (
-    <Card
-      className={`font-mono text-sm p-4 ${
-        collapsed && activityPulse ? 'ring-2 ring-green-500/40 shadow-[0_0_18px_rgba(34,197,94,0.35)]' : ''
-      }`}
-    >
-      <div className="flex items-center gap-2 mb-1">
-        <div className="w-3 h-3 bg-red-500 rounded-full" />
-        <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-        <div className="w-3 h-3 bg-green-500 rounded-full" />
-        <span className="text-gray-400 text-xs ml-2">{title.toLowerCase().replace(/\s+/g, '-')}</span>
+    <div className="relative">
+      {/* Click to expand/collapse hint with button - above the card */}
+      <AnimatePresence mode="wait">
         {collapsible && (
-          <button
-            className={`ml-2 p-1 rounded hover:bg-gray-800 text-gray-300 transition-transform ${
-              collapsed ? '' : 'rotate-180'
-            }`}
-            title={collapsed ? 'Expand' : 'Collapse'}
-            aria-label={collapsed ? 'Expand' : 'Collapse'}
-            onClick={() => setCollapsed((c) => !c)}
+          <motion.div
+            key={collapsed ? 'expand' : 'collapse'}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="text-center mb-3 flex flex-col items-center gap-1"
           >
-            <ChevronDown className="w-4 h-4" />
-          </button>
+            <span className="text-xs text-green-400 font-medium animate-pulse">
+              {collapsed ? 'Click to expand' : 'Click to collapse'}
+            </span>
+            <motion.button
+              className="p-1.5 rounded-full bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all"
+              title={collapsed ? "Expand terminal" : "Collapse terminal"}
+              aria-label={collapsed ? "Expand" : "Collapse"}
+              onClick={(e) => { e.stopPropagation(); toggleCollapsed(); }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                animate={{ rotate: collapsed ? 0 : 180 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="w-4 h-4" />
+              </motion.div>
+            </motion.button>
+          </motion.div>
         )}
-        {controls && (
-          <div className="ml-auto flex items-center gap-1">
-            <button
-              className="p-1.5 rounded hover:bg-gray-800 text-gray-300"
-              title={isPlaying ? 'Pause' : 'Play'}
-              aria-label={isPlaying ? 'Pause' : 'Play'}
-              onClick={() => setIsPlaying((p) => !p)}
-            >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            </button>
-            <button
-              className="p-1.5 rounded hover:bg-gray-800 text-gray-300"
-              title="Step"
-              aria-label="Step"
-              onClick={async () => {
-                if (isPlaying) setIsPlaying(false);
-                if (!runningRef.current) await runStep();
-              }}
-            >
-              <StepForward className="w-4 h-4" />
-            </button>
-            <button
-              className="p-1.5 rounded hover:bg-gray-800 text-gray-300"
-              title="Reset"
-              aria-label="Reset"
-              onClick={() => {
-                setIsPlaying(false);
-                setHistory([
-                  { type: 'output', text: `🚀 ${title}` },
-                  { type: 'output', text: 'Type "help" to view commands' },
-                ]);
-                setStepIndex(0);
-              }}
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-      </div>
-      {subtitle && (
-        <div className="text-[11px] text-gray-500 mb-2">{subtitle}</div>
-      )}
-
-      {/* Content / Preview */}
-      {collapsed ? (
-        <div className="text-xs text-gray-400 mt-1">
-          {(() => {
-            const lines = history.slice(-2);
-            return lines.map((l, i) => (
-              <div key={`prev-${i}`} className={l.type === 'error' ? 'text-red-400' : l.type === 'input' ? 'text-green-400' : 'text-gray-400'}>
-                {l.text.length > 120 ? l.text.slice(0, 117) + '…' : l.text}
-              </div>
-            ));
-          })()}
-        </div>
-      ) : (
-        <div
-          ref={scrollRef}
-          className={`${heightClass} overflow-y-auto overflow-x-hidden space-y-1 pr-1`}
+      </AnimatePresence>
+      
+        <Card
+          className={`font-mono transition-all duration-300 ${
+            collapsed ? 'hover:shadow-lg hover:shadow-green-400/20 cursor-pointer' : ''
+          } bg-gray-900/90 border-gray-700 shadow-xl backdrop-blur-sm p-4 h-[320px] flex flex-col`}
+          onClick={collapsed ? toggleCollapsed : undefined}
         >
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 bg-red-500 rounded-full" />
+            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+            <div className="w-3 h-3 bg-green-500 rounded-full" />
+          </div>
+          <div className="flex-1 text-center px-6">
+            <div className="text-gray-300 text-sm font-medium">{title}</div>
+            {subtitle && (
+              <div className="text-xs text-gray-400 mt-1">{subtitle}</div>
+            )}
+          </div>
+          <div className="w-[60px]" />
+        </div>
+
+        {/* Content / Preview */}
+        <div className="flex-1 overflow-hidden">
+          <AnimatePresence mode="wait">
+            {collapsed ? (
+              <motion.div
+                key="collapsed"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="h-full"
+              >
+                <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-800 flex flex-col h-full">
+                  <div className="flex-1 overflow-hidden">
+                    <div className="text-xs text-gray-400 space-y-1">
+                      {(() => {
+                        const lastLines = history.slice(-4);
+                        if (lastLines.length === 0) {
+                          return <div className="text-gray-500">Ready to start...</div>;
+                        }
+                        return lastLines.map((l, i) => (
+                          <div key={`prev-${i}`} className={`${
+                            l.type === 'error' ? 'text-red-400/70' : 
+                            l.type === 'input' ? 'text-green-400/70' : 
+                            'text-gray-400'
+                          } truncate`}>
+                            {l.text.length > 80 ? l.text.substring(0, 80) + '...' : l.text}
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 ml-3">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    <span className="text-xs text-gray-500 whitespace-nowrap">Running</span>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="expanded"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="h-full flex flex-col"
+              >
+                <div
+                  ref={scrollRef}
+                  className="flex-1 overflow-y-auto overflow-x-hidden space-y-0.5 pr-1"
+                >
           {history.map((item, i) => (
             <div
               key={i}
               className={
                 item.type === 'input'
-                  ? 'text-green-400'
+                  ? 'text-green-400 text-xs'
                   : item.type === 'error'
-                    ? 'text-red-400'
-                    : 'text-gray-300'
+                    ? 'text-red-400 text-xs'
+                    : 'text-gray-300 text-xs'
               }
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             >
               {item.text}
             </div>
-          ))}
+                ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      )}
 
-      {!autoplay && showInput && !collapsed && (
+        {!autoplay && showInput && !collapsed && (
         <div className="flex items-center gap-2 mt-3">
           <span className="text-green-400">{'>'}</span>
           <input
@@ -609,202 +652,475 @@ function InteractiveTerminal({
             placeholder="Enter command..."
           />
         </div>
-      )}
-    </Card>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+// Agent Boot Live Demo Terminal
+function AgentBootDemo() {
+  const commands: Record<string, string> = {
+    'agent-boot progress': `📊 Visual Progress Report\n\n⚡ ContentGenerator\n▓▓▓▓▓▓░░░░░░░░░░░░░░ 30%\nStatus: IN_PROGRESS\n\n🔧 API Routes\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%\nStatus: COMPLETE\n\n🎨 UI Components\n░░░░░░░░░░░░░░░░░░░░ 0%\nStatus: TODO`,
+    'agent-boot epic create "Epic L" --tasks 5': `✅ Created Epic L\n• 5 tasks added\n• Status: TODO\n• Progress: 0%\n• Updated EPICS.md\n• Session logged to DEVLOG.md`,
+    'agent-boot epic list': `📋 All Epics (12 total)\n\nL: Authentication System ▓▓░░░░░░░░ 20%\nK: Content Pipeline     ▓▓▓░░░░░░░ 30%\nJ: API Gateway         ▓▓▓▓▓▓▓▓▓▓ 100%\nI: Testing Suite       ▓▓▓▓▓░░░░░ 50%\nH: DevOps Pipeline     ▓▓▓▓░░░░░░ 40%\nG: Security Patterns   ░░░░░░░░░░ 0%\nF: Monitoring         ▓▓▓▓▓▓░░░░ 60%\nE: Documentation      ▓▓▓▓▓▓▓░░░ 70%\nD: Performance        ▓▓░░░░░░░░ 20%\nC: State Management   ▓▓▓▓▓▓▓▓░░ 80%\nB: Error Handling     ▓▓▓▓▓░░░░░ 50%\nA: Core Architecture  ▓▓▓▓▓▓▓▓▓░ 90%`,
+    'agent-boot report': `📊 Comprehensive Project Report\n\n🏗️ Build Status: ✅ PASSING\n🧪 Test Status: ❌ FAILING (3/10 passing)\n📘 TypeScript: ✅ CLEAN (0 errors)\n🐛 GitHub Issues: 30 open, 12 closed\n\n📈 Production Readiness: 35%\n• Circuit Breaker: ✅ Implemented\n• Security Lab: ✅ Created\n• Epic Tracking: ✅ Active\n• CI/CD: 🚧 In Progress\n\n✨ Next Priority: ContentGenerator (30%)`,
+    'agent-boot implement ContentGenerator': `🚀 Implementing ContentGenerator...\n\n✓ Created /src/lib/patterns/circuit-breaker.ts\n✓ Added exponential backoff\n✓ Implemented half-open state\n✓ Added metrics collection\n✓ Created fallback support\n\n📝 Updated Documentation:\n• DEVLOG.md ✅\n• SYSTEM_STATUS.md ✅\n• EPICS.md ✅\n\n🎯 ContentGenerator now at 40%!`,
+    'agent-boot security-lab create XSS': `🔒 Creating Security Learning Lab...\n\n✓ Created /src/labs/security/xss-demo.ts\n✓ Added vulnerable endpoint (sandboxed)\n✓ Added secure implementation\n✓ Created educational docs\n\n⚠️ Lab Environment Only\n✅ Safe for learning\n✅ Auto-disabled in production\n\n📚 Learn by breaking, fix by understanding!`,
+  };
+
+  const script: { cmd: string; delay?: number }[] = [
+    { cmd: 'agent-boot progress', delay: 1000 },
+    { cmd: 'agent-boot epic create "Epic L" --tasks 5', delay: 2000 },
+    { cmd: 'agent-boot epic list', delay: 1500 },
+    { cmd: 'agent-boot report', delay: 1800 },
+    { cmd: 'agent-boot implement ContentGenerator', delay: 2200 },
+    { cmd: 'agent-boot security-lab create XSS', delay: 2000 },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative"
+    >
+      <motion.div
+        className="absolute -inset-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-3xl blur-2xl opacity-40"
+        animate={{
+          scale: [1, 1.02, 0.98, 1],
+          opacity: [0.4, 0.5, 0.3, 0.4],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut"
+        }}
+      />
+      <InteractiveTerminal
+        title="🚀 Agent Boot Live"
+        subtitle="Driving to Production"
+        commands={commands}
+        script={script}
+        autoplay
+        showInput={false}
+        controls
+        animateTyping
+        typingSpeedMs={40}
+        outputLineDelayMs={100}
+        loop
+        loopPauseMs={3000}
+        heightClass="h-[600px]"
+        accentColor="green"
+      />
+    </motion.div>
   );
 }
 
 function WorkflowsShowcase() {
-  // Four independent terminals to showcase: AI Agent, TDD, Mock-first (Storybook/MSW + E2E), and Ops/Observability (K8s/Docker)
+  // Four terminals telling a complete story: AI Agent plans → TDD implements → Mock-first validates → Ops deploys
   type Step = { cmd: string; delay?: number };
+  // Track which terminals are open - can have multiple open
+  const [openTerminals, setOpenTerminals] = useState<Set<string>>(new Set());
 
-  // AI Agent Orchestration terminal
+  // AI Agent Orchestration terminal - Planning Phase
   const agentCommands: Record<string, string> = {
-    'pnpm agent:dev': `Agent Gateway ready on http://localhost:8787\nRoutes loaded: openai:gpt-4o-mini, anthropic:claude-3.7, local:ollama:llama3.1\nPolicy: privacy-first (BYOK: ephemeral by default)`,
-    'agent memory load repo': `Workspace memory loaded:\n• patterns: 32\n• tests: 128\n• docs: 14\n• recent-diffs: 5`,
-    'agent routes show': `Routing rules:\n• code-review → openai:gpt-4o-mini (fast/cost)\n• planning/spec → anthropic:claude-3.7 (reasoning)\n• offline/local → ollama:llama3.1 (BYOK/local-first)`,
-    "agent prompt 'spec: BloomValidator multi-skill weighting'": `Spec created: BloomValidator multi-skill weighting scenario\nPlan: align user journey + docs + tests`,
-    'agent storybook open': 'Opening Storybook http://localhost:7007',
-    'agent msw profile show': 'MSW Profile: latency=200ms, error_rate=10%, handlers=17',
-    'agent e2e run': `Playwright triggered (3 specs) — status:\n✓ QuizCard flows\n✓ API Playground latency/error scenarios\n✓ Status Dashboard surfaces artifacts`,
-    'agent docs align --storybook --openapi': `Docs aligned:\n• Storybook: QuizCard.stories updated\n• OpenAPI: POST /api/bloom/validate extended`,
-    'agent stories top': `Top User Stories:\n1) As a learner, I start a 7‑question adaptive session and get instant feedback.\n2) As a developer, I get inline, repo‑aware suggestions that match our patterns.\n3) As an ops engineer, I monitor error budgets and latency to keep SLOs on track.`,
-    'agent s2s top': `Top Service-to-Service Flows:\n• App → /api/bloom/validate → Supabase (RLS) → analytics aggregates.\n• VS Code → API Gateway → Learning Service → Memory Service (Qdrant) → LLM.\n• Storybook UI → MSW handlers → deterministic mocks → E2E assertions (Playwright).`,
-    'agent publish status': `Status posted: CI links + artifacts (coverage, a11y, e2e, latency)`,
+    'agent start': `AI Agent v2.1.0\n✓ Connected to /src/app\n✓ 128 patterns loaded`,
+    "agent plan 'payment feature'": `Analyzing...\n✓ Found 3 payment modules\n✓ Security requirements\n\nPlan: PaymentProcessor + Stripe + retry logic`,
+    'agent generate tests': `✓ Unit tests created\n✓ Integration mocks\n✓ E2E flows\n12 test cases ready`,
+    'agent create stories': `✓ PaymentForm.stories\n✓ CheckoutFlow.stories\nMSW handlers configured`,
+    'agent commit': `✓ docs/payment.md\n✓ tests/payment.test.ts\n✓ stories/Payment.stories\nReady to implement`,
   };
   const agentScript: Step[] = [
-    { cmd: 'pnpm agent:dev', delay: 600 },
-    { cmd: 'agent memory load repo', delay: 900 },
-    { cmd: 'agent routes show', delay: 700 },
-    { cmd: "agent prompt 'spec: BloomValidator multi-skill weighting'", delay: 900 },
-    { cmd: 'agent storybook open', delay: 700 },
-    { cmd: 'agent msw profile show', delay: 700 },
-    { cmd: 'agent e2e run', delay: 900 },
-    { cmd: 'agent docs align --storybook --openapi', delay: 900 },
-    { cmd: 'agent stories top', delay: 700 },
-    { cmd: 'agent s2s top', delay: 700 },
-    { cmd: 'agent publish status', delay: 800 },
+    { cmd: 'agent start', delay: 600 },
+    { cmd: "agent plan 'payment feature'", delay: 900 },
+    { cmd: 'agent generate tests', delay: 800 },
+    { cmd: 'agent create stories', delay: 700 },
+    { cmd: 'agent commit', delay: 700 },
   ];
 
-  // TDD terminal (unit tests)
+  // TDD terminal - Implementation Phase
   const tddCommands: Record<string, string> = {
-    'pnpm test': `> Running tests...\nFAIL src/lib/bloom/validator.test.ts\n  ✕ validates multi-skill weighting (45 ms)\n\n  ● BloomValidator › validates multi-skill weighting\n    Expected: 0.75\n    Received: 0.60\n\nTest Suites: 1 failed, 12 passed, 13 total\nTests:       1 failed, 87 passed, 88 total\nSnapshots:   0 total\nTime:        3.42 s`,
-    'git add -A && git commit -m "red: add failing test for BloomValidator"':
-      `[main 1a2b3c] red: add failing test for BloomValidator\n  2 files changed, 18 insertions(+)`,
-    'patch bloom-validator': `Applying patch...\n✔ Updated src/lib/bloom/validator.ts\n✔ Added handling for multi-skill weighting and rounding`,
-    'git add -A && git commit -m "green: BloomValidator handles multi-skill weighting"':
-      `[main 4d5e6f] green: BloomValidator handles multi-skill weighting\n  1 file changed, 22 insertions(+), 6 deletions(-)`,
-    'pnpm test:all': `> Running tests...\nPASS src/lib/bloom/validator.test.ts\n\nTest Suites: 13 passed, 13 total\nTests:       88 passed, 88 total\nSnapshots:   0 total\nTime:        2.17 s`,
-    'pnpm run lint && pnpm run format': `✔ ESLint: 0 problems (0 errors, 0 warnings)\n✔ Prettier: files formatted`,
+    'pnpm test:payment': `FAIL payment.test.ts\n  ✕ payment retry (52ms)\n  ✕ card validation (12ms)\nTests: 0/12 passed`,
+    'code PaymentProcessor.ts': `✓ Stripe client added\n✓ Retry logic implemented\n✓ Idempotency keys\n✓ Webhook handler`,
+    'pnpm test:payment --watch': `PASS payment.test.ts\n  ✓ All 12 tests passing\n  Coverage: 94%`,
+    'git commit -m "feat: payment service"': `[main 7g8h9i] feat: payment service\n  3 files changed, 287 insertions(+)`,
+    'pnpm test:e2e': `✓ Payment flow complete\n✓ 3D Secure handled\nAll scenarios passed!`,
   };
   const tddScript: Step[] = [
-    { cmd: 'pnpm test', delay: 600 },
-    { cmd: 'git add -A && git commit -m "red: add failing test for BloomValidator"', delay: 900 },
-    { cmd: 'patch bloom-validator', delay: 1000 },
-    { cmd: 'git add -A && git commit -m "green: BloomValidator handles multi-skill weighting"', delay: 900 },
-    { cmd: 'pnpm test:all', delay: 900 },
-    { cmd: 'pnpm run lint && pnpm run format', delay: 700 },
+    { cmd: 'pnpm test:payment', delay: 600 },
+    { cmd: 'code PaymentProcessor.ts', delay: 900 },
+    { cmd: 'pnpm test:payment --watch', delay: 800 },
+    { cmd: 'git commit -m "feat: payment service"', delay: 700 },
+    { cmd: 'pnpm test:e2e', delay: 800 },
   ];
 
-  // Mock-first terminal (Storybook/MSW/A11y/E2E)
+  // Mock-first terminal - Validation Phase
   const mockCommands: Record<string, string> = {
-    'pnpm storybook':
-      'Storybook 9.0 • ready on http://localhost:7007\nMSW connected — intercepting API calls\nMSW loaded 17 handlers',
-    'msw handlers list': `MSW Handlers:\n• GET /api/health → 200 OK { ok: true }\n• GET /api/status → 200 OK { artifacts: [...] }\n• POST /api/generate → 200 OK (mock content)\n• GET /metrics → 200 OK (mock counters)\n• GET /api/bloom/validate → 200 OK (pedagogy sample)` ,
-    'msw latency 200': 'MSW: network latency set to 200ms for /api/* routes',
-    'msw error-rate 0.10': 'MSW: error rate set to 10% for POST /api/*',
-    'msw profile e2e': 'MSW: applied E2E profile (latency=50ms, error_rate=0%)',
-    'pnpm test:a11y': `A11y: scanning visible stories...\n✔ QuizCard — no violations\n✔ StatusDashboard — no violations\n✔ EpicManager — no violations\nAll good (0 violations)`,
-    'pnpm test:e2e': `E2E: launching Playwright...\n✓ Storybook: QuizCard flows (chrome) 12s\n✓ API Playground: error/latency scenarios 9s\n✓ Status Dashboard: artifacts surface 4s\nSummary: 3 passed; 0 failed; duration 28s`,
-    'msw profile reset': 'MSW: profiles reset to defaults',
-    'curl -s http://localhost:7007/health': 'OK',
+    'pnpm storybook': `Storybook 9.0\n✓ PaymentForm stories\n✓ MSW mocks active\nhttp://localhost:7007`,
+    'msw add stripe': `✓ /payment_intents\n✓ /charges\n✓ /refunds\n✓ /webhooks`,
+    'msw simulate errors': `Testing failures:\n• Network timeout\n• Card declined\n• 3D Secure`,
+    'pnpm test:visual': `✓ All components match\n✓ No regressions\n4 snapshots updated`,
+    'pnpm test:a11y': `✓ WCAG 2.1 AA\n✓ Keyboard nav\n✓ Screen readers\nAll checks passed`,
+    'pnpm build': `✓ 12 stories built\n✓ Assets optimized\nReady to deploy`,
   };
   const mockScript: Step[] = [
     { cmd: 'pnpm storybook', delay: 600 },
-    { cmd: 'msw handlers list', delay: 800 },
-    { cmd: 'msw latency 200', delay: 900 },
-    { cmd: 'msw error-rate 0.10', delay: 800 },
-    { cmd: 'pnpm test:a11y', delay: 900 },
-    { cmd: 'msw profile e2e', delay: 800 },
-    { cmd: 'pnpm test:e2e', delay: 900 },
-    { cmd: 'msw profile reset', delay: 800 },
-    { cmd: 'curl -s http://localhost:7007/health', delay: 700 },
+    { cmd: 'msw add stripe', delay: 800 },
+    { cmd: 'msw simulate errors', delay: 700 },
+    { cmd: 'pnpm test:visual', delay: 900 },
+    { cmd: 'pnpm test:a11y', delay: 800 },
+    { cmd: 'pnpm build', delay: 700 },
   ];
 
-  // Ops / Observability terminal (K8s/Docker/metrics)
+  // Ops / Observability terminal - Deployment Phase
   const opsCommands: Record<string, string> = {
-    'kubectl get pods -n naturequest': `NAME                          READY   STATUS    RESTARTS   AGE\nweb-679d9c9b5f-8k2dj         1/1     Running   0          2m\napi-6c4b8d8d95-ntx7m        1/1     Running   0          2m\nlearning-service-7d9bd9     1/1     Running   0          2m\nmemory-service-65c4bc8f9    1/1     Running   0          2m`,
-    'kubectl get svc -n naturequest': `NAME               TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE\nweb                ClusterIP   10.43.0.10     <none>        80/TCP    2m\napi                ClusterIP   10.43.0.21     <none>        8080/TCP  2m`,
-    'kubectl get hpa -n naturequest': `NAME   REFERENCE        TARGETS   MINPODS   MAXPODS   REPLICAS   AGE\nweb    Deployment/web   60%/70%   2         8         2          2m`,
-    'kubectl top pods -n naturequest': `NAME                      CPU(%)   MEM(Mi)\nweb-679d9c9b5f-8k2dj     22        152\napi-6c4b8d8d95-ntx7m    15        128`,
-    'kubectl get ingress -n naturequest': `NAME   CLASS    HOSTS                ADDRESS   PORTS   AGE\nweb    public   app.naturequest.dev            80      2m`,
-    "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'": `NAMES                STATUS          PORTS\nredis                Up 2 minutes    0.0.0.0:6379->6379/tcp\nqdrant               Up 2 minutes    0.0.0.0:6333->6333/tcp\npostgres             Up 2 minutes    0.0.0.0:5432->5432/tcp`,
-    'curl -s http://localhost:3000/api/health': '{"ok":true,"uptime":"healthy","services":["web","api","learning-service","memory-service"]}',
-    "curl -s http://localhost:3000/metrics | grep http_requests_total":
-      'http_requests_total{service="web",status="200"} 1284\nhttp_requests_total{service="api",status="200"} 932\nhttp_requests_total{service="api",status="500"} 1',
-    'kubectl logs deploy/web -n naturequest --tail=8':
-      'GET / 200 42ms\nGET /api/health 200 12ms\nGET /mockServiceWorker.js 404 1ms\nPOST /api/generate 200 221ms\nGET / 200 28ms\nGET /storybook/iframe.html 200 18ms\nGET /api/status 200 9ms\nGET /metrics 200 5ms',
-    'kubectl get events -n naturequest --sort-by=.metadata.creationTimestamp': `LAST SEEN   TYPE     REASON    OBJECT                 MESSAGE\n1m          Normal   Pulled    pod/web-679d9c9b5f     Container image pulled\n1m          Normal   Started   pod/web-679d9c9b5f     Started container web` ,
+    'docker build': `✓ Dependencies installed\n✓ Tests passed\n✓ Image: 142MB\nTagged: payment:v1.0`,
+    'kubectl apply -f k8s/': `✓ deployment created\n✓ service created\n✓ configmap created\n✓ secrets configured`,
+    'kubectl rollout status': `✓ Replica 1/3 ready\n✓ Replica 2/3 ready\n✓ Replica 3/3 ready\nDeployment complete!`,
+    'curl /health': `{"status": "healthy",\n "uptime": "32s",\n "version": "1.0.0"}`,
+    'kubectl logs --tail=3': `[INFO] Service started\n[INFO] Stripe connected\n[INFO] Ready for traffic`,
+    'prometheus metrics': `success_rate: 98.7%\np95_latency: 247ms\nrequests/sec: 1.2k`,
+    'kubectl autoscale': `✓ HPA configured\n✓ Target CPU: 70%\n✓ Replicas: 2-10`,
+    'git tag v1.0.0': `✓ Tagged v1.0.0\n✓ Pushed to origin\n🎉 Deployed to production!`,
   };
   const opsScript: Step[] = [
-    { cmd: 'kubectl get pods -n naturequest', delay: 600 },
-    { cmd: 'kubectl get svc -n naturequest', delay: 800 },
-    { cmd: 'kubectl get hpa -n naturequest', delay: 800 },
-    { cmd: 'kubectl top pods -n naturequest', delay: 800 },
-    { cmd: 'kubectl get ingress -n naturequest', delay: 800 },
-    { cmd: "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'", delay: 800 },
-    { cmd: 'curl -s http://localhost:3000/api/health', delay: 800 },
-    { cmd: 'curl -s http://localhost:3000/metrics | grep http_requests_total', delay: 900 },
-    { cmd: 'kubectl logs deploy/web -n naturequest --tail=8', delay: 900 },
-    { cmd: 'kubectl get events -n naturequest --sort-by=.metadata.creationTimestamp', delay: 900 },
+    { cmd: 'docker build', delay: 600 },
+    { cmd: 'kubectl apply -f k8s/', delay: 800 },
+    { cmd: 'kubectl rollout status', delay: 900 },
+    { cmd: 'curl /health', delay: 700 },
+    { cmd: 'kubectl logs --tail=3', delay: 800 },
+    { cmd: 'prometheus metrics', delay: 700 },
+    { cmd: 'kubectl autoscale', delay: 800 },
+    { cmd: 'git tag v1.0.0', delay: 600 },
   ];
 
+  // API/Business Contracts terminal - Contract-First Development
+  const contractCommands: Record<string, string> = {
+    'openapi generate': `✓ payment.yaml v3.0\n✓ 12 endpoints defined\n✓ Schema validation\n✓ Auth requirements`,
+    'contract test': `Testing contracts:\n✓ /api/payment POST\n✓ /api/payment/:id GET\n✓ /api/refund POST\nAll contracts valid`,
+    'mock from-spec': `✓ Mock server started\n✓ Port: 4000\n✓ Example responses\n✓ Error scenarios`,
+    'generate client': `✓ TypeScript client\n✓ Type-safe methods\n✓ Runtime validation\n✓ Retry logic included`,
+    'contract validate': `✓ Request schemas\n✓ Response formats\n✓ Error codes\n✓ Breaking changes: 0`,
+    'publish docs': `✓ API docs generated\n✓ Interactive playground\n✓ Code examples\n📚 docs.api.dev/v1`,
+  };
+  const contractScript: Step[] = [
+    { cmd: 'openapi generate', delay: 700 },
+    { cmd: 'contract test', delay: 800 },
+    { cmd: 'mock from-spec', delay: 600 },
+    { cmd: 'generate client', delay: 900 },
+    { cmd: 'contract validate', delay: 700 },
+    { cmd: 'publish docs', delay: 600 },
+  ];
+
+  // CI/CD Pipeline terminal - Continuous Integration & Deployment
+  const cicdCommands: Record<string, string> = {
+    'github actions status': `✓ Unit tests: PASSED\n✓ Integration: PASSED\n✓ Coverage: 87%\n✓ Build: SUCCESS\n✓ Security scan: CLEAN`,
+    'npm run test:coverage': `PASS src/**/*.test.ts\n  File      | Coverage\n  --------- | --------\n  All files |   87.3%\n  index.ts  |   92.1%\n  utils.ts  |   84.5%`,
+    'docker scan image': `Scanning image...\n✓ No critical vulnerabilities\n⚠ 2 medium issues\n✓ Dependencies updated\n✓ Base image current`,
+    'deploy preview': `Creating preview...\n✓ Branch: feature/payment\n✓ URL: preview-42.app\n✓ Tests: 42/42 passed\n✓ Lighthouse: 98/100`,
+    'rollback production': `Rolling back...\n✓ Previous version: v1.2.3\n✓ Health checks: OK\n✓ Traffic shifted: 100%\n✓ Rollback complete`,
+    'monitor deployment': `📊 Deployment metrics:\n• Success rate: 99.9%\n• Deploy time: 3m 12s\n• Error rate: 0.01%\n• Active users: 1,234`,
+  };
+  const cicdScript: Step[] = [
+    { cmd: 'github actions status', delay: 700 },
+    { cmd: 'npm run test:coverage', delay: 800 },
+    { cmd: 'docker scan image', delay: 600 },
+    { cmd: 'deploy preview', delay: 900 },
+    { cmd: 'rollback production', delay: 700 },
+    { cmd: 'monitor deployment', delay: 600 },
+  ];
+
+  const toggleTerminal = (id: string) => {
+    setOpenTerminals(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+  
+  const terminalConfigs = [
+    {
+      id: 'agent',
+      title: '🤖 AI Agent Orchestration',
+      subtitle: 'Planning & Architecture',
+      icon: <Brain className="w-5 h-5" />,
+      color: 'purple' as const,
+      description: 'AI analyzes requirements and generates implementation plan',
+    },
+    {
+      id: 'tdd',
+      title: '🧪 Test-Driven Development',
+      subtitle: 'Implementation Phase',
+      icon: <TestTube className="w-5 h-5" />,
+      color: 'green' as const,
+      description: 'Writing tests first, then implementing features',
+    },
+    {
+      id: 'mock',
+      title: '🎨 Mock-First Validation',
+      subtitle: 'UI & Integration Testing',
+      icon: <Palette className="w-5 h-5" />,
+      color: 'blue' as const,
+      description: 'Storybook components with MSW API mocking',
+    },
+    {
+      id: 'ops',
+      title: '🚀 Production Deployment',
+      subtitle: 'DevOps & Monitoring',
+      icon: <Rocket className="w-5 h-5" />,
+      color: 'amber' as const,
+      description: 'Containerization, Kubernetes deployment, and observability',
+    },
+    {
+      id: 'contract',
+      title: '📜 API/Business Contracts',
+      subtitle: 'Contract-First Development',
+      icon: <FileCode className="w-5 h-5" />,
+      color: 'indigo' as const,
+      description: 'OpenAPI specs, contract testing, and API documentation',
+    },
+    {
+      id: 'cicd',
+      title: '⚙️ CI/CD Pipeline',
+      subtitle: 'Continuous Integration',
+      icon: <GitBranch className="w-5 h-5" />,
+      color: 'rose' as const,
+      description: 'Automated testing, security scanning, and deployment pipelines',
+    },
+  ];
+  
   return (
-    <div>
-      <div className="text-center mb-3 text-xs text-gray-400">
-        Now showing: AI Agent • TDD • Mock-first (Storybook/MSW + E2E) • Ops/Observability (K8s/Docker)
-        — Use the controls on each terminal (Pause, Step, Reset) to follow at your own pace.
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <InteractiveTerminal
-          title="AI Agent Orchestration"
-          subtitle="Memory → Routes → Spec → Storybook/MSW → E2E → Docs → Status"
-          commands={agentCommands}
-          script={agentScript}
-          autoplay
-          showInput={false}
-          controls
-          animateTyping
-          typingSpeedMs={90}
-          outputLineDelayMs={320}
-          loop
-          loopPauseMs={2200}
-          heightClass="h-80"
-          collapsible
-          defaultCollapsed={false}
-          glowOnActivity={false}
-        />
-        <InteractiveTerminal
-          title="TDD Loop (red→green→refactor)"
-          subtitle="Unit-first TDD: fail → patch → pass → lint"
-          commands={tddCommands}
-          script={tddScript}
-          autoplay
-          showInput={false}
-          controls
-          animateTyping
-          typingSpeedMs={85}
-          outputLineDelayMs={300}
-          loop
-          loopPauseMs={2200}
-          heightClass="h-80"
-          collapsible
-          defaultCollapsed={true}
-          glowOnActivity={true}
-        />
-        <InteractiveTerminal
-          title="Mock-first (Storybook/MSW + E2E)"
-          subtitle="Handlers → profiles → a11y → E2E"
-          commands={mockCommands}
-          script={mockScript}
-          autoplay
-          showInput={false}
-          controls
-          animateTyping
-          typingSpeedMs={85}
-          outputLineDelayMs={300}
-          loop
-          loopPauseMs={2200}
-          heightClass="h-80"
-          collapsible
-          defaultCollapsed={true}
-          glowOnActivity={true}
-        />
-        <InteractiveTerminal
-          title="Ops / Observability (K8s/Docker)"
-          subtitle="pods/svc/hpa/top/ingress → health/metrics/logs/events"
-          commands={opsCommands}
-          script={opsScript}
-          autoplay
-          showInput={false}
-          controls
-          animateTyping
-          typingSpeedMs={80}
-          outputLineDelayMs={280}
-          loop
-          loopPauseMs={2200}
-          heightClass="h-80"
-          collapsible
-          defaultCollapsed={true}
-          glowOnActivity={true}
-        />
+    <div className="w-full">
+      {/* Terminal Grid - 3 columns for 6 terminals */}
+      <div className="grid lg:grid-cols-3 gap-4 w-full">
+        {/* AI Agent Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0 }}
+          className="relative"
+        >
+          <motion.div 
+            className="absolute -inset-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
+            animate={{
+              scale: [1, 1.05, 0.95, 1],
+              opacity: [0.4, 0.5, 0.3, 0.4],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut"
+            }}
+          />
+          <InteractiveTerminal
+            title="AI Agent Orchestration"
+            subtitle="Planning & Architecture"
+            accentColor={terminalConfigs[0].color}
+            commands={agentCommands}
+            script={agentScript}
+            autoplay
+            showInput={false}
+            animateTyping
+            typingSpeedMs={180}
+            outputLineDelayMs={1500}
+            loop
+            loopPauseMs={5000}
+            heightClass="h-[400px]"
+          />
+          <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[0].description}</p>
+        </motion.div>
+        {/* TDD Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="relative"
+        >
+          <motion.div 
+            className="absolute -inset-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
+            animate={{
+              scale: [1, 0.95, 1.05, 1],
+              opacity: [0.4, 0.3, 0.5, 0.4],
+            }}
+            transition={{
+              duration: 9,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut"
+            }}
+          />
+          <InteractiveTerminal
+            title="Test-Driven Development"
+            subtitle="Implementation Phase"
+            accentColor={terminalConfigs[1].color}
+            commands={tddCommands}
+            script={tddScript}
+            autoplay
+            showInput={false}
+            animateTyping
+            typingSpeedMs={190}
+            outputLineDelayMs={1600}
+            loop
+            loopPauseMs={5000}
+            heightClass="h-[400px]"
+          />
+          <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[1].description}</p>
+        </motion.div>
+        {/* Mock Validation Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="relative"
+        >
+          <motion.div 
+            className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
+            animate={{
+              scale: [1, 1.03, 0.97, 1],
+              opacity: [0.4, 0.45, 0.35, 0.4],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut"
+            }}
+          />
+          <InteractiveTerminal
+            title="Mock-First Validation"
+            subtitle="UI & Integration Testing"
+            accentColor={terminalConfigs[2].color}
+            commands={mockCommands}
+            script={mockScript}
+            autoplay
+            showInput={false}
+            animateTyping
+            typingSpeedMs={190}
+            outputLineDelayMs={1600}
+            loop
+            loopPauseMs={5000}
+            heightClass="h-[200px]"
+          />
+          <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[2].description}</p>
+        </motion.div>
+        {/* DevOps Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className="relative"
+        >
+          <motion.div 
+            className="absolute -inset-2 bg-gradient-to-r from-amber-600/20 to-orange-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
+            animate={{
+              scale: [1, 0.98, 1.02, 1],
+              opacity: [0.4, 0.35, 0.45, 0.4],
+            }}
+            transition={{
+              duration: 11,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut"
+            }}
+          />
+          <InteractiveTerminal
+            title="Production Deployment"
+            subtitle="DevOps & Monitoring"
+            accentColor={terminalConfigs[3].color}
+            commands={opsCommands}
+            script={opsScript}
+            autoplay
+            showInput={false}
+            animateTyping
+            typingSpeedMs={185}
+            outputLineDelayMs={1550}
+            loop
+            loopPauseMs={5000}
+            heightClass="h-[200px]"
+          />
+          <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[3].description}</p>
+        </motion.div>
+        {/* API/Business Contracts Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
+          className="relative"
+        >
+          <motion.div 
+            className="absolute -inset-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
+            animate={{
+              scale: [1, 1.01, 0.99, 1],
+              opacity: [0.4, 0.45, 0.35, 0.4],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut"
+            }}
+          />
+          <InteractiveTerminal
+            title="API/Business Contracts"
+            subtitle="Contract-First Development"
+            accentColor={terminalConfigs[4].color}
+            commands={contractCommands}
+            script={contractScript}
+            autoplay
+            showInput={false}
+            animateTyping
+            typingSpeedMs={175}
+            outputLineDelayMs={1450}
+            loop
+            loopPauseMs={5000}
+            heightClass="h-[200px]"
+          />
+          <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[4].description}</p>
+        </motion.div>
+        {/* Infrastructure as Code Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.5 }}
+          className="relative"
+        >
+          <motion.div 
+            className="absolute -inset-2 bg-gradient-to-r from-rose-600/20 to-pink-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
+            animate={{
+              scale: [1, 0.97, 1.03, 1],
+              opacity: [0.4, 0.35, 0.45, 0.4],
+            }}
+            transition={{
+              duration: 13,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut"
+            }}
+          />
+          <InteractiveTerminal
+            title="CI/CD Pipeline"
+            subtitle="Continuous Integration"
+            accentColor="amber"
+            commands={cicdCommands}
+            script={cicdScript}
+            autoplay
+            showInput={false}
+            animateTyping
+            typingSpeedMs={170}
+            outputLineDelayMs={1400}
+            loop
+            loopPauseMs={5000}
+            heightClass="h-[200px]"
+          />
+          <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[5].description}</p>
+        </motion.div>
       </div>
     </div>
   );
 }
 
 // Animated Navigation
-type SectionId = 'home' | 'projects' | 'skills' | 'about' | 'book' | 'blog' | 'contact';
+type SectionId = 'home' | 'projects' | 'skills' | 'about' | 'principles' | 'contact';
 
 // Allow mixed nav items (section switch or link to route)
 type NavItem = {
@@ -827,9 +1143,10 @@ function Navigation({
     { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { id: 'about', label: 'About', icon: <User className="w-4 h-4" /> },
     { id: 'skills', label: 'Stack', icon: <Layers className="w-4 h-4" /> },
-    { id: 'projects', label: 'Projects', icon: <Rocket className="w-4 h-4" /> },
-    { id: 'book', label: 'Book', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'blog', label: 'Blog', icon: <FileText className="w-4 h-4" /> },
+    { id: 'projects', label: 'Projects', icon: <Code className="w-4 h-4" /> },
+    { href: '/book', label: 'Book', icon: <BookOpen className="w-4 h-4" /> },
+    { href: '/tools', label: 'Tools', icon: <Terminal className="w-4 h-4" /> },
+    { id: 'principles', label: 'Principles', icon: <Lightbulb className="w-4 h-4" /> },
     { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
   ];
 
@@ -840,13 +1157,9 @@ function Navigation({
     >
       <div className="w-full max-w-[90%] 2xl:max-w-[85%] mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <motion.div className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
-            <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-teal-400 rounded-lg" />
-              <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-teal-400 rounded-lg animate-pulse blur-xl opacity-50" />
-            </div>
+          <motion.div className="flex items-center space-x-2" whileHover={{ scale: 1.05 }}>
             <span className="font-bold text-lg">
-              <span className="text-white">Nature</span>
+              <span className="text-white">Pixel</span>
               <span className="text-green-400">Quest</span>
             </span>
           </motion.div>
@@ -867,11 +1180,12 @@ function Navigation({
                 <motion.button
                   key={section.id}
                   onClick={() => setActiveSection(section.id as SectionId)}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all ${
                     activeSection === section.id
-                      ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-lg'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-900/50 rounded-lg'
+                      ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-900/50'
                   }`}
+                  style={{ borderRadius: '0.5rem' }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -881,14 +1195,6 @@ function Navigation({
               )
             ))}
 
-            {/* Contact CTA */}
-            {activeSection !== 'contact' && (
-              <div className="ml-2">
-                <Button size="sm" onClick={() => setActiveSection('contact')}>
-                  Contact
-                </Button>
-              </div>
-            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -979,11 +1285,12 @@ function Navigation({
                         setActiveSection(section.id as SectionId);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all ${
                         activeSection === section.id
                           ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white'
                           : 'text-gray-400 hover:text-white hover:bg-gray-900/50'
                       }`}
+                      style={{ borderRadius: '0.5rem' }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -1413,7 +1720,7 @@ export function InteractivePortfolio() {
     skills:
       '💻 Tech Stack:\n  Languages: TypeScript, Python, Go, Rust\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB',
     about:
-      '🌟 NatureQuest - Building the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Privacy-first, performance-optimized solutions\n  Team: Passionate developers and AI enthusiasts',
+      '🌟 PixelQuest - Building the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Privacy-first, performance-optimized solutions\n  Team: Passionate developers and AI enthusiasts',
     contact:
       "📬 Let's Connect:\n  Email: Marcowurtz@hotmail.com\n  GitHub: github.com/MarcoPWx\n  LinkedIn: linkedin.com/in/mapw",
     github: '🔗 Opening GitHub... github.com/MarcoPWx',
@@ -1426,7 +1733,7 @@ export function InteractivePortfolio() {
     whoami:
       '👨‍💻 Senior Full-Stack Developer\n  Specializing in AI/ML, distributed systems\n  Building at the intersection of AI and DX',
     neofetch:
-      '🖥️ NatureQuest OS\n  ================\n  OS: Production v2.0\n  Uptime: 2 years\n  Packages: 4 (production)\n  Shell: zsh\n  DE: React\n  Terminal: portfolio\n  CPU: Multi-core AI\n  Memory: Unlimited',
+      '🖥️ PixelQuest OS\n  ================\n  OS: Production v2.0\n  Uptime: 2 years\n  Packages: 4 (production)\n  Shell: zsh\n  DE: React\n  Terminal: portfolio\n  CPU: Multi-core AI\n  Memory: Unlimited',
   };
 
   // Animated typing text
@@ -1452,229 +1759,157 @@ export function InteractivePortfolio() {
       {
         id: 'quizmentor',
         title: 'QuizMentor',
-        tagline: '🎮 Fast, feedback-rich quizzes learners actually want',
+        tagline: 'Gamified Learning Platform',
         description:
-          'Help learners gain real, retained skill in minutes a day through fast, feedback‑rich quizzes they actually want to come back to.',
+          'Interactive quiz application with gamification elements. Features adaptive learning, instant feedback, and progress tracking. Includes powerful Harvest Scraper system.',
         differentiation: [
-          // 1) Fast feedback that sticks
-          'Start a quiz in under 30 seconds',
-          'Clear explanations after each answer',
-          'Practice mode for deeper understanding without time pressure',
-          // 2) Progress you can feel
-          'XP, streaks, achievements, and daily goals provide tangible momentum',
-          'Results summarize what to improve; "Recently Incorrect" turns mistakes into learning',
-          'Shareable wins and friendly competition via leaderboards',
-          // 3) Accessible, reliable, everywhere
-          'Keyboard/screen‑reader friendly with strong focus order and labels',
-          'Offline quiz packs with smart sync on reconnect',
-          'Graceful error recovery and performance budgets for smooth sessions',
-          // 4) BatchProcessor Infrastructure - Real Performance Gains
-          '90% reduction in API calls through intelligent batching',
-          'Quiz loading 5x faster: 10 questions in 200ms vs 1000ms',
-          '90% cost reduction through fewer database calls',
-          'Memory-efficient queue management with non-blocking operations',
-          'Automatic retry logic with exponential backoff',
-          'QuestionBatchProcessor: Loads quiz questions in optimized batches',
-          'AnalyticsBatchProcessor: Collects and sends events efficiently',
-          'UserDataSyncProcessor: Batches user progress updates',
-          'Real-time performance monitoring in Storybook dashboard',
-          'Interactive testing: toggle batched/non-batched modes live',
+          'Quick quiz sessions with instant feedback',
+          'Gamification: XP, streaks, achievements',
+          'Adaptive difficulty adjustment',
+          'Offline mode with sync capabilities',
+          'Performance optimized batch processing',
+          'AI-powered Harvest Scraper generating 50K+ questions/day',
         ],
-        status: 'Beta',
+        status: 'Alpha',
         metrics: {},
         tech: [
           'React Native',
           'Expo',
           'TypeScript',
-          'Next.js API Routes',
-          'Edge Runtime',
+          'Next.js',
           'Supabase',
-          'Supabase Auth (RLS)',
           'PostgreSQL',
-          'SQLite',
-          'Upstash Redis (optional)',
-          'WebSockets',
-          'Vercel Cron',
-'Playwright',
-          'Jest',
-          'Storybook',
-          'MSW',
-          'Bloom Validator',
-          'Adaptive Engine',
-          'Self‑Learning Orchestrator',
-          'Content Pipeline (Scraper/AI/RAG)',
         ],
+        github: 'https://github.com/MarcoPWx/QuizMentor.ai',
         live: 'https://quizmentor.app',
         icon: <Gamepad2 className="w-6 h-6" />,
         color: 'from-purple-600 to-pink-600',
       },
       {
-        id: 'devmentor',
-        title: 'DevMentor',
-        tagline: 'AI-assisted development without context loss',
+        id: 'harvest-scraper',
+        title: 'Harvest Scraper',
+        tagline: 'Automated Educational Content Generation',
         description:
-          'VS Code extension + product layer that enriches prompts with repo context, runs a TDD feedback loop (red→green→refactor), and keeps code, tests, and docs in sync.',
+          'Enterprise-grade content harvesting system that automatically generates high-quality quiz questions from 120+ technical sources. Features AI-powered generation, legal compliance, and ethical data collection for continuous learning.',
         differentiation: [
-          'PBML code intelligence: pattern-aware suggestions, refactors, and quick‑fixes in VS Code',
-          'Epic Management: CRUD with filters, status, and linked docs',
-          'System Status: unified diagnostics, incidents, and CI artifacts',
-          'Mock‑first dev: MSW latency/error profiles; Swagger/OpenAPI "contracts in Storybook"',
-          'Quality gates in CI: a11y checks, Jest coverage, Playwright E2E, and bundle budgets',
-          // Advanced technical capabilities
-          'Embeddings: Text to vector conversion with caching',
-          'Document Processing: Chunking, metadata, overlap',
-          'Vector Storage: Qdrant integration',
-          'Search: Similarity search with filters and thresholds',
-          'RAG: Context retrieval for LLM augmentation',
-          'Performance: Concurrency and response time requirements',
-          'Error Handling: Graceful failure recovery',
+          'Processes 120+ sources: docs, Stack Overflow, GitHub, tutorials',
+          'Generates 4-5 questions per piece at ~12 questions/second',
+          'AI confidence scoring (0.75+ threshold) for quality assurance',
+          'Full robots.txt compliance & rate limiting (2s delay)',
+          'GDPR/CCPA compliant with PII filtering & attribution',
+          'Scales to 50,000+ questions/day with 82% difficulty balance',
         ],
-        status: 'Beta',
-        metrics: {},
+        status: 'Production',
+        metrics: {
+          'Sources': '120+',
+          'Speed': '12q/s',
+          'Daily Cap': '50K',
+          'Quality': '0.80',
+        },
         tech: [
-          'Next.js 14',
-          'React 18',
-          'TypeScript',
-'Node.js',
-          'Storybook 9',
-          'MSW',
-          'Swagger UI',
-          'TanStack Query',
-          'Radix UI',
-          'LangChain',
+          'Python',
           'OpenAI',
-          'Anthropic',
+          'BeautifulSoup',
+          'Scrapy',
+          'FastAPI',
           'PostgreSQL',
           'Redis',
-          'Qdrant',
-          'WebSockets',
-          'Kubernetes',
-          'Istio',
-          'Kiali',
-          'Helm',
-          'FluxCD',
-          'Envoy',
-          'API Gateway',
-          'Prometheus',
-          'Alertmanager',
-          'Grafana',
-          'Loki',
-          'Promtail',
-          'OpenTelemetry',
-          'Playwright',
-          'Vitest/Jest',
-          'Locust',
-          'GitHub Actions',
-          'OAuth 2.0',
-          'JWT',
-          'JWKS',
-          'OPA (ABAC/RBAC)',
+          'Celery',
         ],
+        github: 'https://github.com/MarcoPWx/QuizMentor.ai',
+        icon: <Database className="w-6 h-6" />,
+        color: 'from-emerald-600 to-green-600',
+      },
+      {
+        id: 'devmentor',
+        title: 'DevMentor',
+        tagline: 'AI Pair Programming Assistant',
+        description:
+          'Intelligent coding assistant that maintains repository context and helps with code generation, testing, and documentation.',
+        differentiation: [
+          'Repository-aware code suggestions',
+          'Automated TDD workflow support',
+          'Multi-provider AI integration',
+          'Context preservation across sessions',
+          'Pattern recognition and learning',
+        ],
+        status: 'Alpha',
+        metrics: {},
+        tech: [
+          'Next.js',
+          'React',
+          'TypeScript',
+          'LangChain',
+          'OpenAI',
+          'PostgreSQL',
+          'Redis',
+        ],
+        github: 'https://github.com/MarcoPWx/DevMentor.ai',
         icon: <Bot className="w-6 h-6" />,
         color: 'from-blue-600 to-cyan-600',
       },
       {
         id: 'harvest',
         title: 'Harvest.ai',
-        tagline: '🌾 Transform raw content into polished outputs—fast',
+        tagline: 'Content Transformation Pipeline',
         description:
-          'Transforms raw content (notes, outlines, transcripts, docs) into polished outputs like blogs, summaries, emails, and presentations—fast, predictable, and privacy-first (BYOK: bring your own AI keys).',
+          'AI-powered content processor that transforms raw text into polished outputs like articles, summaries, and presentations.',
         differentiation: [
-          // Speed to value
-          'One input box, opinionated presets, instant streaming feedback',
-          // Radical transparency
-          'Live token/cost meter, quality scoring, clear fallbacks and errors',
-          // Reliability
-          'Multi-provider fallback (OpenAI, Anthropic, Gemini), caching, rate limiting',
-          // Privacy-first
-          'BYOK (bring your own keys), no default data retention, clear export and deletion',
-          // Developer experience
-          'REST + streaming API, OpenAPI spec, mock-first dev mode',
-          // Trust building
-          'Transparent cost/quality UX—not a black box',
+          'Multi-format content generation',
+          'BYOK (Bring Your Own Keys) support',
+          'Streaming API with real-time feedback',
+          'Cost transparency and optimization',
+          'Privacy-first architecture',
         ],
-        status: 'Beta',
+        status: 'Alpha',
         metrics: {},
         tech: [
           'Python',
           'FastAPI',
           'Next.js',
-'TypeScript',
+          'TypeScript',
           'OpenAPI',
-          'Storybook',
-          'MSW',
-          'Playwright',
           'SSE',
         ],
+        github: 'https://github.com/MarcoPWx/Harvest.ai',
         icon: <Brain className="w-6 h-6" />,
         color: 'from-green-600 to-teal-600',
       },
       {
         id: 'devmentor-vscode',
-        title: 'DevMentor for VS Code',
-        tagline: '🧩 DevMentor’s VS Code extension',
+        title: 'DevMentor VS Code Extension',
+        tagline: 'AI Assistant for VS Code',
         description:
-          'Brings DevMentor’s pattern-aware intelligence directly into VS Code with inline suggestions, quick-fixes, and workspace-aware guidance.',
+          'VS Code extension that brings AI-powered code assistance directly to your editor with context-aware suggestions.',
         differentiation: [
-          'Inline code actions and quick-fixes powered by project patterns',
-          'Command Palette and hover helpers with repository-context prompts',
-          'Privacy-first: local model routing where possible, API fallbacks when allowed',
-          'Workspace-aware memory and RAG for consistent recommendations',
+          'Inline code suggestions and fixes',
+          'Command palette integration',
+          'Workspace-aware intelligence',
+          'Privacy-focused local processing',
         ],
-        status: 'Active Development',
+        status: 'Alpha',
         metrics: {},
-        tech: ['TypeScript', 'VS Code API', 'LangChain', 'Vector Search', 'Node.js'],
+        tech: ['TypeScript', 'VS Code API', 'LangChain', 'Node.js'],
+        github: 'https://github.com/MarcoPWx/DevMentor.ai',
         icon: <Code className="w-6 h-6" />,
         color: 'from-indigo-600 to-purple-600',
       },
       {
-        id: 'command-center',
-        title: 'AIBook (OSS Command Center)',
-        tagline: '🤖 Where AI Meets UI Development — stop copying broken AI code',
-        description:
-          'A Storybook setup built for AI-assisted UI development. It provides working patterns, mock-first APIs, and built-in tests so AI can generate code that actually runs. It’s the visual ground truth and main workflow for AI + TDD.',
-        differentiation: [
-          'AI-ready patterns: Epic Manager CRUD, API Playground, Network Playground, Status Dashboard',
-          'Mock-first development: MSW intercepts all API calls; control latency/error via toolbar',
-          'Built-in quality: Unit (Vitest), accessibility checks, and E2E (Playwright), plus live coverage',
-          'Context recovery: Rebuild mental model in 2 minutes after crashes with Docs/Status/Epics stories',
-          '5-minute features: Pattern-based prompts → working components with tests',
-          'Time saved: ~30 min per component (≈5 hours/week)',
-        ],
-        status: 'Beta',
-        featured: true,
-        metrics: {},
-        tech: [
-          'Storybook',
-          'React',
-          'TypeScript',
-          'MSW',
-          'Vitest',
-          'Playwright',
-          'Accessibility (axe runner)',
-        ],
-        icon: <Book className="w-6 h-6" />,
-        color: 'from-teal-600 to-emerald-600',
-      },
-      {
         id: 'voice',
-        title: 'Voice',
-        tagline: '🎙️ Voice AI Project',
+        title: 'Voice AI Assistant',
+        tagline: 'Real-time Voice Interactions',
         description:
-          'Speech-driven AI experiences with real-time transcription and intelligent responses',
+          'Voice-enabled AI platform for natural conversations with low latency and privacy-focused architecture.',
         differentiation: [
-          'Low-latency streaming transcription',
-          'Conversational context retention',
-          'Local and cloud model support',
-          'Privacy-first audio handling',
+          'Sub-100ms transcription latency',
+          'Voice Activity Detection (VAD)',
+          'Local processing with cloud fallback',
+          'WebRTC streaming support',
+          'Offline functionality',
         ],
-        status: 'Active Development',
-        metrics: {
-          sessions: '1K+',
-          latency: '<100ms',
-          accuracy: '≈95%',
-        },
-        tech: ['TypeScript', 'WebAudio', 'WebRTC', 'OpenAI/Whisper', 'VAD'],
+        status: 'Alpha',
+        metrics: {},
+        tech: ['TypeScript', 'WebAudio', 'WebRTC', 'Whisper'],
         icon: <Mic className="w-6 h-6" />,
         color: 'from-orange-600 to-red-600',
       },
@@ -1684,7 +1919,7 @@ export function InteractivePortfolio() {
 
   // Sort projects by status only
   const sortedProjects = useMemo(() => {
-    const statusOrder: Record<string, number> = { Beta: 1, 'Active Development': 2 };
+    const statusOrder: Record<string, number> = { Production: 1, Beta: 2, Alpha: 3 };
     return [...projects].sort((a, b) => (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99));
   }, [projects]);
 
@@ -1699,11 +1934,122 @@ export function InteractivePortfolio() {
   };
 
   const projectDetails: Record<string, any> = {
+    'harvest-scraper': {
+      coreOffering:
+        '🌾 Automated Educational Content Generation system that harvests and transforms technical content into 50K+ quiz questions daily with enterprise-grade legal compliance and ethical data collection.',
+      howItWorks: [
+        'Multi-source harvesting from 120+ URLs: AWS docs, Stack Overflow (45+ tags), GitHub repos, tutorials, certification materials',
+        'AI pipeline: Extract → Generate 4-5 questions/piece → Create distractors → Add explanations → Assign difficulty → Score confidence (0.75+)',
+        'Smart organization: Auto-categorize into 15+ domains → Deduplicate via fingerprinting → Export to QuizMentor format',
+        'Legal compliance: robots.txt checking → 2s rate limiting → User-Agent identification → ToS compliance → GDPR/CCPA ready',
+        'Performance: ~12 questions/second throughput → 491 questions in 42 seconds → 50K+ questions/day capacity',
+      ],
+      keyEndpoints: [
+        'python3 scripts/python/local_harvester.py --quick — Generate ~500 questions in 10 minutes',
+        'python3 scripts/python/local_harvester.py --max-content 500 — Standard 1-hour harvest (~2,500 questions)',
+        'python3 scripts/python/local_harvester.py --max-content 10000 — Full 24-hour harvest (50,000+ questions)',
+        'python3 scripts/python/integrate_harvest.py — Integrate harvested content into QuizMentor',
+        'data/quizzes/harvested/* — Auto-organized quiz files by technology domain',
+      ],
+      userStories: [
+        'As a content manager, I double our quiz database in under an hour without manual creation',
+        'As a developer, I harvest fresh questions from updated documentation automatically',
+        'As an instructor, I generate certification practice questions for AWS/Azure/Kubernetes on demand',
+        'As a compliance officer, I verify all content respects robots.txt and rate limits',
+        'As a data scientist, I analyze confidence scores and difficulty distributions across domains',
+      ],
+      s2sStories: [
+        'Scraper → robots.txt checker → rate limiter (2s delay) → content extractor → AI generator → quality scorer → database',
+        'Harvester → OpenAI API (4-5 questions per piece) → confidence filter (0.75+) → deduplication → category assignment',
+        'Scheduler → cron job → harvest script → process 125 pieces → generate 491 questions → organize into 15 categories',
+        'Compliance checker → User-Agent header → crawl delay → ToS scanner → PII filter → GDPR anonymization',
+        'Integration pipeline → harvest_index.json → quiz_*_harvested.json files → QuizMentor import → live deployment',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Multi-source content extraction from 120+ technical sources',
+          'Batch processing with retry logic and exponential backoff',
+          'Auto-organized output structure (harvest_index.json + quiz files)',
+          'Direct QuizMentor format compatibility',
+        ],
+        'AI & Learning': [
+          'OpenAI-powered question generation (4-5 per content piece)',
+          'Intelligent distractor creation for multiple choice',
+          'Detailed explanation generation with examples',
+          'Difficulty level assignment (Easy/Medium/Hard)',
+          'Confidence scoring for quality filtering (0.75+ threshold)',
+        ],
+        'Reliability & Performance': [
+          '~12 questions/second processing throughput',
+          '82% medium difficulty balance maintenance',
+          'Exponential backoff on rate limits (429 responses)',
+          'Connection pooling and session management',
+          'Fault-tolerant with automatic retries (max 3)',
+        ],
+        'Security & Privacy': [
+          'HTTPS-only source requirements',
+          'PII filtering and data anonymization',
+          'No authentication bypass attempts',
+          'Educational fair use compliance',
+          'GDPR/CCPA compliant data handling',
+        ],
+        'Legal Compliance': [
+          'Automatic robots.txt detection and respect',
+          'Crawl-delay directive honoring',
+          'User-Agent identification (QuizMentor-Educational-Bot/1.0)',
+          'Terms of Service scanning and compliance',
+          'DMCA-ready with takedown procedures',
+        ],
+        'Observability': [
+          'Harvest metrics: speed, volume, quality scores',
+          'Source performance tracking',
+          'Error rate and retry monitoring',
+          'Compliance audit trail logging',
+        ],
+        'Dev Workflow & QA': [
+          'Quick/Standard/Full harvest modes',
+          'Dry-run testing capability',
+          'Quality threshold configuration',
+          'Source whitelist/blacklist management',
+        ],
+      },
+      practices: [
+        'Ethical data harvesting',
+        'Legal compliance-first',
+        'Rate limiting & fair use',
+        'Quality over quantity',
+        'Attribution preservation',
+        'Privacy by design',
+      ],
+      complianceConfig: {
+        'respect_robots': true,
+        'user_agent': 'QuizMentor-Educational-Bot/1.0',
+        'crawl_delay': 2.0,
+        'max_concurrent': 3,
+        'timeout': 30,
+        'retry_max': 3,
+        'check_terms': true,
+        'educational_only': true,
+        'preserve_attribution': true,
+        'filter_pii': true,
+        'https_only': true,
+      },
+      who: [
+        'Educational platforms needing continuous content updates',
+        'Certification prep companies requiring practice questions',
+        'Technical training organizations seeking current material',
+        'Developers building quiz/assessment applications',
+      ],
+      next: [
+        'Multi-agent validation for improved accuracy',
+        'Real-time streaming harvest capabilities',
+        'Custom AI models for domain-specific generation',
+        'Advanced deduplication with semantic similarity',
+      ],
+    },
     quizmentor: {
       coreOffering:
         'Help learners gain real, retained skill in minutes a day through fast, feedback‑rich quizzes they actually want to come back to.',
-      securitySnapshot: 'Supabase RLS; PII minimization; redaction',
-      securityDocUrl: '/docs/_quizmentor/security/SECURITY_HARDENING_BLUEPRINT.md',
       howItWorks: [
         'Content pipeline: Scraper/Harvester + AI generation/validation + optional RAG ensures fresh, high‑quality questions',
         'Mock‑first, E2E‑ready app architecture delivers speed, accessibility, and reliability',
@@ -1778,8 +2124,6 @@ export function InteractivePortfolio() {
     devmentor: {
       coreOffering:
         'Repo-aware prompt enrichment + TDD workflow + docs alignment — solving context loss in AI-assisted development (delivered via a VS Code extension).',
-      securitySnapshot: 'JWT edge; mTLS mesh; RBAC',
-      securityDocUrl: '/docs/_devmentor/security/SECURITY_HARDENING_BLUEPRINT.md',
       howItWorks: [
         'Feedback loop: Plan → Spec → Test → Implement → Validate → Align docs',
         'Prompt enrichment: relevant files, tests, docs, and diffs automatically gathered for the model',
@@ -1857,28 +2201,6 @@ export function InteractivePortfolio() {
     harvest: {
       coreOffering:
         'Transforms raw content (notes, outlines, transcripts, docs) into polished outputs like blogs, summaries, emails, and presentations—fast, predictable, and privacy-first with BYOK.',
-      securitySnapshot: 'BYOK ephemeral default; encrypted opt-in',
-      plannedTech: [
-        'BullMQ (queue)',
-        'Cloudflare R2',
-        'Pinecone',
-        'S3 (backups)',
-        'Puppeteer',
-        'pdf-parse',
-        'Whisper API',
-        'Tesseract',
-        'spaCy',
-        'scikit-learn (TF‑IDF)',
-        'Prometheus client',
-        'PostHog',
-        'Sentry',
-        'BetterUptime',
-        'CDN caching (Cloudflare)',
-        'Circuit breaker',
-        'Exponential backoff',
-        'Cost Router',
-        'Railway/Render configs',
-      ],
       howItWorks: [
         'Content Generation: Submit text → receive formatted output (blog/summary/email) within 90 seconds via deterministic mocks in dev, SSE streaming for progressive output, with cost/latency surfaced',
         'BYOK (Session-only or Encrypted-at-Rest): Use your own provider key. Default is ephemeral, memory-only (auto-wipe, zero retention via proxy). Opt-in encrypted storage with audit logs is available when required.',
@@ -2085,7 +2407,7 @@ export function InteractivePortfolio() {
                     transition={{ duration: 0.5 }}
                   >
                     <span className="bg-gradient-to-r from-white via-green-200 to-teal-200 bg-clip-text text-transparent">
-                      NatureQuest
+                      PixelQuest
                     </span>
                   </motion.h1>
 
@@ -2097,10 +2419,10 @@ export function InteractivePortfolio() {
                   >
                     <TypewriterCycle
                       texts={[
-                        'Transforming ideas into intelligent, scalable solutions',
-                        'Building AI-powered developer tools with privacy first',
-                        "Creating tomorrow's development workflow today",
-                        'Revolutionizing education through gamification',
+                        'Building thoughtful developer tools',
+                        'Focusing on privacy and performance',
+                        'Learning through continuous iteration',
+                        'Solving real problems with simple solutions',
                       ]}
                       delay={100}
                       pauseDelay={3000}
@@ -2126,32 +2448,46 @@ export function InteractivePortfolio() {
                   transition={{ delay: 0.9 }}
                 >
                   <Button
-                    onClick={() => setActiveSection('projects')}
+                    onClick={() => {
+                      setActiveSection('projects');
+                      // Scroll to top when navigating
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                     variant="primary"
                     size="lg"
                     icon={ArrowRight}
                     iconPosition="right"
+                    style={{ borderRadius: '12px' }}
                   >
                     Explore Projects
                   </Button>
                   <Button
-                    onClick={() => setActiveSection('projects')}
+                    onClick={() => {
+                      setActiveSection('projects');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                     variant="secondary"
                     size="lg"
-                    icon={MapPin}
+                    style={{ borderRadius: '12px' }}
                   >
-                    View Roadmaps
+                    <div className="flex items-center gap-2">
+                      <Map className="w-5 h-5" />
+                      <span>View Roadmaps</span>
+                    </div>
                   </Button>
                 </motion.div>
 
-                {/* Dual Terminal Demo (autoplay flows) */}
+                {/* Terminal Demo - Development Workflow */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.1 }}
                   className="max-w-7xl mx-auto mt-16"
                 >
-                  <WorkflowsShowcase />
+                  <div className="w-full">
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 text-left">Development Workflow</h3>
+                    <WorkflowsShowcase />
+                  </div>
                 </motion.div>
               </div>
             </div>
@@ -2174,29 +2510,48 @@ export function InteractivePortfolio() {
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
               >
-                <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                  Projects
+                <motion.div
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-full border border-purple-600/30 mb-6"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", duration: 0.6 }}
+                >
+                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <span className="text-sm text-purple-400">7 Active Projects</span>
+                </motion.div>
+                
+                <h2 className="text-5xl font-bold mb-4">
+                  <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent animate-gradient bg-300%">
+                    Projects
+                  </span>
                 </h2>
-                <p className="text-gray-400">Real products solving real problems</p>
-                <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 text-xs">
-                  <Sparkles className="w-3 h-3" />
-                  <span>All projects are in active beta development</span>
-                </div>
+                <p className="text-gray-400 text-lg">Real products solving real problems</p>
+                
                 {focusedProject && (
-                  <div className="mt-6 flex justify-center">
-                    <Button variant="secondary" size="sm" onClick={() => setFocusedProject(null)}>
-                      Back to overview
+                  <motion.div 
+                    className="mt-6 flex justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      onClick={() => setFocusedProject(null)}
+                      className="group"
+                    >
+                      <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                      Back to all projects
                     </Button>
-                  </div>
+                  </motion.div>
                 )}
               </motion.div>
 
-              <div className="space-y-4">
+              {/* Project Grid/List */}
+              <div className={`${focusedProject ? 'space-y-4' : 'grid lg:grid-cols-2 gap-6'}`}>
                 {sortedProjects.map((project, idx) => (
                   <motion.div
                     key={project.id}
-                    className={`w-full transition-all duration-500 ${focusedProject && focusedProject !== project.id ? 'opacity-30 scale-[0.99]' : ''}`}
-                    style={project.id === 'devmentor-vscode' ? { marginLeft: '10%' } : undefined}
+                    className={`w-full transition-all duration-500 cursor-pointer ${focusedProject && focusedProject !== project.id ? 'opacity-20 scale-[0.98] pointer-events-none' : ''}`}
                     onClick={() => {
                       if (focusedProject === project.id) {
                         setFocusedProject(null);
@@ -2204,76 +2559,227 @@ export function InteractivePortfolio() {
                         setFocusedProject(project.id);
                       }
                     }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.08, duration: 0.4, ease: 'easeOut' }}
+                    initial={{ opacity: 0, y: 20, rotateX: -10 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ delay: idx * 0.1, duration: 0.5, ease: 'easeOut' }}
+                    whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                    style={{ transformStyle: 'preserve-3d' }}
                   >
                     <motion.div
-                      className="group w-full"
+                      className="group w-full h-full"
                       layout
                       transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
                     >
-                      <div className="relative bg-gray-900 rounded-xl border border-gray-800 overflow-hidden w-full">
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}
+                      <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700 overflow-hidden w-full h-full shadow-2xl group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-shadow duration-300">
+                        {/* Animated gradient background */}
+                        <motion.div
+                          className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
+                          animate={{
+                            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
+                          }}
+                          transition={{
+                            duration: 10,
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: 'linear'
+                          }}
                         />
+                        
+                        {/* Glow effect on hover */}
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
 
                         <motion.div
-                          className={`relative ${focusedProject === project.id ? 'p-6 lg:p-8' : 'p-4 lg:p-5'}`}
+                          className={`relative ${focusedProject === project.id ? 'p-6 lg:p-8' : 'p-5 lg:p-6'} z-10`}
                           layout
                           transition={{ layout: { duration: 0.3 } }}
                         >
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-4">
                               <motion.div
-                                className={`${focusedProject === project.id ? 'p-3' : 'p-2.5'} rounded-lg bg-gradient-to-br ${project.color} transition-all duration-300`}
-                                whileHover={{ rotate: 360 }}
-                                transition={{ duration: 0.5 }}
+                                className={`${focusedProject === project.id ? 'p-3' : 'p-3'} rounded-xl bg-gradient-to-br ${project.color} shadow-lg transition-all duration-300`}
+                                whileHover={{ rotate: 360, scale: 1.1 }}
+                                transition={{ duration: 0.6 }}
                               >
                                 {React.cloneElement(project.icon, {
-                                  className: focusedProject === project.id ? 'w-6 h-6' : 'w-5 h-5',
+                                  className: focusedProject === project.id ? 'w-7 h-7 text-white' : 'w-6 h-6 text-white',
                                 })}
                               </motion.div>
                               <div>
                                 <h3
-                                  className={`font-bold text-white ${focusedProject === project.id ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'}`}
+                                  className={`font-bold text-white ${focusedProject === project.id ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'} flex items-center gap-2`}
                                 >
                                   {project.title}
+                                  {!focusedProject && (
+                                    <motion.span
+                                      initial={{ opacity: 0, x: -10 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      className="text-xs text-gray-500"
+                                    >
+                                      <ChevronRight className="w-4 h-4" />
+                                    </motion.span>
+                                  )}
                                 </h3>
                                 <p className="text-gray-400 text-sm lg:text-base">
                                   {project.tagline}
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2">
+                              {/* Progress indicator */}
+                              {roadmapProgress[project.id] && (
+                                <div className="flex items-center gap-2 mr-2">
+                                  <div className="w-12 h-12 relative">
+                                    <svg className="w-12 h-12 transform -rotate-90">
+                                      <circle
+                                        cx="24"
+                                        cy="24"
+                                        r="20"
+                                        stroke="currentColor"
+                                        strokeWidth="3"
+                                        fill="none"
+                                        className="text-gray-700"
+                                      />
+                                      <motion.circle
+                                        cx="24"
+                                        cy="24"
+                                        r="20"
+                                        stroke="url(#gradient)"
+                                        strokeWidth="3"
+                                        fill="none"
+                                        strokeDasharray={126}
+                                        initial={{ strokeDashoffset: 126 }}
+                                        animate={{ strokeDashoffset: 126 - (126 * roadmapProgress[project.id]) / 100 }}
+                                        transition={{ duration: 1, delay: idx * 0.1 }}
+                                        strokeLinecap="round"
+                                      />
+                                      <defs>
+                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                          <stop offset="0%" stopColor="#10b981" />
+                                          <stop offset="100%" stopColor="#3b82f6" />
+                                        </linearGradient>
+                                      </defs>
+                                    </svg>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <span className="text-xs font-bold text-white">{roadmapProgress[project.id]}%</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                               <Badge
                                 variant={
                                   project.status === 'Production'
                                     ? 'success'
                                     : project.status === 'Beta'
                                       ? 'info'
-                                      : 'warning'
+                                      : project.status === 'Alpha'
+                                        ? 'warning'
+                                        : 'default'
                                 }
                                 size="sm"
+                                className="animate-pulse"
                               >
                                 {project.status}
                               </Badge>
-                              {project.id === 'command-center' && (
-                                <Badge size="sm">Featured</Badge>
-                              )}
-                              {(() => {
-                                const details = (projectDetails as any)[project.id];
-                                if (details?.securitySnapshot) {
-                                  return (
-                                    <span title={details.securitySnapshot}>
-                                      <Badge size="sm">Security</Badge>
-                                    </span>
-                                  );
-                                }
-                                return null;
-                              })()}
                             </div>
                           </div>
+
+                          {/* Show description for non-focused items in grid */}
+                          {!focusedProject && (
+                            <motion.p 
+                              className="text-gray-400 text-sm mb-4 line-clamp-2"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.2 }}
+                            >
+                              {project.description}
+                            </motion.p>
+                          )}
+                          
+                          {/* Quick stats for non-focused */}
+                          {!focusedProject && (
+                            <motion.div 
+                              className="flex items-center gap-4 mb-4"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.3 }}
+                            >
+                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <Code className="w-3 h-3" />
+                                <span>{project.tech.length} techs</span>
+                              </div>
+                              {project.differentiation && (
+                                <div className="flex items-center gap-1 text-xs text-gray-500">
+                                  <Sparkles className="w-3 h-3" />
+                                  <span>{project.differentiation.length} features</span>
+                                </div>
+                              )}
+                              {project.github && (
+                                <div className="flex items-center gap-1 text-xs text-gray-500">
+                                  <Github className="w-3 h-3" />
+                                  <span>Open Source</span>
+                                </div>
+                              )}
+                            </motion.div>
+                          )}
+                          
+                          {/* Show mini tech stack for non-focused */}
+                          {!focusedProject && (
+                            <div className="flex flex-wrap gap-1 mb-4">
+                              {project.tech.slice(0, 4).map((tech, i) => (
+                                <motion.span
+                                  key={`${tech}-mini-${i}`}
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: 0.3 + i * 0.05 }}
+                                  className="px-2 py-0.5 bg-gray-800/60 text-[10px] text-gray-400 rounded border border-gray-700/50"
+                                >
+                                  {tech}
+                                </motion.span>
+                              ))}
+                              {project.tech.length > 4 && (
+                                <span className="px-2 py-0.5 text-[10px] text-gray-500">
+                                  +{project.tech.length - 4} more
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          
+                          {/* Action buttons for non-focused */}
+                          {!focusedProject && (
+                            <motion.div 
+                              className="flex items-center justify-between"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.4 }}
+                            >
+                              <div className="flex gap-2">
+                                {project.github && (
+                                  <motion.a
+                                    href={project.github}
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="p-1.5 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    <Github className="w-4 h-4 text-gray-400" />
+                                  </motion.a>
+                                )}
+                                {project.live && (
+                                  <motion.a
+                                    href={project.live}
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="p-1.5 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    <ExternalLink className="w-4 h-4 text-gray-400" />
+                                  </motion.a>
+                                )}
+                              </div>
+                              <span className="text-xs text-gray-500">Click to explore →</span>
+                            </motion.div>
+                          )}
 
                           <AnimatePresence>
                             {focusedProject === project.id && (
@@ -2541,24 +3047,6 @@ export function InteractivePortfolio() {
                                   );
                                 })()}
 
-                                {/* Security Snapshot */}
-                                {(() => {
-                                  const details = (projectDetails as any)[project.id];
-                                  if (details?.securitySnapshot) {
-                                    return (
-                                      <div className="bg-gray-900/40 border border-gray-800 rounded-lg p-4 mb-4">
-                                        <h5 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                                          Security Snapshot (5 words)
-                                        </h5>
-                                        <div className="text-xs text-gray-300">
-                                          {details.securitySnapshot}
-                                        </div>
-                                      </div>
-                                    );
-                                  }
-                                  return null;
-                                })()}
-
                                 {/* Key Endpoints */}
                                 {(() => {
                                   const details = (projectDetails as any)[project.id];
@@ -2685,16 +3173,6 @@ export function InteractivePortfolio() {
 
                                 {/* Action Buttons */}
                                 <div className="flex flex-wrap gap-3">
-                                  <Button
-                                    onClick={() =>
-                                      setRoadmapModal({ isOpen: true, project: project.id })
-                                    }
-                                    variant="primary"
-                                    size="sm"
-                                    icon={MapPin}
-                                  >
-                                    View Roadmap
-                                  </Button>
                                   {project.live && (
                                     <Button
                                       onClick={() => window.open(project.live, '_blank')}
@@ -2721,24 +3199,16 @@ export function InteractivePortfolio() {
                                     }
                                     return null;
                                   })()}
-                                  {(() => {
-                                    const details = (projectDetails as any)[project.id];
-                                    if (details?.securityDocUrl) {
-                                      return (
-                                        <Button
-                                          onClick={() =>
-                                            window.open(details.securityDocUrl, '_blank')
-                                          }
-                                          variant="secondary"
-                                          size="sm"
-                                          icon={Shield}
-                                        >
-                                          Security Blueprint
-                                        </Button>
-                                      );
-                                    }
-                                    return null;
-                                  })()}
+                                  {project.github && (
+                                    <Button
+                                      onClick={() => window.open(project.github, '_blank')}
+                                      variant="secondary"
+                                      size="sm"
+                                      icon={Github}
+                                    >
+                                      GitHub
+                                    </Button>
+                                  )}
                                 </div>
                               </motion.div>
                             )}
@@ -2753,7 +3223,7 @@ export function InteractivePortfolio() {
           </motion.section>
         )}
 
-        {/* About Section - Balanced spacing applied */}
+        {/* About Section - Redesigned with integrated header */}
         {activeSection === 'about' && (
           <motion.section
             key="about"
@@ -2763,316 +3233,308 @@ export function InteractivePortfolio() {
             className="min-h-screen px-4 pt-24 pb-16"
           >
             <div className="w-full max-w-[90%] 2xl:max-w-[85%] mx-auto">
-              {/* Header - SUPER COMPACT SPACING */}
-              <motion.div
-                className="text-center mb-2"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-              >
-                <div className="w-32 h-32 2xl:w-36 2xl:h-36 mx-auto mb-1 relative">
-                  <div className="w-full h-full rounded-full overflow-hidden border-4 border-green-400/30 shadow-2xl shadow-green-400/20">
-                    <Image
-                      src="/marco.jpg"
-                      alt="Marco profile photo"
-                      width={128}
-                      height={128}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-teal-500/20 rounded-full animate-pulse blur-xl" />
-                </div>
-                <h1 className="text-3xl 2xl:text-4xl font-bold mb-1">
-                  <span className="bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
-                    Marco
-                  </span>
-                </h1>
-                <p className="text-sm 2xl:text-base text-gray-400 mb-0">
-                  Pragmatic Problem Solver | Fullstack - Mobile Engineer & Web-stacks | Exploring
-                  "AI as a companion mindset".
-                </p>
-                <p className="text-xs text-gray-500 mb-1">Denmark</p>
-                <div className="flex justify-center space-x-4">
-                  <motion.a
-                    href="https://linkedin.com/in/mapw"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all border border-gray-700 hover:border-gray-600"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Linkedin className="w-6 h-6 text-blue-400" />
-                  </motion.a>
-                  <motion.a
-                    href="https://github.com/MarcoPWx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all border border-gray-700 hover:border-gray-600"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Github className="w-6 h-6 text-gray-300" />
-                  </motion.a>
-                  <motion.a
-                    href="mailto:Marcowurtz@hotmail.com"
-                    className="p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all border border-gray-700 hover:border-gray-600"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Mail className="w-6 h-6 text-green-400" />
-                  </motion.a>
-                </div>
-              </motion.div>
-
               <div className="grid lg:grid-cols-3 gap-8">
-                {/* Professional Summary */}
+                {/* Professional Summary with integrated profile */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="lg:col-span-2 space-y-2"
+                  className="lg:col-span-2 space-y-6"
                 >
-                  <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-3">
-                    <h2 className="text-lg 2xl:text-xl font-bold mb-2 flex items-center gap-2">
-                      <User className="w-6 h-6 text-green-400" />
-                      Professional Summary
-                    </h2>
-                    <div className="space-y-4 text-gray-300 leading-relaxed">
-                      <div className="text-lg font-medium text-white mb-4">
-                        Pragmatic Problem Solver | Fullstack - Mobile Engineer & Web-stacks |
-                        Exploring "AI as a companion mindset".
+                  <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
+                    {/* Integrated Profile Header */}
+                    <div className="flex items-start gap-6 mb-6">
+                      <div className="relative flex-shrink-0">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-3 border-green-400/30 shadow-xl shadow-green-400/10">
+                          <Image
+                            src="/marco.jpg"
+                            alt="Marco profile photo"
+                            width={96}
+                            height={96}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-teal-500/20 rounded-full animate-pulse blur-xl" />
                       </div>
-                      <p>
-                        Able to work with fast adaptability, deep problem-solving skills, and the
-                        ability to thrive in fast-paced environments requiring multi-context
-                        switching.
-                      </p>
-                      <p>Passionate about big-picture design.</p>
-                      <div className="bg-gray-900/40 border border-gray-800 rounded-lg p-4">
-                        <h3 className="text-xs text-gray-300 font-semibold mb-1">
-                          Philosophy for Building Exceptional Software
-                        </h3>
-                        <ul className="list-disc list-inside space-y-1">
-                          <li className="text-xs text-gray-400">
-                            Deliver Frequently: Launch features in smaller increments to stay agile
-                            and adapt quickly.
-                          </li>
-                          <li className="text-xs text-gray-400">
-                            User-Centered: Focus on delivering tangible value for end users at every
-                            release.
-                          </li>
-                          <li className="text-xs text-gray-400">
-                            Preemptive Error Detection: Identify and address potential issues before
-                            they become critical.
-                          </li>
-                          <li className="text-xs text-gray-400">
-                            Maintain Code Integrity: Fix small issues early to prevent big problems
-                            later.
-                          </li>
-                          <li className="text-xs text-gray-400">
-                            Efficient Testing: Implement automated, fast, and reliable tests that
-                            catch errors early.
-                          </li>
-                          <li className="text-xs text-gray-400">
-                            Keep It Simple: Strive for straightforward, maintainable solutions that
-                            stand the test of time.
-                          </li>
-                          <li className="text-xs text-gray-400">
-                            Continuous Learning: Believe in ongoing reading, experimentation, and
-                            exploring new ideas for growth.
-                          </li>
-                        </ul>
-                        <p className="italic text-xs text-gray-400 mt-2">
-                          "The journey in programming never ends—growth comes from pushing
-                          boundaries and exploring unfamiliar territory."
+                      
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h1 className="text-2xl 2xl:text-3xl font-bold">
+                              <span className="bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
+                                Marco
+                              </span>
+                            </h1>
+                            <p className="text-sm text-gray-400 mt-1">
+                              Pragmatic Problem Solver | Fullstack - Mobile Engineer & Web-stacks | Exploring "AI as a companion mindset"
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">📍 Denmark</p>
+                          </div>
+                          
+                          <div className="flex gap-2">
+                            <motion.a
+                              href="https://linkedin.com/in/mapw"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all border border-gray-700 hover:border-gray-600"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              title="LinkedIn"
+                            >
+                              <Linkedin className="w-4 h-4 text-blue-400" />
+                            </motion.a>
+                            <motion.a
+                              href="https://github.com/MarcoPWx"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all border border-gray-700 hover:border-gray-600"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              title="GitHub"
+                            >
+                              <Github className="w-4 h-4 text-gray-300" />
+                            </motion.a>
+                            <motion.a
+                              href="mailto:Marcowurtz@hotmail.com"
+                              className="p-2 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all border border-gray-700 hover:border-gray-600"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              title="Email"
+                            >
+                              <Mail className="w-4 h-4 text-green-400" />
+                            </motion.a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-gray-800 pt-4">
+                      <h2 className="text-lg 2xl:text-xl font-bold mb-3 flex items-center gap-2">
+                        <User className="w-5 h-5 text-green-400" />
+                        Professional Summary
+                      </h2>
+                      <div className="space-y-3 text-gray-300 leading-relaxed">
+                        <p>
+                          Able to work with fast adaptability, deep problem-solving skills, and the
+                          ability to thrive in fast-paced environments requiring multi-context
+                          switching.
+                        </p>
+                        <p>Passionate about big-picture design.</p>
+                        
+                        <div className="bg-gray-900/40 border border-gray-800 rounded-lg p-4">
+                          <h3 className="text-xs text-gray-300 font-semibold mb-2">
+                            Philosophy for Building Exceptional Software
+                          </h3>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">Deliver Frequently:</span> Launch features in smaller increments to stay agile
+                              and adapt quickly.
+                            </li>
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">User-Centered:</span> Focus on delivering tangible value for end users at every
+                              release.
+                            </li>
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">Preemptive Error Detection:</span> Identify and address potential issues before
+                              they become critical.
+                            </li>
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">Maintain Code Integrity:</span> Fix small issues early to prevent big problems
+                              later.
+                            </li>
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">Efficient Testing:</span> Implement automated, fast, and reliable tests that
+                              catch errors early.
+                            </li>
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">Keep It Simple:</span> Strive for straightforward, maintainable solutions that
+                              stand the test of time.
+                            </li>
+                            <li className="text-xs text-gray-400">
+                              <span className="font-medium">Continuous Learning:</span> Believe in ongoing reading, experimentation, and
+                              exploring new ideas for growth.
+                            </li>
+                          </ul>
+                          <p className="italic text-xs text-gray-400 mt-2">
+                            "The journey in programming never ends—growth comes from pushing
+                            boundaries and exploring unfamiliar territory."
+                          </p>
+                        </div>
+                        <p>
+                          I love collaborating in agile teams, enabling others through mentorship, and
+                          continuously refining processes for high-quality results.
                         </p>
                       </div>
-                      <p>
-                        I love collaborating in agile teams, enabling others through mentorship, and
-                        continuously refining processes for high-quality results.
-                      </p>
                     </div>
                   </Card3D>
 
-                  {/* Work Experience */}
-                  <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
-                    <h2 className="text-2xl 2xl:text-3xl font-bold mb-4 flex items-center gap-3">
-                      <Briefcase className="w-6 h-6 text-blue-400" />
-                      Work Experience
-                    </h2>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          icon={Download}
-                          onClick={() => {
-                            try {
-                              window.print();
-                            } catch (e) {
-                              /* ignore */
-                            }
-                          }}
-                        >
-                          Save/Print CV
-                        </Button>
-                      </div>
-                      {(() => {
-                        const experiences = [
+                  {/* Work Experience Grid */}
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    {/* Recent Experience */}
+                    <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-blue-400" />
+                        Recent Experience
+                      </h3>
+                      <div className="space-y-4">
+                        {[
                           {
                             title: 'Senior Fullstack Mobile Engineer',
                             company: 'ExSeed Health',
                             period: 'Apr 2025 – Aug 2025',
-                            summary:
-                              'Brought in to mature the team and architecture, balancing hands‑on execution with process and culture upgrades.',
-                            highlights: [
-                              'Steering-group input; weekly stakeholder demo cadence',
-                              'Developer handbook: standards, workflows, patterns',
-                              'Code quality uplift: reviews, PR flow, clean architecture',
-                              'Multi‑platform MVPs/POCs (Flutter, Swift, Kotlin, C++)',
-                              'Focus: thread/memory mgmt, auto‑generated setups, SDK contracts',
-                              'Monorepo tooling, scalable CI, improved dev ergonomics',
-                            ],
-                            tags: ['Swift', 'Kotlin', 'Flutter', 'C++', 'Clean Architecture', 'CI'],
+                            key_achievement: 'Matured team architecture & established dev standards',
+                            tech: ['Flutter', 'Swift', 'Kotlin', 'C++', 'Dart', 'Firebase', 'CI/CD', 'Jenkins', 'Fastlane', 'Git'],
                           },
                           {
-                            title: 'Platform Solution Architect / Senior Mobile Engineer',
+                            title: 'Platform Solution Architect',
                             company: 'Queue‑it',
                             period: 'Oct 2024 – Apr 2025',
-                            summary:
-                              'Connectors, client/server integrations, and CDN‑aware implementations at scale.',
-                            highlights: [
-                              'Designed/maintained JS/Java + iOS/Android connectors',
-                              'Guided client CDN integrations and best‑practices',
-                              'Deep debugging across HTTP/cookies/tokens/security',
-                              'Redis caching, CSP/security hardening',
-                              'AWS infra: Lambda, S3, EC2, Route 53, DynamoDB',
-                              'On‑call/DevDuty for incident readiness and reliability',
-                            ],
-                            tags: ['Swift', 'Kotlin', 'Java', 'AWS', 'Redis', 'CDN'],
+                            key_achievement: 'Built scalable CDN integrations & connectors',
+                            tech: ['AWS', 'Redis', 'Java', 'iOS', 'Android', 'Lambda', 'S3', 'EC2', 'Route53', 'DynamoDB', 'JavaScript', 'Node.js', 'Docker', 'Kubernetes'],
                           },
+                        ].map((job, i) => (
+                          <div key={i} className="border-l-2 border-blue-400/30 pl-4">
+                            <h4 className="font-semibold text-white text-sm">{job.title}</h4>
+                            <p className="text-xs text-green-400">{job.company}</p>
+                            <p className="text-xs text-gray-500 mt-1">{job.period}</p>
+                            <p className="text-xs text-gray-400 mt-2">{job.key_achievement}</p>
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {job.tech.map((t, idx) => (
+                                <span key={idx} className="px-1.5 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-[10px] text-gray-300">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Card3D>
+
+                    {/* Earlier Experience */}
+                    <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-purple-400" />
+                        Earlier Roles
+                      </h3>
+                      <div className="space-y-4">
+                        {[
                           {
                             title: 'Full Stack Engineer',
                             company: 'Cinemataztic',
                             period: 'Apr 2024 – Sep 2024',
-                            summary:
-                              'Delivered trade‑desk web apps, BFF APIs, infra, and robust test tooling.',
-                            highlights: [
-                              'TypeScript/React apps + Express BFF (MongoDB)',
-                              'Auth, sessions, and security middleware',
-                              'API mocking (MSW) and stronger unit/E2E strategy',
-                              'Helm + FluxCD deployments; Jenkins pipelines',
-                              'On‑prem Linux provisioning via SSH/Ansible',
-                              'Service mesh a11y/observability with Istio & dashboards',
-                            ],
-                            tags: [
-                              'TypeScript',
-                              'React',
-                              'Express',
-                              'MongoDB',
-                              'Helm',
-                              'FluxCD',
-                              'MSW',
-                            ],
+                            key_achievement: 'Delivered trade-desk apps with robust testing',
+                            tech: ['React', 'TypeScript', 'Express', 'MongoDB', 'MSW', 'Jest', 'Playwright', 'Helm', 'FluxCD', 'Jenkins', 'Linux', 'SSH', 'Ansible', 'Istio'],
                           },
                           {
-                            title: 'Team Lead / Head of Tech (App)',
-                            company: 'PatientSky (EG PatientSky) — App team',
+                            title: 'Team Lead / Head of Tech',
+                            company: 'PatientSky',
                             period: 'Apr 2023 – May 2024',
-                            summary:
-                              'Led the mobile app team (2.5M downloads, 250k MAU). Drove quality, performance, and accessibility.',
-                            highlights: [
-                              'Raised rating to 5★ from 3★; −20% app load time',
-                              'BFF strategy reducing coupling; testable interfaces',
-                              'WebRTC video experience (iOS/Android tailored)',
-                              'WCAG improvements for accessibility',
-                              'Scaled team to standalone BU with 6 members',
-                            ],
-                            tags: ['iOS', 'Android', 'WebRTC', 'Clean Architecture', 'WCAG'],
+                            key_achievement: 'Raised app rating from 3★ to 5★, scaled team to 6',
+                            tech: ['iOS', 'Android', 'React Native', 'WebRTC', 'WCAG', 'Swift', 'Kotlin', 'Objective-C', 'Java', 'Firebase', 'GraphQL', 'REST', 'Agile'],
                           },
-                        ];
-                        return (
-                          <ol className="relative ml-3 pl-6 space-y-8 border-l border-gray-800">
-                            {experiences.map((job, index) => (
-                              <li key={index} className="relative">
-                                <span className="absolute -left-3 top-1 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-gray-950" />
-                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1">
-                                  <div>
-                                    <h3 className="text-base md:text-lg font-semibold text-white">
-                                      {job.title}
-                                    </h3>
-                                    <p className="text-green-400 font-medium">{job.company}</p>
-                                  </div>
-                                  <span className="text-xs text-gray-400 whitespace-nowrap">
-                                    {job.period}
-                                  </span>
-                                </div>
-                                {job.summary && (
-                                  <p className="text-sm text-gray-300 mt-2">{job.summary}</p>
-                                )}
-                                <ul className="mt-3 space-y-1">
-                                  {job.highlights.map((h: string, i: number) => (
-                                    <li
-                                      key={i}
-                                      className="flex items-start gap-2 text-sm text-gray-400"
-                                    >
-                                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                                      <span>{h}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                                {Array.isArray(job.tags) && job.tags.length > 0 && (
-                                  <div className="mt-3 flex flex-wrap gap-2">
-                                    {job.tags.map((t: string, i: number) => (
-                                      <span
-                                        key={i}
-                                        className="px-2 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-xs text-gray-300"
-                                      >
-                                        {t}
-                                      </span>
-                                    ))}
-                                  </div>
-                                )}
-                              </li>
-                            ))}
-                          </ol>
-                        );
-                      })()}
-                    </div>
-                  </Card3D>
-
-                  {/* Education & Certifications */}
-                  <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-8">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                      <GraduationCap className="w-6 h-6 text-purple-400" />
-                      Education & Certifications
-                    </h2>
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">
-                          Computer Science Degree
-                        </h3>
-                        <p className="text-purple-400 font-medium mb-2">University of Technology</p>
-                        <p className="text-gray-400 text-sm">
-                          Bachelor's in Computer Science • 2014-2018
-                        </p>
-                      </div>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        {[
-                          'AWS Certified Solutions Architect',
-                          'Google Cloud Professional Developer',
-                          'Kubernetes Administrator (CKA)',
-                          'MongoDB Certified Developer',
-                          'React Advanced Certification',
-                          'Machine Learning Specialization',
-                        ].map((cert, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <Award className="w-4 h-4 text-yellow-400" />
-                            <span className="text-sm text-gray-300">{cert}</span>
+                        ].map((job, i) => (
+                          <div key={i} className="border-l-2 border-purple-400/30 pl-4">
+                            <h4 className="font-semibold text-white text-sm">{job.title}</h4>
+                            <p className="text-xs text-purple-400">{job.company}</p>
+                            <p className="text-xs text-gray-500 mt-1">{job.period}</p>
+                            <p className="text-xs text-gray-400 mt-2">{job.key_achievement}</p>
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {job.tech.map((t, idx) => (
+                                <span key={idx} className="px-1.5 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-[10px] text-gray-300">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         ))}
                       </div>
-                    </div>
-                  </Card3D>
+                    </Card3D>
+
+                    {/* Key Achievements */}
+                    <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                        <Trophy className="w-5 h-5 text-green-400" />
+                        Key Achievements
+                      </h3>
+                      <div className="space-y-4">
+                        {[
+                          {
+                            achievement: 'Process Improvement',
+                            detail: 'Established code review & CI/CD practices',
+                            impact: 'Reduced bugs by 30%',
+                            type: 'process',
+                          },
+                          {
+                            achievement: 'Team Development',
+                            detail: 'Mentored junior developers and led knowledge sharing',
+                            impact: 'Improved team productivity',
+                            type: 'leadership',
+                          },
+                          {
+                            achievement: 'Technical Debt',
+                            detail: 'Refactored legacy codebases incrementally',
+                            impact: 'Better maintainability',
+                            type: 'architecture',
+                          },
+                          {
+                            achievement: 'Cross-Platform',
+                            detail: 'Delivered solutions across web, iOS & Android',
+                            impact: 'Consistent user experience',
+                            type: 'delivery',
+                          },
+                        ].map((item, i) => (
+                          <div key={i} className="border-l-2 border-green-400/30 pl-4">
+                            <h4 className="font-semibold text-white text-sm">{item.achievement}</h4>
+                            <p className="text-xs text-gray-400 mt-1">{item.detail}</p>
+                            <p className="text-xs text-green-400 mt-1">→ {item.impact}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </Card3D>
+
+                    {/* Current Projects */}
+                    <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                        <Code className="w-5 h-5 text-amber-400" />
+                        Active Projects
+                      </h3>
+                      <div className="space-y-4">
+                        {[
+                          {
+                            name: 'QuizMentor',
+                            description: 'Building gamified learning platform',
+                            status: 'Beta - 92% retention achieved',
+                            tech: ['React Native', 'Supabase', 'AI/ML'],
+                          },
+                          {
+                            name: 'DevMentor',
+                            description: 'Developing AI pair programming assistant',
+                            status: 'Beta - VS Code extension live',
+                            tech: ['TypeScript', 'LangChain', 'Qdrant'],
+                          },
+                          {
+                            name: 'Harvest.ai',
+                            description: 'Creating content transformation pipeline',
+                            status: 'Beta - BYOK system working',
+                            tech: ['Python', 'FastAPI', 'SSE'],
+                          },
+                        ].map((project, i) => (
+                          <div key={i} className="border-l-2 border-amber-400/30 pl-4">
+                            <h4 className="font-semibold text-white text-sm">{project.name}</h4>
+                            <p className="text-xs text-gray-400 mt-1">{project.description}</p>
+                            <p className="text-xs text-amber-400 mt-1">{project.status}</p>
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {project.tech.map((t, idx) => (
+                                <span key={idx} className="px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-400">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Card3D>
+                  </div>
                 </motion.div>
 
                 {/* Skills & Technologies */}
@@ -3200,62 +3662,6 @@ export function InteractivePortfolio() {
                     </div>
                   </Card3D>
 
-                  {/* Key Projects */}
-                  <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
-                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                      <Rocket className="w-5 h-5 text-blue-400" />
-                      Key Projects
-                    </h3>
-                    <div className="space-y-4">
-                      {[
-                        {
-                          name: 'QuizMentor',
-                          description:
-                            'Gamified learning platform with AI-powered quiz generation and 92% user retention',
-                          tech: ['React Native', 'Supabase', 'AI/ML', 'Gamification', 'Analytics'],
-                        },
-                        {
-                          name: 'DevMentor',
-                          description:
-                            'AI pair programming assistant with pattern-based learning and real-time collaboration',
-                          tech: [
-                            'TypeScript',
-                            'LangChain',
-                            'Kubernetes',
-                            'PostgreSQL',
-                            'WebSockets',
-                          ],
-                        },
-                        {
-                          name: 'Harvest.ai',
-                          description:
-                            'Content intelligence system for automated analysis and insights generation',
-                          tech: ['Python', 'FastAPI', 'Vector DB', 'OpenAI', 'Data Analytics'],
-                        },
-                        {
-                          name: 'NatureQuest Ecosystem',
-                          description:
-                            'Comprehensive developer tools platform with microservices architecture',
-                          tech: ['Kubernetes', 'Istio', 'React', 'Node.js', 'AI/ML'],
-                        },
-                      ].map((project, index) => (
-                        <div key={index} className="border-l-2 border-blue-400/30 pl-4">
-                          <h4 className="font-medium text-white mb-1">{project.name}</h4>
-                          <p className="text-sm text-gray-400 mb-2">{project.description}</p>
-                          <div className="flex flex-wrap gap-1">
-                            {project.tech.map((tech, i) => (
-                              <span
-                                key={i}
-                                className="px-2 py-0.5 bg-blue-500/10 text-xs text-blue-400 rounded border border-blue-500/20"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </Card3D>
 
                   {/* Contact Info */}
                   <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
@@ -3298,256 +3704,242 @@ export function InteractivePortfolio() {
             exit={{ opacity: 0 }}
             className="min-h-screen px-4 pt-24 pb-16"
           >
-            <DynamicComprehensiveSkillsV2 />
-            <div className="mt-10">
-              <ProjectStack />
-            </div>
+            <DynamicTechnicalStackV3 />
           </motion.section>
         )}
 
-        {/* Book Section */}
-        {activeSection === 'book' && (
+        {/* Principles Section */}
+        {activeSection === 'principles' && (
           <motion.section
-            key="book"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-screen px-4 pt-24 pb-16 flex items-center justify-center"
-          >
-            <div className="w-full max-w-4xl mx-auto">
-              <motion.div
-                className="text-center mb-12"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-              >
-                <h2 className="text-5xl font-bold mb-6">
-                  <span className="bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
-                    Book — Announced soon
-                  </span>
-                </h2>
-                <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                  A comprehensive guide to AI-driven development patterns and modern software architecture.
-                  Snippets and sample chapters coming soon.
-                </p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-2xl p-8"
-              >
-                <div className="grid lg:grid-cols-2 gap-8 items-center">
-                  <div>
-                    <h3 className="text-3xl font-bold mb-4 text-white">
-                      AI-Driven Development Patterns
-                    </h3>
-                    <p className="text-gray-300 mb-6 leading-relaxed">
-                      A comprehensive guide to modern development patterns enhanced by AI workflows,
-                      covering everything from pattern recognition to automated code generation and
-                      optimization.
-                    </p>
-
-                    <div className="space-y-4 mb-6">
-                      <div className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
-                        <div>
-                          <h4 className="font-semibold text-green-400">
-                            Pattern-Based Memory Learning (PBML)
-                          </h4>
-                          <p className="text-sm text-gray-400">
-                            How AI systems learn and adapt from code patterns across projects
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full mt-2"></div>
-                        <div>
-                          <h4 className="font-semibold text-blue-400">
-                            Multi-Provider AI Integration
-                          </h4>
-                          <p className="text-sm text-gray-400">
-                            Orchestrating OpenAI, Claude, and local models for optimal results
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2"></div>
-                        <div>
-                          <h4 className="font-semibold text-purple-400">
-                            Adaptive Learning Systems
-                          </h4>
-                          <p className="text-sm text-gray-400">
-                            Building systems that improve performance through continuous learning
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <div className="px-6 py-3 border border-gray-700 text-gray-400 rounded-lg font-medium">
-                        Announcement coming soon
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 rounded-xl p-6">
-                    <div className="text-center mb-4">
-                      <div className="w-32 h-40 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                        <BookOpen className="w-16 h-16 text-white" />
-                      </div>
-                      <h4 className="text-xl font-bold text-white mb-2">Coming Q2 2025</h4>
-                      <p className="text-gray-400 text-sm">
-                        Available in digital and print formats
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Pages:</span>
-                        <span className="text-white">~350</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Chapters:</span>
-                        <span className="text-white">12</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Code Examples:</span>
-                        <span className="text-white">50+</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Case Studies:</span>
-                        <span className="text-white">8</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.section>
-        )}
-
-        {/* Blog Section */}
-        {activeSection === 'blog' && (
-          <motion.section
-            key="blog"
+            key="principles"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="min-h-screen px-4 pt-24 pb-16"
           >
-            <div className="w-full max-w-[90%] 2xl:max-w-[85%] mx-auto">
+            <div className="max-w-7xl mx-auto">
+              {/* Hero */}
               <motion.div
-                className="text-center mb-16"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center mb-12"
               >
-                <h2 className="text-5xl font-bold mb-6">
-                  <span className="bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
-                    Blog & Articles
+                <motion.div
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600/20 to-orange-600/20 rounded-full border border-amber-600/30 mb-6"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", duration: 0.6 }}
+                >
+                  <Lightbulb className="w-4 h-4 text-amber-400" />
+                  <span className="text-sm text-amber-400">Battle-tested wisdom</span>
+                </motion.div>
+                
+                <h2 className="text-5xl font-bold mb-4">
+                  <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
+                    10 Engineering Principles
                   </span>
                 </h2>
-                <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                  Insights on AI development, software architecture, and modern development
-                  practices
-                </p>
+                <p className="text-gray-400 text-lg">Learned from 10+ years of shipping production code</p>
               </motion.div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {/* Principles Grid */}
+              <div className="grid md:grid-cols-2 gap-6">
                 {[
                   {
-                    title: 'Building AI-First Development Workflows',
-                    date: 'December 2024',
-                    readTime: '8 min read',
-                    category: 'AI Development',
-                    excerpt:
-                      'How to integrate AI tools into your development workflow for maximum productivity and code quality.',
-                    gradient: 'from-blue-500 to-purple-500',
+                    number: 1,
+                    title: "Ship Small, Ship Often",
+                    icon: <Rocket className="w-6 h-6" />,
+                    description: "Break features into smallest deployable units",
+                    details: [
+                      "Deploy daily or multiple times per day",
+                      "Feature flags for gradual rollouts",
+                      "Quick feedback loops with users"
+                    ],
+                    example: "Instead of a complete payment system, ship: 1) form UI, 2) validation, 3) processing"
                   },
                   {
-                    title: 'Pattern-Based Memory Learning in Practice',
-                    date: 'November 2024',
-                    readTime: '12 min read',
-                    category: 'Machine Learning',
-                    excerpt:
-                      'Deep dive into PBML systems and how they can revolutionize code pattern recognition and optimization.',
-                    gradient: 'from-green-500 to-teal-500',
+                    number: 2,
+                    title: "User Value First",
+                    icon: <Heart className="w-6 h-6" />,
+                    description: "Every line of code should benefit the end user",
+                    details: [
+                      "Start with user stories, not technical requirements",
+                      "Measure success by user outcomes",
+                      "Remove features that don't add value"
+                    ],
+                    example: "Chose boring tech stack that loads in 500ms over exciting framework that takes 3s"
                   },
                   {
-                    title: 'Microservices with Kubernetes and Istio',
-                    date: 'October 2024',
-                    readTime: '15 min read',
-                    category: 'DevOps',
-                    excerpt:
-                      'Complete guide to building scalable microservices architecture with service mesh patterns.',
-                    gradient: 'from-orange-500 to-red-500',
+                    number: 3,
+                    title: "Test-Driven Development",
+                    icon: <CheckCircle className="w-6 h-6" />,
+                    description: "Write tests first, then make them pass",
+                    details: [
+                      "Red → Green → Refactor cycle",
+                      "Tests document expected behavior",
+                      "Catch bugs before production"
+                    ],
+                    example: "Write failing test for 'user can login', implement login, then optimize"
                   },
                   {
-                    title: 'TypeScript Advanced Patterns for AI Integration',
-                    date: 'September 2024',
-                    readTime: '10 min read',
-                    category: 'TypeScript',
-                    excerpt:
-                      'Advanced TypeScript patterns for building type-safe AI applications and API integrations.',
-                    gradient: 'from-purple-500 to-pink-500',
+                    number: 4,
+                    title: "Simple Over Clever",
+                    icon: <Lightbulb className="w-6 h-6" />,
+                    description: "Code is read 10x more than written",
+                    details: [
+                      "Boring code is good code",
+                      "Explicit over implicit",
+                      "Junior dev should understand it"
+                    ],
+                    example: "Use simple if/else instead of nested ternaries"
                   },
                   {
-                    title: 'Local AI Models vs Cloud APIs: Cost Analysis',
-                    date: 'August 2024',
-                    readTime: '6 min read',
-                    category: 'AI Strategy',
-                    excerpt:
-                      'Comprehensive analysis of running local AI models with Ollama vs cloud-based API services.',
-                    gradient: 'from-yellow-500 to-orange-500',
+                    number: 5,
+                    title: "Fix Small Issues Immediately",
+                    icon: <Shield className="w-6 h-6" />,
+                    description: "A stitch in time saves nine",
+                    details: [
+                      "Fix linting errors right away",
+                      "Update dependencies regularly",
+                      "Don't let tech debt accumulate"
+                    ],
+                    example: "Spend 5 minutes fixing that console warning now, not 2 hours debugging later"
                   },
                   {
-                    title: 'Building Adaptive Learning Systems',
-                    date: 'July 2024',
-                    readTime: '14 min read',
-                    category: 'Education Tech',
-                    excerpt:
-                      'How to build educational systems that adapt to user learning patterns and optimize knowledge retention.',
-                    gradient: 'from-indigo-500 to-blue-500',
+                    number: 6,
+                    title: "Automate Everything Repetitive",
+                    icon: <Zap className="w-6 h-6" />,
+                    description: "If you do it twice, automate it",
+                    details: [
+                      "CI/CD pipelines for deployments",
+                      "Automated testing on every commit",
+                      "Code formatting and linting"
+                    ],
+                    example: "Created GitHub Action to auto-generate API docs from OpenAPI spec"
                   },
-                ].map((article, index) => (
+                  {
+                    number: 7,
+                    title: "Document Why, Not What",
+                    icon: <Brain className="w-6 h-6" />,
+                    description: "Code shows what, comments explain why",
+                    details: [
+                      "Document business decisions",
+                      "Explain non-obvious choices",
+                      "Keep README up to date"
+                    ],
+                    example: "// Using setTimeout because we need to wait for API response before next poll"
+                  },
+                  {
+                    number: 8,
+                    title: "Enable Your Team",
+                    icon: <Users className="w-6 h-6" />,
+                    description: "Your code should make others productive",
+                    details: [
+                      "Write clear PR descriptions",
+                      "Create reusable components",
+                      "Mentor junior developers"
+                    ],
+                    example: "Created Storybook components so team can build UIs without asking questions"
+                  },
+                  {
+                    number: 9,
+                    title: "Measure and Monitor",
+                    icon: <Target className="w-6 h-6" />,
+                    description: "You can't improve what you don't measure",
+                    details: [
+                      "Performance metrics in production",
+                      "Error tracking and alerting",
+                      "User behavior analytics"
+                    ],
+                    example: "Set up dashboard showing p95 latency, error rate, and active users"
+                  },
+                  {
+                    number: 10,
+                    title: "Always Be Learning",
+                    icon: <Sparkles className="w-6 h-6" />,
+                    description: "Technology evolves, so should you",
+                    details: [
+                      "Read documentation thoroughly",
+                      "Try new tools on side projects",
+                      "Teach what you learn"
+                    ],
+                    example: "Spent weekend learning Rust, now using it for performance-critical microservice"
+                  }
+                ].map((principle, index) => (
                   <motion.div
-                    key={article.title}
+                    key={principle.number}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-6 hover:border-gray-600 transition-all cursor-pointer"
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="group"
                   >
-                    <div className="flex items-center gap-2 mb-3">
-                      <div
-                        className={`w-3 h-3 rounded-full bg-gradient-to-r ${article.gradient}`}
-                      ></div>
-                      <span className="text-xs text-gray-400 uppercase tracking-wide">
-                        {article.category}
-                      </span>
-                    </div>
+                    <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 hover:border-amber-500/50 transition-all h-full hover:shadow-lg hover:shadow-amber-500/10">
+                      {/* Header */}
+                      <div className="flex items-start gap-4 mb-4">
+                        <motion.div 
+                          className="flex-shrink-0"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          <div className="w-12 h-12 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg flex items-center justify-center text-amber-400">
+                            {principle.icon}
+                          </div>
+                        </motion.div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-amber-400 font-bold">#{principle.number}</span>
+                            <h3 className="text-xl font-bold text-white">{principle.title}</h3>
+                          </div>
+                          <p className="text-gray-400">{principle.description}</p>
+                        </div>
+                      </div>
 
-                    <h4 className="text-lg font-semibold text-white mb-2 line-clamp-2">
-                      {article.title}
-                    </h4>
-                    <p className="text-sm text-gray-400 mb-4 line-clamp-3">{article.excerpt}</p>
+                      {/* Details */}
+                      <div className="space-y-2 mb-4">
+                        {principle.details.map((detail, i) => (
+                          <motion.div 
+                            key={i} 
+                            className="flex items-start gap-2"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 + i * 0.05 }}
+                          >
+                            <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-gray-300">{detail}</span>
+                          </motion.div>
+                        ))}
+                      </div>
 
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{article.date}</span>
-                      <span>{article.readTime}</span>
+                      {/* Example */}
+                      <div className="pt-4 border-t border-gray-800">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                          Real Example
+                        </p>
+                        <p className="text-sm text-gray-400 italic">
+                          {principle.example}
+                        </p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="text-center">
-                <Button variant="primary" size="md">
-                  View All Articles
-                </Button>
-              </div>
+              {/* Footer */}
+              <motion.div 
+                className="mt-12 p-6 bg-gradient-to-r from-amber-600/10 to-orange-600/10 rounded-lg border border-amber-600/20 text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2 }}
+              >
+                <p className="text-gray-300">
+                  These principles guide every line of code I write and every architectural decision I make.
+                </p>
+              </motion.div>
             </div>
           </motion.section>
         )}
+
 
         {/* Contact Section */}
         {activeSection === 'contact' && (
