@@ -102,30 +102,28 @@ function Navigation() {
           </div>
 
           {/* Desktop Social Links */}
-          <div className="hidden lg:flex items-center space-x-2">
-            <motion.a
-              href="https://linkedin.com/in/mapw"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="p-2 text-gray-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Linkedin className="w-5 h-5" />
-            </motion.a>
-            <motion.a
-              href="https://github.com/MarcoPWx"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="p-2 text-gray-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Github className="w-5 h-5" />
-            </motion.a>
-          </div>
+          <motion.a
+            href="https://linkedin.com/in/mapw"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="hidden lg:block p-2 text-gray-400 hover:text-white transition-colors"
+            whileHover={{ scale: 1.1, rotate: 360 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Linkedin className="w-5 h-5" />
+          </motion.a>
+          <motion.a
+            href="https://github.com/MarcoPWx"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="hidden lg:block p-2 text-gray-400 hover:text-white transition-colors"
+            whileHover={{ scale: 1.1, rotate: 360 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Github className="w-5 h-5" />
+          </motion.a>
         </div>
 
         {/* Mobile Menu */}

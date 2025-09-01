@@ -56,7 +56,7 @@ function Navigation() {
                 key={section.label}
                 href={section.hash ? `${section.href}${section.hash}` : section.href}
                 className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
-                  section.href === '/tools'
+                  section.href === currentPath
                     ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white'
                     : 'text-gray-400 hover:text-white hover:bg-gray-900/50'
                 }`}
@@ -102,30 +102,28 @@ function Navigation() {
           </div>
 
           {/* Desktop Social Links */}
-          <div className="hidden lg:flex items-center space-x-2">
-            <motion.a
-              href="https://linkedin.com/in/mapw"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="p-2 text-gray-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Linkedin className="w-5 h-5" />
-            </motion.a>
-            <motion.a
-              href="https://github.com/MarcoPWx"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="p-2 text-gray-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Github className="w-5 h-5" />
-            </motion.a>
-          </div>
+          <motion.a
+            href="https://linkedin.com/in/mapw"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="hidden lg:block p-2 text-gray-400 hover:text-white transition-colors"
+            whileHover={{ scale: 1.1, rotate: 360 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Linkedin className="w-5 h-5" />
+          </motion.a>
+          <motion.a
+            href="https://github.com/MarcoPWx"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="hidden lg:block p-2 text-gray-400 hover:text-white transition-colors"
+            whileHover={{ scale: 1.1, rotate: 360 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Github className="w-5 h-5" />
+          </motion.a>
         </div>
 
         {/* Mobile Menu */}
@@ -145,7 +143,7 @@ function Navigation() {
                     href={section.hash ? `${section.href}${section.hash}` : section.href}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
-                      section.href === '/tools'
+                      section.href === currentPath
                         ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white'
                         : 'text-gray-400 hover:text-white hover:bg-gray-900/50'
                     }`}
