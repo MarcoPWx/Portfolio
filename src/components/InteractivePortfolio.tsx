@@ -120,6 +120,7 @@ import {
   Square,
   Octagon,
   Star as StarIcon,
+  ArrowDown,
   ArrowUp,
   Maximize2,
   Eye,
@@ -2561,11 +2562,9 @@ export function InteractivePortfolio() {
                     transition={{ delay: idx * 0.1, duration: 0.5, ease: 'easeOut' }}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
-                    <motion.div
-                      className="group w-full h-full"
-                      layout
-                      transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
-                    >
+                        <motion.div
+                          className="group w-full h-full"
+                        >
                       <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700 overflow-hidden w-full h-full shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300">
                         {/* Animated gradient background */}
                         <motion.div
@@ -2583,10 +2582,44 @@ export function InteractivePortfolio() {
                         {/* Glow effect on hover */}
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
 
+                        {/* Top-right close button when open */}
+                        {focusedProject === project.id && (
+                          <div className="absolute top-3 right-3 z-20">
+                            <motion.button
+                              className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all group/close"
+                              onClick={(e) => { e.stopPropagation(); setFocusedProject(null); }}
+                              initial={{ scale: 1 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              title="Close project details"
+                              aria-label="Close project"
+                            >
+                              <X className="w-5 h-5 text-red-400 group-hover/close:text-red-300" />
+                            </motion.button>
+                          </div>
+                        )}
+
+                        {/* Bottom-center open indicator when closed */}
+                        {focusedProject !== project.id && (
+                          <div className="absolute bottom-3 inset-x-0 z-20 flex justify-center">
+                            <motion.button
+                              className="p-2 bg-green-500/20 rounded-lg"
+                              onClick={(e) => { e.stopPropagation(); setFocusedProject(project.id); }}
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: 'spring', stiffness: 200 }}
+                              title="Open project details"
+                              aria-label="Open project"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                                <ArrowDown className="w-5 h-5 text-green-400" />
+                            </motion.button>
+                          </div>
+                        )}
+
                         <motion.div
-                          className={`relative ${focusedProject === project.id ? 'p-6 lg:p-8' : 'p-5 lg:p-6'} z-10`}
-                          layout
-                          transition={{ layout: { duration: 0.3 } }}
+                          className={`relative ${focusedProject === project.id ? 'p-6 lg:p-8' : 'p-5 lg:p-6 pb-12'} z-10`}
                         >
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-4">
@@ -2602,62 +2635,13 @@ export function InteractivePortfolio() {
                                   className={`font-bold text-white ${focusedProject === project.id ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'} flex items-center gap-2`}
                                 >
                                   {project.title}
-                                  {!focusedProject && (
-                                    <motion.span
-                                      initial={{ opacity: 0, x: -10 }}
-                                      animate={{ opacity: 1, x: 0 }}
-                                      className="text-xs text-gray-500"
-                                    >
-                                      <ChevronRight className="w-4 h-4" />
-                                    </motion.span>
-                                  )}
                                 </h3>
                                 <p className="text-gray-400 text-sm lg:text-base">
                                   {project.tagline}
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              {/* Progress indicator */}
-                              {roadmapProgress[project.id] && (
-                                <div className="flex items-center gap-2 mr-2">
-                                  <div className="w-12 h-12 relative">
-                                    <svg className="w-12 h-12 transform -rotate-90">
-                                      <circle
-                                        cx="24"
-                                        cy="24"
-                                        r="20"
-                                        stroke="currentColor"
-                                        strokeWidth="3"
-                                        fill="none"
-                                        className="text-gray-700"
-                                      />
-                                      <motion.circle
-                                        cx="24"
-                                        cy="24"
-                                        r="20"
-                                        stroke="url(#gradient)"
-                                        strokeWidth="3"
-                                        fill="none"
-                                        strokeDasharray={126}
-                                        initial={{ strokeDashoffset: 126 }}
-                                        animate={{ strokeDashoffset: 126 - (126 * roadmapProgress[project.id]) / 100 }}
-                                        transition={{ duration: 1, delay: idx * 0.1 }}
-                                        strokeLinecap="round"
-                                      />
-                                      <defs>
-                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                          <stop offset="0%" stopColor="#10b981" />
-                                          <stop offset="100%" stopColor="#3b82f6" />
-                                        </linearGradient>
-                                      </defs>
-                                    </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                      <span className="text-xs font-bold text-white">{roadmapProgress[project.id]}%</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
+                            <div className="flex items-center gap-2 pr-12">
                               <Badge
                                 variant={
                                   project.status === 'Production'
@@ -2698,7 +2682,7 @@ export function InteractivePortfolio() {
                             >
                               <div className="flex items-center gap-1 text-xs text-gray-500">
                                 <Code className="w-3 h-3" />
-                                <span>{project.tech.length} techs</span>
+                                <span>{project.tech.length} tech</span>
                               </div>
                               {project.differentiation && (
                                 <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -2709,7 +2693,7 @@ export function InteractivePortfolio() {
                               {project.github && (
                                 <div className="flex items-center gap-1 text-xs text-gray-500">
                                   <Github className="w-3 h-3" />
-                                  <span>Open Source</span>
+                                  <span>GitHub</span>
                                 </div>
                               )}
                             </motion.div>
@@ -2771,17 +2755,16 @@ export function InteractivePortfolio() {
                                   </motion.a>
                                 )}
                               </div>
-                              <span className="text-xs text-gray-500">Click to explore →</span>
                             </motion.div>
                           )}
 
                           <AnimatePresence>
                             {focusedProject === project.id && (
                               <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                initial={{ opacity: 0, y: 6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -6 }}
+                                transition={{ duration: 0.2 }}
                               >
                                 <p className="text-gray-300 mb-6 text-base lg:text-lg leading-relaxed">
                                   {project.description}
@@ -2793,10 +2776,10 @@ export function InteractivePortfolio() {
                           <AnimatePresence>
                             {focusedProject === project.id && (
                               <motion.div
-                                initial={{ opacity: 0, y: 10 }}
+                                initial={{ opacity: 0, y: 6 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.4, delay: 0.1 }}
+                                exit={{ opacity: 0, y: -6 }}
+                                transition={{ duration: 0.2 }}
                               >
                                 {/* Horizontal content layout */}
                                 <div className="grid lg:grid-cols-3 gap-6 mb-6">

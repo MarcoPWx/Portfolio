@@ -406,7 +406,7 @@ if __name__ == "__main__":
                     </div>
                   </div>
                   <motion.a
-                    href="https://github.com/yourusername/AI-OS-STORYBOOK"
+                    href="https://github.com/MarcoPWx/AI-OS-STORYBOOK"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-all group"
@@ -690,7 +690,7 @@ if __name__ == "__main__":
           </p>
           <div className="flex justify-center gap-4">
             <motion.a
-              href="https://github.com/yourusername/AI-OS-STORYBOOK"
+              href="https://github.com/MarcoPWx/AI-OS-STORYBOOK"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-black font-semibold rounded-lg transition-all"
