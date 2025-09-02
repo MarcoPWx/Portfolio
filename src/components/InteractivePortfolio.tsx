@@ -1719,7 +1719,7 @@ export function InteractivePortfolio() {
     projects:
       '🚀 Active Projects:\n  • AIBook (OSS Command Center) - AI+TDD workflow\n  • QuizMentor - Gamified learning platform (92% retention)\n  • DevMentor - AI pair programming assistant (95% accuracy)\n  • Harvest.ai - Content intelligence system (99.2% accuracy)\n  • Voice - Voice AI Project',
     skills:
-      '💻 Tech Stack:\n  Languages: TypeScript, Python, Go, Rust\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB',
+      '💻 Tech Stack:\n  Languages: TypeScript, Python, Go\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB',
     about:
       '🌟 PixelQuest - Exploring the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Developer experience and thoughtful solutions\n  Team: Passionate developers and AI enthusiasts',
     contact:
@@ -3537,10 +3537,6 @@ export function InteractivePortfolio() {
                             'Python',
                             'Java',
                             'Go',
-                            'Rust',
-                            'C#',
-                            'PHP',
-                            'Ruby',
                           ],
                         },
                         {
@@ -3552,8 +3548,6 @@ export function InteractivePortfolio() {
                             'Tailwind CSS',
                             'Vue.js',
                             'Redux',
-                            'Angular',
-                            'Svelte',
                             'Bootstrap',
                             'Material-UI',
                           ],
@@ -3568,22 +3562,15 @@ export function InteractivePortfolio() {
                             'REST APIs',
                             'WebSockets',
                             'Spring Boot',
-                            'Django',
-                            'Laravel',
-                            'ASP.NET',
-                            'Flask',
                           ],
                         },
                         {
                           category: 'AI/ML',
                           skills: [
-                            'TensorFlow',
                             'PyTorch',
-                            'Scikit-learn',
                             'OpenAI APIs',
                             'LangChain',
                             'Anthropic',
-                            'Jupyter',
                           ],
                         },
                         {
