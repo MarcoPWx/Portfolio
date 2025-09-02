@@ -1719,7 +1719,7 @@ export function InteractivePortfolio() {
     projects:
       '🚀 Active Projects:\n  • AIBook (OSS Command Center) - AI+TDD workflow\n  • QuizMentor - Gamified learning platform (92% retention)\n  • DevMentor - AI pair programming assistant (95% accuracy)\n  • Harvest.ai - Content intelligence system (99.2% accuracy)\n  • Voice - Voice AI Project',
     skills:
-      '💻 Tech Stack:\n  Languages: TypeScript, Python, Go\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB',
+      '💻 Tech Stack (Specialization: Mobile Engineering)\n  Mobile: React Native, iOS (Swift), Android (Kotlin)\n  Languages: TypeScript, Python, Go\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB\n  Note: End-to-end across mobile, web, backend, AI, and DevOps — I love the entire picture; every part matters',
     about:
       '🌟 PixelQuest - Exploring the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Developer experience and thoughtful solutions\n  Team: Passionate developers and AI enthusiasts',
     contact:
@@ -3297,6 +3297,7 @@ export function InteractivePortfolio() {
                           switching.
                         </p>
                         <p>Passionate about big-picture design.</p>
+                        <p>I work end-to-end across mobile, web, backend, AI, and DevOps — I love the entire picture and believe every part matters.</p>
                         
                         <div className="bg-gray-900/40 border border-gray-800 rounded-lg p-4">
                           <h3 className="text-xs text-gray-300 font-semibold mb-2">
@@ -3528,6 +3529,35 @@ export function InteractivePortfolio() {
                       Technical Skills
                     </h3>
                     <div className="space-y-4">
+                      {/* Specialization callout */}
+                      <div className="p-4 rounded-lg border border-green-600/30 bg-green-500/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Smartphone className="w-4 h-4 text-green-400" />
+                          <span className="text-sm font-semibold text-white">Specialization: Mobile Engineering</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            'React Native',
+                            'Expo',
+                            'iOS (Swift, Obj-C)',
+                            'Android (Kotlin, Java)',
+                            'Native Modules',
+                            'WebRTC',
+                            'Bluetooth LE',
+                            'Push Notifications',
+                            'Fastlane / TestFlight / Play Console',
+                            'Crashlytics',
+                            'Performance (Hermes)'
+                          ].map((s, i) => (
+                            <span key={`mobile-${i}`} className="px-2 py-0.5 bg-gray-900/50 text-xs text-gray-200 rounded border border-green-700/40">
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-2">
+                          I work end-to-end across mobile, web, backend, AI, and DevOps. I love the entire picture—every part matters.
+                        </p>
+                      </div>
                       {[
                         {
                           category: 'Languages',
