@@ -37,6 +37,12 @@ export const AgentBootShowcase = () => {
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
   const terminalContentRef = useRef<HTMLDivElement>(null);
 
+  // Left-side Scenario Terminal State
+  const [scenarioOutput, setScenarioOutput] = useState<string[]>([]);
+  const [scenarioPlaying, setScenarioPlaying] = useState(true);
+  const [scenarioCommandIndex, setScenarioCommandIndex] = useState(0);
+  const scenarioContentRef = useRef<HTMLDivElement>(null);
+
   // Load the AGENT-BOOT.py code
   useEffect(() => {
     fetch('/code-examples/AGENT-BOOT.py')
@@ -233,14 +239,83 @@ if __name__ == "__main__":
     }
   ];
 
-  // Auto-scroll terminal to bottom when new content is added
+  // Left Scenario Terminal: narrative/status demonstration
+  const scenarioCommands = [
+    {
+      command: '> agent-boot analyze --status --epics --devlog --issues',
+      output: [
+        `This needs to get developed, where are we now? load your agent_boot and lets see where we are now, epics tasks, devlog and issues nad epics on github`,
+        ``,
+        `I’ll run the project agent to get a fresh analysis, read the EPICS roadmap and the latest DEVLOG entries, and query GitHub for open issues (including anything labeled as epics). This will give us a consolidated status across local docs and GitHub. Now executing these steps.`,
+        `/Users/betolbook/Documents/github/QuizMentor.ai/docs/roadmap/EPICS.md`,
+        `/Users/betolbook/Documents/github/QuizMentor.ai/docs/status/DEVLOG.md (1-200)`,
+        ``,
+        `Here’s the current state across the project, pulled via the agent, roadmap, dev log, and GitHub:`,
+        ``,
+        `Agent status (AGENT_BOOT)`,
+        `•  Health: Package.json, node_modules, src, tests, Storybook, TS config OK; Jest config missing`,
+        `•  TDD priorities:`,
+        `1. Fix test environment foundation (Jest configuration)`,
+        `2. Wire Supabase authentication (30% complete)`,
+        `3. Implement analytics persistence`,
+        `4. Complete theme consistency (75% done)`,
+        `5. Add API contract testing`,
+        ``,
+        `Roadmap (EPICS.md)`,
+        `•  Now Working On (as of 2025-08-30)`,
+        `•  EPIC-12 Simplify Agent Boot & Docs — In Progress`,
+        `◦  Minimal ops: docs:updates active; remove Agent badge, agent:validate, and pre-Storybook agent:sync.`,
+        `•  Authentication & OAuth — P0`,
+        `◦  Wire Supabase auth (GitHub + email) end-to-end.`,
+        `•  Testing & QA — P1`,
+        `◦  Stabilize RN/Expo unit test environment; fix brittle TurboModules.`,
+        `•  Analytics & Tracking — P1`,
+        `◦  Persist client events to backend; add contract tests.`,
+        `•  Backend/API Foundation — P1`,
+        `◦  Back API stubs with Supabase; implement contract tests and OpenAPI.`,
+        `•  Theme/UI Consistency — P1`,
+        `◦  Propagate theme across Epic screens; remove hardcoded styles.`,
+        ``,
+        `DevLog (latest entries)`,
+        `•  [2025-09-01 05:01:31] STATUS_UPDATE — Updated system status: {'build_status': '✅ Passing'}`,
+        `•  [2025-09-01 05:00:46] DOCS — Added 64 expert-level quiz questions and comprehensive QUIZ_INVENTORY documentation`,
+        `•  Outstanding gaps recorded earlier:`,
+        `•  No ProfileScreen.tsx`,
+        `•  No GitHub OAuth implementation`,
+        `•  Services not wired to backend`,
+        `•  No privacy policy / GDPR UI`,
+        `•  Testing at ~5% coverage`,
+        `•  Missing core screens (Quiz, Home, Leaderboard)`,
+        ``,
+        `GitHub issues and epics`,
+        `•  Open issues: none found (gh issue list returned empty)`,
+        `•  Epic-labeled issues: none found (no issues with label epic/Epic)`,
+        `•  Note: We previously generated content locally but did not create issues on GitHub yet.`,
+        ``,
+        `What I can do next (say the word and I’ll run it)`,
+        `•  Create GitHub issues from the TDD priorities (with proper labels and bodies), using the agent’s generator.`,
+        `•  Add an Epic label and create one umbrella “EPIC” issue per roadmap item, then link child tasks.`,
+        `•  Add/update a Jest config to clear the test-env blocker, then wire in a minimal test to verify setup.`,
+        `•  Generate a focused Auth/OAuth task breakdown (Supabase + GitHub OAuth) as issues.`,
+      ]
+    }
+  ];
+
+  // Auto-scroll terminal to bottom when new content is added (right)
   useEffect(() => {
     if (terminalContentRef.current) {
       terminalContentRef.current.scrollTop = terminalContentRef.current.scrollHeight;
     }
   }, [terminalOutput]);
 
-  // Terminal Animation Effect
+  // Auto-scroll terminal to bottom when new content is added (left)
+  useEffect(() => {
+    if (scenarioContentRef.current) {
+      scenarioContentRef.current.scrollTop = scenarioContentRef.current.scrollHeight;
+    }
+  }, [scenarioOutput]);
+
+  // Terminal Animation Effect (right / demo)
   useEffect(() => {
     if (!isPlaying || currentCommandIndex >= agentBootCommands.length) {
       if (currentCommandIndex >= agentBootCommands.length && isPlaying) {
@@ -270,10 +345,32 @@ if __name__ == "__main__":
           setCurrentCommandIndex(prev => prev + 1);
         }, 2000); // Wait before next command
       }
-    }, 100); // Speed of typing each line
+    }, 100);
 
     return () => clearInterval(interval);
   }, [isPlaying, currentCommandIndex]);
+
+  // Terminal Animation Effect (left / scenario)
+  useEffect(() => {
+    if (!scenarioPlaying || scenarioCommandIndex >= scenarioCommands.length) return;
+
+    const currentCommand = scenarioCommands[scenarioCommandIndex];
+    let outputIndex = 0;
+
+    setScenarioOutput(prev => [...prev, currentCommand.command]);
+
+    const interval = setInterval(() => {
+      if (outputIndex < currentCommand.output.length) {
+        setScenarioOutput(prev => [...prev, currentCommand.output[outputIndex]]);
+        outputIndex++;
+      } else {
+        clearInterval(interval);
+        setScenarioPlaying(false);
+      }
+    }, 90);
+
+    return () => clearInterval(interval);
+  }, [scenarioPlaying, scenarioCommandIndex]);
 
   const resetTerminal = () => {
     setTerminalOutput([]);
@@ -474,10 +571,11 @@ if __name__ == "__main__":
           ))}
         </div>
 
-        {/* Two Column Layout: Code and Terminal */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
-          {/* AGENT-BOOT.py Code Showcase */}
+        {/* Two Column Layout: Scenario (left) and Terminal (right) */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-16 items-stretch">
+          {/* Left: Scenario Terminal (animated example) */}
           <motion.div
+            className="h-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -488,81 +586,68 @@ if __name__ == "__main__":
                   <Terminal className="w-5 h-5 text-green-400" />
                   AGENT-BOOT.py
                 </h3>
-                <div className="flex gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={copyToClipboard}
-                    className="p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
-                    title="Copy code"
-                  >
-                    {copiedCode ? (
-                      <Check className="w-4 h-4 text-green-400" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-400" />
-                    )}
-                  </motion.button>
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    href="/code-examples/AGENT-BOOT.py"
-                    download="AGENT-BOOT.py"
-                    className="p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
-                    title="Download"
-                  >
-                    <Download className="w-4 h-4 text-gray-400" />
-                  </motion.a>
-                </div>
               </div>
-            
-            <div className="bg-black/50 rounded-lg p-4 overflow-x-auto max-h-[500px]">
-              <pre className="text-sm font-mono">
-                <code className="language-python text-gray-300">
-{agentBootCode}
-                </code>
-              </pre>
-            </div>
-            
-              <div className="mt-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                <p className="text-sm text-gray-400 mb-2">
-                  Complete implementation includes:
-                </p>
-                <ul className="text-xs text-gray-500 space-y-1">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-400" />
-                    Health monitoring & status checks
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-400" />
-                    Automatic documentation updates
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-400" />
-                    GitHub integration with graceful degradation
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-400" />
-                    Visual progress tracking
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-400" />
-                    TDD workflow automation
-                  </li>
-                </ul>
+
+              {/* Terminal Window */}
+              <div className="bg-gray-950 rounded-lg overflow-hidden">
+                {/* Terminal Header */}
+                <div className="bg-gray-900 px-4 py-2 flex items-center justify-between border-b border-gray-800">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full" />
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                    <div className="w-3 h-3 bg-green-500 rounded-full" />
+                  </div>
+                  <div className="text-xs text-gray-500 font-mono">AGENT-BOOT.py</div>
+                  <div className="text-xs text-gray-500 font-mono">Scenario</div>
+                </div>
+
+                {/* Terminal Content */}
+                <div ref={scenarioContentRef} className="p-4 font-mono text-sm h-[500px] overflow-y-auto">
+                  {scenarioOutput.map((line, index) => {
+                    const lineText = line || '';
+                    return (
+                      <motion.div
+                        key={`scenario-${index}`}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={`${
+                          lineText.startsWith('>')
+                            ? 'text-green-400 mt-2'
+                            : lineText.startsWith('📊') || lineText.startsWith('🚀')
+                            ? 'text-white font-bold mt-2'
+                            : lineText.startsWith('✓') || lineText.includes('✅')
+                            ? 'text-green-400'
+                            : lineText.includes('❌')
+                            ? 'text-red-400'
+                            : lineText.includes('🚧') || lineText.includes('⚠️')
+                            ? 'text-yellow-400'
+                            : lineText.startsWith('•') || lineText.match(/^\d\./)
+                            ? 'text-gray-400 ml-4'
+                            : 'text-gray-300'
+                        }`}
+                      >
+                        {lineText || '\u00A0'}
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </motion.div>
 
           {/* Agent Boot Terminal Live Demo */}
           <motion.div
+            className="h-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 h-full">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">
-                  Live Demo
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Terminal className="w-5 h-5 text-green-400" />
+                  AGENT-BOOT.py
                 </h3>
                 <div className="flex gap-2">
                   <motion.button
@@ -599,7 +684,7 @@ if __name__ == "__main__":
                     <div className="w-3 h-3 bg-yellow-500 rounded-full" />
                     <div className="w-3 h-3 bg-green-500 rounded-full" />
                   </div>
-                  <div className="text-xs text-gray-500 font-mono">🚀 Agent Boot Live</div>
+                  <div className="text-xs text-gray-500 font-mono flex items-center gap-2"><Terminal className="w-3 h-3 text-green-400" /> AGENT-BOOT.py</div>
                   <div className="text-xs text-gray-500 font-mono">AI-OS Project</div>
                 </div>
                 
@@ -647,26 +732,36 @@ if __name__ == "__main__":
               </div>
               
               <div className="mt-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                <p className="text-sm text-gray-400 mb-2">
-                  Live example showing:
+                <p className="text-sm text-gray-400 mb-1">
+                  Live example showing these steps (loops automatically):
                 </p>
-                <ul className="text-xs text-gray-500 space-y-1">
-                  <li className="flex items-center gap-2">
-                    <Zap className="w-3 h-3 text-yellow-400" />
-                    Real-time health monitoring
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Zap className="w-3 h-3 text-yellow-400" />
-                    Epic creation with GitHub integration
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Zap className="w-3 h-3 text-yellow-400" />
-                    Visual progress tracking
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Zap className="w-3 h-3 text-yellow-400" />
-                    TDD workflow automation
-                  </li>
+                <p className="text-xs text-gray-500 mb-2">
+                  Currently: {['Health check','Epic creation with GitHub issues','Progress report','Manifest generation','TDD workflow (red → green → refactor)','Staging deploy with validation'][Math.min(currentCommandIndex, 5)]}
+                </p>
+                <ul className="text-xs space-y-1">
+                  {[
+                    'Health check',
+                    'Epic creation with GitHub issues',
+                    'Progress report',
+                    'Manifest generation',
+                    'TDD workflow (red → green → refactor)',
+                    'Staging deploy with validation',
+                  ].map((label, idx) => {
+                    const active = idx === Math.min(currentCommandIndex, 5);
+                    const done = idx < Math.min(currentCommandIndex, 5);
+                    return (
+                      <li key={label} className={`flex items-center gap-2 ${active ? 'text-white' : done ? 'text-gray-300' : 'text-gray-500'}`}>
+                        {active ? (
+                          <Zap className="w-3 h-3 text-yellow-400" />
+                        ) : done ? (
+                          <CheckCircle className="w-3 h-3 text-green-400" />
+                        ) : (
+                          <span className="w-3 h-3 rounded-full bg-gray-600 inline-block" />
+                        )}
+                        {label}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
