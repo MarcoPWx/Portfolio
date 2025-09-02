@@ -1,10 +1,10 @@
-# 📚 NatureQuest Documentation Hub
+# 📚 PixelQuest Documentation Hub
 
-Comprehensive documentation center aggregating 256+ documents from across the NatureQuest ecosystem.
+Comprehensive documentation center aggregating 256+ documents from across the PixelQuest ecosystem.
 
 ## 🌟 Overview
 
-This GitHub Pages site serves as the central documentation hub for all NatureQuest projects:
+This GitHub Pages site serves as the central documentation hub for all PixelQuest projects:
 - **DevMentor**: AI development assistant (200+ docs)
 - **QuizMentor**: Adaptive learning platform (70+ docs)
 - **Harvest.ai**: Content intelligence (15+ docs)
@@ -195,7 +195,7 @@ ls -la /path/to/NatureQuest/*/docs/
 
 ## 📄 License
 
-This documentation is part of the NatureQuest ecosystem.
+This documentation is part of the PixelQuest ecosystem.
 
 ---
 

@@ -70,7 +70,7 @@ describe('ComprehensiveSkills', () => {
     fireEvent.click(awsCard);
 
     await waitFor(() => {
-      expect(screen.getByText('NatureQuest Production Infrastructure')).toBeInTheDocument();
+      expect(screen.getByText('PixelQuest Production Infrastructure')).toBeInTheDocument();
     });
   });
 

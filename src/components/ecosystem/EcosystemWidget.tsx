@@ -203,7 +203,7 @@ export default function EcosystemWidget({
                       <h3
                         className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
                       >
-                        NatureQuest Ecosystem
+                        PixelQuest Ecosystem
                       </h3>
                       <p
                         className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}

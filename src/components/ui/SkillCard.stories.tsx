@@ -28,7 +28,7 @@ export const Default: Story = {
     level: 'Expert',
     years: 6,
     description: 'Strong typing, generics, advanced types, and large-scale app architecture.',
-    projects: ['NatureQuest Portfolio', 'QuizMentor'],
+    projects: ['PixelQuest Portfolio', 'QuizMentor'],
     additionalTags: ['Generics', 'Utility Types', 'Monorepo'],
     projectCount: 12
   }

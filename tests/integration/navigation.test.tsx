@@ -23,7 +23,7 @@ describe('Navigation Integration Tests', () => {
 
   test('complete navigation flow through all sections', async () => {
     // Start at home
-    expect(screen.getByText('NatureQuest')).toBeInTheDocument();
+    expect(screen.getByText('PixelQuest')).toBeInTheDocument();
 
     // Navigate to Projects
     const projectsButton = screen.getByText('Projects');
@@ -58,7 +58,7 @@ describe('Navigation Integration Tests', () => {
     fireEvent.click(homeButton);
 
     await waitFor(() => {
-      expect(screen.getByText('NatureQuest')).toBeInTheDocument();
+      expect(screen.getByText('PixelQuest')).toBeInTheDocument();
     });
   });
 
@@ -78,7 +78,7 @@ describe('Navigation Integration Tests', () => {
     fireEvent.keyDown(terminalInput, { key: 'Enter', code: 'Enter' });
 
     await waitFor(() => {
-      expect(screen.getByText(/NatureQuest - Building the future/)).toBeInTheDocument();
+      expect(screen.getByText(/PixelQuest - Building the future/)).toBeInTheDocument();
     });
 
     // Test projects command

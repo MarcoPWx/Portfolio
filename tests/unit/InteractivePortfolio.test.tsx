@@ -23,7 +23,7 @@ describe('InteractivePortfolio', () => {
   });
 
   test('renders the main portfolio component', () => {
-    expect(screen.getByText('NatureQuest')).toBeInTheDocument();
+    expect(screen.getByText('PixelQuest')).toBeInTheDocument();
   });
 
   test('renders navigation menu', () => {

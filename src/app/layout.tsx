@@ -12,13 +12,13 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://naturequest.dev'),
-  title: 'NatureQuest - Developer Tools Ecosystem',
+  title: 'PixelQuest - Developer Tools Ecosystem',
   description:
     'A suite of powerful tools for developers: QuizMentor, DevMentor, Harvest, and Omni. Enhance your productivity, learning, and development workflow.',
   keywords: 'developer tools, quiz platform, AI assistant, time tracking, VS Code extension',
-  authors: [{ name: 'NatureQuest Team' }],
+  authors: [{ name: 'PixelQuest Team' }],
   openGraph: {
-    title: 'NatureQuest - Developer Tools Ecosystem',
+    title: 'PixelQuest - Developer Tools Ecosystem',
     description: 'Building the future of developer tools',
     type: 'website',
     url: 'https://naturequest.dev',
@@ -27,13 +27,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'NatureQuest Portfolio',
+        alt: 'PixelQuest Portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'NatureQuest - Developer Tools Ecosystem',
+    title: 'PixelQuest - Developer Tools Ecosystem',
     description: 'Building the future of developer tools',
     images: ['/og-image.png'],
   },

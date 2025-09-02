@@ -9,7 +9,7 @@ test.describe.skip('Portfolio E2E Tests', () => {
 
   test('should load the portfolio homepage', async ({ page }) => {
     // Check if the main content is visible
-    await expect(page.locator('text=NatureQuest')).toBeVisible();
+    await expect(page.locator('text=PixelQuest')).toBeVisible();
     await expect(page.locator('text=Senior Full-Stack Engineer')).toBeVisible();
     
     // Check if navigation is present
@@ -127,7 +127,7 @@ test.describe.skip('Portfolio E2E Tests', () => {
     
     // Check professional information
     await expect(page.locator('text=Senior Full-Stack Developer')).toBeVisible();
-    await expect(page.locator('text=NatureQuest')).toBeVisible();
+    await expect(page.locator('text=PixelQuest')).toBeVisible();
     await expect(page.locator('text=Founder & Lead Engineer')).toBeVisible();
     
     // Check skills and technologies
@@ -139,7 +139,7 @@ test.describe.skip('Portfolio E2E Tests', () => {
 
   test('should have proper SEO meta tags', async ({ page }) => {
     // Check title
-    await expect(page).toHaveTitle(/NatureQuest/);
+    await expect(page).toHaveTitle(/PixelQuest/);
     
     // Check meta description
     const metaDescription = page.locator('meta[name="description"]');

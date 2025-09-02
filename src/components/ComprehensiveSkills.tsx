@@ -428,7 +428,7 @@ const techCategories: TechCategory[] = [
         proficiencyLevel: 'Advanced',
         examples: [
           {
-            project: 'NatureQuest Production Infrastructure',
+            project: 'PixelQuest Production Infrastructure',
             description:
               'Built scalable microservices infrastructure on AWS with auto-scaling and high availability',
             impact: '99.9% uptime with automatic scaling supporting 10K+ concurrent users',

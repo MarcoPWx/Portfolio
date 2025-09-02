@@ -1,6 +1,6 @@
-# NatureQuest Portfolio
+# PixelQuest Portfolio
 
-A beautiful portfolio website showcasing the NatureQuest product ecosystem, inspired by modern design systems like Supabase and Parlant.
+A beautiful portfolio website showcasing the PixelQuest product ecosystem, inspired by modern design systems like Supabase and Parlant.
 
 ## 🎯 Products Showcased
 
@@ -152,8 +152,8 @@ open storybook-static/index.html
 
 ## 📝 License
 
-Private - NatureQuest © 2024
+Private - PixelQuest © 2024
 
 ---
 
-Built with ❤️ by the NatureQuest team
+Built with ❤️ by the PixelQuest team
