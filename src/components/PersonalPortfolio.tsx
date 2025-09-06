@@ -66,7 +66,7 @@ export function PersonalPortfolio() {
     },
     {
       id: 'harvest',
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       description: 'Data insights and analytics for your business growth',
       icon: TrendingUp,
       color: 'green',

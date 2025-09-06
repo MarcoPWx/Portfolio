@@ -33,4 +33,3 @@ describe('MiniArchGraph', () => {
     expect(circles.length).toBeGreaterThanOrEqual(nodes.length);
   });
 });
-

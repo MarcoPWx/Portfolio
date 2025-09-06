@@ -61,7 +61,7 @@ export function SkillComponentsShowcase() {
       level: 'Expert' as const,
       years: 7,
       description: 'AI/ML development, FastAPI backends, data processing, and automation scripts',
-      projects: ['Harvest.ai', 'DevMentor AI'],
+      projects: ['Chameleon', 'DevMentor AI'],
       additionalTags: ['+2'],
       projectCount: 2,
     },
@@ -166,7 +166,7 @@ export function SkillComponentsShowcase() {
       level: 'Advanced' as const,
       years: 3,
       description: 'High-performance Python APIs with automatic documentation',
-      projects: ['Harvest.ai', 'ML Services'],
+      projects: ['Chameleon', 'ML Services'],
       projectCount: 3,
     },
     {
@@ -224,7 +224,7 @@ export function SkillComponentsShowcase() {
       level: 'Expert' as const,
       years: 2,
       description: 'Building LLM applications with chains, agents, and RAG systems',
-      projects: ['DevMentor', 'Harvest.ai'],
+      projects: ['DevMentor', 'Chameleon'],
       projectCount: 3,
     },
     {
@@ -244,7 +244,7 @@ export function SkillComponentsShowcase() {
       level: 'Advanced' as const,
       years: 2,
       description: 'Qdrant, Pinecone, Weaviate for semantic search and RAG',
-      projects: ['DevMentor', 'Harvest.ai'],
+      projects: ['DevMentor', 'Chameleon'],
       projectCount: 2,
     },
   ];
@@ -497,7 +497,7 @@ export function SkillComponentsShowcase() {
               level="Advanced"
               years={3}
               description="Building intelligent systems with modern AI technologies"
-              projects={['DevMentor', 'Harvest.ai']}
+              projects={['DevMentor', 'Chameleon']}
               projectCount={5}
               expandedContent={
                 <div className="space-y-4">

@@ -248,7 +248,7 @@ export const StatsDashboard: React.FC = () => {
       color: 'blue',
     },
     {
-      title: 'Harvest.ai Tokens',
+      title: 'Chameleon Tokens',
       value: 1847392,
       change: 67,
       icon: <Cpu className="w-5 h-5 text-green-400" />,
@@ -428,7 +428,7 @@ export const StatsDashboard: React.FC = () => {
               <div className="space-y-4">
                 {[
                   'QuizMentor v2.0 Released',
-                  'Harvest.ai Beta Launch',
+                  'Chameleon Beta Launch',
                   'DevMentor Integration',
                   'Omni.ai Alpha',
                 ].map((event, index) => (

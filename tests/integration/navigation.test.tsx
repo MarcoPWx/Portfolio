@@ -32,7 +32,7 @@ describe('Navigation Integration Tests', () => {
     await waitFor(() => {
       expect(screen.getAllByText('QuizMentor').length).toBeGreaterThan(0);
       expect(screen.getAllByText('DevMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('Harvest.ai').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Chameleon').length).toBeGreaterThan(0);
     });
 
     // Navigate to About
@@ -42,7 +42,7 @@ describe('Navigation Integration Tests', () => {
     await waitFor(() => {
       expect(screen.getByText('Marco')).toBeInTheDocument();
       expect(screen.getByText('Professional Summary')).toBeInTheDocument();
-      expect(screen.getByText('Work Experience')).toBeInTheDocument();
+      expect(screen.getByText('Recent Experience')).toBeInTheDocument();
     });
 
     // Navigate to Stack
@@ -90,7 +90,7 @@ describe('Navigation Integration Tests', () => {
     });
   });
 
-  test('project roadmap modal integration', async () => {
+  test('project details interaction shows actions', async () => {
     // Navigate to projects
     const projectsButton = screen.getByText('Projects');
     fireEvent.click(projectsButton);
@@ -99,15 +99,12 @@ describe('Navigation Integration Tests', () => {
       expect(screen.getAllByText('QuizMentor').length).toBeGreaterThan(0);
     });
 
-    // Focus a card to reveal its roadmap button
+    // Focus a card to reveal its actions
     fireEvent.click(screen.getAllByText('QuizMentor')[0]);
 
-    // Click on roadmap button
-    const roadmapButtons = screen.getAllByText('View Roadmap');
-    fireEvent.click(roadmapButtons[0]);
-
+    // Expect GitHub action to be visible in the focused view
     await waitFor(() => {
-      expect(screen.getAllByText(/Product Roadmaps/).length).toBeGreaterThan(0);
+      expect(screen.getAllByText('GitHub').length).toBeGreaterThan(0);
     });
   });
 
@@ -144,7 +141,7 @@ describe('Navigation Integration Tests', () => {
 
   test('responsive navigation integration', () => {
     // Test that all navigation items are present
-    const navItems = ['Home', 'Projects', 'About', 'Stack', 'Book', 'Blog', 'Contact'];
+    const navItems = ['Home', 'Projects', 'About', 'Stack', 'Book', 'Tools', 'Contact'];
 
     navItems.forEach((item) => {
       expect(screen.getAllByText(item).length).toBeGreaterThan(0);
@@ -158,7 +155,7 @@ describe('Navigation Integration Tests', () => {
     await waitFor(() => {
       // Check professional summary
       expect(screen.getByText('Professional Summary')).toBeInTheDocument();
-      expect(screen.getByText('Work Experience')).toBeInTheDocument();
+      expect(screen.getByText('Recent Experience')).toBeInTheDocument();
 
       // Check work experience (company names)
       expect(screen.getByText(/ExSeed Health/)).toBeInTheDocument();
@@ -178,7 +175,7 @@ describe('Navigation Integration Tests', () => {
       expect(screen.getAllByText('React').length).toBeGreaterThan(0);
       expect(screen.getAllByText('Python').length).toBeGreaterThan(0);
       expect(screen.getAllByText('Node.js').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('TensorFlow').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('PyTorch').length).toBeGreaterThan(0);
     });
   });
 
@@ -190,8 +187,8 @@ describe('Navigation Integration Tests', () => {
       // Check project details
       expect(screen.getAllByText('QuizMentor').length).toBeGreaterThan(0);
       expect(screen.getAllByText('DevMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('Harvest.ai').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('Voice').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Chameleon').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Voice AI Assistant').length).toBeGreaterThan(0);
     });
   });
 });

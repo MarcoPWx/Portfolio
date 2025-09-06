@@ -1,18 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { 
-  BookOpen, 
-  Users, 
-  GitBranch, 
-  Code, 
-  MessageSquare, 
+import {
+  BookOpen,
+  Users,
+  GitBranch,
+  Code,
+  MessageSquare,
   Award,
   CheckCircle,
   ArrowRight,
   Lightbulb,
   Target,
-  Workflow
+  Workflow,
 } from 'lucide-react';
 
 export default function TeamplayPage() {
@@ -28,7 +28,9 @@ export default function TeamplayPage() {
           >
             <div className="inline-flex items-center gap-2 mb-4">
               <BookOpen className="w-5 h-5 text-purple-400" />
-              <span className="text-sm font-medium text-purple-400 bg-purple-500/10 px-2 py-1 rounded-full">DevBook • Team Excellence</span>
+              <span className="text-sm font-medium text-purple-400 bg-purple-500/10 px-2 py-1 rounded-full">
+                DevBook • Team Excellence
+              </span>
             </div>
             <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
               TeamPlay
@@ -47,34 +49,34 @@ export default function TeamplayPage() {
           {[
             {
               icon: <GitBranch className="w-6 h-6" />,
-              title: "Git Mastery",
-              description: "Branching strategies, conflict resolution, and workflow optimization"
+              title: 'Git Mastery',
+              description: 'Branching strategies, conflict resolution, and workflow optimization',
             },
             {
               icon: <Code className="w-6 h-6" />,
-              title: "Clean Code",
-              description: "Readable, maintainable code that teams can build on"
+              title: 'Clean Code',
+              description: 'Readable, maintainable code that teams can build on',
             },
             {
               icon: <Users className="w-6 h-6" />,
-              title: "Team Dynamics",
-              description: "Communication patterns that prevent technical debt"
+              title: 'Team Dynamics',
+              description: 'Communication patterns that prevent technical debt',
             },
             {
               icon: <MessageSquare className="w-6 h-6" />,
-              title: "Code Reviews",
-              description: "Constructive feedback loops and knowledge sharing"
+              title: 'Code Reviews',
+              description: 'Constructive feedback loops and knowledge sharing',
             },
             {
               icon: <Workflow className="w-6 h-6" />,
-              title: "Process Design",
-              description: "Workflows that enhance productivity, not hinder it"
+              title: 'Process Design',
+              description: 'Workflows that enhance productivity, not hinder it',
             },
             {
               icon: <Award className="w-6 h-6" />,
-              title: "ExSeed Integration",
-              description: "Learn from high-performing engineering cultures"
-            }
+              title: 'ExSeed Integration',
+              description: 'Learn from high-performing engineering cultures',
+            },
           ].map((area, index) => (
             <motion.div
               key={index}
@@ -109,21 +111,27 @@ export default function TeamplayPage() {
                   <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="text-white font-semibold">Branching Strategies</h4>
-                    <p className="text-gray-400 text-sm">GitFlow, GitHub Flow, and when to use each</p>
+                    <p className="text-gray-400 text-sm">
+                      GitFlow, GitHub Flow, and when to use each
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
                   <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="text-white font-semibold">Conflict Resolution</h4>
-                    <p className="text-gray-400 text-sm">Turn merge conflicts from roadblocks into learning opportunities</p>
+                    <p className="text-gray-400 text-sm">
+                      Turn merge conflicts from roadblocks into learning opportunities
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
                   <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="text-white font-semibold">History Management</h4>
-                    <p className="text-gray-400 text-sm">Clean commits that tell the story of your codebase</p>
+                    <p className="text-gray-400 text-sm">
+                      Clean commits that tell the story of your codebase
+                    </p>
                   </div>
                 </div>
               </div>
@@ -151,7 +159,9 @@ export default function TeamplayPage() {
                   <CheckCircle className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
                   <div>
                     <h4 className="text-white font-semibold">Function Design</h4>
-                    <p className="text-gray-400 text-sm">Single responsibility and optimal abstraction levels</p>
+                    <p className="text-gray-400 text-sm">
+                      Single responsibility and optimal abstraction levels
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
@@ -181,7 +191,8 @@ export default function TeamplayPage() {
                 <div className="bg-gray-900/50 border-l-4 border-purple-500 p-4">
                   <h4 className="text-white font-semibold mb-2">Book Club Approach</h4>
                   <p className="text-gray-300 text-sm">
-                    Weekly discussions of engineering principles, with practical exercises that reinforce learning
+                    Weekly discussions of engineering principles, with practical exercises that
+                    reinforce learning
                   </p>
                 </div>
                 <div className="bg-gray-900/50 border-l-4 border-purple-500 p-4">
@@ -210,7 +221,7 @@ export default function TeamplayPage() {
                 ExSeed Integration
               </h2>
               <p className="text-gray-300 mb-6">
-                Learn from companies that have scaled engineering excellence. Real case studies, 
+                Learn from companies that have scaled engineering excellence. Real case studies,
                 proven patterns, and actionable insights from high-performing teams.
               </p>
               <div className="space-y-3">
@@ -243,7 +254,7 @@ export default function TeamplayPage() {
               Transform Your Team's Engineering Culture
             </h2>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              From individual contributors to cohesive teams that deliver exceptional software. 
+              From individual contributors to cohesive teams that deliver exceptional software.
               Learn the practices that separate good teams from great ones.
             </p>
             <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all flex items-center justify-center gap-2 mx-auto">

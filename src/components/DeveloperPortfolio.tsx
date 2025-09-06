@@ -240,7 +240,7 @@ export class GamificationEngine {
 }`,
     },
     {
-      title: 'Harvest.ai',
+      title: 'Chameleon',
       description: 'Content transformation pipeline with multi-agent AI validation',
       tech: ['Python', 'FastAPI', 'LangChain', 'Docker'],
       icon: FileSearch,
@@ -410,7 +410,7 @@ class SmartRouter {
                 <div className="text-gray-500 mb-2">$ ls projects/</div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                   <span className="text-blue-400">QuizMentor/</span>
-                  <span className="text-blue-400">Harvest.ai/</span>
+                  <span className="text-blue-400">Chameleon/</span>
                   <span className="text-blue-400">NatureQuest-Auth/</span>
                   <span className="text-blue-400">Omni.ai/</span>
                 </div>

@@ -15,7 +15,7 @@ This page lists all documentation files across the NatureQuest ecosystem.
 |---------|----------------|
 | DevMentor | 173 |
 | QuizMentor | 55 |
-| Harvest.ai | 13 |
+| Chameleon | 13 |
 | NatureQuest Auth | 3 |
 | Infrastructure | 13 |
 | Portfolio | 5 |
@@ -281,7 +281,7 @@ testing-strategy.md
 testing-testid-guide.md
 ```
 
-### Harvest.ai
+### Chameleon
 
 ```
 COST_OPTIMIZATION_SECURITY.md

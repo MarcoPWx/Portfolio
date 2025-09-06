@@ -295,7 +295,7 @@ export function ProfessionalPortfolio() {
     },
 
     harvest: {
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       tagline: 'Intelligent Content Transformation Infrastructure',
       description:
         'Enterprise-grade content intelligence platform that ethically processes, validates, and transforms knowledge into multiple formats using advanced multi-agent AI systems.',
@@ -935,7 +935,7 @@ class SmartRouter {
                 </li>
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
-                    Harvest.ai
+                    Chameleon
                   </a>
                 </li>
                 <li>

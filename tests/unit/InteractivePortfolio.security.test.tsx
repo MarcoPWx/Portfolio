@@ -19,9 +19,8 @@ describe('InteractivePortfolio Project Status', () => {
     expect(alphaBadges.length).toBeGreaterThan(0);
 
     // Verify that projects are present
-    expect(screen.getByText('AI-OS Storybook')).toBeInTheDocument();
+    expect(screen.getByText('Voice AI Assistant')).toBeInTheDocument();
     expect(screen.getByText('DevMentor')).toBeInTheDocument();
-    expect(screen.getByText('Harvest.ai')).toBeInTheDocument();
+    expect(screen.getByText('Chameleon')).toBeInTheDocument();
   });
 });
-

@@ -324,7 +324,7 @@ export function ComprehensivePortfolio() {
     },
     {
       id: 'harvest',
-      title: 'Harvest.ai',
+      title: 'Chameleon',
       tagline: 'Intelligent Content Infrastructure',
       description: 'Multi-agent AI system for automated content transformation and validation',
       status: 'Beta',

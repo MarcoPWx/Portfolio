@@ -684,7 +684,7 @@ export class GamificationEngine {
     },
 
     harvest: {
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       icon: FileSearch,
       tagline: 'AI Content Generation That Would Bankrupt You',
       status: projectStatus.harvest.reality.status,
@@ -1348,7 +1348,7 @@ class SmartRouter {
                 </div>
                 <p className="text-sm text-gray-300">
                   Despite impressive documentation, most projects are 15-20% complete. QuizMentor
-                  has no auth, Harvest.ai would bankrupt users, and Omni.ai is just a README.
+                  has no auth, Chameleon would bankrupt users, and Omni.ai is just a README.
                 </p>
               </div>
 
@@ -1768,9 +1768,9 @@ class SmartRouter {
                   <CodeEditor
                     code={currentProject.code}
                     title={`${currentProject.name.toLowerCase().replace(/\s+/g, '-')}.${
-                      currentProject.name === 'Harvest.ai' ? 'py' : 'ts'
+                      activeProject === 'harvest' ? 'py' : 'ts'
                     }`}
-                    language={currentProject.name === 'Harvest.ai' ? 'python' : 'typescript'}
+                    language={activeProject === 'harvest' ? 'python' : 'typescript'}
                   />
                 )}
 

@@ -369,7 +369,7 @@ function InteractiveTerminal({
   controlledCollapsed?: boolean;
   onToggleCollapsed?: (next: boolean) => void;
   terminalIcon?: React.ReactNode;
-  accentColor?: 'green' | 'blue' | 'purple' | 'amber';
+  accentColor?: 'green' | 'blue' | 'purple' | 'amber' | 'indigo' | 'rose';
 }) {
   const [input, setInput] = useState('');
   type HistoryEntry = { type: 'input' | 'output' | 'error'; text: string };
@@ -500,7 +500,17 @@ function InteractiveTerminal({
 
     setStepIndex((i) => i + 1);
     runningRef.current = false;
-  }, [script, stepIndex, animateTyping, typingSpeedMs, outputLineDelayMs, commands, loop, loopPauseMs, title]);
+  }, [
+    script,
+    stepIndex,
+    animateTyping,
+    typingSpeedMs,
+    outputLineDelayMs,
+    commands,
+    loop,
+    loopPauseMs,
+    title,
+  ]);
 
   // Auto-run while playing
   useEffect(() => {
@@ -529,29 +539,29 @@ function InteractiveTerminal({
             </span>
             <motion.button
               className="p-1.5 rounded-full bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all"
-              title={collapsed ? "Expand terminal" : "Collapse terminal"}
-              aria-label={collapsed ? "Expand" : "Collapse"}
-              onClick={(e) => { e.stopPropagation(); toggleCollapsed(); }}
+              title={collapsed ? 'Expand terminal' : 'Collapse terminal'}
+              aria-label={collapsed ? 'Expand' : 'Collapse'}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleCollapsed();
+              }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <motion.div
-                animate={{ rotate: collapsed ? 0 : 180 }}
-                transition={{ duration: 0.3 }}
-              >
+              <motion.div animate={{ rotate: collapsed ? 0 : 180 }} transition={{ duration: 0.3 }}>
                 <ChevronDown className="w-4 h-4" />
               </motion.div>
             </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
-      
-        <Card
-          className={`font-mono transition-all duration-300 ${
-            collapsed ? 'hover:shadow-lg hover:shadow-green-400/20 cursor-pointer' : ''
-          } bg-gray-900/90 border-gray-700 shadow-xl backdrop-blur-sm p-4 h-[320px] flex flex-col`}
-          onClick={collapsed ? toggleCollapsed : undefined}
-        >
+
+      <Card
+        className={`font-mono transition-all duration-300 ${
+          collapsed ? 'hover:shadow-lg hover:shadow-green-400/20 cursor-pointer' : ''
+        } bg-gray-900/90 border-gray-700 shadow-xl backdrop-blur-sm p-4 h-[320px] flex flex-col`}
+        onClick={collapsed ? toggleCollapsed : undefined}
+      >
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 bg-red-500 rounded-full" />
@@ -560,9 +570,7 @@ function InteractiveTerminal({
           </div>
           <div className="flex-1 text-center px-6">
             <div className="text-gray-300 text-sm font-medium">{title}</div>
-            {subtitle && (
-              <div className="text-xs text-gray-400 mt-1">{subtitle}</div>
-            )}
+            {subtitle && <div className="text-xs text-gray-400 mt-1">{subtitle}</div>}
           </div>
           <div className="w-[60px]" />
         </div>
@@ -588,11 +596,16 @@ function InteractiveTerminal({
                           return <div className="text-gray-500">Ready to start...</div>;
                         }
                         return lastLines.map((l, i) => (
-                          <div key={`prev-${i}`} className={`${
-                            l.type === 'error' ? 'text-red-400/70' : 
-                            l.type === 'input' ? 'text-green-400/70' : 
-                            'text-gray-400'
-                          } truncate`}>
+                          <div
+                            key={`prev-${i}`}
+                            className={`${
+                              l.type === 'error'
+                                ? 'text-red-400/70'
+                                : l.type === 'input'
+                                  ? 'text-green-400/70'
+                                  : 'text-gray-400'
+                            } truncate`}
+                          >
                             {l.text.length > 80 ? l.text.substring(0, 80) + '...' : l.text}
                           </div>
                         ));
@@ -618,21 +631,21 @@ function InteractiveTerminal({
                   ref={scrollRef}
                   className="flex-1 overflow-y-auto overflow-x-hidden space-y-0.5 pr-1"
                 >
-          {history.map((item, i) => (
-            <div
-              key={i}
-              className={
-                item.type === 'input'
-                  ? 'text-green-400 text-xs'
-                  : item.type === 'error'
-                    ? 'text-red-400 text-xs'
-                    : 'text-gray-300 text-xs'
-              }
-              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-            >
-              {item.text}
-            </div>
-                ))}
+                  {history.map((item, i) => (
+                    <div
+                      key={i}
+                      className={
+                        item.type === 'input'
+                          ? 'text-green-400 text-xs'
+                          : item.type === 'error'
+                            ? 'text-red-400 text-xs'
+                            : 'text-gray-300 text-xs'
+                      }
+                      style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                    >
+                      {item.text}
+                    </div>
+                  ))}
                 </div>
               </motion.div>
             )}
@@ -640,19 +653,19 @@ function InteractiveTerminal({
         </div>
 
         {!autoplay && showInput && !collapsed && (
-        <div className="flex items-center gap-2 mt-3">
-          <span className="text-green-400">{'>'}</span>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleCommand(input);
-            }}
-            className="flex-1 bg-transparent outline-none text-gray-300"
-            placeholder="Enter command..."
-          />
-        </div>
+          <div className="flex items-center gap-2 mt-3">
+            <span className="text-green-400">{'>'}</span>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleCommand(input);
+              }}
+              className="flex-1 bg-transparent outline-none text-gray-300"
+              placeholder="Enter command..."
+            />
+          </div>
         )}
       </Card>
     </div>
@@ -695,7 +708,7 @@ function AgentBootDemo() {
         transition={{
           duration: 10,
           repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut"
+          ease: 'easeInOut',
         }}
       />
       <InteractiveTerminal
@@ -833,7 +846,7 @@ function WorkflowsShowcase() {
   ];
 
   const toggleTerminal = (id: string) => {
-    setOpenTerminals(prev => {
+    setOpenTerminals((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -843,7 +856,7 @@ function WorkflowsShowcase() {
       return newSet;
     });
   };
-  
+
   const terminalConfigs = [
     {
       id: 'agent',
@@ -894,7 +907,7 @@ function WorkflowsShowcase() {
       description: 'Automated testing, security scanning, and deployment pipelines',
     },
   ];
-  
+
   return (
     <div className="w-full">
       {/* Terminal Grid - 3 columns for 6 terminals */}
@@ -906,7 +919,7 @@ function WorkflowsShowcase() {
           transition={{ duration: 0.3, delay: 0 }}
           className="relative"
         >
-          <motion.div 
+          <motion.div
             className="absolute -inset-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
             animate={{
               scale: [1, 1.05, 0.95, 1],
@@ -915,7 +928,7 @@ function WorkflowsShowcase() {
             transition={{
               duration: 8,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
           <InteractiveTerminal
@@ -942,7 +955,7 @@ function WorkflowsShowcase() {
           transition={{ duration: 0.3, delay: 0.1 }}
           className="relative"
         >
-          <motion.div 
+          <motion.div
             className="absolute -inset-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
             animate={{
               scale: [1, 0.95, 1.05, 1],
@@ -951,7 +964,7 @@ function WorkflowsShowcase() {
             transition={{
               duration: 9,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
           <InteractiveTerminal
@@ -978,7 +991,7 @@ function WorkflowsShowcase() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="relative"
         >
-          <motion.div 
+          <motion.div
             className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
             animate={{
               scale: [1, 1.03, 0.97, 1],
@@ -987,7 +1000,7 @@ function WorkflowsShowcase() {
             transition={{
               duration: 10,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
           <InteractiveTerminal
@@ -1014,7 +1027,7 @@ function WorkflowsShowcase() {
           transition={{ duration: 0.3, delay: 0.3 }}
           className="relative"
         >
-          <motion.div 
+          <motion.div
             className="absolute -inset-2 bg-gradient-to-r from-amber-600/20 to-orange-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
             animate={{
               scale: [1, 0.98, 1.02, 1],
@@ -1023,7 +1036,7 @@ function WorkflowsShowcase() {
             transition={{
               duration: 11,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
           <InteractiveTerminal
@@ -1050,7 +1063,7 @@ function WorkflowsShowcase() {
           transition={{ duration: 0.3, delay: 0.4 }}
           className="relative"
         >
-          <motion.div 
+          <motion.div
             className="absolute -inset-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
             animate={{
               scale: [1, 1.01, 0.99, 1],
@@ -1059,7 +1072,7 @@ function WorkflowsShowcase() {
             transition={{
               duration: 12,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
           <InteractiveTerminal
@@ -1086,7 +1099,7 @@ function WorkflowsShowcase() {
           transition={{ duration: 0.3, delay: 0.5 }}
           className="relative"
         >
-          <motion.div 
+          <motion.div
             className="absolute -inset-2 bg-gradient-to-r from-rose-600/20 to-pink-600/20 rounded-3xl blur-2xl opacity-40 pointer-events-none"
             animate={{
               scale: [1, 0.97, 1.03, 1],
@@ -1095,7 +1108,7 @@ function WorkflowsShowcase() {
             transition={{
               duration: 13,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
           <InteractiveTerminal
@@ -1167,7 +1180,7 @@ function Navigation({
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
-            {sections.map((section) => (
+            {sections.map((section) =>
               section.href ? (
                 <Link
                   key={section.label}
@@ -1193,9 +1206,8 @@ function Navigation({
                   {section.icon}
                   <span>{section.label}</span>
                 </motion.button>
-              )
-            ))}
-
+              ),
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -1268,7 +1280,7 @@ function Navigation({
               className="lg:hidden border-t border-gray-800"
             >
               <div className="py-4 space-y-2">
-                {sections.map((section) => (
+                {sections.map((section) =>
                   section.href ? (
                     <Link
                       key={`m-${section.label}`}
@@ -1298,8 +1310,8 @@ function Navigation({
                       {section.icon}
                       <span>{section.label}</span>
                     </motion.button>
-                  )
-                ))}
+                  ),
+                )}
               </div>
             </motion.div>
           )}
@@ -1375,7 +1387,7 @@ function ProjectRoadmap({ project }: { project: string }) {
         completion: 10,
       },
     ],
-    harvest: [
+    chameleon: [
       {
         phase: 'MVP',
         status: 'completed',
@@ -1717,7 +1729,7 @@ export function InteractivePortfolio() {
   const terminalCommands = {
     help: "📚 Available commands:\n  projects - List all projects\n  skills - Show tech stack\n  about - Who we are\n  contact - Get in touch\n  github - Visit GitHub\n  linkedin - Visit LinkedIn\n  blog - Latest articles\n  metrics - View live stats\n  roadmap - See what's next\n  whoami - About the developer\n  neofetch - System info\n  clear - Clear terminal",
     projects:
-      '🚀 Active Projects:\n  • AIBook (OSS Command Center) - AI+TDD workflow\n  • QuizMentor - Gamified learning platform (92% retention)\n  • DevMentor - AI pair programming assistant (95% accuracy)\n  • Harvest.ai - Content intelligence system (99.2% accuracy)\n  • Voice - Voice AI Project',
+      '🚀 Active Projects:\n  • AIBook (OSS Command Center) - AI+TDD workflow\n  • QuizMentor - Gamified learning platform (92% retention)\n  • DevMentor - AI pair programming assistant (95% accuracy)\n  • Chameleon - Smart MCQ generator (heuristics + dedupe)\n  • Voice - Voice AI Project',
     skills:
       '💻 Tech Stack (Specialization: Mobile Engineering)\n  Mobile:\n    - React Native\n    - Expo\n    - iOS (Swift, Obj-C)\n    - Android (Kotlin, Java)\n    - Native Modules\n    - WebRTC\n    - Bluetooth LE\n    - Push Notifications\n    - Fastlane / TestFlight / Play Console\n    - Crashlytics\n    - Performance (Hermes)\n  Languages: TypeScript, Python, Go\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB\n  End-to-end: I work across mobile, web, backend, AI, and DevOps — I love the entire picture; every part matters',
     about:
@@ -1730,7 +1742,7 @@ export function InteractivePortfolio() {
     metrics:
       '📊 Live Stats:\n  Users: 10,000+\n  API Calls: 1M+\n  Uptime: 99.9%\n  Response: <50ms',
     roadmap:
-      '🗺️ Coming Soon:\n  • QuizMentor: Multiplayer battles\n  • DevMentor: Cloud sync\n  • Harvest.ai: Enterprise features\n  • Voice: Realtime conversational features',
+      '🗺️ Coming Soon:\n  • QuizMentor: Multiplayer battles\n  • DevMentor: Cloud sync\n  • Chameleon: Enterprise features\n  • Voice: Realtime conversational features',
     whoami:
       '👨‍💻 Senior Full-Stack Developer\n  Specializing in AI/ML, distributed systems\n  Building at the intersection of AI and DX',
     neofetch:
@@ -1755,7 +1767,21 @@ export function InteractivePortfolio() {
   }, []);
 
   // Project data with real differentiation
-  const projects = useMemo(
+  type ProjectInfo = {
+    id: string;
+    title: string;
+    tagline: string;
+    description: string;
+    differentiation: string[];
+    status: 'Alpha' | 'Beta' | 'Production';
+    metrics: Record<string, string | undefined>;
+    tech: string[];
+    github?: string;
+    icon: React.ReactElement;
+    color: string;
+    live?: string;
+  };
+  const projects = useMemo<ProjectInfo[]>(
     () => [
       {
         id: 'quizmentor',
@@ -1769,55 +1795,47 @@ export function InteractivePortfolio() {
           'Adaptive difficulty adjustment',
           'Offline mode with sync capabilities',
           'Performance optimized batch processing',
-          'AI-powered Harvest Scraper generating 50K+ questions/day',
+          'AI-powered Chameleon generating 50K+ questions/day',
         ],
         status: 'Alpha',
         metrics: {},
-        tech: [
-          'React Native',
-          'Expo',
-          'TypeScript',
-          'Next.js',
-          'Supabase',
-          'PostgreSQL',
-        ],
+        tech: ['React Native', 'Expo', 'TypeScript', 'Next.js', 'Supabase', 'PostgreSQL'],
         github: 'https://github.com/MarcoPWx/QuizMentor.ai',
         icon: <Gamepad2 className="w-6 h-6" />,
         color: 'from-purple-600 to-pink-600',
       },
       {
-        id: 'harvest-scraper',
-        title: 'Harvest Scraper',
-        tagline: 'Automated Educational Content Generation',
+        id: 'chameleon',
+        title: 'Chameleon',
+        tagline: 'Smart MCQ Generator',
         description:
-          'Enterprise-grade content harvesting system that automatically generates high-quality quiz questions from 120+ technical sources. Features AI-powered generation, legal compliance, and ethical data collection for continuous learning.',
+          'Reads trusted technical sources and turns them into exam‑grade multiple‑choice questions with believable distractors and strong duplicate guards. Exports to CSV for review and integrates with QuizMentor.',
         differentiation: [
-          'Processes 120+ sources: docs, Stack Overflow, GitHub, tutorials',
-          'Generates 4-5 questions per piece at ~12 questions/second',
-          'AI confidence scoring (0.75+ threshold) for quality assurance',
-          'Full robots.txt compliance & rate limiting (2s delay)',
-          'GDPR/CCPA compliant with PII filtering & attribution',
-          'Scales to 50,000+ questions/day with 82% difficulty balance',
+          'Collects from docs, Stack Overflow, GitHub READMEs, and tutorials',
+          'Grounded question + short explanation per key concept',
+          'Believable distractors (misconceptions, meaning flips, related terms from context)',
+          'Duplicate checks: semantic similarity, string similarity, near‑duplicate hashing',
+          'Balanced correct answer letters (A/B/C/D)',
+          'SQLite persistence + CSV exports + Rich TUI statistics',
         ],
         status: 'Beta',
         metrics: {
-          'Sources': '120+',
-          'Speed': '12q/s',
-          'Daily Cap': '50K',
-          'Quality': '0.80',
+          Questions: '10k+',
+          Confidence: '~0.7–0.85',
+          Dedup: 'TF‑IDF + Levenshtein + SimHash',
         },
         tech: [
           'Python',
-          'OpenAI',
+          'scikit-learn (TF‑IDF)',
+          'fuzzywuzzy (Levenshtein)',
           'BeautifulSoup',
-          'Scrapy',
-          'FastAPI',
-          'PostgreSQL',
-          'Redis',
-          'Celery',
+          'Requests',
+          'Pandas',
+          'SQLite',
+          'Rich',
         ],
         github: 'https://github.com/MarcoPWx/QuizMentor.ai',
-        icon: <Database className="w-6 h-6" />,
+        icon: <Brain className="w-6 h-6" />,
         color: 'from-emerald-600 to-green-600',
       },
       {
@@ -1835,45 +1853,10 @@ export function InteractivePortfolio() {
         ],
         status: 'Alpha',
         metrics: {},
-        tech: [
-          'Next.js',
-          'React',
-          'TypeScript',
-          'LangChain',
-          'OpenAI',
-          'PostgreSQL',
-          'Redis',
-        ],
+        tech: ['Next.js', 'React', 'TypeScript', 'LangChain', 'OpenAI', 'PostgreSQL', 'Redis'],
         github: 'https://github.com/MarcoPWx/DevMentor.ai',
         icon: <Bot className="w-6 h-6" />,
         color: 'from-blue-600 to-cyan-600',
-      },
-      {
-        id: 'harvest',
-        title: 'Harvest.ai',
-        tagline: 'Content Transformation Pipeline',
-        description:
-          'AI-powered content processor that transforms raw text into polished outputs like articles, summaries, and presentations.',
-        differentiation: [
-          'Multi-format content generation',
-          'BYOK (Bring Your Own Keys) support',
-          'Streaming API with real-time feedback',
-          'Cost transparency and optimization',
-          'Privacy-first architecture',
-        ],
-        status: 'Alpha',
-        metrics: {},
-        tech: [
-          'Python',
-          'FastAPI',
-          'Next.js',
-          'TypeScript',
-          'OpenAPI',
-          'SSE',
-        ],
-        github: 'https://github.com/MarcoPWx/Harvest.ai',
-        icon: <Brain className="w-6 h-6" />,
-        color: 'from-green-600 to-teal-600',
       },
       {
         id: 'devmentor-vscode',
@@ -1920,21 +1903,23 @@ export function InteractivePortfolio() {
   // Sort projects by status only
   const sortedProjects = useMemo(() => {
     const statusOrder: Record<string, number> = { Production: 1, Beta: 2, Alpha: 3 };
-    return [...projects].sort((a, b) => (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99));
+    return [...projects].sort(
+      (a, b) => (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99),
+    );
   }, [projects]);
 
   // Approximate roadmap completion per project for on-card summary
   const roadmapProgress: Record<string, number> = {
     quizmentor: 61,
     devmentor: 63,
-    harvest: 67,
+    chameleon: 67,
     voice: 57,
     'devmentor-vscode': 25,
     'command-center': 60,
   };
 
   const projectDetails: Record<string, any> = {
-    'harvest-scraper': {
+    chameleon: {
       coreOffering:
         '🌾 Automated Educational Content Generation system that harvests and transforms technical content into 50K+ quiz questions daily with enterprise-grade legal compliance and ethical data collection.',
       howItWorks: [
@@ -2000,7 +1985,7 @@ export function InteractivePortfolio() {
           'Terms of Service scanning and compliance',
           'DMCA-ready with takedown procedures',
         ],
-        'Observability': [
+        Observability: [
           'Harvest metrics: speed, volume, quality scores',
           'Source performance tracking',
           'Error rate and retry monitoring',
@@ -2022,17 +2007,17 @@ export function InteractivePortfolio() {
         'Privacy by design',
       ],
       complianceConfig: {
-        'respect_robots': true,
-        'user_agent': 'QuizMentor-Educational-Bot/1.0',
-        'crawl_delay': 2.0,
-        'max_concurrent': 3,
-        'timeout': 30,
-        'retry_max': 3,
-        'check_terms': true,
-        'educational_only': true,
-        'preserve_attribution': true,
-        'filter_pii': true,
-        'https_only': true,
+        respect_robots: true,
+        user_agent: 'QuizMentor-Educational-Bot/1.0',
+        crawl_delay: 2.0,
+        max_concurrent: 3,
+        timeout: 30,
+        retry_max: 3,
+        check_terms: true,
+        educational_only: true,
+        preserve_attribution: true,
+        filter_pii: true,
+        https_only: true,
       },
       who: [
         'Educational platforms needing continuous content updates',
@@ -2099,7 +2084,7 @@ export function InteractivePortfolio() {
         ],
         Observability: ['Performance telemetry (dev/CI)'],
         'Dev Workflow & QA': [
-'Storybook component library with MSW mock scenarios',
+          'Storybook component library with MSW mock scenarios',
           'E2E tests (Playwright), unit tests and coverage gates, performance budgets',
         ],
       },
@@ -2180,7 +2165,7 @@ export function InteractivePortfolio() {
         ],
       },
       practices: [
-'Storybook‑driven development',
+        'Storybook‑driven development',
         'Mock‑first APIs (MSW)',
         'Contract‑first (OpenAPI)',
         'TDD: red → green → refactor',
@@ -2204,7 +2189,7 @@ export function InteractivePortfolio() {
       howItWorks: [
         'Content Generation: Submit text → receive formatted output (blog/summary/email) within 90 seconds via deterministic mocks in dev, SSE streaming for progressive output, with cost/latency surfaced',
         'BYOK (Session-only or Encrypted-at-Rest): Use your own provider key. Default is ephemeral, memory-only (auto-wipe, zero retention via proxy). Opt-in encrypted storage with audit logs is available when required.',
-'Observability: See request metrics and p95 latencies in dev via /api/metrics counters, Storybook coverage & test dashboards',
+        'Observability: See request metrics and p95 latencies in dev via /api/metrics counters, Storybook coverage & test dashboards',
         'E2E Stability: Reliable Playwright smokes for streaming, errors, and metrics with centralized selectors and no brittle waits',
       ],
       keyEndpoints: [
@@ -2251,12 +2236,12 @@ export function InteractivePortfolio() {
           'Observability endpoints (/api/metrics) with dashboards',
         ],
         'Dev Workflow & QA': [
-'Deterministic dev mocks (Storybook/MSW)',
+          'Deterministic dev mocks (Storybook/MSW)',
           'Playwright smoke tests for streaming, errors, metrics',
         ],
       },
       practices: [
-'Storybook‑driven development',
+        'Storybook‑driven development',
         'Mock‑first development (MSW)',
         'Contract‑first APIs (OpenAPI)',
         'E2E smoke tests in CI',
@@ -2291,10 +2276,10 @@ export function InteractivePortfolio() {
       coreOffering:
         'Agent-driven Storybook that is the main AI + TDD workflow: working patterns, mock-first API, built-in tests, and docs as the single source of truth.',
       howItWorks: [
-'Start Storybook (port 7007) → open Docs/Dev Log & System Status to rebuild context fast',
+        'Start Storybook (port 7007) → open Docs/Dev Log & System Status to rebuild context fast',
         'Use Epics/Epic Manager (improved) for reference CRUD + state patterns',
         'Develop against MSW mocks; control latency/errors via toolbar; swap to real API later',
-'Validate with unit (Vitest), a11y runner (stories), and E2E (Playwright)',
+        'Validate with unit (Vitest), a11y runner (stories), and E2E (Playwright)',
       ],
       technicalFeatures: [
         'Epic Manager CRUD with validation and improved memoized filtering',
@@ -2304,7 +2289,7 @@ export function InteractivePortfolio() {
         'Templates: CRUD, Fetch, Table, Debounced Search, Optimistic Update, Skeleton Loading',
       ],
       practices: [
-'Storybook-driven development',
+        'Storybook-driven development',
         'Mock-first (MSW)',
         'TDD: red → green → refactor',
         'Accessibility checks (axe runner)',
@@ -2317,7 +2302,7 @@ export function InteractivePortfolio() {
         'Validate AI-generated code before merge with coverage, a11y, and E2E checks',
       ],
       s2sStories: [
-'Storybook UI → MSW handlers → component renders against deterministic mock endpoints',
+        'Storybook UI → MSW handlers → component renders against deterministic mock endpoints',
         'Storybook a11y test runner → stories → axe-core validation results surfaced in CI',
         'Playwright E2E → Storybook dev server → assert user flows under latency/error scenarios',
         'Docs viewers → staticDirs serve docs/* → DevLog/System Status rendered live',
@@ -2436,8 +2421,8 @@ export function InteractivePortfolio() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7 }}
                 >
-                  Developer tools that prioritize developer experience. From gamified learning to intelligent content
-                  transformation.
+                  Developer tools that prioritize developer experience. From gamified learning to
+                  intelligent content transformation.
                 </motion.p>
 
                 <motion.div
@@ -2484,7 +2469,9 @@ export function InteractivePortfolio() {
                   className="max-w-7xl mx-auto mt-16"
                 >
                   <div className="w-full">
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 text-left">Development Workflow</h3>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 text-left">
+                      Development Workflow
+                    </h3>
                     <WorkflowsShowcase />
                   </div>
                 </motion.div>
@@ -2513,27 +2500,27 @@ export function InteractivePortfolio() {
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-full border border-purple-600/30 mb-6"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: "spring", duration: 0.6 }}
+                  transition={{ type: 'spring', duration: 0.6 }}
                 >
                   <Sparkles className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm text-purple-400">6 Active Projects</span>
+                  <span className="text-sm text-purple-400">5 Active Projects</span>
                 </motion.div>
-                
+
                 <h2 className="text-5xl font-bold mb-4">
                   <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent animate-gradient bg-300%">
                     Projects
                   </span>
                 </h2>
-                
+
                 {focusedProject && (
-                  <motion.div 
+                  <motion.div
                     className="mt-6 flex justify-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => setFocusedProject(null)}
                       className="group"
                     >
@@ -2562,9 +2549,7 @@ export function InteractivePortfolio() {
                     transition={{ delay: idx * 0.1, duration: 0.5, ease: 'easeOut' }}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
-                        <motion.div
-                          className="group w-full h-full"
-                        >
+                    <motion.div className="group w-full h-full">
                       <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700 overflow-hidden w-full h-full shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300">
                         {/* Animated gradient background */}
                         <motion.div
@@ -2575,10 +2560,10 @@ export function InteractivePortfolio() {
                           transition={{
                             duration: 10,
                             repeat: Number.POSITIVE_INFINITY,
-                            ease: 'linear'
+                            ease: 'linear',
                           }}
                         />
-                        
+
                         {/* Glow effect on hover */}
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
 
@@ -2587,7 +2572,10 @@ export function InteractivePortfolio() {
                           <div className="absolute top-3 right-3 z-20">
                             <motion.button
                               className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all group/close"
-                              onClick={(e) => { e.stopPropagation(); setFocusedProject(null); }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setFocusedProject(null);
+                              }}
                               initial={{ scale: 1 }}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
@@ -2604,7 +2592,10 @@ export function InteractivePortfolio() {
                           <div className="absolute bottom-3 inset-x-0 z-20 flex justify-center">
                             <motion.button
                               className="p-2 bg-green-500/20 rounded-lg"
-                              onClick={(e) => { e.stopPropagation(); setFocusedProject(project.id); }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setFocusedProject(project.id);
+                              }}
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ type: 'spring', stiffness: 200 }}
@@ -2613,7 +2604,7 @@ export function InteractivePortfolio() {
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
-                                <ArrowDown className="w-5 h-5 text-green-400" />
+                              <ArrowDown className="w-5 h-5 text-green-400" />
                             </motion.button>
                           </div>
                         )}
@@ -2627,7 +2618,10 @@ export function InteractivePortfolio() {
                                 className={`${focusedProject === project.id ? 'p-3' : 'p-3'} rounded-xl bg-gradient-to-br ${project.color} shadow-lg transition-all duration-300`}
                               >
                                 {React.cloneElement(project.icon, {
-                                  className: focusedProject === project.id ? 'w-7 h-7 text-white' : 'w-6 h-6 text-white',
+                                  className:
+                                    focusedProject === project.id
+                                      ? 'w-7 h-7 text-white'
+                                      : 'w-6 h-6 text-white',
                                 })}
                               </motion.div>
                               <div>
@@ -2662,7 +2656,7 @@ export function InteractivePortfolio() {
 
                           {/* Show description for non-focused items in grid */}
                           {!focusedProject && (
-                            <motion.p 
+                            <motion.p
                               className="text-gray-400 text-sm mb-4 line-clamp-2"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
@@ -2671,10 +2665,10 @@ export function InteractivePortfolio() {
                               {project.description}
                             </motion.p>
                           )}
-                          
+
                           {/* Quick stats for non-focused */}
                           {!focusedProject && (
-                            <motion.div 
+                            <motion.div
                               className="flex items-center gap-4 mb-4"
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -2698,7 +2692,7 @@ export function InteractivePortfolio() {
                               )}
                             </motion.div>
                           )}
-                          
+
                           {/* Show mini tech stack for non-focused */}
                           {!focusedProject && (
                             <div className="flex flex-wrap gap-1 mb-4">
@@ -2720,10 +2714,10 @@ export function InteractivePortfolio() {
                               )}
                             </div>
                           )}
-                          
+
                           {/* Action buttons for non-focused */}
                           {!focusedProject && (
-                            <motion.div 
+                            <motion.div
                               className="flex items-center justify-between"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
@@ -3233,7 +3227,7 @@ export function InteractivePortfolio() {
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-teal-500/20 rounded-full animate-pulse blur-xl" />
                       </div>
-                      
+
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
@@ -3243,11 +3237,12 @@ export function InteractivePortfolio() {
                               </span>
                             </h1>
                             <p className="text-sm text-gray-400 mt-1">
-                              Pragmatic Problem Solver | Fullstack - Mobile Engineer & Web-stacks | Exploring "AI as a companion mindset"
+                              Pragmatic Problem Solver | Fullstack - Mobile Engineer & Web-stacks |
+                              Exploring "AI as a companion mindset"
                             </p>
                             <p className="text-xs text-gray-500 mt-1">📍 Denmark</p>
                           </div>
-                          
+
                           <div className="flex gap-2">
                             <motion.a
                               href="https://linkedin.com/in/mapw"
@@ -3297,40 +3292,43 @@ export function InteractivePortfolio() {
                           switching.
                         </p>
                         <p>Passionate about big-picture design.</p>
-                        <p>I work end-to-end across mobile, web, backend, AI, and DevOps — I love the entire picture and believe every part matters.</p>
-                        
+                        <p>
+                          I work end-to-end across mobile, web, backend, AI, and DevOps — I love the
+                          entire picture and believe every part matters.
+                        </p>
+
                         <div className="bg-gray-900/40 border border-gray-800 rounded-lg p-4">
                           <h3 className="text-xs text-gray-300 font-semibold mb-2">
                             Philosophy for Building Exceptional Software
                           </h3>
                           <ul className="list-disc list-inside space-y-1">
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">Deliver Frequently:</span> Launch features in smaller increments to stay agile
-                              and adapt quickly.
+                              <span className="font-medium">Deliver Frequently:</span> Launch
+                              features in smaller increments to stay agile and adapt quickly.
                             </li>
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">User-Centered:</span> Focus on delivering tangible value for end users at every
-                              release.
+                              <span className="font-medium">User-Centered:</span> Focus on
+                              delivering tangible value for end users at every release.
                             </li>
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">Preemptive Error Detection:</span> Identify and address potential issues before
-                              they become critical.
+                              <span className="font-medium">Preemptive Error Detection:</span>{' '}
+                              Identify and address potential issues before they become critical.
                             </li>
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">Maintain Code Integrity:</span> Fix small issues early to prevent big problems
-                              later.
+                              <span className="font-medium">Maintain Code Integrity:</span> Fix
+                              small issues early to prevent big problems later.
                             </li>
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">Efficient Testing:</span> Implement automated, fast, and reliable tests that
-                              catch errors early.
+                              <span className="font-medium">Efficient Testing:</span> Implement
+                              automated, fast, and reliable tests that catch errors early.
                             </li>
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">Keep It Simple:</span> Strive for straightforward, maintainable solutions that
-                              stand the test of time.
+                              <span className="font-medium">Keep It Simple:</span> Strive for
+                              straightforward, maintainable solutions that stand the test of time.
                             </li>
                             <li className="text-xs text-gray-400">
-                              <span className="font-medium">Continuous Learning:</span> Believe in ongoing reading, experimentation, and
-                              exploring new ideas for growth.
+                              <span className="font-medium">Continuous Learning:</span> Believe in
+                              ongoing reading, experimentation, and exploring new ideas for growth.
                             </li>
                           </ul>
                           <p className="italic text-xs text-gray-400 mt-2">
@@ -3339,8 +3337,8 @@ export function InteractivePortfolio() {
                           </p>
                         </div>
                         <p>
-                          I love collaborating in agile teams, enabling others through mentorship, and
-                          continuously refining processes for high-quality results.
+                          I love collaborating in agile teams, enabling others through mentorship,
+                          and continuously refining processes for high-quality results.
                         </p>
                       </div>
                     </div>
@@ -3360,15 +3358,42 @@ export function InteractivePortfolio() {
                             title: 'Senior Fullstack Mobile Engineer',
                             company: 'ExSeed Health',
                             period: 'Apr 2025 – Aug 2025',
-                            key_achievement: 'Matured team architecture & established dev standards',
-                            tech: ['Flutter', 'Swift', 'Kotlin', 'C++', 'Dart', 'Firebase', 'CI/CD', 'Jenkins', 'Fastlane', 'Git'],
+                            key_achievement:
+                              'Matured team architecture & established dev standards',
+                            tech: [
+                              'Flutter',
+                              'Swift',
+                              'Kotlin',
+                              'C++',
+                              'Dart',
+                              'Firebase',
+                              'CI/CD',
+                              'Jenkins',
+                              'Fastlane',
+                              'Git',
+                            ],
                           },
                           {
                             title: 'Platform Solution Architect',
                             company: 'Queue‑it',
                             period: 'Oct 2024 – Apr 2025',
                             key_achievement: 'Built scalable CDN integrations & connectors',
-                            tech: ['AWS', 'Redis', 'Java', 'iOS', 'Android', 'Lambda', 'S3', 'EC2', 'Route53', 'DynamoDB', 'JavaScript', 'Node.js', 'Docker', 'Kubernetes'],
+                            tech: [
+                              'AWS',
+                              'Redis',
+                              'Java',
+                              'iOS',
+                              'Android',
+                              'Lambda',
+                              'S3',
+                              'EC2',
+                              'Route53',
+                              'DynamoDB',
+                              'JavaScript',
+                              'Node.js',
+                              'Docker',
+                              'Kubernetes',
+                            ],
                           },
                         ].map((job, i) => (
                           <div key={i} className="border-l-2 border-blue-400/30 pl-4">
@@ -3378,7 +3403,10 @@ export function InteractivePortfolio() {
                             <p className="text-xs text-gray-400 mt-2">{job.key_achievement}</p>
                             <div className="flex flex-wrap gap-1 mt-2">
                               {job.tech.map((t, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-[10px] text-gray-300">
+                                <span
+                                  key={idx}
+                                  className="px-1.5 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-[10px] text-gray-300"
+                                >
                                   {t}
                                 </span>
                               ))}
@@ -3401,14 +3429,43 @@ export function InteractivePortfolio() {
                             company: 'Cinemataztic',
                             period: 'Apr 2024 – Sep 2024',
                             key_achievement: 'Delivered trade-desk apps with robust testing',
-                            tech: ['React', 'TypeScript', 'Express', 'MongoDB', 'MSW', 'Jest', 'Playwright', 'Helm', 'FluxCD', 'Jenkins', 'Linux', 'SSH', 'Ansible', 'Istio'],
+                            tech: [
+                              'React',
+                              'TypeScript',
+                              'Express',
+                              'MongoDB',
+                              'MSW',
+                              'Jest',
+                              'Playwright',
+                              'Helm',
+                              'FluxCD',
+                              'Jenkins',
+                              'Linux',
+                              'SSH',
+                              'Ansible',
+                              'Istio',
+                            ],
                           },
                           {
                             title: 'Team Lead / Head of Tech',
                             company: 'PatientSky',
                             period: 'Apr 2023 – May 2024',
                             key_achievement: 'Raised app rating from 3★ to 5★, scaled team to 6',
-                            tech: ['iOS', 'Android', 'React Native', 'WebRTC', 'WCAG', 'Swift', 'Kotlin', 'Objective-C', 'Java', 'Firebase', 'GraphQL', 'REST', 'Agile'],
+                            tech: [
+                              'iOS',
+                              'Android',
+                              'React Native',
+                              'WebRTC',
+                              'WCAG',
+                              'Swift',
+                              'Kotlin',
+                              'Objective-C',
+                              'Java',
+                              'Firebase',
+                              'GraphQL',
+                              'REST',
+                              'Agile',
+                            ],
                           },
                         ].map((job, i) => (
                           <div key={i} className="border-l-2 border-purple-400/30 pl-4">
@@ -3418,7 +3475,10 @@ export function InteractivePortfolio() {
                             <p className="text-xs text-gray-400 mt-2">{job.key_achievement}</p>
                             <div className="flex flex-wrap gap-1 mt-2">
                               {job.tech.map((t, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-[10px] text-gray-300">
+                                <span
+                                  key={idx}
+                                  className="px-1.5 py-0.5 bg-gray-800/60 border border-gray-700 rounded text-[10px] text-gray-300"
+                                >
                                   {t}
                                 </span>
                               ))}
@@ -3491,10 +3551,10 @@ export function InteractivePortfolio() {
                             tech: ['TypeScript', 'LangChain', 'Qdrant'],
                           },
                           {
-                            name: 'Harvest.ai',
-                            description: 'Creating content transformation pipeline',
-                            status: 'Beta - BYOK system working',
-                            tech: ['Python', 'FastAPI', 'SSE'],
+                            name: 'Chameleon',
+                            description: 'Smart MCQ generator (heuristics + dedupe)',
+                            status: 'Beta - heuristics + dedupe',
+                            tech: ['Python', 'scikit-learn', 'SQLite'],
                           },
                         ].map((project, i) => (
                           <div key={i} className="border-l-2 border-amber-400/30 pl-4">
@@ -3503,7 +3563,10 @@ export function InteractivePortfolio() {
                             <p className="text-xs text-amber-400 mt-1">{project.status}</p>
                             <div className="flex flex-wrap gap-1 mt-2">
                               {project.tech.map((t, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-400">
+                                <span
+                                  key={idx}
+                                  className="px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-400"
+                                >
                                   {t}
                                 </span>
                               ))}
@@ -3533,7 +3596,9 @@ export function InteractivePortfolio() {
                       <div className="p-4 rounded-lg border border-green-600/30 bg-green-500/10">
                         <div className="flex items-center gap-2 mb-2">
                           <Smartphone className="w-4 h-4 text-green-400" />
-                          <span className="text-sm font-semibold text-white">Specialization: Mobile Engineering</span>
+                          <span className="text-sm font-semibold text-white">
+                            Specialization: Mobile Engineering
+                          </span>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {[
@@ -3547,27 +3612,25 @@ export function InteractivePortfolio() {
                             'Push Notifications',
                             'Fastlane / TestFlight / Play Console',
                             'Crashlytics',
-                            'Performance (Hermes)'
+                            'Performance (Hermes)',
                           ].map((s, i) => (
-                            <span key={`mobile-${i}`} className="px-2 py-0.5 bg-gray-900/50 text-xs text-gray-200 rounded border border-green-700/40">
+                            <span
+                              key={`mobile-${i}`}
+                              className="px-2 py-0.5 bg-gray-900/50 text-xs text-gray-200 rounded border border-green-700/40"
+                            >
                               {s}
                             </span>
                           ))}
                         </div>
                         <p className="text-xs text-gray-400 mt-2">
-                          I work end-to-end across mobile, web, backend, AI, and DevOps. I love the entire picture—every part matters.
+                          I work end-to-end across mobile, web, backend, AI, and DevOps. I love the
+                          entire picture—every part matters.
                         </p>
                       </div>
                       {[
                         {
                           category: 'Languages',
-                          skills: [
-                            'TypeScript',
-                            'JavaScript',
-                            'Python',
-                            'Java',
-                            'Go',
-                          ],
+                          skills: ['TypeScript', 'JavaScript', 'Python', 'Java', 'Go'],
                         },
                         {
                           category: 'Frontend',
@@ -3596,12 +3659,7 @@ export function InteractivePortfolio() {
                         },
                         {
                           category: 'AI/ML',
-                          skills: [
-                            'PyTorch',
-                            'OpenAI APIs',
-                            'LangChain',
-                            'Anthropic',
-                          ],
+                          skills: ['PyTorch', 'OpenAI APIs', 'LangChain', 'Anthropic'],
                         },
                         {
                           category: 'Cloud & DevOps',
@@ -3655,7 +3713,6 @@ export function InteractivePortfolio() {
                       ))}
                     </div>
                   </Card3D>
-
 
                   {/* Contact Info */}
                   <Card3D className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
@@ -3722,12 +3779,12 @@ export function InteractivePortfolio() {
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600/20 to-orange-600/20 rounded-full border border-amber-600/30 mb-6"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: "spring", duration: 0.6 }}
+                  transition={{ type: 'spring', duration: 0.6 }}
                 >
                   <Lightbulb className="w-4 h-4 text-amber-400" />
                   <span className="text-sm text-amber-400">Battle-tested wisdom</span>
                 </motion.div>
-                
+
                 <h2 className="text-5xl font-bold mb-4">
                   <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
                     10 Engineering Principles
@@ -3740,124 +3797,131 @@ export function InteractivePortfolio() {
                 {[
                   {
                     number: 1,
-                    title: "Ship Small, Ship Often",
+                    title: 'Ship Small, Ship Often',
                     icon: <Rocket className="w-6 h-6" />,
-                    description: "Break features into smallest deployable units",
+                    description: 'Break features into smallest deployable units',
                     details: [
-                      "Deploy daily or multiple times per day",
-                      "Feature flags for gradual rollouts",
-                      "Quick feedback loops with users"
+                      'Deploy daily or multiple times per day',
+                      'Feature flags for gradual rollouts',
+                      'Quick feedback loops with users',
                     ],
-                    example: "Instead of a complete payment system, ship: 1) form UI, 2) validation, 3) processing"
+                    example:
+                      'Instead of a complete payment system, ship: 1) form UI, 2) validation, 3) processing',
                   },
                   {
                     number: 2,
-                    title: "User Value First",
+                    title: 'User Value First',
                     icon: <Heart className="w-6 h-6" />,
-                    description: "Every line of code should benefit the end user",
+                    description: 'Every line of code should benefit the end user',
                     details: [
-                      "Start with user stories, not technical requirements",
-                      "Measure success by user outcomes",
-                      "Remove features that don't add value"
+                      'Start with user stories, not technical requirements',
+                      'Measure success by user outcomes',
+                      "Remove features that don't add value",
                     ],
-                    example: "Chose boring tech stack that loads in 500ms over exciting framework that takes 3s"
+                    example:
+                      'Chose boring tech stack that loads in 500ms over exciting framework that takes 3s',
                   },
                   {
                     number: 3,
-                    title: "Test-Driven Development",
+                    title: 'Test-Driven Development',
                     icon: <CheckCircle className="w-6 h-6" />,
-                    description: "Write tests first, then make them pass",
+                    description: 'Write tests first, then make them pass',
                     details: [
-                      "Red → Green → Refactor cycle",
-                      "Tests document expected behavior",
-                      "Catch bugs before production"
+                      'Red → Green → Refactor cycle',
+                      'Tests document expected behavior',
+                      'Catch bugs before production',
                     ],
-                    example: "Write failing test for 'user can login', implement login, then optimize"
+                    example:
+                      "Write failing test for 'user can login', implement login, then optimize",
                   },
                   {
                     number: 4,
-                    title: "Simple Over Clever",
+                    title: 'Simple Over Clever',
                     icon: <Lightbulb className="w-6 h-6" />,
-                    description: "Code is read 10x more than written",
+                    description: 'Code is read 10x more than written',
                     details: [
-                      "Boring code is good code",
-                      "Explicit over implicit",
-                      "Junior dev should understand it"
+                      'Boring code is good code',
+                      'Explicit over implicit',
+                      'Junior dev should understand it',
                     ],
-                    example: "Use simple if/else instead of nested ternaries"
+                    example: 'Use simple if/else instead of nested ternaries',
                   },
                   {
                     number: 5,
-                    title: "Fix Small Issues Immediately",
+                    title: 'Fix Small Issues Immediately',
                     icon: <Shield className="w-6 h-6" />,
-                    description: "A stitch in time saves nine",
+                    description: 'A stitch in time saves nine',
                     details: [
-                      "Fix linting errors right away",
-                      "Update dependencies regularly",
-                      "Don't let tech debt accumulate"
+                      'Fix linting errors right away',
+                      'Update dependencies regularly',
+                      "Don't let tech debt accumulate",
                     ],
-                    example: "Spend 5 minutes fixing that console warning now, not 2 hours debugging later"
+                    example:
+                      'Spend 5 minutes fixing that console warning now, not 2 hours debugging later',
                   },
                   {
                     number: 6,
-                    title: "Automate Everything Repetitive",
+                    title: 'Automate Everything Repetitive',
                     icon: <Zap className="w-6 h-6" />,
-                    description: "If you do it twice, automate it",
+                    description: 'If you do it twice, automate it',
                     details: [
-                      "CI/CD pipelines for deployments",
-                      "Automated testing on every commit",
-                      "Code formatting and linting"
+                      'CI/CD pipelines for deployments',
+                      'Automated testing on every commit',
+                      'Code formatting and linting',
                     ],
-                    example: "Created GitHub Action to auto-generate API docs from OpenAPI spec"
+                    example: 'Created GitHub Action to auto-generate API docs from OpenAPI spec',
                   },
                   {
                     number: 7,
-                    title: "Document Why, Not What",
+                    title: 'Document Why, Not What',
                     icon: <Brain className="w-6 h-6" />,
-                    description: "Code shows what, comments explain why",
+                    description: 'Code shows what, comments explain why',
                     details: [
-                      "Document business decisions",
-                      "Explain non-obvious choices",
-                      "Keep README up to date"
+                      'Document business decisions',
+                      'Explain non-obvious choices',
+                      'Keep README up to date',
                     ],
-                    example: "// Using setTimeout because we need to wait for API response before next poll"
+                    example:
+                      '// Using setTimeout because we need to wait for API response before next poll',
                   },
                   {
                     number: 8,
-                    title: "Enable Your Team",
+                    title: 'Enable Your Team',
                     icon: <Users className="w-6 h-6" />,
-                    description: "Your code should make others productive",
+                    description: 'Your code should make others productive',
                     details: [
-                      "Write clear PR descriptions",
-                      "Create reusable components",
-                      "Mentor junior developers"
+                      'Write clear PR descriptions',
+                      'Create reusable components',
+                      'Mentor junior developers',
                     ],
-                    example: "Created Storybook components so team can build UIs without asking questions"
+                    example:
+                      'Created Storybook components so team can build UIs without asking questions',
                   },
                   {
                     number: 9,
-                    title: "Measure and Monitor",
+                    title: 'Measure and Monitor',
                     icon: <Target className="w-6 h-6" />,
                     description: "You can't improve what you don't measure",
                     details: [
-                      "Performance metrics in production",
-                      "Error tracking and alerting",
-                      "User behavior analytics"
+                      'Performance metrics in production',
+                      'Error tracking and alerting',
+                      'User behavior analytics',
                     ],
-                    example: "Set up dashboard showing p95 latency, error rate, and active users"
+                    example: 'Set up dashboard showing p95 latency, error rate, and active users',
                   },
                   {
                     number: 10,
-                    title: "Always Be Learning",
+                    title: 'Always Be Learning',
                     icon: <Sparkles className="w-6 h-6" />,
-                    description: "Technology evolves, so should you",
+                    description: 'Technology evolves, so should you',
                     details: [
-                      "Read documentation thoroughly",
-                      "Try new tools on side projects",
-                      "Teach what you learn"
+                      'Read documentation thoroughly',
+                      'Try new tools on side projects',
+                      'Teach what you learn',
                     ],
-                    example: "Spent weekend learning Rust, now using it for performance-critical microservice"
-                  }
+                    example:
+                      'Spent weekend learning Rust, now using it for performance-critical microservice',
+                  },
                 ].map((principle, index) => (
                   <motion.div
                     key={principle.number}
@@ -3870,7 +3934,7 @@ export function InteractivePortfolio() {
                     <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 hover:border-amber-500/50 transition-all h-full hover:shadow-lg hover:shadow-amber-500/10">
                       {/* Header */}
                       <div className="flex items-start gap-4 mb-4">
-                        <motion.div 
+                        <motion.div
                           className="flex-shrink-0"
                           whileHover={{ rotate: 360 }}
                           transition={{ duration: 0.6 }}
@@ -3891,8 +3955,8 @@ export function InteractivePortfolio() {
                       {/* Details */}
                       <div className="space-y-2 mb-4">
                         {principle.details.map((detail, i) => (
-                          <motion.div 
-                            key={i} 
+                          <motion.div
+                            key={i}
                             className="flex items-start gap-2"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -3909,9 +3973,7 @@ export function InteractivePortfolio() {
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                           Real Example
                         </p>
-                        <p className="text-sm text-gray-400 italic">
-                          {principle.example}
-                        </p>
+                        <p className="text-sm text-gray-400 italic">{principle.example}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -3919,20 +3981,20 @@ export function InteractivePortfolio() {
               </div>
 
               {/* Footer */}
-              <motion.div 
+              <motion.div
                 className="mt-12 p-6 bg-gradient-to-r from-amber-600/10 to-orange-600/10 rounded-lg border border-amber-600/20 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2 }}
               >
                 <p className="text-gray-300">
-                  These principles guide every line of code I write and every architectural decision I make.
+                  These principles guide every line of code I write and every architectural decision
+                  I make.
                 </p>
               </motion.div>
             </div>
           </motion.section>
         )}
-
 
         {/* Contact Section */}
         {activeSection === 'contact' && (

@@ -381,7 +381,7 @@ export const auth = createAuthConfig({
   products: [
     { id: 'devmentor', name: 'DevMentor', url: 'https://devmentor.naturequest.dev' },
     { id: 'quizmentor', name: 'QuizMentor', url: 'https://quiz.naturequest.dev' },
-    { id: 'harvest', name: 'Harvest.ai', url: 'https://harvest.naturequest.dev' },
+    { id: 'harvest', name: 'Chameleon', url: 'https://harvest.naturequest.dev' },
     { id: 'omni', name: 'Omni.ai', url: 'https://omni.naturequest.dev', requiredTier: 'pro' }
   ],
   tiers: [
@@ -440,7 +440,7 @@ function Dashboard() {
       npm: 'https://npmjs.com/package/naturequest-auth',
     },
     harvest: {
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       icon: FileSearch,
       tagline: 'Content Intelligence Platform',
       status: 'Live',
@@ -817,7 +817,7 @@ class SmartRouter {
       link: '/blog/gamification-engineering',
     },
     {
-      title: 'Ethical Web Scraping at Scale: Harvest.ai Architecture',
+      title: 'Ethical Web Scraping at Scale: Chameleon Architecture',
       excerpt:
         'How we built a legally compliant content intelligence platform that respects robots.txt, rate limits, and always attributes sources...',
       category: 'System Design',
@@ -984,11 +984,17 @@ class SmartRouter {
                       <CodeEditor
                         code={currentProject.code}
                         title={
-                          currentProject.name.toLowerCase().includes('harvest')
+                          currentProject.name.toLowerCase().includes('harvest') ||
+                          currentProject.name.toLowerCase().includes('chameleon')
                             ? 'compliance.py'
                             : `${currentProject.name.toLowerCase().replace(/\s+/g, '-')}.ts`
                         }
-                        language={currentProject.name.includes('Harvest') ? 'python' : 'typescript'}
+                        language={
+                          currentProject.name.includes('Harvest') ||
+                          currentProject.name.includes('Chameleon')
+                            ? 'python'
+                            : 'typescript'
+                        }
                       />
                     )}
                     {activeTab === 'terminal' && (

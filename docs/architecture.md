@@ -27,7 +27,7 @@ Comprehensive architecture documentation across all NatureQuest projects.
 - [User Journey Architecture](/quizmentor/USER_JOURNEY_ARCHITECTURE/)
 - [AI Engine Hosting Guide](/quizmentor/AI_ENGINE_HOSTING_GUIDE/)
 
-### Harvest.ai Architecture
+### Chameleon Architecture
 - [System Architecture](/harvest/architecture/SYSTEM_ARCHITECTURE/)
 - [Data Flow](/harvest/architecture/DATA_FLOW/)
 - [Complete System Architecture](/harvest/architecture/COMPLETE_SYSTEM_ARCHITECTURE/)
@@ -79,7 +79,7 @@ Comprehensive architecture documentation across all NatureQuest projects.
 ### By Product Focus
 - **DevMentor**: Developer mentoring platform architecture
 - **QuizMentor**: Quiz and learning platform architecture
-- **Harvest.ai**: Privacy-first data harvesting architecture
+- **Chameleon**: Privacy-first data harvesting architecture
 
 ## 📚 Learning Resources
 - [DevMentor Learning Roadmap](/learning-roadmap/) - Start with architecture basics

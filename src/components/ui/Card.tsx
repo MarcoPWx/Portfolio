@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
@@ -14,7 +14,7 @@ interface CardProps {
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
-    { children, className = '', hover = true, gradient = false, blur = false, padding = 'md' },
+    { children, className = '', hover = true, gradient = false, blur = false, padding = 'md', onClick, ...rest },
     ref,
   ) => {
     const paddings = {
@@ -38,6 +38,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         <motion.div
           ref={ref}
           className={baseClasses}
+          onClick={onClick}
           whileHover={{
             scale: 1.01,
             transition: { duration: 0.2 },
@@ -63,8 +64,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       );
     }
 
-    return (
-      <div ref={ref} className={baseClasses}>
+  return (
+      <div ref={ref} className={baseClasses} onClick={onClick} {...rest}>
         {children}
       </div>
     );

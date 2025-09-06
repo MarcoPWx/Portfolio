@@ -6,13 +6,30 @@ import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Button } from './ui';
 import { ProjectTag } from './ui/SkillCard';
-import { Layers, Server, Brain, Database, Cloud, Shield, TestTube, BookOpen, Network } from 'lucide-react';
+import {
+  Layers,
+  Server,
+  Brain,
+  Database,
+  Cloud,
+  Shield,
+  TestTube,
+  BookOpen,
+  Network,
+} from 'lucide-react';
 
 // A project-referenced stack view without skill level tags.
 // Each technology lists: projects used in + concrete example usage lines.
 
 export function ProjectStack() {
-  type ProjectId = 'all' | 'quizmentor' | 'devmentor' | 'harvest' | 'voice' | 'devmentor-vscode' | 'opensource';
+  type ProjectId =
+    | 'all'
+    | 'quizmentor'
+    | 'devmentor'
+    | 'harvest'
+    | 'voice'
+    | 'devmentor-vscode'
+    | 'opensource';
   const [filter, setFilter] = useState<ProjectId>('all');
 
   const categories = useMemo(
@@ -24,11 +41,11 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Next.js + React + TypeScript',
-            usedIn: ['DevMentor', 'Harvest.ai'],
+            usedIn: ['DevMentor', 'Chameleon'],
             usedIds: ['devmentor', 'harvest'],
             examples: [
               'App Router + RSC where useful (DevMentor)',
-              'Next.js 15.5 streaming API routes (Harvest.ai)',
+              'Next.js 15.5 streaming API routes (Chameleon)',
             ],
           },
           {
@@ -66,17 +83,17 @@ export function ProjectStack() {
           },
           {
             tech: 'React Query (TanStack)',
-            usedIn: ['DevMentor', 'Harvest.ai', 'QuizMentor'],
+            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
             usedIds: ['devmentor', 'harvest', 'quizmentor'],
             examples: [
               'Client caching for /api/models and contracts (DevMentor)',
-              'SSR-safe caching and SWR patterns (Harvest.ai)',
+              'SSR-safe caching and SWR patterns (Chameleon)',
               'useQuizCategories/useQuizQuestions hooks (QuizMentor)',
             ],
           },
           {
             tech: 'Tailwind CSS / NativeWind',
-            usedIn: ['DevMentor', 'Harvest.ai', 'QuizMentor'],
+            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
             usedIds: ['devmentor', 'harvest', 'quizmentor'],
             examples: [
               'Utility-first styling; PostCSS/Autoprefixer',
@@ -103,13 +120,13 @@ export function ProjectStack() {
           },
           {
             tech: 'React Markdown + remark-gfm + Mermaid',
-            usedIn: ['DevMentor', 'Harvest.ai'],
+            usedIn: ['DevMentor', 'Chameleon'],
             usedIds: ['devmentor', 'harvest'],
             examples: ['Docs rendering and diagrams in UI/Storybook'],
           },
           {
             tech: 'Swagger UI React',
-            usedIn: ['DevMentor', 'Harvest.ai', 'QuizMentor'],
+            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
             usedIds: ['devmentor', 'harvest', 'quizmentor'],
             examples: ['Embed OpenAPI specs in stories/panels'],
           },
@@ -130,19 +147,25 @@ export function ProjectStack() {
             tech: 'Express (Node.js)',
             usedIn: ['DevMentor', 'QuizMentor', 'Voice'],
             usedIds: ['devmentor', 'quizmentor', 'voice'],
-            examples: ['Gateway routing + rate limiting (DevMentor)', 'API with helmet/cors/rate-limit (QuizMentor)', 'Voice: /health, /asr, /chat; multipart & OpenAI calls'],
+            examples: [
+              'Gateway routing + rate limiting (DevMentor)',
+              'API with helmet/cors/rate-limit (QuizMentor)',
+              'Voice: /health, /asr, /chat; multipart & OpenAI calls',
+            ],
           },
           {
             tech: 'Next.js API Routes (Node runtime)',
-            usedIn: ['Harvest.ai'],
+            usedIn: ['Chameleon'],
             usedIds: ['harvest'],
             examples: ['SSE streaming generate/chat routes'],
           },
           {
             tech: 'Swagger/OpenAPI',
-            usedIn: ['DevMentor', 'Harvest.ai', 'QuizMentor'],
+            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
             usedIds: ['devmentor', 'harvest', 'quizmentor'],
-            examples: ['Gateway aggregate (DevMentor); OpenAPI YAML embedded in Storybook (QuizMentor)'],
+            examples: [
+              'Gateway aggregate (DevMentor); OpenAPI YAML embedded in Storybook (QuizMentor)',
+            ],
           },
           {
             tech: 'Supabase JS (server-side)',
@@ -189,7 +212,7 @@ export function ProjectStack() {
           },
           {
             tech: 'SSE (Server-Sent Events)',
-            usedIn: ['Harvest.ai', 'QuizMentor'],
+            usedIn: ['Chameleon', 'QuizMentor'],
             usedIds: ['harvest', 'quizmentor'],
             examples: ['Streaming responses/tokens in UI; SSE demo flows'],
           },
@@ -208,7 +231,7 @@ export function ProjectStack() {
           },
           {
             tech: 'AI SDKs: OpenAI / Anthropic / Google',
-            usedIn: ['Harvest.ai'],
+            usedIn: ['Chameleon'],
             usedIds: ['harvest'],
             examples: ['Provider routing + fallback; embeddings; cost/latency surfacing'],
           },
@@ -233,15 +256,22 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Redis',
-            usedIn: ['DevMentor', 'Harvest.ai', 'QuizMentor'],
+            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
             usedIds: ['devmentor', 'harvest', 'quizmentor'],
-            examples: ['Caching, rate limiting, idempotency (DevMentor)', 'Metrics counters and caches (Harvest.ai)', 'API-side checks and caching (QuizMentor)'],
+            examples: [
+              'Caching, rate limiting, idempotency (DevMentor)',
+              'Metrics counters and caches (Chameleon)',
+              'API-side checks and caching (QuizMentor)',
+            ],
           },
           {
             tech: 'PostgreSQL',
             usedIn: ['DevMentor', 'QuizMentor'],
             usedIds: ['devmentor', 'quizmentor'],
-            examples: ['Project data; Memory/learning metadata (DevMentor)', 'Local dev DB via Docker Compose (QuizMentor)'],
+            examples: [
+              'Project data; Memory/learning metadata (DevMentor)',
+              'Local dev DB via Docker Compose (QuizMentor)',
+            ],
           },
           {
             tech: 'MMKV (client storage)',
@@ -270,9 +300,12 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Docker & Compose',
-            usedIn: ['Harvest.ai', 'DevMentor', 'QuizMentor'],
+            usedIn: ['Chameleon', 'DevMentor', 'QuizMentor'],
             usedIds: ['harvest', 'devmentor', 'quizmentor'],
-            examples: ['Local dev orchestration for services and workers', 'Postgres/Redis/API + Expo web service (QuizMentor)'],
+            examples: [
+              'Local dev orchestration for services and workers',
+              'Postgres/Redis/API + Expo web service (QuizMentor)',
+            ],
           },
           {
             tech: 'Kubernetes & Istio (mTLS optional)',
@@ -319,7 +352,7 @@ export function ProjectStack() {
           },
           {
             tech: 'CSP, HSTS, COOP/COEP',
-            usedIn: ['Harvest.ai'],
+            usedIn: ['Chameleon'],
             usedIds: ['harvest'],
             examples: ['connect-src to OpenAI/Anthropic; cross-origin isolation'],
           },
@@ -352,7 +385,11 @@ export function ProjectStack() {
             tech: 'Testing Library (React Native)',
             usedIn: ['QuizMentor'],
             usedIds: ['quizmentor'],
-            examples: ['User-centric component tests', 'Expo web server target; multi-project desktop/mobile', 'E2E against Storybook iframe stories'],
+            examples: [
+              'User-centric component tests',
+              'Expo web server target; multi-project desktop/mobile',
+              'E2E against Storybook iframe stories',
+            ],
           },
           {
             tech: 'Detox (native E2E)',
@@ -364,19 +401,28 @@ export function ProjectStack() {
             tech: 'MSW (+ Storybook addon)',
             usedIn: ['QuizMentor', 'OpenSource SB'],
             usedIds: ['quizmentor', 'opensource'],
-            examples: ['Latency/error profiles; toolbar-driven MSW profiles', 'Fully mocked backend for stories and API playgrounds'],
+            examples: [
+              'Latency/error profiles; toolbar-driven MSW profiles',
+              'Fully mocked backend for stories and API playgrounds',
+            ],
           },
           {
             tech: 'axe-core/playwright',
             usedIn: ['QuizMentor', 'OpenSource SB'],
             usedIds: ['quizmentor', 'opensource'],
-            examples: ['Accessibility scans within E2E suite', 'Story-level a11y checks with AxeBuilder'],
+            examples: [
+              'Accessibility scans within E2E suite',
+              'Story-level a11y checks with AxeBuilder',
+            ],
           },
           {
             tech: 'Storybook Test Runner',
             usedIn: ['QuizMentor', 'OpenSource SB'],
             usedIds: ['quizmentor', 'opensource'],
-            examples: ['.storybook test stories with @storybook/test', 'Automated story assertions with @storybook/test-runner'],
+            examples: [
+              '.storybook test stories with @storybook/test',
+              'Automated story assertions with @storybook/test-runner',
+            ],
           },
           {
             tech: 'Vitest + Testing Library + jest-dom',
@@ -407,7 +453,10 @@ export function ProjectStack() {
             tech: 'Storybook (react-vite)',
             usedIn: ['QuizMentor', 'OpenSource SB'],
             usedIds: ['quizmentor', 'opensource'],
-            examples: ['Living docs, labs, and MSW-driven demos', 'Interactive component and patterns catalog'],
+            examples: [
+              'Living docs, labs, and MSW-driven demos',
+              'Interactive component and patterns catalog',
+            ],
           },
           {
             tech: 'Chromatic (visual regression)',
@@ -440,7 +489,7 @@ export function ProjectStack() {
           { id: 'all', label: 'All' },
           { id: 'quizmentor', label: 'QuizMentor' },
           { id: 'devmentor', label: 'DevMentor' },
-          { id: 'harvest', label: 'Harvest.ai' },
+          { id: 'harvest', label: 'Chameleon' },
           { id: 'voice', label: 'Voice' },
           { id: 'devmentor-vscode', label: 'DevMentor VS Code' },
           { id: 'opensource', label: 'OpenSource SB' },
@@ -461,7 +510,9 @@ export function ProjectStack() {
       <div className="space-y-3">
         {categories.map((cat) => {
           const items =
-            filter === 'all' ? cat.items : cat.items.filter((it: any) => it.usedIds.includes(filter));
+            filter === 'all'
+              ? cat.items
+              : cat.items.filter((it: any) => it.usedIds.includes(filter));
           if (!items || items.length === 0) return null;
           return (
             <AccordionSection key={cat.id} title={cat.title} icon={cat.icon} defaultOpen={false}>

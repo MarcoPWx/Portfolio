@@ -250,7 +250,7 @@ export function EnhancedPortfolio() {
     },
     {
       id: 'harvest',
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       description: 'Data insights and analytics',
       icon: TrendingUp,
       gradient: 'from-green-500 to-emerald-500',

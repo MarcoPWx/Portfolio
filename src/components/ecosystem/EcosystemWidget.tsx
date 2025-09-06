@@ -73,7 +73,7 @@ export default function EcosystemWidget({
     },
     {
       id: 'harvest',
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       description: 'AI content transformation platform',
       icon: TrendingUp,
       color: 'green',
@@ -124,7 +124,6 @@ export default function EcosystemWidget({
     setIsOpen(false);
     saveState(true, hasInteracted);
   };
-
 
   if (isMinimized) {
     return (
@@ -270,7 +269,7 @@ export default function EcosystemWidget({
                             <h4
                               className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
                             >
-                            {product.name}
+                              {product.name}
                             </h4>
                             {product.badge && (
                               <span className="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">
@@ -294,7 +293,6 @@ export default function EcosystemWidget({
                   );
                 })}
               </div>
-
 
               {/* Footer - Account Link */}
               {userTier !== 'free' && (

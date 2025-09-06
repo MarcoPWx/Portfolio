@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { 
+import {
   ArrowLeft,
   CheckCircle,
   Lightbulb,
@@ -13,141 +13,146 @@ import {
   Heart,
   Target,
   Sparkles,
-  Brain
+  Brain,
 } from 'lucide-react';
 import Link from 'next/link';
 
 const principles = [
   {
     number: 1,
-    title: "Ship Small, Ship Often",
+    title: 'Ship Small, Ship Often',
     icon: <Rocket className="w-6 h-6" />,
-    description: "Break features into smallest deployable units",
+    description: 'Break features into smallest deployable units',
     details: [
-      "Deploy daily or multiple times per day",
-      "Feature flags for gradual rollouts",
-      "Quick feedback loops with users",
-      "Easier debugging and rollback"
+      'Deploy daily or multiple times per day',
+      'Feature flags for gradual rollouts',
+      'Quick feedback loops with users',
+      'Easier debugging and rollback',
     ],
-    example: "Instead of a complete payment system, ship: 1) payment form UI, 2) validation logic, 3) payment processing, 4) receipt generation"
+    example:
+      'Instead of a complete payment system, ship: 1) payment form UI, 2) validation logic, 3) payment processing, 4) receipt generation',
   },
   {
     number: 2,
-    title: "User Value First",
+    title: 'User Value First',
     icon: <Heart className="w-6 h-6" />,
-    description: "Every line of code should benefit the end user",
+    description: 'Every line of code should benefit the end user',
     details: [
-      "Start with user stories, not technical requirements",
-      "Measure success by user outcomes",
+      'Start with user stories, not technical requirements',
+      'Measure success by user outcomes',
       "Remove features that don't add value",
-      "Prioritize UX over technical elegance"
+      'Prioritize UX over technical elegance',
     ],
-    example: "Chose boring tech stack that loads in 500ms over exciting framework that takes 3 seconds"
+    example:
+      'Chose boring tech stack that loads in 500ms over exciting framework that takes 3 seconds',
   },
   {
     number: 3,
-    title: "Test-Driven Development",
+    title: 'Test-Driven Development',
     icon: <CheckCircle className="w-6 h-6" />,
-    description: "Write tests first, then make them pass",
+    description: 'Write tests first, then make them pass',
     details: [
-      "Red → Green → Refactor cycle",
-      "Tests document expected behavior",
-      "Catch bugs before production",
-      "Confidence in refactoring"
+      'Red → Green → Refactor cycle',
+      'Tests document expected behavior',
+      'Catch bugs before production',
+      'Confidence in refactoring',
     ],
-    example: "Write failing test for 'user can login', implement login, then optimize the code"
+    example: "Write failing test for 'user can login', implement login, then optimize the code",
   },
   {
     number: 4,
-    title: "Simple Over Clever",
+    title: 'Simple Over Clever',
     icon: <Lightbulb className="w-6 h-6" />,
-    description: "Code is read 10x more than written",
+    description: 'Code is read 10x more than written',
     details: [
-      "Boring code is good code",
-      "Explicit over implicit",
-      "Avoid premature optimization",
-      "Junior dev should understand it"
+      'Boring code is good code',
+      'Explicit over implicit',
+      'Avoid premature optimization',
+      'Junior dev should understand it',
     ],
-    example: "Use simple if/else instead of nested ternaries. Use descriptive names over short ones."
+    example:
+      'Use simple if/else instead of nested ternaries. Use descriptive names over short ones.',
   },
   {
     number: 5,
-    title: "Fix Small Issues Immediately",
+    title: 'Fix Small Issues Immediately',
     icon: <Shield className="w-6 h-6" />,
-    description: "A stitch in time saves nine",
+    description: 'A stitch in time saves nine',
     details: [
-      "Fix linting errors right away",
-      "Update dependencies regularly",
-      "Refactor as you go",
-      "Don't let tech debt accumulate"
+      'Fix linting errors right away',
+      'Update dependencies regularly',
+      'Refactor as you go',
+      "Don't let tech debt accumulate",
     ],
-    example: "Spend 5 minutes fixing that console warning now, not 2 hours debugging it later"
+    example: 'Spend 5 minutes fixing that console warning now, not 2 hours debugging it later',
   },
   {
     number: 6,
-    title: "Automate Everything Repetitive",
+    title: 'Automate Everything Repetitive',
     icon: <Zap className="w-6 h-6" />,
-    description: "If you do it twice, automate it",
+    description: 'If you do it twice, automate it',
     details: [
-      "CI/CD pipelines for deployments",
-      "Automated testing on every commit",
-      "Code formatting and linting",
-      "Dependency updates"
+      'CI/CD pipelines for deployments',
+      'Automated testing on every commit',
+      'Code formatting and linting',
+      'Dependency updates',
     ],
-    example: "Created GitHub Action to auto-generate API docs from OpenAPI spec on every merge"
+    example: 'Created GitHub Action to auto-generate API docs from OpenAPI spec on every merge',
   },
   {
     number: 7,
-    title: "Document Why, Not What",
+    title: 'Document Why, Not What',
     icon: <Brain className="w-6 h-6" />,
-    description: "Code shows what, comments explain why",
+    description: 'Code shows what, comments explain why',
     details: [
-      "Document business decisions",
-      "Explain non-obvious choices",
-      "Link to relevant discussions",
-      "Keep README up to date"
+      'Document business decisions',
+      'Explain non-obvious choices',
+      'Link to relevant discussions',
+      'Keep README up to date',
     ],
-    example: "// Using setTimeout instead of setInterval because we need to wait for API response before next poll"
+    example:
+      '// Using setTimeout instead of setInterval because we need to wait for API response before next poll',
   },
   {
     number: 8,
-    title: "Enable Your Team",
+    title: 'Enable Your Team',
     icon: <Users className="w-6 h-6" />,
-    description: "Your code should make others productive",
+    description: 'Your code should make others productive',
     details: [
-      "Write clear PR descriptions",
-      "Create reusable components",
-      "Share knowledge in team meetings",
-      "Mentor junior developers"
+      'Write clear PR descriptions',
+      'Create reusable components',
+      'Share knowledge in team meetings',
+      'Mentor junior developers',
     ],
-    example: "Created Storybook components with examples so team can build UIs without asking questions"
+    example:
+      'Created Storybook components with examples so team can build UIs without asking questions',
   },
   {
     number: 9,
-    title: "Measure and Monitor",
+    title: 'Measure and Monitor',
     icon: <Target className="w-6 h-6" />,
     description: "You can't improve what you don't measure",
     details: [
-      "Performance metrics in production",
-      "Error tracking and alerting",
-      "User behavior analytics",
-      "Cost monitoring"
+      'Performance metrics in production',
+      'Error tracking and alerting',
+      'User behavior analytics',
+      'Cost monitoring',
     ],
-    example: "Set up dashboard showing p95 latency, error rate, and active users for each service"
+    example: 'Set up dashboard showing p95 latency, error rate, and active users for each service',
   },
   {
     number: 10,
-    title: "Always Be Learning",
+    title: 'Always Be Learning',
     icon: <Sparkles className="w-6 h-6" />,
-    description: "Technology evolves, so should you",
+    description: 'Technology evolves, so should you',
     details: [
-      "Read documentation thoroughly",
-      "Try new tools on side projects",
-      "Learn from failures",
-      "Teach what you learn"
+      'Read documentation thoroughly',
+      'Try new tools on side projects',
+      'Learn from failures',
+      'Teach what you learn',
     ],
-    example: "Spent weekend learning Rust, now using it for performance-critical microservice"
-  }
+    example: 'Spent weekend learning Rust, now using it for performance-critical microservice',
+  },
 ];
 
 export default function PrinciplesPage() {
@@ -194,9 +199,7 @@ export default function PrinciplesPage() {
           <p className="text-xl text-gray-400 mb-2">
             Battle-tested principles for building exceptional software
           </p>
-          <p className="text-gray-500 italic">
-            Learned from 10+ years of shipping production code
-          </p>
+          <p className="text-gray-500 italic">Learned from 10+ years of shipping production code</p>
         </motion.div>
       </div>
 
@@ -243,9 +246,7 @@ export default function PrinciplesPage() {
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                     Real Example
                   </p>
-                  <p className="text-sm text-gray-400 italic">
-                    {principle.example}
-                  </p>
+                  <p className="text-sm text-gray-400 italic">{principle.example}</p>
                 </div>
               </div>
             </motion.div>
@@ -257,7 +258,8 @@ export default function PrinciplesPage() {
       <div className="border-t border-gray-800 py-12">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-gray-400 mb-4">
-            These principles guide every line of code I write and every architectural decision I make.
+            These principles guide every line of code I write and every architectural decision I
+            make.
           </p>
           <Link
             href="/"

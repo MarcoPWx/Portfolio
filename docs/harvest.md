@@ -1,16 +1,16 @@
 ---
 layout: default
-title: Harvest.ai Documentation
+title: Chameleon Documentation
 permalink: /harvest/
 ---
 
-# Harvest.ai Documentation 🌾
+# Chameleon Documentation 🌾
 
-Welcome to the Harvest.ai documentation hub - your guide to the privacy-first AI data harvesting platform.
+Welcome to the Chameleon documentation hub - your guide to the privacy-first AI data harvesting platform.
 
 ## 📖 [Start with the Learning Roadmap](/harvest-learning-roadmap/)
 
-The learning roadmap provides a structured path through all Harvest.ai documentation.
+The learning roadmap provides a structured path through all Chameleon documentation.
 
 ## 🚀 Quick Links
 
@@ -34,7 +34,7 @@ The learning roadmap provides a structured path through all Harvest.ai documenta
 
 ## 📚 All Documentation
 
-Browse all Harvest.ai documentation files:
+Browse all Chameleon documentation files:
 
 {% assign docs = site.harvest | sort: 'title' %}
 {% for doc in docs %}

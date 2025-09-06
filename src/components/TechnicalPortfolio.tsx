@@ -449,7 +449,7 @@ const analytics = await quiz.getAnalytics(userId);`,
       ],
     },
     harvest: {
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       description: 'Intelligent data analytics and insights',
       gradient: 'from-green-500 to-emerald-500',
       code: `import { Harvest } from '@naturequest/harvest';

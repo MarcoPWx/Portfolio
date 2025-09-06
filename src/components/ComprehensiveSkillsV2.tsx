@@ -81,7 +81,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 6,
       description: 'Primary language for all frontend and backend development',
-      projects: ['QuizMentor', 'DevMentor', 'Harvest.ai', 'Voice', 'Portfolio'],
+      projects: ['QuizMentor', 'DevMentor', 'Chameleon', 'Voice', 'Portfolio'],
       additionalTags: ['All projects'],
       projectCount: 10,
       proficiency: 95,
@@ -93,7 +93,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 7,
       description: 'AI/ML development, FastAPI backends, data processing',
-      projects: ['Harvest.ai', 'DevMentor', 'ML Services'],
+      projects: ['Chameleon', 'DevMentor', 'ML Services'],
       projectCount: 5,
       proficiency: 90,
     },
@@ -207,7 +207,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 6,
       description: 'SSR, SSG, ISR, React Server Components, App Router',
-      projects: ['QuizMentor', 'DevMentor', 'Harvest.ai', 'Voice', 'Portfolio'],
+      projects: ['QuizMentor', 'DevMentor', 'Chameleon', 'Voice', 'Portfolio'],
       projectCount: 8,
       proficiency: 95,
     },
@@ -299,7 +299,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Advanced' as const,
       years: 3,
       description: 'High-performance Python APIs, async/await',
-      projects: ['Harvest.ai'],
+      projects: ['Chameleon'],
       projectCount: 4,
       proficiency: 85,
     },
@@ -494,7 +494,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 2,
       description: 'Chains, agents, RAG, memory systems',
-      projects: ['DevMentor', 'Harvest.ai'],
+      projects: ['DevMentor', 'Chameleon'],
       projectCount: 4,
       proficiency: 90,
     },
@@ -516,7 +516,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Advanced' as const,
       years: 2,
       description: 'Qdrant, Pinecone, semantic search',
-      projects: ['DevMentor', 'Harvest.ai', 'RAG apps'],
+      projects: ['DevMentor', 'Chameleon', 'RAG apps'],
       projectCount: 3,
       proficiency: 85,
     },
@@ -764,7 +764,7 @@ export function ComprehensiveSkillsV2() {
       securityDocUrl: '/docs/_devmentor/security/SECURITY_HARDENING_BLUEPRINT.md',
     },
     harvest: {
-      name: 'Harvest.ai',
+      name: 'Chameleon',
       securitySnapshot: 'BYOK ephemeral default; encrypted opt-in',
       securityDocUrl: '/docs/_harvest/security/SECURITY_HARDENING_BLUEPRINT.md',
     },
@@ -995,12 +995,12 @@ export function ComprehensiveSkillsV2() {
     ],
     Python: [
       {
-        text: 'FastAPI microservices powering Harvest.ai multi‑agent pipeline',
-        tags: ['Harvest.ai'],
+        text: 'FastAPI microservices powering Chameleon multi‑agent pipeline',
+        tags: ['Chameleon'],
       },
       {
         text: 'LangChain tooling for RAG, scoring, and orchestration',
-        tags: ['DevMentor', 'Harvest.ai'],
+        tags: ['DevMentor', 'Chameleon'],
       },
     ],
     Go: [
@@ -1026,8 +1026,8 @@ export function ComprehensiveSkillsV2() {
         tags: ['Portfolio'],
       },
       {
-        text: 'Authored Storybook docs for project suites (QuizMentor, DevMentor, Harvest.ai)',
-        tags: ['QuizMentor', 'DevMentor', 'Harvest.ai'],
+        text: 'Authored Storybook docs for project suites (QuizMentor, DevMentor, Chameleon)',
+        tags: ['QuizMentor', 'DevMentor', 'Chameleon'],
       },
     ],
     'React Native': [
@@ -1052,7 +1052,7 @@ export function ComprehensiveSkillsV2() {
       { text: 'Improved accessibility and readability for mobile UI', tags: ['PatientSky'] },
       {
         text: 'Storybook documentation for projects for consistent UI references',
-        tags: ['QuizMentor', 'DevMentor', 'Harvest.ai'],
+        tags: ['QuizMentor', 'DevMentor', 'Chameleon'],
       },
     ],
     'Redux & Zustand': [
@@ -1093,7 +1093,7 @@ export function ComprehensiveSkillsV2() {
       { text: 'Built BFF to decouple complex flows and enable unit testing', tags: ['PatientSky'] },
       { text: 'Middleware and auth/session management', tags: ['Cinemataztic'] },
     ],
-    FastAPI: [{ text: 'Developed AI services and pipelines', tags: ['Harvest.ai'] }],
+    FastAPI: [{ text: 'Developed AI services and pipelines', tags: ['Chameleon'] }],
     GraphQL: [
       { text: 'Designed and maintained enterprise APIs and subscriptions', tags: ['Portfolio'] },
       {
@@ -1159,20 +1159,20 @@ export function ComprehensiveSkillsV2() {
 
     // AI/ML
     LangChain: [
-      { text: 'Agents/chains for content transformation and validation', tags: ['Harvest.ai'] },
+      { text: 'Agents/chains for content transformation and validation', tags: ['Chameleon'] },
       { text: 'RAG pipelines and memory primitives for learning features', tags: ['DevMentor'] },
     ],
     'OpenAI APIs': [
       {
         text: 'Function calling, embeddings, and cost‑aware routing across providers',
-        tags: ['DevMentor', 'Harvest.ai'],
+        tags: ['DevMentor', 'Chameleon'],
       },
       { text: 'Prompt safety/validation layers for production tools', tags: ['DevMentor'] },
     ],
     'Vector DBs': [
       {
         text: 'Qdrant/Pinecone indexes for semantic search and recommendation',
-        tags: ['DevMentor', 'Harvest.ai'],
+        tags: ['DevMentor', 'Chameleon'],
       },
     ],
     'Prompt Engineering': [
@@ -1266,7 +1266,7 @@ export function ComprehensiveSkillsV2() {
     PyTest: [
       {
         text: 'FastAPI service tests, fixtures and contract checks for AI pipelines',
-        tags: ['Harvest.ai'],
+        tags: ['Chameleon'],
       },
     ],
     'ESLint & Prettier': [

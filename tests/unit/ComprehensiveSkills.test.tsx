@@ -39,7 +39,7 @@ describe('ComprehensiveSkills', () => {
     fireEvent.click(pythonCard);
 
     await waitFor(() => {
-      expect(screen.getByText('Harvest.ai Content Intelligence')).toBeInTheDocument();
+      expect(screen.getByText('Chameleon Content Intelligence')).toBeInTheDocument();
     });
   });
 

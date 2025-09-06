@@ -31,7 +31,12 @@ function Navigation() {
     { href: '/', label: 'Projects', icon: <Code className="w-4 h-4" />, hash: '#projects' },
     { href: '/book', label: 'Book', icon: <BookOpen className="w-4 h-4" /> },
     { href: '/tools', label: 'Tools', icon: <Terminal className="w-4 h-4" /> },
-    { href: '/', label: 'Principles', icon: <Lightbulb className="w-4 h-4" />, hash: '#principles' },
+    {
+      href: '/',
+      label: 'Principles',
+      icon: <Lightbulb className="w-4 h-4" />,
+      hash: '#principles',
+    },
     { href: '/', label: 'Contact', icon: <Mail className="w-4 h-4" />, hash: '#contact' },
   ];
 

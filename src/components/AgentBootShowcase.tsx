@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { 
-  Code, 
+import {
+  Code,
   Terminal,
   Play,
   Copy,
@@ -24,13 +24,13 @@ import {
   Brain,
   BarChart3,
   ArrowLeft,
-  Home
+  Home,
 } from 'lucide-react';
 
 export const AgentBootShowcase = () => {
   const [copiedCode, setCopiedCode] = useState(false);
   const [agentBootCode, setAgentBootCode] = useState('');
-  
+
   // Agent Boot Terminal State
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -46,8 +46,8 @@ export const AgentBootShowcase = () => {
   // Load the AGENT-BOOT.py code
   useEffect(() => {
     fetch('/code-examples/AGENT-BOOT.py')
-      .then(res => res.text())
-      .then(code => setAgentBootCode(code))
+      .then((res) => res.text())
+      .then((code) => setAgentBootCode(code))
       .catch(() => setAgentBootCode(getDefaultAgentBootCode()));
   }, []);
 
@@ -124,14 +124,14 @@ if __name__ == "__main__":
         '',
         '📊 Core Systems:',
         '• Documentation: ✅ HEALTHY',
-        '• Manifest: ✅ SYNCED', 
+        '• Manifest: ✅ SYNCED',
         '• GitHub: ⚠️ DEGRADED (offline mode)',
         '• Tests: ✅ PASSING (42/42)',
         '',
         '📈 Overall Health: 85%',
         '⏰ Last Check: 2 mins ago',
-        '📝 Auto-logged to DEVLOG.md'
-      ]
+        '📝 Auto-logged to DEVLOG.md',
+      ],
     },
     {
       command: '> agent-boot epic create "Authentication" --tasks 5',
@@ -149,8 +149,8 @@ if __name__ == "__main__":
         '✅ Created GitHub issues (5)',
         '✅ Logged to DEVLOG.md',
         '',
-        '🎯 Epic ID: AUTH-001'
-      ]
+        '🎯 Epic ID: AUTH-001',
+      ],
     },
     {
       command: '> agent-boot progress',
@@ -160,7 +160,7 @@ if __name__ == "__main__":
         '⚡ ContentGenerator',
         '▓▓▓▓▓▓▓▓░░░░░░░░░░░░ 40%',
         '',
-        '🔧 API Routes', 
+        '🔧 API Routes',
         '▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%',
         '',
         '🎨 UI Components',
@@ -169,8 +169,8 @@ if __name__ == "__main__":
         '🧪 Test Coverage',
         '▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 85%',
         '',
-        '📈 Overall: 71% Complete'
-      ]
+        '📈 Overall: 71% Complete',
+      ],
     },
     {
       command: '> agent-boot manifest',
@@ -189,8 +189,8 @@ if __name__ == "__main__":
         '• Coverage: 85%',
         '',
         '💾 Saved to manifest.json',
-        '🔄 GitHub sync completed'
-      ]
+        '🔄 GitHub sync completed',
+      ],
     },
     {
       command: '> agent-boot tdd Payment --ai',
@@ -211,8 +211,8 @@ if __name__ == "__main__":
         '4️⃣ Tests now (GREEN phase)...',
         '✅ 12/12 passing!',
         '',
-        '5️⃣ Refactoring & docs updated'
-      ]
+        '5️⃣ Refactoring & docs updated',
+      ],
     },
     {
       command: '> agent-boot deploy staging --validate',
@@ -234,9 +234,9 @@ if __name__ == "__main__":
         '✓ Smoke tests: 15/15',
         '',
         '✅ Deployed successfully!',
-        '🔗 https://staging.app.com'
-      ]
-    }
+        '🔗 https://staging.app.com',
+      ],
+    },
   ];
 
   // Left Scenario Terminal: narrative/status demonstration
@@ -297,8 +297,8 @@ if __name__ == "__main__":
         `•  Add an Epic label and create one umbrella “EPIC” issue per roadmap item, then link child tasks.`,
         `•  Add/update a Jest config to clear the test-env blocker, then wire in a minimal test to verify setup.`,
         `•  Generate a focused Auth/OAuth task breakdown (Supabase + GitHub OAuth) as issues.`,
-      ]
-    }
+      ],
+    },
   ];
 
   // Auto-scroll terminal to bottom when new content is added (right)
@@ -330,19 +330,19 @@ if __name__ == "__main__":
 
     const currentCommand = agentBootCommands[currentCommandIndex];
     let outputIndex = 0;
-    
+
     // Type the command
-    setTerminalOutput(prev => [...prev, currentCommand.command]);
-    
+    setTerminalOutput((prev) => [...prev, currentCommand.command]);
+
     // Type the output lines
     const interval = setInterval(() => {
       if (outputIndex < currentCommand.output.length) {
-        setTerminalOutput(prev => [...prev, currentCommand.output[outputIndex]]);
+        setTerminalOutput((prev) => [...prev, currentCommand.output[outputIndex]]);
         outputIndex++;
       } else {
         clearInterval(interval);
         setTimeout(() => {
-          setCurrentCommandIndex(prev => prev + 1);
+          setCurrentCommandIndex((prev) => prev + 1);
         }, 2000); // Wait before next command
       }
     }, 100);
@@ -357,11 +357,11 @@ if __name__ == "__main__":
     const currentCommand = scenarioCommands[scenarioCommandIndex];
     let outputIndex = 0;
 
-    setScenarioOutput(prev => [...prev, currentCommand.command]);
+    setScenarioOutput((prev) => [...prev, currentCommand.command]);
 
     const interval = setInterval(() => {
       if (outputIndex < currentCommand.output.length) {
-        setScenarioOutput(prev => [...prev, currentCommand.output[outputIndex]]);
+        setScenarioOutput((prev) => [...prev, currentCommand.output[outputIndex]]);
         outputIndex++;
       } else {
         clearInterval(interval);
@@ -382,33 +382,33 @@ if __name__ == "__main__":
     {
       icon: <Shield className="w-5 h-5" />,
       title: 'Health Monitoring',
-      description: 'Real-time project status with automatic documentation updates'
+      description: 'Real-time project status with automatic documentation updates',
     },
     {
       icon: <GitBranch className="w-5 h-5" />,
       title: 'Epic Management',
-      description: 'Create, track, and manage epics with GitHub integration'
+      description: 'Create, track, and manage epics with GitHub integration',
     },
     {
       icon: <BarChart3 className="w-5 h-5" />,
       title: 'Visual Progress',
-      description: 'Beautiful progress bars and metrics tracking'
+      description: 'Beautiful progress bars and metrics tracking',
     },
     {
       icon: <Brain className="w-5 h-5" />,
       title: 'AI-Assisted TDD',
-      description: 'Red → Green → Refactor with AI implementation'
+      description: 'Red → Green → Refactor with AI implementation',
     },
     {
       icon: <Package className="w-5 h-5" />,
       title: 'Manifest Generation',
-      description: 'Automatic project analysis and dependency tracking'
+      description: 'Automatic project analysis and dependency tracking',
     },
     {
       icon: <Rocket className="w-5 h-5" />,
       title: 'Deploy Pipeline',
-      description: 'Validated deployments with pre-flight checks'
-    }
+      description: 'Validated deployments with pre-flight checks',
+    },
   ];
 
   return (
@@ -440,9 +440,8 @@ if __name__ == "__main__":
           </div>
         </div>
       </nav>
-      
+
       <div className="max-w-7xl mx-auto px-4 py-16 pt-24">
-        
         {/* Hero Section */}
         <div className="text-center mb-16">
           <motion.div
@@ -459,12 +458,10 @@ if __name__ == "__main__":
             <h1 className="text-5xl font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent mb-4">
               Agent Boot
             </h1>
-            <p className="text-xl text-gray-300 mb-2">
-              Your AI-OS Project Companion
-            </p>
+            <p className="text-xl text-gray-300 mb-2">Your AI-OS Project Companion</p>
             <p className="text-gray-400 italic max-w-2xl mx-auto">
-              750+ lines of intelligent automation that transforms how you manage AI-assisted development. 
-              From health checks to deployment, everything automated.
+              750+ lines of intelligent automation that transforms how you manage AI-assisted
+              development. From health checks to deployment, everything automated.
             </p>
           </motion.div>
         </div>
@@ -487,10 +484,10 @@ if __name__ == "__main__":
                 transition={{
                   duration: 4,
                   repeat: Number.POSITIVE_INFINITY,
-                  ease: 'easeInOut'
+                  ease: 'easeInOut',
                 }}
               />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -515,7 +512,7 @@ if __name__ == "__main__":
                     <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </motion.a>
                 </div>
-                
+
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50">
                     <div className="flex items-center gap-2 mb-2">
@@ -523,20 +520,24 @@ if __name__ == "__main__":
                       <span className="text-xs font-semibold text-gray-300">AGENT_BOOT.py</span>
                     </div>
                     <p className="text-xs text-gray-400">
-                      750+ lines of intelligent automation with health checks, progress tracking, and GitHub integration
+                      750+ lines of intelligent automation with health checks, progress tracking,
+                      and GitHub integration
                     </p>
                   </div>
-                  
+
                   <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50">
                     <div className="flex items-center gap-2 mb-2">
                       <FileText className="w-4 h-4 text-cyan-400" />
-                      <span className="text-xs font-semibold text-gray-300">Auto Documentation</span>
+                      <span className="text-xs font-semibold text-gray-300">
+                        Auto Documentation
+                      </span>
                     </div>
                     <p className="text-xs text-gray-400">
-                      Automatic updates to DEVLOG, SYSTEM_STATUS, and EPICS with complete audit trails
+                      Automatic updates to DEVLOG, SYSTEM_STATUS, and EPICS with complete audit
+                      trails
                     </p>
                   </div>
-                  
+
                   <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="w-4 h-4 text-purple-400" />
@@ -602,7 +603,10 @@ if __name__ == "__main__":
                 </div>
 
                 {/* Terminal Content */}
-                <div ref={scenarioContentRef} className="p-4 font-mono text-sm h-[500px] overflow-y-auto">
+                <div
+                  ref={scenarioContentRef}
+                  className="p-4 font-mono text-sm h-[500px] overflow-y-auto"
+                >
                   {scenarioOutput.map((line, index) => {
                     const lineText = line || '';
                     return (
@@ -615,16 +619,16 @@ if __name__ == "__main__":
                           lineText.startsWith('>')
                             ? 'text-green-400 mt-2'
                             : lineText.startsWith('📊') || lineText.startsWith('🚀')
-                            ? 'text-white font-bold mt-2'
-                            : lineText.startsWith('✓') || lineText.includes('✅')
-                            ? 'text-green-400'
-                            : lineText.includes('❌')
-                            ? 'text-red-400'
-                            : lineText.includes('🚧') || lineText.includes('⚠️')
-                            ? 'text-yellow-400'
-                            : lineText.startsWith('•') || lineText.match(/^\d\./)
-                            ? 'text-gray-400 ml-4'
-                            : 'text-gray-300'
+                              ? 'text-white font-bold mt-2'
+                              : lineText.startsWith('✓') || lineText.includes('✅')
+                                ? 'text-green-400'
+                                : lineText.includes('❌')
+                                  ? 'text-red-400'
+                                  : lineText.includes('🚧') || lineText.includes('⚠️')
+                                    ? 'text-yellow-400'
+                                    : lineText.startsWith('•') || lineText.match(/^\d\./)
+                                      ? 'text-gray-400 ml-4'
+                                      : 'text-gray-300'
                         }`}
                       >
                         {lineText || '\u00A0'}
@@ -655,7 +659,7 @@ if __name__ == "__main__":
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsPlaying(!isPlaying)}
                     className="p-2 bg-gray-800 rounded hover:bg-gray-700 transition-colors"
-                    title={isPlaying ? "Pause" : "Play"}
+                    title={isPlaying ? 'Pause' : 'Play'}
                   >
                     {isPlaying ? (
                       <Pause className="w-4 h-4 text-gray-400" />
@@ -674,7 +678,7 @@ if __name__ == "__main__":
                   </motion.button>
                 </div>
               </div>
-              
+
               {/* Terminal Window */}
               <div className="bg-gray-950 rounded-lg overflow-hidden">
                 {/* Terminal Header */}
@@ -684,12 +688,17 @@ if __name__ == "__main__":
                     <div className="w-3 h-3 bg-yellow-500 rounded-full" />
                     <div className="w-3 h-3 bg-green-500 rounded-full" />
                   </div>
-                  <div className="text-xs text-gray-500 font-mono flex items-center gap-2"><Terminal className="w-3 h-3 text-green-400" /> AGENT-BOOT.py</div>
+                  <div className="text-xs text-gray-500 font-mono flex items-center gap-2">
+                    <Terminal className="w-3 h-3 text-green-400" /> AGENT-BOOT.py
+                  </div>
                   <div className="text-xs text-gray-500 font-mono">AI-OS Project</div>
                 </div>
-                
+
                 {/* Terminal Content */}
-                <div ref={terminalContentRef} className="p-4 font-mono text-sm h-[500px] overflow-y-auto">
+                <div
+                  ref={terminalContentRef}
+                  className="p-4 font-mono text-sm h-[500px] overflow-y-auto"
+                >
                   {terminalOutput.map((line, index) => {
                     // Safety check for undefined line
                     const lineText = line || '';
@@ -700,21 +709,21 @@ if __name__ == "__main__":
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.2 }}
                         className={`${
-                          lineText.startsWith('>') 
-                            ? 'text-green-400 mt-2' 
+                          lineText.startsWith('>')
+                            ? 'text-green-400 mt-2'
                             : lineText.startsWith('📊') || lineText.startsWith('🚀')
-                            ? 'text-white font-bold mt-2'
-                            : lineText.startsWith('✓') || lineText.includes('✅')
-                            ? 'text-green-400'
-                            : lineText.includes('❌') || lineText.includes('FAILING')
-                            ? 'text-red-400'
-                            : lineText.includes('🚧') || lineText.includes('⚠️')
-                            ? 'text-yellow-400'
-                            : lineText.startsWith('•') || lineText.match(/^\d\./)
-                            ? 'text-gray-400 ml-4'
-                            : lineText.startsWith('▓')
-                            ? 'text-cyan-400 font-bold'
-                            : 'text-gray-300'
+                              ? 'text-white font-bold mt-2'
+                              : lineText.startsWith('✓') || lineText.includes('✅')
+                                ? 'text-green-400'
+                                : lineText.includes('❌') || lineText.includes('FAILING')
+                                  ? 'text-red-400'
+                                  : lineText.includes('🚧') || lineText.includes('⚠️')
+                                    ? 'text-yellow-400'
+                                    : lineText.startsWith('•') || lineText.match(/^\d\./)
+                                      ? 'text-gray-400 ml-4'
+                                      : lineText.startsWith('▓')
+                                        ? 'text-cyan-400 font-bold'
+                                        : 'text-gray-300'
                         }`}
                       >
                         {lineText || '\u00A0'}
@@ -730,13 +739,23 @@ if __name__ == "__main__":
                   )}
                 </div>
               </div>
-              
+
               <div className="mt-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
                 <p className="text-sm text-gray-400 mb-1">
                   Live example showing these steps (loops automatically):
                 </p>
                 <p className="text-xs text-gray-500 mb-2">
-                  Currently: {['Health check','Epic creation with GitHub issues','Progress report','Manifest generation','TDD workflow (red → green → refactor)','Staging deploy with validation'][Math.min(currentCommandIndex, 5)]}
+                  Currently:{' '}
+                  {
+                    [
+                      'Health check',
+                      'Epic creation with GitHub issues',
+                      'Progress report',
+                      'Manifest generation',
+                      'TDD workflow (red → green → refactor)',
+                      'Staging deploy with validation',
+                    ][Math.min(currentCommandIndex, 5)]
+                  }
                 </p>
                 <ul className="text-xs space-y-1">
                   {[
@@ -750,7 +769,10 @@ if __name__ == "__main__":
                     const active = idx === Math.min(currentCommandIndex, 5);
                     const done = idx < Math.min(currentCommandIndex, 5);
                     return (
-                      <li key={label} className={`flex items-center gap-2 ${active ? 'text-white' : done ? 'text-gray-300' : 'text-gray-500'}`}>
+                      <li
+                        key={label}
+                        className={`flex items-center gap-2 ${active ? 'text-white' : done ? 'text-gray-300' : 'text-gray-500'}`}
+                      >
                         {active ? (
                           <Zap className="w-3 h-3 text-yellow-400" />
                         ) : done ? (
@@ -779,9 +801,9 @@ if __name__ == "__main__":
             Ready to Transform Your Development Workflow?
           </h2>
           <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-            Agent Boot is part of the AI-OS-STORYBOOK project, providing intelligent automation 
-            for AI-assisted development. From health monitoring to deployment, everything you need 
-            in one powerful tool.
+            Agent Boot is part of the AI-OS-STORYBOOK project, providing intelligent automation for
+            AI-assisted development. From health monitoring to deployment, everything you need in
+            one powerful tool.
           </p>
           <div className="flex justify-center gap-4">
             <motion.a

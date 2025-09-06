@@ -1,17 +1,17 @@
 ---
 layout: default
-title: Harvest.ai Learning Roadmap
+title: Chameleon Learning Roadmap
 permalink: /harvest-learning-roadmap/
 ---
 
-# Harvest.ai Learning Roadmap 🌾
+# Chameleon Learning Roadmap 🌾
 
-A structured guide to understanding Harvest.ai - the privacy-first AI data harvesting platform.
+A structured guide to understanding Chameleon - the privacy-first AI data harvesting platform.
 
 ## 📚 Reading Order
 
 ### Phase 1: Core Concepts
-Start here to understand what Harvest.ai is about.
+Start here to understand what Chameleon is about.
 
 1. **[User Journeys](/harvest/USER_JOURNEYS/)** - Start here! Understand how users interact
 2. **[Trust First User Journey](/harvest/TRUST_FIRST_USER_JOURNEY/)** - Privacy-focused approach
@@ -63,7 +63,7 @@ Current state of the project.
 
 ## 📝 Notes
 
-- Harvest.ai is focused on privacy-first data collection
+- Chameleon is focused on privacy-first data collection
 - Documents are organized in logical reading order
 - Each section builds on previous knowledge
 - Check status documents for latest updates

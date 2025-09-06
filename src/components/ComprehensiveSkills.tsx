@@ -88,7 +88,7 @@ const techCategories: TechCategory[] = [
         icon: <Braces className="w-5 h-5" />,
         experience:
           'Primary language for all frontend and backend development with strict type safety',
-        projects: ['QuizMentor', 'DevMentor', 'Harvest.ai', 'Portfolio'],
+        projects: ['QuizMentor', 'DevMentor', 'Chameleon', 'Portfolio'],
         yearsUsed: '6+ years',
         proficiencyLevel: 'Expert',
         examples: [
@@ -115,12 +115,12 @@ const techCategories: TechCategory[] = [
         name: 'Python',
         icon: <Code2 className="w-5 h-5" />,
         experience: 'AI/ML development, FastAPI backends, data processing, and automation',
-        projects: ['Harvest.ai', 'DevMentor AI', 'Data Analytics', 'ML Models'],
+        projects: ['Chameleon', 'DevMentor AI', 'Data Analytics', 'ML Models'],
         yearsUsed: '7+ years',
         proficiencyLevel: 'Expert',
         examples: [
           {
-            project: 'Harvest.ai Content Intelligence',
+            project: 'Chameleon Content Intelligence',
             description:
               'Built high-performance content analysis pipeline processing 100K+ documents with ML models',
             impact: 'Achieved 99.2% accuracy in content classification and 60% faster processing',
@@ -238,7 +238,7 @@ const techCategories: TechCategory[] = [
         name: 'React Native',
         icon: <Smartphone className="w-5 h-5" />,
         experience: 'Cross-platform mobile apps, native modules',
-        projects: ['QuizMentor Mobile', 'Harvest.ai Mobile'],
+        projects: ['QuizMentor Mobile', 'Chameleon Mobile'],
         yearsUsed: '4+ years',
         proficiencyLevel: 'Advanced',
         examples: [],
@@ -298,7 +298,7 @@ const techCategories: TechCategory[] = [
         name: 'FastAPI',
         icon: <Zap className="w-5 h-5" />,
         experience: 'High-performance Python APIs, automatic documentation',
-        projects: ['Harvest.ai', 'ML model serving'],
+        projects: ['Chameleon', 'ML model serving'],
         yearsUsed: '3+ years',
         proficiencyLevel: 'Advanced',
         examples: [],
@@ -343,7 +343,7 @@ const techCategories: TechCategory[] = [
         icon: <Sparkles className="w-5 h-5" />,
         experience:
           'GPT models, embeddings, fine-tuning, function calling, and advanced prompt engineering',
-        projects: ['All AI-powered features', 'DevMentor', 'Harvest.ai'],
+        projects: ['All AI-powered features', 'DevMentor', 'Chameleon'],
         yearsUsed: '3+ years',
         proficiencyLevel: 'Expert',
         examples: [
@@ -379,7 +379,7 @@ const techCategories: TechCategory[] = [
         name: 'LangChain',
         icon: <Brain className="w-5 h-5" />,
         experience: 'Complex AI workflows, agents, memory systems, and RAG implementations',
-        projects: ['DevMentor', 'Harvest.ai', 'Knowledge Systems'],
+        projects: ['DevMentor', 'Chameleon', 'Knowledge Systems'],
         yearsUsed: '2+ years',
         proficiencyLevel: 'Advanced',
         examples: [],

@@ -25,7 +25,7 @@ test.describe.skip('Portfolio E2E Tests', () => {
     await page.click('text=Projects');
     await expect(page.locator('text=QuizMentor')).toBeVisible();
     await expect(page.locator('text=DevMentor')).toBeVisible();
-    await expect(page.locator('text=Harvest.ai')).toBeVisible();
+    await expect(page.locator('text=Chameleon')).toBeVisible();
 
     // Test navigation to About section
     await page.click('text=About');

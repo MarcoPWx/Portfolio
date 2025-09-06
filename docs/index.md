@@ -35,7 +35,7 @@ Welcome to the comprehensive documentation center for the NatureQuest ecosystem 
   </a>
   
   <a href="/harvest/" class="card">
-    <h3>🌾 Harvest.ai</h3>
+    <h3>🌾 Chameleon</h3>
     <p><strong>Content Intelligence Platform</strong> for smart time tracking, project management, and developer productivity analytics.</p>
     <div class="warning-box">
       <strong>Status:</strong> Development - 15+ documentation files
@@ -109,7 +109,7 @@ Welcome to the comprehensive documentation center for the NatureQuest ecosystem 
 | 2024-12-25 | DevMentor system audit completed | DevMentor |
 | 2024-12-24 | Authentication architecture updated | DevMentor |
 | 2024-12-23 | QuizMentor testing guide enhanced | QuizMentor |
-| 2024-12-22 | Harvest.ai competitive analysis | Harvest.ai |
+| 2024-12-22 | Chameleon competitive analysis | Chameleon |
 
 ## 🎓 Learning Tracks
 
