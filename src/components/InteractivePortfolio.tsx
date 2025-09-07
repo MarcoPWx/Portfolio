@@ -513,18 +513,25 @@ function InteractiveTerminal({
             <div className="flex items-center gap-2">
               {collapsible && (
                 <motion.button
-                  className="p-1 rounded hover:bg-gray-700/50 text-gray-400 hover:text-white transition-all"
+                  className="relative p-1.5 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-400 hover:text-green-300 transition-all shadow-lg shadow-green-500/20"
                   title={collapsed ? 'Expand terminal' : 'Collapse terminal'}
                   aria-label={collapsed ? 'Expand' : 'Collapse'}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleCollapsed();
                   }}
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.15 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <motion.div animate={{ rotate: collapsed ? 0 : 180 }} transition={{ duration: 0.3 }}>
-                    <ChevronDown className="w-3 h-3" />
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-green-400 rounded-lg blur-md opacity-40 animate-pulse" />
+                  
+                  <motion.div 
+                    className="relative z-10"
+                    animate={{ rotate: collapsed ? 0 : 180 }} 
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown className="w-4 h-4" />
                   </motion.div>
                 </motion.button>
               )}
