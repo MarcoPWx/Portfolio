@@ -5,8 +5,10 @@ A beautiful portfolio website showcasing the PixelQuest product ecosystem, inspi
 ## 🎯 Products Showcased
 
 - **QuizMentor** - Adaptive Learning Platform
-- **DevMentor** - AI Development Assistant  
+- **AI-OS CE** - Local-First AI Development Toolkit
+- **AI-OS Pro** - Enterprise AI Development Platform
 - **Harvest** - Smart Time Tracking
+- **VoiceApp** - Realtime Voice AI Platform
 
 ## 🚀 Quick Start
 

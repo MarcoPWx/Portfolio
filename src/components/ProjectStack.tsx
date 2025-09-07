@@ -25,10 +25,10 @@ export function ProjectStack() {
   type ProjectId =
     | 'all'
     | 'quizmentor'
-    | 'devmentor'
+    | 'ai-os-ce'
+    | 'ai-os-pro'
     | 'harvest'
     | 'voice'
-    | 'devmentor-vscode'
     | 'opensource';
   const [filter, setFilter] = useState<ProjectId>('all');
 
@@ -41,11 +41,12 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Next.js + React + TypeScript',
-            usedIn: ['DevMentor', 'Chameleon'],
-            usedIds: ['devmentor', 'harvest'],
+            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'harvest'],
             examples: [
-              'App Router + RSC where useful (DevMentor)',
+              'App Router + RSC where useful (AI-OS-Pro)',
               'Next.js 15.5 streaming API routes (Chameleon)',
+              'Documentation sites and dashboards (AI-OS-CE)',
             ],
           },
           {
@@ -61,7 +62,12 @@ export function ProjectStack() {
             tech: 'Expo (React Native, managed)',
             usedIn: ['Voice'],
             usedIds: ['voice'],
-            examples: ['Push-to-talk UI; record→upload→on-device TTS'],
+            examples: [
+              'Push-to-talk UI with realtime audio capture',
+              'Speech-to-Text and Text-to-Speech integration',
+              'Wake word detection and voice biometrics',
+              'WebRTC for realtime voice streaming',
+            ],
           },
           {
             tech: 'Expo Router',
@@ -83,21 +89,22 @@ export function ProjectStack() {
           },
           {
             tech: 'React Query (TanStack)',
-            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
-            usedIds: ['devmentor', 'harvest', 'quizmentor'],
+            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
             examples: [
-              'Client caching for /api/models and contracts (DevMentor)',
+              'Client caching for multi-agent state (AI-OS-Pro)',
               'SSR-safe caching and SWR patterns (Chameleon)',
               'useQuizCategories/useQuizQuestions hooks (QuizMentor)',
             ],
           },
           {
             tech: 'Tailwind CSS / NativeWind',
-            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
-            usedIds: ['devmentor', 'harvest', 'quizmentor'],
+            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon', 'QuizMentor'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'harvest', 'quizmentor'],
             examples: [
               'Utility-first styling; PostCSS/Autoprefixer',
               'NativeWind for RN components (QuizMentor)',
+              'Custom design systems (AI-OS-Pro)',
             ],
           },
           {
@@ -120,21 +127,32 @@ export function ProjectStack() {
           },
           {
             tech: 'React Markdown + remark-gfm + Mermaid',
-            usedIn: ['DevMentor', 'Chameleon'],
-            usedIds: ['devmentor', 'harvest'],
-            examples: ['Docs rendering and diagrams in UI/Storybook'],
+            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'harvest'],
+            examples: [
+              'Docs rendering and diagrams in UI/Storybook',
+              'Architecture diagrams and S2S journey visualizations (AI-OS-CE)',
+            ],
           },
           {
             tech: 'Swagger UI React',
-            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
-            usedIds: ['devmentor', 'harvest', 'quizmentor'],
-            examples: ['Embed OpenAPI specs in stories/panels'],
+            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
+            examples: [
+              'Embed OpenAPI specs in stories/panels',
+              'Multi-agent API documentation (AI-OS-Pro)',
+            ],
           },
           {
-            tech: 'VS Code Extension UI',
-            usedIn: ['DevMentor VS Code'],
-            usedIds: ['devmentor-vscode'],
-            examples: ['TreeView, StatusBar, Decorations; commands and views'],
+            tech: 'Python CLI & Agent Boot',
+            usedIn: ['AI-OS-CE'],
+            usedIds: ['ai-os-ce'],
+            examples: [
+              'Agent Boot CLI for DEVLOG management',
+              'EPIC tracking and task management',
+              'Security and performance checks',
+              'Optional GitHub issue sync',
+            ],
           },
         ],
       },
@@ -145,12 +163,13 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Express (Node.js)',
-            usedIn: ['DevMentor', 'QuizMentor', 'Voice'],
-            usedIds: ['devmentor', 'quizmentor', 'voice'],
+            usedIn: ['AI-OS-Pro', 'QuizMentor', 'Voice'],
+            usedIds: ['ai-os-pro', 'quizmentor', 'voice'],
             examples: [
-              'Gateway routing + rate limiting (DevMentor)',
+              'Multi-agent orchestration API (AI-OS-Pro)',
               'API with helmet/cors/rate-limit (QuizMentor)',
               'Voice: /health, /asr, /chat; multipart & OpenAI calls',
+              'Dialogue management and NLP processing (Voice)',
             ],
           },
           {
@@ -161,10 +180,11 @@ export function ProjectStack() {
           },
           {
             tech: 'Swagger/OpenAPI',
-            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
-            usedIds: ['devmentor', 'harvest', 'quizmentor'],
+            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
             examples: [
-              'Gateway aggregate (DevMentor); OpenAPI YAML embedded in Storybook (QuizMentor)',
+              'Multi-agent API documentation (AI-OS-Pro)',
+              'OpenAPI YAML embedded in Storybook (QuizMentor)',
             ],
           },
           {
@@ -200,15 +220,18 @@ export function ProjectStack() {
         items: [
           {
             tech: 'WebSocket (ws)',
-            usedIn: ['DevMentor VS Code'],
-            usedIds: ['devmentor-vscode'],
-            examples: ['Realtime comm with DevMentor dashboard; handshake and auto-reconnect'],
+            usedIn: ['AI-OS-Pro', 'VoiceApp'],
+            usedIds: ['ai-os-pro', 'voice'],
+            examples: [
+              'Multi-agent real-time communication (AI-OS-Pro)',
+              'Real-time voice streaming and dialogue state (VoiceApp)',
+            ],
           },
           {
             tech: 'Socket.IO (client)',
-            usedIn: ['DevMentor', 'QuizMentor'],
-            usedIds: ['devmentor', 'quizmentor'],
-            examples: ['Learning Service updates (DevMentor); multiplayer/presence (QuizMentor)'],
+            usedIn: ['AI-OS-Pro', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'quizmentor'],
+            examples: ['Agent coordination updates (AI-OS-Pro); multiplayer/presence (QuizMentor)'],
           },
           {
             tech: 'SSE (Server-Sent Events)',
@@ -225,9 +248,12 @@ export function ProjectStack() {
         items: [
           {
             tech: 'AI Gateway (Ollama + zod + Redis + ws)',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['Idempotent chat completions; events over WebSocket'],
+            usedIn: ['AI-OS-Pro'],
+            usedIds: ['ai-os-pro'],
+            examples: [
+              'Multi-agent orchestration and coordination',
+              'Idempotent chat completions; events over WebSocket',
+            ],
           },
           {
             tech: 'AI SDKs: OpenAI / Anthropic / Google',
@@ -243,9 +269,12 @@ export function ProjectStack() {
           },
           {
             tech: 'RAG / Vector (Qdrant)',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['Memory Service retrieval; PBML context assembly'],
+            usedIn: ['AI-OS-Pro'],
+            usedIds: ['ai-os-pro'],
+            examples: [
+              'Enterprise knowledge base and retrieval',
+              'Context-aware agent memory management',
+            ],
           },
         ],
       },
@@ -256,20 +285,20 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Redis',
-            usedIn: ['DevMentor', 'Chameleon', 'QuizMentor'],
-            usedIds: ['devmentor', 'harvest', 'quizmentor'],
+            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
             examples: [
-              'Caching, rate limiting, idempotency (DevMentor)',
+              'Agent state caching and coordination (AI-OS-Pro)',
               'Metrics counters and caches (Chameleon)',
               'API-side checks and caching (QuizMentor)',
             ],
           },
           {
             tech: 'PostgreSQL',
-            usedIn: ['DevMentor', 'QuizMentor'],
-            usedIds: ['devmentor', 'quizmentor'],
+            usedIn: ['AI-OS-Pro', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'quizmentor'],
             examples: [
-              'Project data; Memory/learning metadata (DevMentor)',
+              'Multi-agent task and state persistence (AI-OS-Pro)',
               'Local dev DB via Docker Compose (QuizMentor)',
             ],
           },
@@ -281,15 +310,21 @@ export function ProjectStack() {
           },
           {
             tech: 'Qdrant (Vector store)',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['Semantic search for RAG'],
+            usedIn: ['AI-OS-Pro', 'VoiceApp'],
+            usedIds: ['ai-os-pro', 'voice'],
+            examples: [
+              'Semantic search for enterprise RAG (AI-OS-Pro)',
+              'Voice command semantic matching (VoiceApp)',
+            ],
           },
           {
-            tech: 'Kafka (optional)',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['PBML orchestration pipelines'],
+            tech: 'GitHub Actions',
+            usedIn: ['AI-OS-CE', 'AI-OS-Pro'],
+            usedIds: ['ai-os-ce', 'ai-os-pro'],
+            examples: [
+              'CI/CD workflows and automation (AI-OS-CE)',
+              'Multi-agent deployment pipelines (AI-OS-Pro)',
+            ],
           },
         ],
       },
@@ -300,18 +335,22 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Docker & Compose',
-            usedIn: ['Chameleon', 'DevMentor', 'QuizMentor'],
-            usedIds: ['harvest', 'devmentor', 'quizmentor'],
+            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
             examples: [
-              'Local dev orchestration for services and workers',
+              'Multi-agent container orchestration (AI-OS-Pro)',
+              'Local dev environment setup',
               'Postgres/Redis/API + Expo web service (QuizMentor)',
             ],
           },
           {
-            tech: 'Kubernetes & Istio (mTLS optional)',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['Service DNS/mesh, policy gates, tracing plan'],
+            tech: 'Kubernetes & Helm',
+            usedIn: ['AI-OS-Pro'],
+            usedIds: ['ai-os-pro'],
+            examples: [
+              'Enterprise-scale agent deployment',
+              'Service mesh and policy management',
+            ],
           },
           {
             tech: 'Locust (load testing)',
@@ -328,9 +367,12 @@ export function ProjectStack() {
         items: [
           {
             tech: 'HMAC S2S + JWT',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['x-s2s-* signing/verification; JWT at gateway'],
+            usedIn: ['AI-OS-Pro'],
+            usedIds: ['ai-os-pro'],
+            examples: [
+              'Inter-agent secure communication',
+              'Enterprise auth and service-to-service signing',
+            ],
           },
           {
             tech: 'helmet/cors/rate-limit',
@@ -345,10 +387,13 @@ export function ProjectStack() {
             examples: ['Verify bearer tokens for protected endpoints'],
           },
           {
-            tech: 'Secure WebSocket defaults (wss)',
-            usedIn: ['DevMentor VS Code'],
-            usedIds: ['devmentor-vscode'],
-            examples: ['wss endpoints; packaging hygiene via .vscodeignore'],
+            tech: 'End-to-End Encryption',
+            usedIn: ['VoiceApp'],
+            usedIds: ['voice'],
+            examples: [
+              'Voice data encryption in transit and at rest',
+              'Secure voice biometric storage',
+            ],
           },
           {
             tech: 'CSP, HSTS, COOP/COEP',
@@ -357,10 +402,13 @@ export function ProjectStack() {
             examples: ['connect-src to OpenAI/Anthropic; cross-origin isolation'],
           },
           {
-            tech: 'Correlation IDs',
-            usedIn: ['DevMentor'],
-            usedIds: ['devmentor'],
-            examples: ['x-correlation-id propagation end-to-end'],
+            tech: 'Distributed Tracing',
+            usedIn: ['AI-OS-Pro'],
+            usedIds: ['ai-os-pro'],
+            examples: [
+              'Multi-agent request tracing',
+              'Correlation ID propagation across services',
+            ],
           },
           {
             tech: 'Server-only secrets; no client keys',
@@ -488,10 +536,10 @@ export function ProjectStack() {
         {[
           { id: 'all', label: 'All' },
           { id: 'quizmentor', label: 'QuizMentor' },
-          { id: 'devmentor', label: 'DevMentor' },
+          { id: 'ai-os-ce', label: 'AI-OS CE' },
+          { id: 'ai-os-pro', label: 'AI-OS Pro' },
           { id: 'harvest', label: 'Chameleon' },
-          { id: 'voice', label: 'Voice' },
-          { id: 'devmentor-vscode', label: 'DevMentor VS Code' },
+          { id: 'voice', label: 'VoiceApp' },
           { id: 'opensource', label: 'OpenSource SB' },
         ].map((f) => (
           <button
