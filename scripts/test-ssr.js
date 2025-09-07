@@ -73,7 +73,7 @@ const testSSREndpoint = async (url) => {
       },
       {
         name: 'No Loading State',
-        pass: !html.includes('Loading portfolio...') || html.includes('NatureQuest'),
+        pass: !html.includes('Loading portfolio...') || html.includes('Portfolio'),
         message: 'Content renders on server (not just loading state)',
       },
       {
@@ -189,8 +189,8 @@ const testComponentImports = () => {
 const main = async () => {
   console.log(
     chalk.bold
-      ? chalk.bold.cyan('\n🚀 NatureQuest Portfolio SSR Test Suite\n')
-      : '\x1b[1m\x1b[36m\n🚀 NatureQuest Portfolio SSR Test Suite\n\x1b[0m',
+      ? chalk.bold.cyan('\n🚀 Portfolio Portfolio SSR Test Suite\n')
+      : '\x1b[1m\x1b[36m\n🚀 Portfolio Portfolio SSR Test Suite\n\x1b[0m',
   );
   console.log(chalk.gray('='.repeat(50)));
 

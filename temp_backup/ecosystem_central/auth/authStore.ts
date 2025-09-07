@@ -315,9 +315,9 @@ export const useAuthStore = create<AuthState>()(
 
         const productAccess = {
           free: ['quizmentor'],
-          pro: ['quizmentor', 'devmentor', 'harvest'],
-          team: ['quizmentor', 'devmentor', 'harvest', 'omni'],
-          enterprise: ['quizmentor', 'devmentor', 'harvest', 'omni'],
+          pro: ['quizmentor', 'platform', 'harvest'],
+          team: ['quizmentor', 'platform', 'harvest', 'omni'],
+          enterprise: ['quizmentor', 'platform', 'harvest', 'omni'],
         };
 
         return productAccess[subscription.tier]?.includes(productId) || false;

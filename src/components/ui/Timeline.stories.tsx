@@ -19,9 +19,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const items = [
-  { date: '2023', title: 'Joined NatureQuest', subtitle: 'Senior Engineer', description: 'Led the developer tools initiative.', icon: Briefcase, tags: ['Leadership', 'Architecture'] },
+  { date: '2023', title: 'Joined Portfolio', subtitle: 'Senior Engineer', description: 'Led the developer tools initiative.', icon: Briefcase, tags: ['Leadership', 'Architecture'] },
   { date: '2024', title: 'Launched QuizMentor', description: 'Gamified learning platform release.', icon: Calendar, tags: ['React Native', 'Supabase'] },
-  { date: '2025', title: 'Chameleon Beta', description: 'Content intelligence system in beta.', icon: MapPin, tags: ['FastAPI', 'LangChain'] }
+  { date: '2025', title: 'AI Assistant Beta', description: 'Content intelligence system in beta.', icon: MapPin, tags: ['FastAPI', 'LangChain'] }
 ]
 
 export const Default: Story = {

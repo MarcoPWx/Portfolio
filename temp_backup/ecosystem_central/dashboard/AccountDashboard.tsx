@@ -45,8 +45,8 @@ export default function AccountDashboard() {
 
   const products: Product[] = [
     {
-      id: 'devmentor',
-      name: 'DevMentor',
+      id: 'platform',
+      name: 'Platform',
       description: 'AI-powered development assistant',
       icon: Zap,
       status: subscription?.tier === 'free' ? 'locked' : 'active',
@@ -633,7 +633,7 @@ export default function AccountDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white">Account Dashboard</h1>
-              <p className="text-gray-400 mt-1">Manage your NatureQuest ecosystem account</p>
+              <p className="text-gray-400 mt-1">Manage your Portfolio ecosystem account</p>
             </div>
             <div className="flex items-center space-x-4">
               <Badge color="green" size="lg">

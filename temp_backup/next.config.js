@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['naturequest.dev', 'quizmentor.ai', 'devmentor.ai', 'harvest.ai', 'omni.dev'],
+    domains: ['portfolio.dev', 'quizmentor.ai', 'platform.ai', 'harvest.ai', 'omni.dev'],
   },
   // If you want to deploy to a subdirectory
   // basePath: '/portfolio',

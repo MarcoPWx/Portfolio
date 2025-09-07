@@ -16,12 +16,12 @@ class EcosystemWidget {
 
     this.products = [
       {
-        id: 'devmentor',
-        name: 'DevMentor',
+        id: 'platform',
+        name: 'Platform',
         tagline: 'AI Development Assistant',
         icon: '🧠',
         color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        url: '/devmentor/',
+        url: '/platform/',
         status: 'beta',
         description: 'AI assistant that learns your coding patterns',
       },
@@ -47,11 +47,11 @@ class EcosystemWidget {
       },
       {
         id: 'auth',
-        name: 'NatureQuest Auth',
+        name: 'Portfolio Auth',
         tagline: 'Unified Authentication',
         icon: '🔐',
         color: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-        url: '/naturequest-auth/',
+        url: '/portfolio-auth/',
         status: 'beta',
         description: 'Single sign-on across the ecosystem',
       },
@@ -126,7 +126,7 @@ class EcosystemWidget {
     return `
       <div class="ecosystem-expanded">
         <div class="ecosystem-header">
-          <h3>NatureQuest Ecosystem</h3>
+          <h3>Portfolio Ecosystem</h3>
           <div class="ecosystem-actions">
             <button class="btn-minimize" onclick="ecosystemWidget.minimize()" title="Minimize">
               −
@@ -236,10 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname;
   let currentProduct = null;
 
-  if (path.includes('/devmentor/')) currentProduct = 'devmentor';
+  if (path.includes('/platform/')) currentProduct = 'platform';
   else if (path.includes('/quizmentor/')) currentProduct = 'quizmentor';
   else if (path.includes('/harvest/')) currentProduct = 'harvest';
-  else if (path.includes('/naturequest-auth/')) currentProduct = 'auth';
+  else if (path.includes('/portfolio-auth/')) currentProduct = 'auth';
 
   // Initialize widget
   ecosystemWidget = new EcosystemWidget({

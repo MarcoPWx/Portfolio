@@ -59,7 +59,7 @@ function Navigation({ activeSection, setActiveSection }) {
           </div>
 
           <a 
-            href="https://github.com/naturequest"
+            href="https://github.com/portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all"
@@ -272,7 +272,7 @@ export function UltimatePortfolio() {
   // Complete projects data with real code, technologies, and roadmaps
   const projects = {
     auth: {
-      name: 'NatureQuest Auth',
+      name: 'Portfolio Auth',
       icon: KeyRound,
       tagline: 'Open-Source Unified Authentication',
       status: 'Live',
@@ -291,23 +291,23 @@ export function UltimatePortfolio() {
         { label: 'Security Score', value: 'A+' },
         { label: 'Response Time', value: '<50ms' }
       ],
-      code: `// NatureQuest Auth - Real Implementation
-import { AuthProvider, useAuth, AuthGuard } from 'naturequest-auth';
+      code: `// Portfolio Auth - Real Implementation
+import { AuthProvider, useAuth, AuthGuard } from 'portfolio-auth';
 import { createClient } from '@supabase/supabase-js';
 
 // Configure unified auth for multiple products
 export const auth = createAuthConfig({
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_KEY,
-  domain: '.naturequest.dev', // Cross-domain SSO
+  domain: '.portfolio.dev', // Cross-domain SSO
   products: [
-    { id: 'devmentor', name: 'DevMentor', url: 'https://devmentor.naturequest.dev' },
-    { id: 'quizmentor', name: 'QuizMentor', url: 'https://quiz.naturequest.dev' },
-    { id: 'harvest', name: 'Harvest.ai', url: 'https://harvest.naturequest.dev' },
-    { id: 'omni', name: 'Omni.ai', url: 'https://omni.naturequest.dev', requiredTier: 'pro' }
+    { id: 'platform', name: 'Platform', url: 'https://platform.portfolio.dev' },
+    { id: 'quizmentor', name: 'QuizMentor', url: 'https://quiz.portfolio.dev' },
+    { id: 'harvest', name: 'Harvest.ai', url: 'https://harvest.portfolio.dev' },
+    { id: 'omni', name: 'Omni.ai', url: 'https://omni.portfolio.dev', requiredTier: 'pro' }
   ],
   tiers: [
-    { id: 'free', name: 'Free', products: ['devmentor', 'quizmentor'], apiCalls: 100 },
+    { id: 'free', name: 'Free', products: ['platform', 'quizmentor'], apiCalls: 100 },
     { id: 'pro', name: 'Pro', products: ['all'], apiCalls: 10000 },
     { id: 'team', name: 'Team', products: ['all'], apiCalls: 50000, seats: 5 }
   ]
@@ -325,8 +325,8 @@ function Dashboard() {
   );
 }`,
       terminal: [
-        'npm install naturequest-auth',
-        'npx naturequest-auth init',
+        'npm install portfolio-auth',
+        'npx portfolio-auth init',
         'Creating auth configuration...',
         '✓ Supabase tables created',
         '✓ RLS policies configured',
@@ -357,9 +357,9 @@ function Dashboard() {
           features: ['SAML 2.0', 'MFA/2FA', 'Audit logs', 'GDPR compliance']
         }
       ],
-      github: 'https://github.com/naturequest/auth',
-      demo: 'https://auth.naturequest.dev',
-      npm: 'https://npmjs.com/package/naturequest-auth'
+      github: 'https://github.com/portfolio/auth',
+      demo: 'https://auth.portfolio.dev',
+      npm: 'https://npmjs.com/package/portfolio-auth'
     },
     harvest: {
       name: 'Harvest.ai',
@@ -449,7 +449,7 @@ class LegalComplianceEngine:
           features: ['Distributed crawling', 'Custom models', 'API marketplace']
         }
       ],
-      github: 'https://github.com/naturequest/harvest',
+      github: 'https://github.com/portfolio/harvest',
       demo: 'https://harvest.ai'
     },
     quizmentor: {
@@ -516,7 +516,7 @@ class GamificationService {
 }`,
       terminal: [
         'expo init QuizMentor',
-        'npm install @naturequest/gamification',
+        'npm install @portfolio/gamification',
         'expo prebuild',
         'Setting up gamification engine...',
         '✓ XP system configured',
@@ -549,7 +549,7 @@ class GamificationService {
           features: ['Friend challenges', 'Team competitions', 'Study groups']
         }
       ],
-      github: 'https://github.com/naturequest/quizmentor',
+      github: 'https://github.com/portfolio/quizmentor',
       demo: 'https://apps.apple.com/quizmentor'
     },
     omni: {
@@ -647,7 +647,7 @@ class SmartRouter {
           features: ['Team sharing', 'Custom models', 'Audit logs', 'Compliance']
         }
       ],
-      github: 'https://github.com/naturequest/omni',
+      github: 'https://github.com/portfolio/omni',
       marketplace: 'https://marketplace.visualstudio.com/omni'
     }
   };
@@ -715,7 +715,7 @@ class SmartRouter {
       link: '/blog/ethical-scraping'
     },
     {
-      title: 'Open Source SSO: Building NatureQuest Auth',
+      title: 'Open Source SSO: Building Portfolio Auth',
       excerpt: 'Complete guide to building a production SSO system with cross-domain support, subscription management, and enterprise features...',
       category: 'Open Source',
       date: 'Dec 10, 2024',
@@ -762,7 +762,7 @@ class SmartRouter {
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
                 Full-stack engineer building production-ready AI tools, open-source authentication systems, 
-                and gamified learning platforms. Creator of NatureQuest ecosystem.
+                and gamified learning platforms. Creator of Portfolio ecosystem.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button 

@@ -872,7 +872,7 @@ class RealtimeManager {
                       <h3 className="text-xl font-bold">Senior Full-Stack Engineer</h3>
                       <span className="text-sm text-green-400">Current</span>
                     </div>
-                    <div className="text-gray-400 mb-3">NatureQuest Technologies • 2022 - Present</div>
+                    <div className="text-gray-400 mb-3">Portfolio Technologies • 2022 - Present</div>
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start gap-2">
                         <ChevronRight className="w-4 h-4 text-gray-600 mt-1" />

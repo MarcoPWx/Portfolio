@@ -61,7 +61,7 @@ function Navigation({ activeSection, setActiveSection }) {
           </div>
 
           <a 
-            href="https://github.com/naturequest"
+            href="https://github.com/portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all"
@@ -315,7 +315,7 @@ export function DefinitivePortfolio() {
   // Complete projects with REAL features and psychology
   const projects = {
     quizmentor: {
-      name: 'DevMentor BETA',
+      name: 'Platform BETA',
       icon: Brain,
       tagline: 'Pattern-Based Machine Learning for Code',
       status: 'BETA',
@@ -743,7 +743,7 @@ class LegalComplianceEngine:
     },
     
     auth: {
-      name: 'NatureQuest Auth',
+      name: 'Portfolio Auth',
       icon: KeyRound,
       tagline: 'The Only Part That Actually Works',
       status: projectStatus.auth.reality.status,
@@ -808,7 +808,7 @@ export const useAuthStore = create<AuthState>()(
         
         // Set secure cross-domain cookie
         document.cookie = \`nq_session=\${data.session.access_token}; \` +
-          \`domain=.naturequest.dev; path=/; \` +
+          \`domain=.portfolio.dev; path=/; \` +
           \`secure; samesite=lax; max-age=604800\`;
         
         // Track security event

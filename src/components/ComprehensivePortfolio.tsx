@@ -324,7 +324,7 @@ export function ComprehensivePortfolio() {
     },
     {
       id: 'harvest',
-      title: 'Chameleon',
+      title: 'AI Assistant',
       tagline: 'Intelligent Content Infrastructure',
       description: 'Multi-agent AI system for automated content transformation and validation',
       status: 'Beta',
@@ -1015,7 +1015,7 @@ class RealtimeManager {
                       <span className="text-sm text-green-400">Current</span>
                     </div>
                     <div className="text-gray-400 mb-3">
-                      NatureQuest Technologies • 2022 - Present
+                      Portfolio Technologies • 2022 - Present
                     </div>
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start gap-2">

@@ -32,7 +32,7 @@ export function AuthGuard({
         <h2 className="text-2xl font-bold mb-4">Authentication Required</h2>
         <p className="text-gray-500 mb-6">Please sign in to access this page</p>
         <a 
-          href="https://accounts.naturequest.dev/login" 
+          href="https://accounts.portfolio.dev/login" 
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           Sign In
@@ -54,7 +54,7 @@ export function AuthGuard({
             This feature requires {requireTier} tier or higher
           </p>
           <a 
-            href="https://accounts.naturequest.dev/billing" 
+            href="https://accounts.portfolio.dev/billing" 
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg"
           >
             Upgrade Now
@@ -72,7 +72,7 @@ export function AuthGuard({
           You don't have access to this product
         </p>
         <a 
-          href="https://accounts.naturequest.dev/billing" 
+          href="https://accounts.portfolio.dev/billing" 
           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg"
         >
           View Plans

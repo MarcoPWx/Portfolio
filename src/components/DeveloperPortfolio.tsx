@@ -129,7 +129,7 @@ function Navigation({
           </div>
 
           <a
-            href="https://github.com/naturequest"
+            href="https://github.com/portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
@@ -213,7 +213,7 @@ export function DeveloperPortfolio() {
         'Created 60+ smooth animations with Reanimated 3',
         'Designed psychological hooks for 92% retention rate',
       ],
-      github: 'https://github.com/naturequest/quizmentor',
+      github: 'https://github.com/portfolio/quizmentor',
       demo: 'https://quizmentor.app',
       code: `// Gamification engine with psychological hooks
 export class GamificationEngine {
@@ -240,7 +240,7 @@ export class GamificationEngine {
 }`,
     },
     {
-      title: 'Chameleon',
+      title: 'AI Assistant',
       description: 'Content transformation pipeline with multi-agent AI validation',
       tech: ['Python', 'FastAPI', 'LangChain', 'Docker'],
       icon: FileSearch,
@@ -251,7 +251,7 @@ export class GamificationEngine {
         'Implemented semantic deduplication with FAISS',
         'Created pipeline supporting 20+ output formats',
       ],
-      github: 'https://github.com/naturequest/harvest',
+      github: 'https://github.com/portfolio/harvest',
       code: `# Multi-agent content validation system
 class ContentValidator:
     def __init__(self):
@@ -283,7 +283,7 @@ class ContentValidator:
         return output`,
     },
     {
-      title: 'NatureQuest Auth',
+      title: 'Portfolio Auth',
       description: 'Unified authentication system with cross-domain SSO',
       tech: ['TypeScript', 'React', 'Supabase', 'JWT'],
       icon: KeyRound,
@@ -294,8 +294,8 @@ class ContentValidator:
         'Created TypeScript SDK with React hooks',
         'Added 2FA, rate limiting, and CSRF protection',
       ],
-      github: 'https://github.com/naturequest/auth',
-      npm: 'https://npmjs.com/package/naturequest-auth',
+      github: 'https://github.com/portfolio/auth',
+      npm: 'https://npmjs.com/package/portfolio-auth',
       code: `// Cross-domain SSO implementation
 export const useAuthStore = create<AuthState>()(
   persist((set, get) => ({
@@ -306,7 +306,7 @@ export const useAuthStore = create<AuthState>()(
       
       // Set secure cross-domain cookie
       document.cookie = \`nq_session=\${data.session.access_token}; \` +
-        \`domain=.naturequest.dev; secure; samesite=lax\`;
+        \`domain=.portfolio.dev; secure; samesite=lax\`;
       
       // Track security event
       await this.logSecurityEvent('login', {
@@ -342,7 +342,7 @@ export const useAuthStore = create<AuthState>()(
         'Creating cost tracking and optimization features',
         'Supporting 12+ AI providers in unified interface',
       ],
-      github: 'https://github.com/naturequest/omni',
+      github: 'https://github.com/portfolio/omni',
       code: `// Smart AI provider routing
 class SmartRouter {
   async route(request: AIRequest): Promise<AIProvider> {
@@ -410,8 +410,8 @@ class SmartRouter {
                 <div className="text-gray-500 mb-2">$ ls projects/</div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                   <span className="text-blue-400">QuizMentor/</span>
-                  <span className="text-blue-400">Chameleon/</span>
-                  <span className="text-blue-400">NatureQuest-Auth/</span>
+                  <span className="text-blue-400">AI Assistant/</span>
+                  <span className="text-blue-400">Portfolio-Auth/</span>
                   <span className="text-blue-400">Omni.ai/</span>
                 </div>
               </div>
@@ -443,7 +443,7 @@ class SmartRouter {
                   View Projects
                 </button>
                 <a
-                  href="https://github.com/naturequest"
+                  href="https://github.com/portfolio"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 bg-gray-800 rounded-lg font-medium hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
@@ -714,13 +714,13 @@ class SmartRouter {
                 </a>
 
                 <a
-                  href="https://github.com/naturequest"
+                  href="https://github.com/portfolio"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
                 >
                   <Github className="w-5 h-5 text-green-400" />
-                  <span>github.com/naturequest</span>
+                  <span>github.com/portfolio</span>
                 </a>
 
                 <a

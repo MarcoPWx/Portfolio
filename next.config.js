@@ -21,7 +21,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['naturequest.dev', 'quizmentor.ai', 'devmentor.ai', 'harvest.ai', 'omni.dev'],
+    domains: ['portfolio.dev', 'quizmentor.ai', 'platform.ai', 'harvest.ai', 'omni.dev'],
     formats: ['image/avif', 'image/webp'],
   },
   experimental: {

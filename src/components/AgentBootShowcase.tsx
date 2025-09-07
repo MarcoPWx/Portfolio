@@ -58,7 +58,7 @@ export const AgentBootShowcase = () => {
   };
 
   const getDefaultAgentBootCode = () => `#!/usr/bin/env python3
-"""AGENT-BOOT.py - AI-OS Project Companion"""
+"""AGENT-BOOT.py - Enterprise Platformject Companion"""
 
 import json
 import subprocess
@@ -67,7 +67,7 @@ from datetime import datetime
 from typing import Dict, List, Optional
 
 class AgentBoot:
-    """Your AI-OS Project Companion"""
+    """Your Enterprise Platformject Companion"""
     
     def __init__(self):
         self.project_root = Path.cwd()
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     {
       command: '> agent-boot health',
       output: [
-        '🚀 AI-OS Project Health Check',
+        '🚀 Enterprise Platformject Health Check',
         '',
         '📊 Core Systems:',
         '• Documentation: ✅ HEALTHY',
@@ -458,7 +458,7 @@ if __name__ == "__main__":
             <h1 className="text-5xl font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent mb-4">
               Agent Boot
             </h1>
-            <p className="text-xl text-gray-300 mb-2">Your AI-OS Project Companion</p>
+            <p className="text-xl text-gray-300 mb-2">Your Enterprise Platformject Companion</p>
             <p className="text-gray-400 italic max-w-2xl mx-auto">
               750+ lines of intelligent automation that transforms how you manage AI-assisted
               development. From health checks to deployment, everything automated.
@@ -691,7 +691,7 @@ if __name__ == "__main__":
                   <div className="text-xs text-gray-500 font-mono flex items-center gap-2">
                     <Terminal className="w-3 h-3 text-green-400" /> AGENT-BOOT.py
                   </div>
-                  <div className="text-xs text-gray-500 font-mono">AI-OS Project</div>
+                  <div className="text-xs text-gray-500 font-mono">Enterprise Platformject</div>
                 </div>
 
                 {/* Terminal Content */}

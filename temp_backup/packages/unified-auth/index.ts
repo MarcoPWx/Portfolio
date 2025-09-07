@@ -1,5 +1,5 @@
-// @naturequest/unified-auth
-// Unified authentication package for NatureQuest ecosystem
+// @portfolio/unified-auth
+// Unified authentication package for Portfolio ecosystem
 
 export { useAuthStore, supabase } from './src/authStore';
 export { AuthProvider } from './src/AuthProvider';

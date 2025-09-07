@@ -81,7 +81,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 6,
       description: 'Primary language for all frontend and backend development',
-      projects: ['QuizMentor', 'DevMentor', 'Chameleon', 'Voice', 'Portfolio'],
+      projects: ['QuizMentor', 'Platform', 'AI Assistant', 'Voice', 'Portfolio'],
       additionalTags: ['All projects'],
       projectCount: 10,
       proficiency: 95,
@@ -93,7 +93,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 7,
       description: 'AI/ML development, FastAPI backends, data processing',
-      projects: ['Chameleon', 'DevMentor', 'ML Services'],
+      projects: ['AI Assistant', 'Platform', 'ML Services'],
       projectCount: 5,
       proficiency: 90,
     },
@@ -207,7 +207,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 6,
       description: 'SSR, SSG, ISR, React Server Components, App Router',
-      projects: ['QuizMentor', 'DevMentor', 'Chameleon', 'Voice', 'Portfolio'],
+      projects: ['QuizMentor', 'Platform', 'AI Assistant', 'Voice', 'Portfolio'],
       projectCount: 8,
       proficiency: 95,
     },
@@ -240,7 +240,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 5,
       description: 'State management, Redux Toolkit, RTK Query',
-      projects: ['QuizMentor', 'DevMentor', 'Complex apps'],
+      projects: ['QuizMentor', 'Platform', 'Complex apps'],
       projectCount: 6,
       proficiency: 90,
     },
@@ -299,7 +299,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Advanced' as const,
       years: 3,
       description: 'High-performance Python APIs, async/await',
-      projects: ['Chameleon'],
+      projects: ['AI Assistant'],
       projectCount: 4,
       proficiency: 85,
     },
@@ -494,7 +494,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Expert' as const,
       years: 2,
       description: 'Chains, agents, RAG, memory systems',
-      projects: ['DevMentor', 'Chameleon'],
+      projects: ['Platform', 'AI Assistant'],
       projectCount: 4,
       proficiency: 90,
     },
@@ -516,7 +516,7 @@ export function ComprehensiveSkillsV2() {
       level: 'Advanced' as const,
       years: 2,
       description: 'Qdrant, Pinecone, semantic search',
-      projects: ['DevMentor', 'Chameleon', 'RAG apps'],
+      projects: ['Platform', 'AI Assistant', 'RAG apps'],
       projectCount: 3,
       proficiency: 85,
     },
@@ -758,13 +758,13 @@ export function ComprehensiveSkillsV2() {
       securityDocUrl: '/docs/_quizmentor/security/SECURITY_HARDENING_BLUEPRINT.md',
       pipelineUrl: '/docs/_quizmentor/PRODUCTION_ARCHITECTURE.md',
     },
-    devmentor: {
-      name: 'DevMentor',
+    platform: {
+      name: 'Platform',
       securitySnapshot: 'JWT edge; mTLS mesh; RBAC',
-      securityDocUrl: '/docs/_devmentor/security/SECURITY_HARDENING_BLUEPRINT.md',
+      securityDocUrl: '/docs/_platform/security/SECURITY_HARDENING_BLUEPRINT.md',
     },
     harvest: {
-      name: 'Chameleon',
+      name: 'AI Assistant',
       securitySnapshot: 'BYOK ephemeral default; encrypted opt-in',
       securityDocUrl: '/docs/_harvest/security/SECURITY_HARDENING_BLUEPRINT.md',
     },
@@ -802,7 +802,7 @@ export function ComprehensiveSkillsV2() {
       'POST /api/sessions/{id}/results — Submit results',
       'GET /api/analytics/user/{userId} — User analytics',
     ],
-    devmentor: [
+    platform: [
       'POST /api/recommendations/learning-path — Learning Service',
       'POST /api/prompts/suggestions — Prompt suggestions',
       'POST /memories/search — Memory Service semantic search',
@@ -866,7 +866,7 @@ export function ComprehensiveSkillsV2() {
         { from: 'aiq', to: 'store' },
       ],
     },
-    devmentor: {
+    platform: {
       nodes: [
         { id: 'vscode', label: 'VS Code Ext', color: '#38bdf8' },
         { id: 'gateway', label: 'API Gateway', color: '#22c55e' },
@@ -917,7 +917,7 @@ export function ComprehensiveSkillsV2() {
       items: [
         {
           name: 'Contract-first APIs',
-          docUrl: '/docs/_devmentor/security/SECURITY_HARDENING_BLUEPRINT.md',
+          docUrl: '/docs/_platform/security/SECURITY_HARDENING_BLUEPRINT.md',
           storyId: 'portfolio-interactiveportfolio--docs',
           summary: 'OpenAPI-first, MSW mocks, Swagger in Storybook',
         },
@@ -934,7 +934,7 @@ export function ComprehensiveSkillsV2() {
       items: [
         {
           name: 'Security Blueprints',
-          docUrl: projectMeta.devmentor.securityDocUrl,
+          docUrl: projectMeta.platform.securityDocUrl,
           storyId: 'guides-engineering-notes--default',
           summary: 'Edge JWT, mTLS mesh, RBAC/OPA',
         },
@@ -975,8 +975,8 @@ export function ComprehensiveSkillsV2() {
         tags: ['Cinemataztic'],
       },
       {
-        text: 'Implemented type-safe SDKs and UI state patterns across DevMentor and portfolio',
-        tags: ['DevMentor', 'Portfolio'],
+        text: 'Implemented type-safe SDKs and UI state patterns across Platform and portfolio',
+        tags: ['Platform', 'Portfolio'],
       },
       {
         text: 'Authored reusable utilities and patterns documented in the internal developer handbook',
@@ -995,12 +995,12 @@ export function ComprehensiveSkillsV2() {
     ],
     Python: [
       {
-        text: 'FastAPI microservices powering Chameleon multi‑agent pipeline',
-        tags: ['Chameleon'],
+        text: 'FastAPI microservices powering AI Assistant multi‑agent pipeline',
+        tags: ['AI Assistant'],
       },
       {
         text: 'LangChain tooling for RAG, scoring, and orchestration',
-        tags: ['DevMentor', 'Chameleon'],
+        tags: ['Platform', 'AI Assistant'],
       },
     ],
     Go: [
@@ -1026,8 +1026,8 @@ export function ComprehensiveSkillsV2() {
         tags: ['Portfolio'],
       },
       {
-        text: 'Authored Storybook docs for project suites (QuizMentor, DevMentor, Chameleon)',
-        tags: ['QuizMentor', 'DevMentor', 'Chameleon'],
+        text: 'Authored Storybook docs for project suites (QuizMentor, Platform, AI Assistant)',
+        tags: ['QuizMentor', 'Platform', 'AI Assistant'],
       },
     ],
     'React Native': [
@@ -1052,13 +1052,13 @@ export function ComprehensiveSkillsV2() {
       { text: 'Improved accessibility and readability for mobile UI', tags: ['PatientSky'] },
       {
         text: 'Storybook documentation for projects for consistent UI references',
-        tags: ['QuizMentor', 'DevMentor', 'Chameleon'],
+        tags: ['QuizMentor', 'Platform', 'AI Assistant'],
       },
     ],
     'Redux & Zustand': [
       {
-        text: 'Managed complex app state in QuizMentor and DevMentor with predictable data flows',
-        tags: ['QuizMentor', 'DevMentor'],
+        text: 'Managed complex app state in QuizMentor and Platform with predictable data flows',
+        tags: ['QuizMentor', 'Platform'],
       },
       {
         text: 'Introduced testable store boundaries to enable unit/component testing',
@@ -1093,7 +1093,7 @@ export function ComprehensiveSkillsV2() {
       { text: 'Built BFF to decouple complex flows and enable unit testing', tags: ['PatientSky'] },
       { text: 'Middleware and auth/session management', tags: ['Cinemataztic'] },
     ],
-    FastAPI: [{ text: 'Developed AI services and pipelines', tags: ['Chameleon'] }],
+    FastAPI: [{ text: 'Developed AI services and pipelines', tags: ['AI Assistant'] }],
     GraphQL: [
       { text: 'Designed and maintained enterprise APIs and subscriptions', tags: ['Portfolio'] },
       {
@@ -1105,7 +1105,7 @@ export function ComprehensiveSkillsV2() {
       { text: 'Real‑time battles, leaderboards and team competitions', tags: ['QuizMentor'] },
       {
         text: 'Live collaboration channels and presence indicators in dev tools',
-        tags: ['DevMentor'],
+        tags: ['Platform'],
       },
     ],
     'REST APIs': [
@@ -1159,28 +1159,28 @@ export function ComprehensiveSkillsV2() {
 
     // AI/ML
     LangChain: [
-      { text: 'Agents/chains for content transformation and validation', tags: ['Chameleon'] },
-      { text: 'RAG pipelines and memory primitives for learning features', tags: ['DevMentor'] },
+      { text: 'Agents/chains for content transformation and validation', tags: ['AI Assistant'] },
+      { text: 'RAG pipelines and memory primitives for learning features', tags: ['Platform'] },
     ],
     'OpenAI APIs': [
       {
         text: 'Function calling, embeddings, and cost‑aware routing across providers',
-        tags: ['DevMentor', 'Chameleon'],
+        tags: ['Platform', 'AI Assistant'],
       },
-      { text: 'Prompt safety/validation layers for production tools', tags: ['DevMentor'] },
+      { text: 'Prompt safety/validation layers for production tools', tags: ['Platform'] },
     ],
     'Vector DBs': [
       {
         text: 'Qdrant/Pinecone indexes for semantic search and recommendation',
-        tags: ['DevMentor', 'Chameleon'],
+        tags: ['Platform', 'AI Assistant'],
       },
     ],
     'Prompt Engineering': [
       {
         text: 'System/prompt templates with tool/argument schemas for reliable outputs',
-        tags: ['DevMentor'],
+        tags: ['Platform'],
       },
-      { text: 'Pattern‑based prompts that adapt to repository conventions', tags: ['DevMentor'] },
+      { text: 'Pattern‑based prompts that adapt to repository conventions', tags: ['Platform'] },
     ],
     'Local Models': [
       {
@@ -1266,7 +1266,7 @@ export function ComprehensiveSkillsV2() {
     PyTest: [
       {
         text: 'FastAPI service tests, fixtures and contract checks for AI pipelines',
-        tags: ['Chameleon'],
+        tags: ['AI Assistant'],
       },
     ],
     'ESLint & Prettier': [
@@ -1637,7 +1637,7 @@ export function ComprehensiveSkillsV2() {
 
         {/* Security & Compliance */}
         <div className="mt-10 grid md:grid-cols-3 gap-4">
-          {(['quizmentor', 'devmentor', 'harvest'] as const).map((key) => (
+          {(['quizmentor', 'platform', 'harvest'] as const).map((key) => (
             <div key={key} className="bg-gray-900/50 border border-gray-800 rounded-lg p-4">
               <div className="text-xs text-gray-400 mb-2">{projectMeta[key].name}</div>
               <div className="text-sm text-gray-300 mb-3">{projectMeta[key].securitySnapshot}</div>
@@ -1673,7 +1673,7 @@ export function ComprehensiveSkillsV2() {
               {(Object.keys(archGraphs) as (keyof typeof archGraphs)[]).map((k) => (
                 <div key={k} className="bg-gray-900/40 border border-gray-800 rounded-lg p-3">
                   <div className="text-xs text-gray-400 mb-2">
-                    {projectMeta[k as 'quizmentor' | 'devmentor' | 'harvest']?.name ||
+                    {projectMeta[k as 'quizmentor' | 'platform' | 'harvest']?.name ||
                       (k === 'quizmentor-harvester' ? 'QuizMentor Harvester' : k)}
                   </div>
                   <MiniArchGraph
@@ -1746,7 +1746,7 @@ export function ComprehensiveSkillsV2() {
               {(Object.keys(apiDirectory) as (keyof typeof apiDirectory)[]).map((k) => (
                 <div key={k} className="bg-gray-900/40 border border-gray-800 rounded-lg p-4">
                   <div className="text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-2">
-                    {projectMeta[k as 'quizmentor' | 'devmentor' | 'harvest']?.name || k}
+                    {projectMeta[k as 'quizmentor' | 'platform' | 'harvest']?.name || k}
                   </div>
                   <ul className="space-y-1">
                     {apiDirectory[k].map((line, i) => (
@@ -1797,7 +1797,7 @@ export function ComprehensiveSkillsV2() {
           </p>
           <div className="flex justify-center gap-4">
             <motion.a
-              href="mailto:hello@naturequest.dev"
+              href="mailto:hello@portfolio.dev"
               className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-medium"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

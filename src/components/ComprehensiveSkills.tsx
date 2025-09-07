@@ -88,12 +88,12 @@ const techCategories: TechCategory[] = [
         icon: <Braces className="w-5 h-5" />,
         experience:
           'Primary language for all frontend and backend development with strict type safety',
-        projects: ['QuizMentor', 'DevMentor', 'Chameleon', 'Portfolio'],
+        projects: ['QuizMentor', 'Platform', 'AI Assistant', 'Portfolio'],
         yearsUsed: '6+ years',
         proficiencyLevel: 'Expert',
         examples: [
           {
-            project: 'DevMentor AI Assistant',
+            project: 'Platform AI Assistant',
             description:
               'Built pattern-based machine learning system with complex type definitions and AI workflow orchestration',
             impact:
@@ -115,12 +115,12 @@ const techCategories: TechCategory[] = [
         name: 'Python',
         icon: <Code2 className="w-5 h-5" />,
         experience: 'AI/ML development, FastAPI backends, data processing, and automation',
-        projects: ['Chameleon', 'DevMentor AI', 'Data Analytics', 'ML Models'],
+        projects: ['AI Assistant', 'Platform AI', 'Data Analytics', 'ML Models'],
         yearsUsed: '7+ years',
         proficiencyLevel: 'Expert',
         examples: [
           {
-            project: 'Chameleon Content Intelligence',
+            project: 'AI Assistant Content Intelligence',
             description:
               'Built high-performance content analysis pipeline processing 100K+ documents with ML models',
             impact: 'Achieved 99.2% accuracy in content classification and 60% faster processing',
@@ -128,7 +128,7 @@ const techCategories: TechCategory[] = [
               'FastAPI with async/await, Pydantic models, SQLAlchemy ORM, TensorFlow/PyTorch, and custom ML pipeline orchestration',
           },
           {
-            project: 'DevMentor AI Learning Engine',
+            project: 'Platform AI Learning Engine',
             description:
               'Developed machine learning algorithms for pattern recognition and code analysis',
             impact: '95% accuracy in code pattern detection and automated learning recommendations',
@@ -202,7 +202,7 @@ const techCategories: TechCategory[] = [
         icon: <Atom className="w-5 h-5" />,
         experience:
           'Advanced patterns, hooks, context, performance optimization, and modern React features',
-        projects: ['QuizMentor Web', 'DevMentor UI', 'Portfolio', 'Admin Dashboards'],
+        projects: ['QuizMentor Web', 'Platform UI', 'Portfolio', 'Admin Dashboards'],
         yearsUsed: '7+ years',
         proficiencyLevel: 'Expert',
         examples: [
@@ -216,7 +216,7 @@ const techCategories: TechCategory[] = [
               'Advanced React patterns, custom hooks, context optimization, React Query, and performance monitoring with React DevTools',
           },
           {
-            project: 'DevMentor Admin Dashboard',
+            project: 'Platform Admin Dashboard',
             description:
               'Complex admin interface with real-time analytics, user management, and system monitoring',
             impact: 'Reduced admin task time by 70% through intuitive UI and automated workflows',
@@ -238,7 +238,7 @@ const techCategories: TechCategory[] = [
         name: 'React Native',
         icon: <Smartphone className="w-5 h-5" />,
         experience: 'Cross-platform mobile apps, native modules',
-        projects: ['QuizMentor Mobile', 'Chameleon Mobile'],
+        projects: ['QuizMentor Mobile', 'AI Assistant Mobile'],
         yearsUsed: '4+ years',
         proficiencyLevel: 'Advanced',
         examples: [],
@@ -289,7 +289,7 @@ const techCategories: TechCategory[] = [
         name: 'Node.js',
         icon: <Server className="w-5 h-5" />,
         experience: 'Express, Fastify, microservices architecture',
-        projects: ['QuizMentor API', 'DevMentor Backend'],
+        projects: ['QuizMentor API', 'Platform Backend'],
         yearsUsed: '6+ years',
         proficiencyLevel: 'Expert',
         examples: [],
@@ -298,7 +298,7 @@ const techCategories: TechCategory[] = [
         name: 'FastAPI',
         icon: <Zap className="w-5 h-5" />,
         experience: 'High-performance Python APIs, automatic documentation',
-        projects: ['Chameleon', 'ML model serving'],
+        projects: ['AI Assistant', 'ML model serving'],
         yearsUsed: '3+ years',
         proficiencyLevel: 'Advanced',
         examples: [],
@@ -343,12 +343,12 @@ const techCategories: TechCategory[] = [
         icon: <Sparkles className="w-5 h-5" />,
         experience:
           'GPT models, embeddings, fine-tuning, function calling, and advanced prompt engineering',
-        projects: ['All AI-powered features', 'DevMentor', 'Chameleon'],
+        projects: ['All AI-powered features', 'Platform', 'AI Assistant'],
         yearsUsed: '3+ years',
         proficiencyLevel: 'Expert',
         examples: [
           {
-            project: 'DevMentor AI Assistant',
+            project: 'Platform AI Assistant',
             description:
               'Built intelligent code analysis and learning recommendation system using GPT-4',
             impact: '95% accuracy in code pattern recognition and personalized learning paths',
@@ -379,7 +379,7 @@ const techCategories: TechCategory[] = [
         name: 'LangChain',
         icon: <Brain className="w-5 h-5" />,
         experience: 'Complex AI workflows, agents, memory systems, and RAG implementations',
-        projects: ['DevMentor', 'Chameleon', 'Knowledge Systems'],
+        projects: ['Platform', 'AI Assistant', 'Knowledge Systems'],
         yearsUsed: '2+ years',
         proficiencyLevel: 'Advanced',
         examples: [],
@@ -441,12 +441,12 @@ const techCategories: TechCategory[] = [
         name: 'Docker & Kubernetes',
         icon: <Boxes className="w-5 h-5" />,
         experience: 'Containerization, orchestration, and microservices deployment',
-        projects: ['DevMentor', 'QuizMentor', 'Production systems'],
+        projects: ['Platform', 'QuizMentor', 'Production systems'],
         yearsUsed: '4+ years',
         proficiencyLevel: 'Advanced',
         examples: [
           {
-            project: 'DevMentor Microservices',
+            project: 'Platform Microservices',
             description:
               'Containerized microservices architecture with Kubernetes orchestration and Istio service mesh',
             impact: 'Zero-downtime deployments and 80% faster scaling response times',
@@ -700,7 +700,7 @@ export function ComprehensiveSkills() {
         </h2>
         <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto">
           Comprehensive toolkit spanning the entire development lifecycle - from ideation to
-          production deployment across all NatureQuest projects
+          production deployment across all Portfolio projects
         </p>
       </motion.div>
 

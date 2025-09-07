@@ -49,13 +49,13 @@ const products: Product[] = [
     }
   },
   {
-    id: 'devmentor',
-    name: 'DevMentor',
+    id: 'platform',
+    name: 'Platform',
     tagline: 'AI Development Assistant',
     description: 'Your intelligent coding companion that learns your patterns and helps you write better code faster. Get contextual suggestions and automated workflows.',
     icon: '🧠',
     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    url: 'https://devmentor.ai',
+    url: 'https://platform.ai',
     status: 'beta',
     features: [
       'Code completion',

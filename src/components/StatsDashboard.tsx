@@ -248,14 +248,14 @@ export const StatsDashboard: React.FC = () => {
       color: 'blue',
     },
     {
-      title: 'Chameleon Tokens',
+      title: 'AI Assistant Tokens',
       value: 1847392,
       change: 67,
       icon: <Cpu className="w-5 h-5 text-green-400" />,
       color: 'green',
     },
     {
-      title: 'DevMentor Sessions',
+      title: 'Platform Sessions',
       value: 3847,
       change: 42,
       icon: <Code2 className="w-5 h-5 text-orange-400" />,
@@ -428,8 +428,8 @@ export const StatsDashboard: React.FC = () => {
               <div className="space-y-4">
                 {[
                   'QuizMentor v2.0 Released',
-                  'Chameleon Beta Launch',
-                  'DevMentor Integration',
+                  'AI Assistant Beta Launch',
+                  'Platform Integration',
                   'Omni.ai Alpha',
                 ].map((event, index) => (
                   <motion.div

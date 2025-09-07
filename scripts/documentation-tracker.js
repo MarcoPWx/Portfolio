@@ -2,7 +2,7 @@
 
 /**
  * Master Documentation Tracker
- * Scans and inventories all documentation across the NatureQuest ecosystem
+ * Scans and inventories all documentation across the Portfolio ecosystem
  * Generates a comprehensive index with categorization and metadata
  */
 
@@ -11,7 +11,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 // Configuration
-const ECOSYSTEM_ROOT = '/Users/betolbook/Documents/github/NatureQuest';
+const ECOSYSTEM_ROOT = '/Users/betolbook/Documents/github/Portfolio';
 const OUTPUT_DIR = path.join(__dirname, '../docs/master-documentation');
 const IGNORE_PATTERNS = [
   'node_modules',
@@ -47,7 +47,7 @@ const CATEGORIES = {
 const PROJECTS = {
   portfolio: 'Portfolio Central',
   QuizMentor: 'QuizMentor',
-  devmentor: 'DevMentor',
+  platform: 'Platform',
   'Harvest.ai': 'Harvest.ai',
   'Omni.ai': 'Omni.ai',
 };

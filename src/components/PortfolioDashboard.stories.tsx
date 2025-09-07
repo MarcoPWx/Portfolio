@@ -8,7 +8,7 @@ const meta: Meta<typeof PortfolioDashboard> = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'A beautiful dashboard showcasing all products in the NatureQuest ecosystem with filtering, detailed views, and metrics.'
+        component: 'A beautiful dashboard showcasing all products in the Portfolio ecosystem with filtering, detailed views, and metrics.'
       }
     }
   },

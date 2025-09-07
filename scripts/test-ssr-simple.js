@@ -5,7 +5,7 @@
  */
 
 const testSSR = async () => {
-  console.log('\n🚀 Testing SSR for NatureQuest Portfolio\n');
+  console.log('\n🚀 Testing SSR for Portfolio Portfolio\n');
   console.log('='.repeat(50));
 
   const url = 'http://localhost:3001';
@@ -32,7 +32,7 @@ const testSSR = async () => {
       },
       {
         name: 'Main Content Renders (not just loading)',
-        pass: html.includes('NatureQuest') || !html.includes('Loading portfolio'),
+        pass: html.includes('Portfolio') || !html.includes('Loading portfolio'),
       },
       {
         name: 'Has Hydration Scripts',

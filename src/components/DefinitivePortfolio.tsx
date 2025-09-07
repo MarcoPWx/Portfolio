@@ -141,7 +141,7 @@ function Navigation({
           </div>
 
           <a
-            href="https://github.com/naturequest"
+            href="https://github.com/portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all"
@@ -411,8 +411,8 @@ export function DefinitivePortfolio() {
 
   // Complete projects with REAL features and psychology
   const projects = {
-    devmentor: {
-      name: 'DevMentor BETA',
+    platform: {
+      name: 'Platform BETA',
       icon: Brain,
       tagline: 'Pattern-Based Machine Learning for Code',
       status: 'BETA',
@@ -684,7 +684,7 @@ export class GamificationEngine {
     },
 
     harvest: {
-      name: 'Chameleon',
+      name: 'AI Assistant',
       icon: FileSearch,
       tagline: 'AI Content Generation That Would Bankrupt You',
       status: projectStatus.harvest.reality.status,
@@ -848,7 +848,7 @@ class LegalComplianceEngine:
     },
 
     auth: {
-      name: 'NatureQuest Auth',
+      name: 'Portfolio Auth',
       icon: KeyRound,
       tagline: 'The Only Part That Actually Works',
       status: projectStatus.auth.reality.status,
@@ -914,7 +914,7 @@ export const useAuthStore = create<AuthState>()(
         
         // Set secure cross-domain cookie
         document.cookie = \`nq_session=\${data.session.access_token}; \` +
-          \`domain=.naturequest.dev; path=/; \` +
+          \`domain=.portfolio.dev; path=/; \` +
           \`secure; samesite=lax; max-age=604800\`;
         
         // Track security event
@@ -1348,7 +1348,7 @@ class SmartRouter {
                 </div>
                 <p className="text-sm text-gray-300">
                   Despite impressive documentation, most projects are 15-20% complete. QuizMentor
-                  has no auth, Chameleon would bankrupt users, and Omni.ai is just a README.
+                  has no auth, AI Assistant would bankrupt users, and Omni.ai is just a README.
                 </p>
               </div>
 

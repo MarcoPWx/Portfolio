@@ -173,8 +173,8 @@ export function EnhancedPortfolio() {
 
   const products = [
     {
-      id: 'devmentor',
-      name: 'DevMentor',
+      id: 'platform',
+      name: 'Platform',
       description: 'AI-powered development assistant',
       icon: Code2,
       gradient: 'from-blue-500 to-cyan-500',
@@ -232,7 +232,7 @@ export function EnhancedPortfolio() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">NatureQuest</span>
+              <span className="text-xl font-bold">Portfolio</span>
             </motion.div>
             
             <div className="hidden md:flex items-center space-x-1">
@@ -520,7 +520,7 @@ export function EnhancedPortfolio() {
             transition={{ delay: 0.2 }}
             className="text-xl text-gray-400 mb-8"
           >
-            With NatureQuest, you can build production-ready applications faster than ever before.
+            With Portfolio, you can build production-ready applications faster than ever before.
           </motion.p>
           
           <motion.div
@@ -559,7 +559,7 @@ export function EnhancedPortfolio() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">NatureQuest</span>
+              <span className="text-xl font-bold">Portfolio</span>
             </div>
             
             <div className="flex items-center space-x-6">
@@ -584,7 +584,7 @@ export function EnhancedPortfolio() {
           </div>
           
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
-            © 2024 NatureQuest. All rights reserved.
+            © 2024 Portfolio. All rights reserved.
           </div>
         </div>
       </footer>

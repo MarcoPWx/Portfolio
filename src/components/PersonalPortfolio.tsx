@@ -47,12 +47,12 @@ export function PersonalPortfolio() {
 
   const products = [
     {
-      id: 'devmentor',
-      name: 'DevMentor',
+      id: 'platform',
+      name: 'Platform',
       description: 'AI-powered development assistant that helps you write better code faster',
       icon: Zap,
       color: 'blue',
-      href: 'https://devmentor.naturequest.dev',
+      href: 'https://platform.portfolio.dev',
       stats: { users: '2.5k+', rating: '4.9' },
     },
     {
@@ -61,16 +61,16 @@ export function PersonalPortfolio() {
       description: 'Interactive learning platform with AI-generated quizzes',
       icon: Star,
       color: 'purple',
-      href: 'https://quizmentor.naturequest.dev',
+      href: 'https://quizmentor.portfolio.dev',
       stats: { users: '5k+', rating: '4.8' },
     },
     {
       id: 'harvest',
-      name: 'Chameleon',
+      name: 'AI Assistant',
       description: 'Data insights and analytics for your business growth',
       icon: TrendingUp,
       color: 'green',
-      href: 'https://harvest.naturequest.dev',
+      href: 'https://harvest.portfolio.dev',
       stats: { users: '1k+', rating: '4.7' },
     },
     {
@@ -212,7 +212,7 @@ export function PersonalPortfolio() {
               <p className="text-lg text-gray-300 leading-relaxed">
                 I'm a passionate full-stack developer with over 7 years of experience building
                 innovative web applications and AI-powered solutions. My journey in tech has led me
-                to create the NatureQuest ecosystem - a suite of tools designed to empower
+                to create the Portfolio ecosystem - a suite of tools designed to empower
                 developers and learners alike.
               </p>
               <p className="text-lg text-gray-300 leading-relaxed mt-4">
@@ -277,7 +277,7 @@ export function PersonalPortfolio() {
             className="space-y-6"
           >
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-2">NatureQuest Ecosystem</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">Portfolio Ecosystem</h2>
               <p className="text-gray-400">Building tools that empower developers and learners</p>
             </div>
 
@@ -591,7 +591,7 @@ export function PersonalPortfolio() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
               <Sparkles className="w-6 h-6 text-blue-400" />
-              <span className="text-xl font-bold text-white">NatureQuest</span>
+              <span className="text-xl font-bold text-white">Portfolio</span>
             </div>
 
             <div className="hidden md:flex items-center space-x-1">
@@ -633,7 +633,7 @@ export function PersonalPortfolio() {
       <footer className="mt-20 border-t border-gray-800 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <p className="text-gray-400">© 2024 NatureQuest. All rights reserved.</p>
+            <p className="text-gray-400">© 2024 Portfolio. All rights reserved.</p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 Privacy

@@ -31,8 +31,8 @@ describe('Navigation Integration Tests', () => {
 
     await waitFor(() => {
       expect(screen.getAllByText('QuizMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('DevMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('Chameleon').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Platform').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('AI Assistant').length).toBeGreaterThan(0);
     });
 
     // Navigate to About
@@ -186,8 +186,8 @@ describe('Navigation Integration Tests', () => {
     await waitFor(() => {
       // Check project details
       expect(screen.getAllByText('QuizMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('DevMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('Chameleon').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Platform').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('AI Assistant').length).toBeGreaterThan(0);
       expect(screen.getAllByText('Voice AI Assistant').length).toBeGreaterThan(0);
     });
   });

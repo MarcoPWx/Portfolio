@@ -25,11 +25,11 @@ export function ProjectStack() {
   type ProjectId =
     | 'all'
     | 'quizmentor'
-    | 'ai-os-ce'
-    | 'ai-os-pro'
-    | 'chameleon'
-    | 'learnforge'
-    | 'octopus'
+    | 'dev-toolkit'
+    | 'enterprise-platform'
+    | 'ai-assistant'
+    | 'docs-system'
+    | 'analytics'
     | 'opensource';
   const [filter, setFilter] = useState<ProjectId>('all');
 
@@ -42,12 +42,12 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Next.js + React + TypeScript',
-            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon'],
+            usedIn: ['Developer Toolkit', 'Enterprise Platform', 'AI Assistant'],
+            usedIds: ['dev-toolkit', 'enterprise-platform', 'ai-assistant'],
             examples: [
-              'App Router + RSC where useful (AI-OS-Pro)',
-              'Next.js 15.5 streaming API routes (Chameleon)',
-              'Documentation sites and dashboards (AI-OS-CE)',
+              'App Router + RSC where useful (Enterprise Platform)',
+              'Next.js 15.5 streaming API routes (AI Assistant)',
+              'Documentation sites and dashboards (Developer Toolkit)',
             ],
           },
           {
@@ -79,23 +79,23 @@ export function ProjectStack() {
           },
           {
             tech: 'React Query (TanStack)',
-            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'AI Assistant', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'ai-assistant', 'quizmentor'],
             examples: [
-              'Client caching for multi-agent state (AI-OS-Pro)',
-              'SSR-safe caching and SWR patterns (Chameleon)',
+              'Client caching for multi-agent state (Enterprise Platform)',
+              'SSR-safe caching and SWR patterns (AI Assistant)',
               'useQuizCategories/useQuizQuestions hooks (QuizMentor)',
             ],
           },
           {
             tech: 'Tailwind CSS / NativeWind',
-            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon', 'QuizMentor', 'LearnForge'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon', 'quizmentor', 'learnforge'],
+            usedIn: ['Developer Toolkit', 'Enterprise Platform', 'AI Assistant', 'QuizMentor', 'Documentation System'],
+            usedIds: ['dev-toolkit', 'enterprise-platform', 'ai-assistant', 'quizmentor', 'docs-system'],
             examples: [
               'Utility-first styling; PostCSS/Autoprefixer',
               'NativeWind for RN components (QuizMentor)',
-              'Custom design systems (AI-OS-Pro)',
-              'Documentation sites (LearnForge)',
+              'Custom design systems (Enterprise Platform)',
+              'Documentation sites (Documentation System)',
             ],
           },
           {
@@ -118,26 +118,26 @@ export function ProjectStack() {
           },
           {
             tech: 'React Markdown + remark-gfm + Mermaid',
-            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon'],
+            usedIn: ['Developer Toolkit', 'Enterprise Platform', 'AI Assistant'],
+            usedIds: ['dev-toolkit', 'enterprise-platform', 'ai-assistant'],
             examples: [
               'Docs rendering and diagrams in UI/Storybook',
-              'Architecture diagrams and S2S journey visualizations (AI-OS-CE)',
+              'Architecture diagrams and S2S journey visualizations (Developer Toolkit)',
             ],
           },
           {
             tech: 'Swagger UI React',
-            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'AI Assistant', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'ai-assistant', 'quizmentor'],
             examples: [
               'Embed OpenAPI specs in stories/panels',
-              'Multi-agent API documentation (AI-OS-Pro)',
+              'Multi-agent API documentation (Enterprise Platform)',
             ],
           },
           {
             tech: 'Python CLI & Agent Boot',
-            usedIn: ['AI-OS-CE'],
-            usedIds: ['ai-os-ce'],
+            usedIn: ['Developer Toolkit'],
+            usedIds: ['dev-toolkit'],
             examples: [
               'Agent Boot CLI for DEVLOG management',
               'EPIC tracking and task management',
@@ -154,25 +154,25 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Express (Node.js)',
-            usedIn: ['AI-OS-Pro', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'quizmentor'],
             examples: [
-              'Multi-agent orchestration API (AI-OS-Pro)',
+              'Multi-agent orchestration API (Enterprise Platform)',
               'API with helmet/cors/rate-limit (QuizMentor)',
             ],
           },
           {
             tech: 'Next.js API Routes (Node runtime)',
-            usedIn: ['Chameleon'],
-            usedIds: ['chameleon'],
+            usedIn: ['AI Assistant'],
+            usedIds: ['ai-assistant'],
             examples: ['SSE streaming generate/chat routes'],
           },
           {
             tech: 'Swagger/OpenAPI',
-            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'AI Assistant', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'ai-assistant', 'quizmentor'],
             examples: [
-              'Multi-agent API documentation (AI-OS-Pro)',
+              'Multi-agent API documentation (Enterprise Platform)',
               'OpenAPI YAML embedded in Storybook (QuizMentor)',
             ],
           },
@@ -203,22 +203,22 @@ export function ProjectStack() {
         items: [
           {
             tech: 'WebSocket (ws)',
-            usedIn: ['AI-OS-Pro'],
-            usedIds: ['ai-os-pro'],
+            usedIn: ['Enterprise Platform'],
+            usedIds: ['enterprise-platform'],
             examples: [
-              'Multi-agent real-time communication (AI-OS-Pro)',
+              'Multi-agent real-time communication (Enterprise Platform)',
             ],
           },
           {
             tech: 'Socket.IO (client)',
-            usedIn: ['AI-OS-Pro', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'quizmentor'],
-            examples: ['Agent coordination updates (AI-OS-Pro); multiplayer/presence (QuizMentor)'],
+            usedIn: ['Enterprise Platform', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'quizmentor'],
+            examples: ['Agent coordination updates (Enterprise Platform); multiplayer/presence (QuizMentor)'],
           },
           {
             tech: 'SSE (Server-Sent Events)',
-            usedIn: ['Chameleon', 'QuizMentor'],
-            usedIds: ['chameleon', 'quizmentor'],
+            usedIn: ['AI Assistant', 'QuizMentor'],
+            usedIds: ['ai-assistant', 'quizmentor'],
             examples: ['Streaming responses/tokens in UI; SSE demo flows'],
           },
         ],
@@ -230,8 +230,8 @@ export function ProjectStack() {
         items: [
           {
             tech: 'AI Gateway (Ollama + zod + Redis + ws)',
-            usedIn: ['AI-OS-Pro'],
-            usedIds: ['ai-os-pro'],
+            usedIn: ['Enterprise Platform'],
+            usedIds: ['enterprise-platform'],
             examples: [
               'Multi-agent orchestration and coordination',
               'Idempotent chat completions; events over WebSocket',
@@ -239,14 +239,14 @@ export function ProjectStack() {
           },
           {
             tech: 'AI SDKs: OpenAI / Anthropic / Google',
-            usedIn: ['Chameleon'],
-            usedIds: ['chameleon'],
+            usedIn: ['AI Assistant'],
+            usedIds: ['ai-assistant'],
             examples: ['Provider routing + fallback; embeddings; cost/latency surfacing'],
           },
           {
             tech: 'RAG / Vector (Qdrant)',
-            usedIn: ['AI-OS-Pro'],
-            usedIds: ['ai-os-pro'],
+            usedIn: ['Enterprise Platform'],
+            usedIds: ['enterprise-platform'],
             examples: [
               'Enterprise knowledge base and retrieval',
               'Context-aware agent memory management',
@@ -261,20 +261,20 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Redis',
-            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'AI Assistant', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'ai-assistant', 'quizmentor'],
             examples: [
-              'Agent state caching and coordination (AI-OS-Pro)',
-              'Metrics counters and caches (Chameleon)',
+              'Agent state caching and coordination (Enterprise Platform)',
+              'Metrics counters and caches (AI Assistant)',
               'API-side checks and caching (QuizMentor)',
             ],
           },
           {
             tech: 'PostgreSQL',
-            usedIn: ['AI-OS-Pro', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'quizmentor'],
             examples: [
-              'Multi-agent task and state persistence (AI-OS-Pro)',
+              'Multi-agent task and state persistence (Enterprise Platform)',
               'Local dev DB via Docker Compose (QuizMentor)',
             ],
           },
@@ -286,20 +286,20 @@ export function ProjectStack() {
           },
           {
             tech: 'Qdrant (Vector store)',
-            usedIn: ['AI-OS-Pro', 'LearnForge'],
-            usedIds: ['ai-os-pro', 'learnforge'],
+            usedIn: ['Enterprise Platform', 'Documentation System'],
+            usedIds: ['enterprise-platform', 'docs-system'],
             examples: [
-              'Semantic search for enterprise RAG (AI-OS-Pro)',
-              'Advanced RAG implementations (LearnForge)',
+              'Semantic search for enterprise RAG (Enterprise Platform)',
+              'Advanced RAG implementations (Documentation System)',
             ],
           },
           {
             tech: 'GitHub Actions',
-            usedIn: ['AI-OS-CE', 'AI-OS-Pro'],
-            usedIds: ['ai-os-ce', 'ai-os-pro'],
+            usedIn: ['Developer Toolkit', 'Enterprise Platform'],
+            usedIds: ['dev-toolkit', 'enterprise-platform'],
             examples: [
-              'CI/CD workflows and automation (AI-OS-CE)',
-              'Multi-agent deployment pipelines (AI-OS-Pro)',
+              'CI/CD workflows and automation (Developer Toolkit)',
+              'Multi-agent deployment pipelines (Enterprise Platform)',
             ],
           },
         ],
@@ -311,18 +311,18 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Docker & Compose',
-            usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
+            usedIn: ['Enterprise Platform', 'AI Assistant', 'QuizMentor'],
+            usedIds: ['enterprise-platform', 'ai-assistant', 'quizmentor'],
             examples: [
-              'Multi-agent container orchestration (AI-OS-Pro)',
+              'Multi-agent container orchestration (Enterprise Platform)',
               'Local dev environment setup',
               'Postgres/Redis/API + Expo web service (QuizMentor)',
             ],
           },
           {
             tech: 'Kubernetes & Helm',
-            usedIn: ['AI-OS-Pro'],
-            usedIds: ['ai-os-pro'],
+            usedIn: ['Enterprise Platform'],
+            usedIds: ['enterprise-platform'],
             examples: [
               'Enterprise-scale agent deployment',
               'Service mesh and policy management',
@@ -343,8 +343,8 @@ export function ProjectStack() {
         items: [
           {
             tech: 'HMAC S2S + JWT',
-            usedIn: ['AI-OS-Pro'],
-            usedIds: ['ai-os-pro'],
+            usedIn: ['Enterprise Platform'],
+            usedIds: ['enterprise-platform'],
             examples: [
               'Inter-agent secure communication',
               'Enterprise auth and service-to-service signing',
@@ -364,14 +364,14 @@ export function ProjectStack() {
           },
           {
             tech: 'CSP, HSTS, COOP/COEP',
-            usedIn: ['Chameleon'],
-            usedIds: ['chameleon'],
+            usedIn: ['AI Assistant'],
+            usedIds: ['ai-assistant'],
             examples: ['connect-src to OpenAI/Anthropic; cross-origin isolation'],
           },
           {
             tech: 'Distributed Tracing',
-            usedIn: ['AI-OS-Pro'],
-            usedIds: ['ai-os-pro'],
+            usedIn: ['Enterprise Platform'],
+            usedIds: ['enterprise-platform'],
             examples: [
               'Multi-agent request tracing',
               'Correlation ID propagation across services',
@@ -472,11 +472,11 @@ export function ProjectStack() {
         {[
           { id: 'all', label: 'All' },
           { id: 'quizmentor', label: 'QuizMentor' },
-          { id: 'ai-os-ce', label: 'AI-OS CE' },
-          { id: 'ai-os-pro', label: 'AI-OS Pro' },
-          { id: 'chameleon', label: 'Chameleon' },
-          { id: 'learnforge', label: 'LearnForge' },
-          { id: 'octopus', label: 'Octopus' },
+          { id: 'dev-toolkit', label: 'Developer Toolkit' },
+          { id: 'enterprise-platform', label: 'Enterprise Platform' },
+          { id: 'ai-assistant', label: 'AI Assistant' },
+          { id: 'docs-system', label: 'Documentation System' },
+          { id: 'analytics', label: 'Analytics Platform' },
           { id: 'opensource', label: 'Open Source' },
         ].map((f) => (
           <button

@@ -30,7 +30,7 @@ describe('ComprehensiveSkills', () => {
     fireEvent.click(typescriptCard);
 
     await waitFor(() => {
-      expect(screen.getByText('DevMentor AI Assistant')).toBeInTheDocument();
+      expect(screen.getByText('Platform AI Assistant')).toBeInTheDocument();
     });
   });
 
@@ -39,7 +39,7 @@ describe('ComprehensiveSkills', () => {
     fireEvent.click(pythonCard);
 
     await waitFor(() => {
-      expect(screen.getByText('Chameleon Content Intelligence')).toBeInTheDocument();
+      expect(screen.getByText('AI Assistant Content Intelligence')).toBeInTheDocument();
     });
   });
 
@@ -55,7 +55,7 @@ describe('ComprehensiveSkills', () => {
     fireEvent.click(openaiCard);
 
     await waitFor(() => {
-      expect(screen.getByText('DevMentor AI Assistant')).toBeInTheDocument();
+      expect(screen.getByText('Platform AI Assistant')).toBeInTheDocument();
     });
   });
 
@@ -113,7 +113,7 @@ describe('ComprehensiveSkills', () => {
     fireEvent.click(typescriptCard);
 
     await waitFor(() => {
-      expect(screen.getByText('DevMentor AI Assistant')).toBeInTheDocument();
+      expect(screen.getByText('Platform AI Assistant')).toBeInTheDocument();
     });
   });
 

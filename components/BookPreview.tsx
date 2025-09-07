@@ -117,7 +117,7 @@ print("Productivity multiplier: 312%")
     {
       command: '> agent-boot health',
       output: [
-        '🚀 AI-OS Project Health Check',
+        '🚀 Enterprise Platformject Health Check',
         '',
         '📊 Core Systems:',
         '• Documentation: ✅ HEALTHY',

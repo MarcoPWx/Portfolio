@@ -5,27 +5,27 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'NatureQuest - Developer Tools Ecosystem',
-  description: 'A suite of powerful tools for developers: QuizMentor, DevMentor, Harvest, and Omni. Enhance your productivity, learning, and development workflow.',
+  title: 'Portfolio - Developer Tools Ecosystem',
+  description: 'A suite of powerful tools for developers: QuizMentor, Platform, Harvest, and Omni. Enhance your productivity, learning, and development workflow.',
   keywords: 'developer tools, quiz platform, AI assistant, time tracking, VS Code extension',
-  authors: [{ name: 'NatureQuest Team' }],
+  authors: [{ name: 'Portfolio Team' }],
   openGraph: {
-    title: 'NatureQuest - Developer Tools Ecosystem',
+    title: 'Portfolio - Developer Tools Ecosystem',
     description: 'Building the future of developer tools',
     type: 'website',
-    url: 'https://naturequest.dev',
+    url: 'https://portfolio.dev',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'NatureQuest Portfolio',
+        alt: 'Portfolio Portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'NatureQuest - Developer Tools Ecosystem',
+    title: 'Portfolio - Developer Tools Ecosystem',
     description: 'Building the future of developer tools',
     images: ['/og-image.png'],
   },

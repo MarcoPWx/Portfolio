@@ -189,7 +189,7 @@ function Card3D({ children, className = "" }) {
 function InteractiveTerminal({ commands }) {
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([
-    { type: 'output', text: '🚀 NatureQuest Developer Portfolio v2.0' },
+    { type: 'output', text: '🚀 Portfolio Developer Portfolio v2.0' },
     { type: 'output', text: 'Type "help" for available commands' }
   ]);
   
@@ -302,7 +302,7 @@ function Navigation({ activeSection, setActiveSection }) {
           </div>
 
           <motion.a 
-            href="https://github.com/NatureQuest"
+            href="https://github.com/Portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 text-gray-400 hover:text-white transition-colors"
@@ -537,17 +537,17 @@ export function InteractivePortfolio() {
   // Enhanced Terminal commands
   const terminalCommands = {
     help: '📚 Available commands:\n  projects - List all projects\n  skills - Show tech stack\n  about - Who we are\n  contact - Get in touch\n  github - Visit GitHub\n  linkedin - Visit LinkedIn\n  blog - Latest articles\n  metrics - View live stats\n  roadmap - See what\'s next\n  whoami - About the developer\n  neofetch - System info\n  clear - Clear terminal',
-    projects: '🚀 Active Projects:\n  • QuizMentor - Gamified learning platform\n  • DevMentor - AI pair programming assistant\n  • Harvest.ai - Content intelligence system\n  • Omni.ai - Universal AI coding assistant',
+    projects: '🚀 Active Projects:\n  • QuizMentor - Gamified learning platform\n  • Platform - AI pair programming assistant\n  • Harvest.ai - Content intelligence system\n  • Omni.ai - Universal AI coding assistant',
     skills: '💻 Tech Stack:\n  Languages: TypeScript, Python, Go, Rust\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB',
-    about: '🌟 NatureQuest - Building the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Privacy-first, performance-optimized solutions\n  Team: Passionate developers and AI enthusiasts',
-    contact: '📬 Let\'s Connect:\n  Email: hello@naturequest.dev\n  GitHub: github.com/NatureQuest\n  LinkedIn: linkedin.com/company/naturequest\n  Twitter: @NatureQuestDev',
-    github: '🔗 Opening GitHub... github.com/NatureQuest',
-    linkedin: '💼 Opening LinkedIn... linkedin.com/company/naturequest',
+    about: '🌟 Portfolio - Building the future of developer tools\n  Mission: Create AI-powered tools that enhance developer productivity\n  Focus: Privacy-first, performance-optimized solutions\n  Team: Passionate developers and AI enthusiasts',
+    contact: '📬 Let\'s Connect:\n  Email: hello@portfolio.dev\n  GitHub: github.com/Portfolio\n  LinkedIn: linkedin.com/company/portfolio\n  Twitter: @PortfolioDev',
+    github: '🔗 Opening GitHub... github.com/Portfolio',
+    linkedin: '💼 Opening LinkedIn... linkedin.com/company/portfolio',
     blog: '📝 Latest Posts:\n  • Building Multi-Agent AI Systems\n  • Cost Optimization in Production AI\n  • Real-time Multiplayer at Scale\n  • Privacy-First Analytics',
     metrics: '📊 Live Stats:\n  Users: 10,000+\n  API Calls: 1M+\n  Uptime: 99.9%\n  Response: <50ms',
-    roadmap: '🗺️ Coming Soon:\n  • QuizMentor: Multiplayer battles\n  • DevMentor: Cloud sync\n  • Harvest.ai: Enterprise features\n  • Omni.ai: Plugin marketplace',
+    roadmap: '🗺️ Coming Soon:\n  • QuizMentor: Multiplayer battles\n  • Platform: Cloud sync\n  • Harvest.ai: Enterprise features\n  • Omni.ai: Plugin marketplace',
     whoami: '👨‍💻 Senior Full-Stack Developer\n  Specializing in AI/ML, distributed systems\n  Building at the intersection of AI and DX',
-    neofetch: '🖥️ NatureQuest OS\n  ================\n  OS: Production v2.0\n  Uptime: 2 years\n  Packages: 4 (production)\n  Shell: zsh\n  DE: React\n  Terminal: portfolio\n  CPU: Multi-core AI\n  Memory: Unlimited'
+    neofetch: '🖥️ Portfolio OS\n  ================\n  OS: Production v2.0\n  Uptime: 2 years\n  Packages: 4 (production)\n  Shell: zsh\n  DE: React\n  Terminal: portfolio\n  CPU: Multi-core AI\n  Memory: Unlimited'
   };
 
   // Animated typing text
@@ -697,7 +697,7 @@ export function InteractivePortfolio() {
                     transition={{ duration: 0.5 }}
                   >
                     <span className="bg-gradient-to-r from-white via-green-200 to-teal-200 bg-clip-text text-transparent">
-                      NatureQuest
+                      Portfolio
                     </span>
                   </motion.h1>
                   
@@ -1104,10 +1104,10 @@ export function InteractivePortfolio() {
               >
                 <div className="space-y-6">
                   {[
-                    { icon: <Mail className="w-5 h-5" />, label: 'Email', value: 'hello@naturequest.dev', href: 'mailto:hello@naturequest.dev' },
-                    { icon: <Github className="w-5 h-5" />, label: 'GitHub', value: 'github.com/NatureQuest', href: 'https://github.com/NatureQuest' },
-                    { icon: <Linkedin className="w-5 h-5" />, label: 'LinkedIn', value: 'linkedin.com/company/naturequest', href: 'https://linkedin.com/company/naturequest' },
-                    { icon: <Twitter className="w-5 h-5" />, label: 'Twitter', value: '@NatureQuestDev', href: 'https://twitter.com/NatureQuestDev' }
+                    { icon: <Mail className="w-5 h-5" />, label: 'Email', value: 'hello@portfolio.dev', href: 'mailto:hello@portfolio.dev' },
+                    { icon: <Github className="w-5 h-5" />, label: 'GitHub', value: 'github.com/Portfolio', href: 'https://github.com/Portfolio' },
+                    { icon: <Linkedin className="w-5 h-5" />, label: 'LinkedIn', value: 'linkedin.com/company/portfolio', href: 'https://linkedin.com/company/portfolio' },
+                    { icon: <Twitter className="w-5 h-5" />, label: 'Twitter', value: '@PortfolioDev', href: 'https://twitter.com/PortfolioDev' }
                   ].map((contact, i) => (
                     <motion.a
                       key={contact.label}

@@ -39,7 +39,7 @@ function Navigation({ activeSection, setActiveSection }) {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <span className="text-lg font-bold">NatureQuest</span>
+              <span className="text-lg font-bold">Portfolio</span>
               <span className="text-xs text-gray-400 block">AI Infrastructure Suite</span>
             </div>
           </div>
@@ -62,7 +62,7 @@ function Navigation({ activeSection, setActiveSection }) {
           </div>
 
           <a 
-            href="https://github.com/naturequest"
+            href="https://github.com/portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all"
@@ -254,7 +254,7 @@ export function ProfessionalPortfolio() {
     },
     
     auth: {
-      name: 'NatureQuest Auth',
+      name: 'Portfolio Auth',
       tagline: 'Unified Authentication for Multi-Product Ecosystems',
       description: 'Production-ready authentication infrastructure supporting cross-domain SSO, subscription management, and granular access control across multiple SaaS products.',
       status: 'Production',
@@ -398,7 +398,7 @@ export function ProfessionalPortfolio() {
               </h1>
               
               <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-12">
-                NatureQuest delivers production-ready AI infrastructure for modern applications.
+                Portfolio delivers production-ready AI infrastructure for modern applications.
                 From intelligent content processing to adaptive learning platforms, we build
                 systems that drive real business value.
               </p>
@@ -672,7 +672,7 @@ export const authConfig = createAuthConfig({
     csrf: true
   },
   sso: {
-    domain: '.naturequest.dev',
+    domain: '.portfolio.dev',
     cookieSecure: true,
     sameSite: 'lax'
   },
@@ -826,7 +826,7 @@ class SmartRouter {
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-bold">NatureQuest</span>
+                <span className="font-bold">Portfolio</span>
               </div>
               <p className="text-sm text-gray-400">
                 Building enterprise AI infrastructure for the next generation of applications.
@@ -838,7 +838,7 @@ class SmartRouter {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">QuizMentor</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Harvest.ai</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">NatureQuest Auth</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Portfolio Auth</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Omni.ai</a></li>
               </ul>
             </div>
@@ -856,7 +856,7 @@ class SmartRouter {
             <div>
               <h4 className="font-bold mb-4">Connect</h4>
               <div className="flex space-x-4">
-                <a href="https://github.com/naturequest" className="hover:text-blue-400 transition-colors">
+                <a href="https://github.com/portfolio" className="hover:text-blue-400 transition-colors">
                   <Github className="w-5 h-5" />
                 </a>
                 <a href="#" className="hover:text-blue-400 transition-colors">
@@ -874,7 +874,7 @@ class SmartRouter {
           
           <div className="border-t border-gray-800 pt-8 text-center">
             <p className="text-sm text-gray-400">
-              © 2024 NatureQuest. Building AI infrastructure that scales.
+              © 2024 Portfolio. Building AI infrastructure that scales.
             </p>
           </div>
         </div>

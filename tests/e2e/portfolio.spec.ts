@@ -24,8 +24,8 @@ test.describe.skip('Portfolio E2E Tests', () => {
     // Test navigation to Projects section
     await page.click('text=Projects');
     await expect(page.locator('text=QuizMentor')).toBeVisible();
-    await expect(page.locator('text=DevMentor')).toBeVisible();
-    await expect(page.locator('text=Chameleon')).toBeVisible();
+    await expect(page.locator('text=Platform')).toBeVisible();
+    await expect(page.locator('text=AI Assistant')).toBeVisible();
 
     // Test navigation to About section
     await page.click('text=About');
@@ -51,7 +51,7 @@ test.describe.skip('Portfolio E2E Tests', () => {
 
     // Test expanding a technology card
     await page.click('text=TypeScript');
-    await expect(page.locator('text=DevMentor AI Assistant')).toBeVisible();
+    await expect(page.locator('text=Platform AI Assistant')).toBeVisible();
     await expect(page.locator('text=95% type safety')).toBeVisible();
   });
 

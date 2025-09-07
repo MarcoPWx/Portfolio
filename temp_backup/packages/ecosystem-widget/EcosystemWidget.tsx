@@ -19,7 +19,7 @@ interface Product {
 }
 
 interface EcosystemWidgetProps {
-  currentProduct: 'devmentor' | 'quizmentor' | 'harvest' | 'omni';
+  currentProduct: 'platform' | 'quizmentor' | 'harvest' | 'omni';
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   userTier?: 'free' | 'pro' | 'team' | 'enterprise';
   onProductClick?: (productId: string) => void;
@@ -58,12 +58,12 @@ export default function EcosystemWidget({
 
   const products: Product[] = [
     {
-      id: 'devmentor',
-      name: 'DevMentor',
+      id: 'platform',
+      name: 'Platform',
       description: 'AI-powered development assistant',
       icon: Zap,
       color: 'blue',
-      href: 'https://devmentor.naturequest.dev',
+      href: 'https://platform.portfolio.dev',
       status: userTier === 'free' ? 'locked' : 'active'
     },
     {
@@ -72,7 +72,7 @@ export default function EcosystemWidget({
       description: 'Interactive learning platform',
       icon: Star,
       color: 'purple',
-      href: 'https://quizmentor.naturequest.dev',
+      href: 'https://quizmentor.portfolio.dev',
       status: 'active'
     },
     {
@@ -81,7 +81,7 @@ export default function EcosystemWidget({
       description: 'Data insights and analytics',
       icon: TrendingUp,
       color: 'green',
-      href: 'https://harvest.naturequest.dev',
+      href: 'https://harvest.portfolio.dev',
       status: userTier === 'pro' || userTier === 'team' || userTier === 'enterprise' ? 'active' : 'locked'
     },
     {
@@ -90,7 +90,7 @@ export default function EcosystemWidget({
       description: 'Free open-source AI toolkit',
       icon: Globe,
       color: 'orange',
-      href: 'https://omni.naturequest.dev',
+      href: 'https://omni.portfolio.dev',
       status: 'free',
       badge: 'Open Source'
     }
@@ -110,7 +110,7 @@ export default function EcosystemWidget({
   const handleProductClick = (product: Product) => {
     if (product.status === 'locked') {
       // Navigate to upgrade page
-      window.location.href = 'https://accounts.naturequest.dev/billing';
+      window.location.href = 'https://accounts.portfolio.dev/billing';
     } else {
       if (onProductClick) {
         onProductClick(product.id);
@@ -221,7 +221,7 @@ export default function EcosystemWidget({
                     </div>
                     <div>
                       <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                        NatureQuest Ecosystem
+                        Portfolio Ecosystem
                       </h3>
                       <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                         {userTier === 'free' ? `${lockedProducts} products to unlock` : 'All products available'}
@@ -314,7 +314,7 @@ export default function EcosystemWidget({
               {userTier === 'free' && hasLockedProducts && (
                 <div className="p-4 border-t border-gray-700">
                   <button
-                    onClick={() => window.location.href = 'https://accounts.naturequest.dev/billing'}
+                    onClick={() => window.location.href = 'https://accounts.portfolio.dev/billing'}
                     className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all flex items-center justify-center space-x-2"
                   >
                     <Rocket className="w-4 h-4" />
@@ -330,7 +330,7 @@ export default function EcosystemWidget({
               {userTier !== 'free' && (
                 <div className="p-4 border-t border-gray-700">
                   <button
-                    onClick={() => window.location.href = 'https://accounts.naturequest.dev'}
+                    onClick={() => window.location.href = 'https://accounts.portfolio.dev'}
                     className="w-full px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-all flex items-center justify-center space-x-2"
                   >
                     <Users className="w-4 h-4" />

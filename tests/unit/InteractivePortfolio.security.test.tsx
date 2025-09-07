@@ -20,7 +20,7 @@ describe('InteractivePortfolio Project Status', () => {
 
     // Verify that projects are present
     expect(screen.getByText('Voice AI Assistant')).toBeInTheDocument();
-    expect(screen.getByText('DevMentor')).toBeInTheDocument();
-    expect(screen.getByText('Chameleon')).toBeInTheDocument();
+    expect(screen.getByText('Platform')).toBeInTheDocument();
+    expect(screen.getByText('AI Assistant')).toBeInTheDocument();
   });
 });

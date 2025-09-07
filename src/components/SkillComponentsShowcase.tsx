@@ -50,7 +50,7 @@ export function SkillComponentsShowcase() {
       years: 6,
       description:
         'Primary language for all frontend and backend development with React, Node.js, and modern JavaScript patterns',
-      projects: ['QuizMentor', 'DevMentor'],
+      projects: ['QuizMentor', 'Platform'],
       additionalTags: ['+2'],
       projectCount: 2,
     },
@@ -61,7 +61,7 @@ export function SkillComponentsShowcase() {
       level: 'Expert' as const,
       years: 7,
       description: 'AI/ML development, FastAPI backends, data processing, and automation scripts',
-      projects: ['Chameleon', 'DevMentor AI'],
+      projects: ['AI Assistant', 'Platform AI'],
       additionalTags: ['+2'],
       projectCount: 2,
     },
@@ -121,7 +121,7 @@ export function SkillComponentsShowcase() {
       years: 6,
       description: 'Building scalable web applications with SSR, SSG, and modern React patterns',
       projects: ['QuizMentor', 'Portfolio'],
-      additionalTags: ['DevMentor', '+3'],
+      additionalTags: ['Platform', '+3'],
       projectCount: 5,
     },
     {
@@ -166,7 +166,7 @@ export function SkillComponentsShowcase() {
       level: 'Advanced' as const,
       years: 3,
       description: 'High-performance Python APIs with automatic documentation',
-      projects: ['Chameleon', 'ML Services'],
+      projects: ['AI Assistant', 'ML Services'],
       projectCount: 3,
     },
     {
@@ -224,7 +224,7 @@ export function SkillComponentsShowcase() {
       level: 'Expert' as const,
       years: 2,
       description: 'Building LLM applications with chains, agents, and RAG systems',
-      projects: ['DevMentor', 'Chameleon'],
+      projects: ['Platform', 'AI Assistant'],
       projectCount: 3,
     },
     {
@@ -244,7 +244,7 @@ export function SkillComponentsShowcase() {
       level: 'Advanced' as const,
       years: 2,
       description: 'Qdrant, Pinecone, Weaviate for semantic search and RAG',
-      projects: ['DevMentor', 'Chameleon'],
+      projects: ['Platform', 'AI Assistant'],
       projectCount: 2,
     },
   ];
@@ -339,7 +339,7 @@ export function SkillComponentsShowcase() {
               <h3 className="text-lg font-semibold text-white mb-4">Project Tags</h3>
               <div className="flex flex-wrap gap-2">
                 <ProjectTag name="QuizMentor" />
-                <ProjectTag name="DevMentor" count={2} />
+                <ProjectTag name="Platform" count={2} />
                 <ProjectTag name="All projects" />
               </div>
             </div>
@@ -497,7 +497,7 @@ export function SkillComponentsShowcase() {
               level="Advanced"
               years={3}
               description="Building intelligent systems with modern AI technologies"
-              projects={['DevMentor', 'Chameleon']}
+              projects={['Platform', 'AI Assistant']}
               projectCount={5}
               expandedContent={
                 <div className="space-y-4">

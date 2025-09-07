@@ -236,19 +236,19 @@ function MetricsDisplay({ metrics }) {
 }
 
 export function TechnicalPortfolio() {
-  const [activeDemo, setActiveDemo] = useState('devmentor');
+  const [activeDemo, setActiveDemo] = useState('platform');
   const [activeTab, setActiveTab] = useState('code');
 
   // Demo configurations
   const demos = {
-    devmentor: {
-      name: 'DevMentor',
+    platform: {
+      name: 'Platform',
       description: 'AI-powered code review and pair programming',
       gradient: 'from-blue-500 to-cyan-500',
-      code: `import { DevMentor } from '@naturequest/devmentor';
+      code: `import { Platform } from '@portfolio/platform';
 
 // Initialize AI assistant
-const mentor = new DevMentor({
+const mentor = new Platform({
   apiKey: process.env.DEVMENTOR_KEY,
   model: 'gpt-4-turbo',
   context: 'react-typescript'
@@ -270,15 +270,15 @@ const session = await mentor.startSession({
 
 console.log(review.suggestions);`,
       terminal: [
-        'npm install @naturequest/devmentor',
-        'devmentor init --project react-app',
-        'devmentor review --file src/App.tsx',
+        'npm install @portfolio/platform',
+        'platform init --project react-app',
+        'platform review --file src/App.tsx',
         '✓ 3 security issues found',
         '✓ 5 performance improvements suggested',
         '✓ Code quality score: 92/100'
       ],
       api: {
-        endpoint: '/api/devmentor/review',
+        endpoint: '/api/platform/review',
         data: {
           status: 'success',
           review: {
@@ -318,7 +318,7 @@ console.log(review.suggestions);`,
       name: 'QuizMentor',
       description: 'AI-generated adaptive learning platform',
       gradient: 'from-purple-500 to-pink-500',
-      code: `import { QuizMentor } from '@naturequest/quizmentor';
+      code: `import { QuizMentor } from '@portfolio/quizmentor';
 
 // Create adaptive quiz engine
 const quiz = new QuizMentor({
@@ -394,7 +394,7 @@ const analytics = await quiz.getAnalytics(userId);`,
       name: 'Harvest.ai',
       description: 'Intelligent data analytics and insights',
       gradient: 'from-green-500 to-emerald-500',
-      code: `import { Harvest } from '@naturequest/harvest';
+      code: `import { Harvest } from '@portfolio/harvest';
 
 // Initialize analytics engine
 const harvest = new Harvest({
@@ -495,7 +495,7 @@ const response = await ai.complete({
 // Export for production
 await ai.export('./models/custom-model.onnx');`,
       terminal: [
-        'git clone https://github.com/naturequest/omni',
+        'git clone https://github.com/portfolio/omni',
         'cd omni && pip install -r requirements.txt',
         'omni download --model llama-2-7b',
         'Downloading model (3.8GB)...',
@@ -560,7 +560,7 @@ await ai.export('./models/custom-model.onnx');`,
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">NatureQuest</span>
+              <span className="text-xl font-bold">Portfolio</span>
             </div>
             
             <div className="flex items-center space-x-4">

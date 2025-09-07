@@ -513,25 +513,21 @@ function InteractiveTerminal({
             <div className="flex items-center gap-2">
               {collapsible && (
                 <motion.button
-                  className="relative p-1.5 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-400 hover:text-green-300 transition-all shadow-lg shadow-green-500/20"
+                  className="p-1 rounded hover:bg-gray-700/50 text-green-400 hover:text-green-300 transition-all"
                   title={collapsed ? 'Expand terminal' : 'Collapse terminal'}
                   aria-label={collapsed ? 'Expand' : 'Collapse'}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleCollapsed();
                   }}
-                  whileHover={{ scale: 1.15 }}
+                  whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 bg-green-400 rounded-lg blur-md opacity-40 animate-pulse" />
-                  
                   <motion.div 
-                    className="relative z-10"
                     animate={{ rotate: collapsed ? 0 : 180 }} 
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-3.5 h-3.5" />
                   </motion.div>
                 </motion.button>
               )}
@@ -910,7 +906,6 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[400px]"
             collapsible
-            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[0].description}</p>
@@ -949,7 +944,6 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[280px] md:h-[400px]"
             collapsible
-            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[1].description}</p>
@@ -988,7 +982,6 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[200px]"
             collapsible
-            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[2].description}</p>
@@ -1027,7 +1020,6 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[200px]"
             collapsible
-            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[3].description}</p>
@@ -1066,8 +1058,6 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[200px]"
             collapsible
-            defaultCollapsed
-            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[4].description}</p>
         </motion.div>
@@ -1105,8 +1095,6 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[180px] md:h-[200px]"
             collapsible
-            defaultCollapsed
-            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[5].description}</p>
         </motion.div>
@@ -1368,7 +1356,7 @@ function ProjectRoadmap({ project }: { project: string }) {
         completion: 10,
       },
     ],
-    chameleon: [
+    'ai-assistant': [
       {
         phase: 'MVP',
         status: 'completed',
@@ -1744,7 +1732,7 @@ export function InteractivePortfolio() {
   const terminalCommands = {
     help: "📚 Available commands:\n  projects - List all projects\n  skills - Show tech stack\n  about - Who we are\n  contact - Get in touch\n  github - Visit GitHub\n  linkedin - Visit LinkedIn\n  blog - Latest articles\n  metrics - View live stats\n  roadmap - See what's next\n  whoami - About the developer\n  neofetch - System info\n  clear - Clear terminal",
     projects:
-      '🚀 Active Projects:\n  • AIBook (OSS Command Center) - AI+TDD workflow\n  • QuizMentor - Gamified learning platform (92% retention)\n  • DevMentor - AI pair programming assistant (95% accuracy)\n  • Chameleon - Smart MCQ generator (heuristics + dedupe)\n  • Voice - Voice AI Project',
+      '🚀 Active Projects:\n  • AIBook (OSS Command Center) - AI+TDD workflow\n  • QuizMentor - Gamified learning platform (92% retention)\n  • Platform - AI pair programming assistant (95% accuracy)\n  • AI Assistant - Smart MCQ generator (heuristics + dedupe)\n  • Voice - Voice AI Project',
     skills:
       '💻 Tech Stack (Specialization: Mobile Engineering)\n  Mobile:\n    - React Native\n    - Expo\n    - iOS (Swift, Obj-C)\n    - Android (Kotlin, Java)\n    - Native Modules\n    - WebRTC\n    - Bluetooth LE\n    - Push Notifications\n    - Fastlane / TestFlight / Play Console\n    - Crashlytics\n    - Performance (Hermes)\n  Languages: TypeScript, Python, Go\n  Frontend: React, Next.js, React Native, Tailwind\n  Backend: Node.js, FastAPI, GraphQL\n  AI/ML: LangChain, OpenAI, Anthropic, Ollama\n  Cloud: AWS, Docker, Kubernetes\n  DB: PostgreSQL, Redis, MongoDB\n  End-to-end: I work across mobile, web, backend, AI, and DevOps — I love the entire picture; every part matters',
     about:
@@ -1757,7 +1745,7 @@ export function InteractivePortfolio() {
     metrics:
       '📊 Live Stats:\n  Users: 10,000+\n  API Calls: 1M+\n  Uptime: 99.9%\n  Response: <50ms',
     roadmap:
-      '🗺️ Coming Soon:\n  • QuizMentor: Multiplayer battles\n  • DevMentor: Cloud sync\n  • Chameleon: Enterprise features\n  • Voice: Realtime conversational features',
+      '🗺️ Coming Soon:\n  • QuizMentor: Multiplayer battles\n  • Platform: Cloud sync\n  • AI Assistant: Enterprise features\n  • Voice: Realtime conversational features',
     whoami:
       '👨‍💻 Senior Full-Stack Developer\n  Specializing in AI/ML, distributed systems\n  Building at the intersection of AI and DX',
     neofetch:
@@ -1796,43 +1784,41 @@ export function InteractivePortfolio() {
     color: string;
     live?: string;
     isOpenSource?: boolean;
+    isStealthMode?: boolean;
   };
   const projects = useMemo<ProjectInfo[]>(
     () => [
       {
-        id: 'quizmentor',
-        title: 'QuizMentor',
-        tagline: 'Gamified Learning Platform',
+        id: 'docs-system',
+        title: 'Learning Plugin',
+        tagline: 'Educational Content System',
         description:
-          'Transform how people learn with an engaging quiz platform that makes education addictive. Built for retention, designed for delight.',
+          'Modular learning framework with interactive components. Built for extensibility and scalability.',
         differentiation: [
-          'Learn in 5-minute daily sessions that stick',
-          'Adaptive difficulty that keeps you in flow state',
-          'Instant feedback that explains why, not just what',
-          'Compete with friends or practice solo',
-          'Track your mastery across 50+ topics',
-          'Works offline, syncs when connected',
+          'Modular architecture',
+          'Plugin system',
+          'Interactive components',
+          'Extensible framework',
         ],
         status: 'Alpha',
         metrics: {},
-        tech: ['React Native', 'Expo', 'TypeScript', 'Next.js', 'Supabase', 'PostgreSQL'],
-        github: 'https://github.com/MarcoPWx/QuizMentor.ai',
-        icon: <Gamepad2 className="w-6 h-6" />,
-        color: 'from-purple-600 to-pink-600',
+        tech: ['Python', 'TypeScript', 'Node.js'],
+        github: '#',
+        icon: <BookOpen className="w-6 h-6" />,
+        color: 'from-violet-600 to-purple-600',
+        isStealthMode: true,
       },
       {
-        id: 'chameleon',
-        title: 'Chameleon',
+        id: 'ai-assistant',
+        title: 'AI Assistant',
         tagline: 'Smart Content Transformation',
         description:
-          'Automatically transform any technical documentation into high-quality educational content. From docs to questions in minutes.',
+          'Transform technical docs into educational content. From docs to questions in minutes.',
         differentiation: [
-          'Generate exam-grade questions from any source',
-          'Intelligent distractor creation that tests understanding',
-          'Advanced duplicate detection prevents redundancy',
-          'Confidence scoring ensures quality',
-          'Balanced difficulty distribution',
-          'Export to multiple formats for any platform',
+          'Exam-grade question generation',
+          'Intelligent distractor creation',
+          'Advanced duplicate detection',
+          'Quality confidence scoring',
         ],
         status: 'Beta',
         metrics: {},
@@ -1844,10 +1830,120 @@ export function InteractivePortfolio() {
           'Pandas',
           'SQLite',
         ],
-        github: 'https://github.com/MarcoPWx/Chameleon.ai',
+        github: 'https://github.com/MarcoPWx/AI Assistant',
         icon: <Brain className="w-6 h-6" />,
         color: 'from-emerald-600 to-green-600',
         isOpenSource: true,
+      },
+      {
+        id: 'quizmentor',
+        title: 'QuizMentor',
+        tagline: 'Gamified Learning Platform (iOS & Android)',
+        description:
+          'Mobile app that makes education addictive. Available on iOS App Store and Google Play Store.',
+        differentiation: [
+          '5-minute daily sessions',
+          'Adaptive difficulty system',
+          'Instant feedback loops',
+          'Social competitions',
+        ],
+        status: 'Beta',
+        metrics: {},
+        tech: ['React Native', 'Expo', 'TypeScript', 'Next.js', 'Supabase', 'PostgreSQL'],
+        github: 'https://github.com/MarcoPWx/QuizMentor.ai',
+        icon: <Gamepad2 className="w-6 h-6" />,
+        color: 'from-purple-600 to-pink-600',
+      },
+      {
+        id: 'enterprise-platform',
+        title: 'Enterprise Platform',
+        tagline: 'Scalable Solutions for Teams',
+        description:
+          'Advanced platform for enterprise teams. Built for scale, security, and collaboration. Contact us for early access.',
+        differentiation: [
+          'Team collaboration and management',
+          'Enterprise-grade security',
+          'Scalable architecture',
+          'Advanced automation capabilities',
+          'Comprehensive metrics and analytics',
+          'Premium support and SLA',
+        ],
+        status: 'Alpha',
+        metrics: {},
+        tech: ['Cloud Native', 'Enterprise Grade', 'Secure by Design'],
+        github: '#',
+        icon: <Cpu className="w-6 h-6" />,
+        color: 'from-indigo-600 to-purple-600',
+        isStealthMode: true,
+      },
+      {
+        id: 'content-tools',
+        title: 'Content Tools',
+        tagline: 'Intelligent Content Management',
+        description:
+          'Suite of tools for content processing, analysis, and management. Built with best practices and ethical considerations.',
+        differentiation: [
+          'Advanced content analysis',
+          'Smart processing pipelines',
+          'Quality scoring and validation',
+          'Ethical data handling',
+          'Multiple export formats',
+          'Performance optimized',
+        ],
+        status: 'Alpha',
+        metrics: {},
+        tech: ['Python', 'Machine Learning', 'Data Processing'],
+        github: '#',
+        icon: <Search className="w-6 h-6" />,
+        color: 'from-teal-600 to-cyan-600',
+        isOpenSource: false,
+        isStealthMode: true,
+      },
+      {
+        id: 'integration-hub',
+        title: 'Integration Hub',
+        tagline: 'Universal Service Connector',
+        description:
+          'Connect various tools and services through a unified interface. Simplify integrations with modular architecture.',
+        differentiation: [
+          'Universal connectivity',
+          'Modular adapter system',
+          'Unified interface design',
+          'Plug-and-play architecture',
+          'Multiple protocol support',
+          'Easy configuration',
+        ],
+        status: 'Alpha',
+        metrics: {},
+        tech: ['TypeScript', 'Node.js', 'API Design'],
+        github: '#',
+        icon: <Puzzle className="w-6 h-6" />,
+        color: 'from-purple-600 to-pink-600',
+        isOpenSource: false,
+        isStealthMode: true,
+      },
+      {
+        id: 'code-analyzer',
+        title: 'Code Analyzer',
+        tagline: 'Repository Intelligence Tool',
+        description:
+          'Advanced code analysis tool that provides deep insights into codebases. Understand structure, patterns, and best practices.',
+        differentiation: [
+          'Multi-language analysis',
+          'Pattern recognition',
+          'API discovery',
+          'Project insights',
+          'Structured reporting',
+          'Extensible architecture',
+        ],
+        status: 'Alpha',
+        metrics: {},
+        tech: ['Python', 'TypeScript', 'Static Analysis'],
+        github: '#',
+        icon: <GitBranch className="w-6 h-6" />,
+        color: 'from-green-600 to-emerald-600',
+        isOpenSource: false,
+        isStealthMode: true,
       },
       {
         id: 'dev-toolkit',
@@ -1871,115 +1967,6 @@ export function InteractivePortfolio() {
         color: 'from-blue-600 to-cyan-600',
         isOpenSource: false,
       },
-      {
-        id: 'enterprise-platform',
-        title: 'Enterprise Platform',
-        tagline: 'Scalable Solutions for Teams',
-        description:
-          'Advanced platform for enterprise teams. Built for scale, security, and collaboration. Contact us for early access.',
-        differentiation: [
-          'Team collaboration and management',
-          'Enterprise-grade security',
-          'Scalable architecture',
-          'Advanced automation capabilities',
-          'Comprehensive metrics and analytics',
-          'Premium support and SLA',
-        ],
-        status: 'Alpha',
-        metrics: {},
-        tech: ['Cloud Native', 'Enterprise Grade', 'Secure by Design'],
-        github: '#',
-        icon: <Cpu className="w-6 h-6" />,
-        color: 'from-indigo-600 to-purple-600',
-      },
-      {
-        id: 'learnforge',
-        title: 'LearnForge',
-        tagline: 'Advanced AI Learning Toolkit',
-        description:
-          'Open-source collection of cutting-edge AI techniques. From RAG implementations to multi-agent systems, learn by building production-ready AI.',
-        differentiation: [
-          'Production-ready RAG pipelines with vector search',
-          'Multi-agent orchestration with LangChain & Autogen',
-          'Advanced NLP with semantic search & embeddings',
-          'MCP (Model Context Protocol) implementations',
-          'Comprehensive Jupyter notebooks for learning',
-          'Real-world AI patterns and best practices',
-        ],
-        status: 'Beta',
-        metrics: {},
-        tech: ['Python', 'LangChain', 'Autogen', 'Qdrant', 'OpenAI', 'Anthropic'],
-        github: 'https://github.com/MarcoPWx/LearnForge',
-        icon: <BookOpen className="w-6 h-6" />,
-        color: 'from-violet-600 to-purple-600',
-        isOpenSource: true,
-      },
-      {
-        id: 'content-tools',
-        title: 'Content Tools',
-        tagline: 'Intelligent Content Management',
-        description:
-          'Suite of tools for content processing, analysis, and management. Built with best practices and ethical considerations.',
-        differentiation: [
-          'Advanced content analysis',
-          'Smart processing pipelines',
-          'Quality scoring and validation',
-          'Ethical data handling',
-          'Multiple export formats',
-          'Performance optimized',
-        ],
-        status: 'Beta',
-        metrics: {},
-        tech: ['Python', 'Machine Learning', 'Data Processing'],
-        github: '#',
-        icon: <Search className="w-6 h-6" />,
-        color: 'from-teal-600 to-cyan-600',
-        isOpenSource: false,
-      },
-      {
-        id: 'integration-hub',
-        title: 'Integration Hub',
-        tagline: 'Universal Service Connector',
-        description:
-          'Connect various tools and services through a unified interface. Simplify integrations with modular architecture.',
-        differentiation: [
-          'Universal connectivity',
-          'Modular adapter system',
-          'Unified interface design',
-          'Plug-and-play architecture',
-          'Multiple protocol support',
-          'Easy configuration',
-        ],
-        status: 'Beta',
-        metrics: {},
-        tech: ['TypeScript', 'Node.js', 'API Design'],
-        github: '#',
-        icon: <Puzzle className="w-6 h-6" />,
-        color: 'from-purple-600 to-pink-600',
-        isOpenSource: false,
-      },
-      {
-        id: 'code-analyzer',
-        title: 'Code Analyzer',
-        tagline: 'Repository Intelligence Tool',
-        description:
-          'Advanced code analysis tool that provides deep insights into codebases. Understand structure, patterns, and best practices.',
-        differentiation: [
-          'Multi-language analysis',
-          'Pattern recognition',
-          'API discovery',
-          'Project insights',
-          'Structured reporting',
-          'Extensible architecture',
-        ],
-        status: 'Beta',
-        metrics: {},
-        tech: ['Python', 'TypeScript', 'Static Analysis'],
-        github: '#',
-        icon: <GitBranch className="w-6 h-6" />,
-        color: 'from-green-600 to-emerald-600',
-        isOpenSource: false,
-      },
     ],
     [],
   );
@@ -1997,13 +1984,13 @@ export function InteractivePortfolio() {
     quizmentor: 61,
     'dev-toolkit': 63,
     'enterprise-platform': 68,
-    chameleon: 67,
+    'ai-assistant': 67,
     voiceapp: 57,
     'command-center': 60,
   };
 
   const projectDetails: Record<string, any> = {
-    chameleon: {
+    'ai-assistant': {
       coreOffering:
         '🌾 Automated Educational Content Generation system that transforms technical documentation into quiz questions with legal compliance and ethical data practices.',
       howItWorks: [
@@ -2190,7 +2177,7 @@ export function InteractivePortfolio() {
         'Advanced analytics and white‑labeling',
       ],
     },
-    devmentor: {
+    platform: {
       coreOffering:
         'Repo-aware prompt enrichment + TDD workflow + docs alignment — solving context loss in AI-assisted development (delivered via a VS Code extension).',
       howItWorks: [
@@ -2535,15 +2522,13 @@ export function InteractivePortfolio() {
       who: ['Developers using AI assistants who need working patterns and fast validation'],
       next: ['Templates, plugin examples, deployment guides, and Vue/Angular variants'],
     },
-    'learnforge': {
+    'docs-system': {
       coreOffering:
-        '🎓 Open-source collection of production-ready AI implementations. Learn advanced AI/ML techniques through working code—from RAG pipelines to multi-agent orchestration, all documented with Jupyter notebooks.',
+        '🎓 Modular learning framework with extensible plugin architecture. Build educational experiences with interactive components.',
       howItWorks: [
-        'Modular examples: Each technique in its own directory with README, requirements, and notebooks',
-        'RAG Pipeline: Ingest → Chunk → Embed → Store in Qdrant → Semantic search → LLM generation',
-        'Multi-Agent: LangChain agents → Task decomposition → Tool usage → Coordination → Results synthesis',
-        'MCP Implementations: Protocol examples → Tool definitions → Claude/AI integration → Production patterns',
-        'Learning Path: Start simple → Build complexity → Combine techniques → Deploy to production',
+        'Plugin System: Modular components → Dynamic loading → Hot reload → Version management',
+        'Content Pipeline: Import → Process → Transform → Export → Distribute',
+        'Interactive Elements: Components → Events → State → Analytics → Feedback',
       ],
       keyEndpoints: [
         'notebooks/rag_basics.ipynb — Introduction to RAG with vector databases',
@@ -2613,7 +2598,7 @@ export function InteractivePortfolio() {
         'Video tutorials',
       ],
     },
-    'octopus': {
+    'analytics': {
       coreOffering:
         '🐙 Intelligent web scraper with ML-powered deduplication. Ethically harvest content while detecting near-duplicates using TF-IDF, SimHash, and fuzzy matching—all while respecting robots.txt and rate limits.',
       howItWorks: [
@@ -2624,11 +2609,11 @@ export function InteractivePortfolio() {
         'Export pipeline: JSON/CSV/Parquet formats → Structured data → Preserves attribution → Import ready',
       ],
       keyEndpoints: [
-        'python octopus.py crawl --url https://example.com --depth 3 — Crawl website to depth 3',
-        'python octopus.py dedupe --threshold 0.8 — Remove duplicates with 80% similarity',
-        'python octopus.py export --format parquet — Export to Parquet format',
-        'python octopus.py check-robots https://example.com — Verify robots.txt compliance',
-        'python octopus.py cluster --method tfidf — Cluster similar content',
+        'python analytics.py crawl --url https://example.com --depth 3 — Crawl website to depth 3',
+        'python analytics.py dedupe --threshold 0.8 — Remove duplicates with 80% similarity',
+        'python analytics.py export --format parquet — Export to Parquet format',
+        'python analytics.py check-robots https://example.com — Verify robots.txt compliance',
+        'python analytics.py cluster --method tfidf — Cluster similar content',
       ],
       userStories: [
         'As a data scientist, I harvest unique content without manual duplicate removal',
@@ -2997,48 +2982,13 @@ export function InteractivePortfolio() {
                   intelligent content transformation.
                 </motion.p>
 
-                <motion.div
-                  className="flex flex-wrap justify-center gap-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 }}
-                >
-                  <Button
-                    onClick={() => {
-                      setActiveSection('projects');
-                      // Scroll to top when navigating
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    variant="primary"
-                    size="lg"
-                    icon={ArrowRight}
-                    iconPosition="right"
-                    style={{ borderRadius: '12px' }}
-                  >
-                    Explore Projects
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setActiveSection('projects');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    variant="secondary"
-                    size="lg"
-                    style={{ borderRadius: '12px' }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Map className="w-5 h-5" />
-                      <span>View Roadmaps</span>
-                    </div>
-                  </Button>
-                </motion.div>
 
                 {/* Terminal Demo - Development Workflow */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.1 }}
-                  className="max-w-7xl mx-auto mt-16"
+                  transition={{ delay: 0.9 }}
+                  className="max-w-7xl mx-auto mt-8"
                 >
                   <div className="w-full">
                     <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 text-left">
@@ -3103,97 +3053,60 @@ export function InteractivePortfolio() {
                 )}
               </motion.div>
 
-              {/* Square Grid Layout */}
-              <div className={`${focusedProject ? 'fixed inset-0 z-50 bg-black overflow-y-auto' : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'}`}>
-                {sortedProjects.map((project, idx) => {
-                  const isExpanded = focusedProject === project.id;
-                  return (
-                    <motion.div
-                      key={project.id}
-                      className={`relative transition-all duration-500 ease-in-out cursor-pointer ${
-                        focusedProject && !isExpanded ? 'hidden' : ''
-                      } ${
-                        isExpanded ? 'fixed inset-0 z-50 p-8 overflow-y-auto bg-black' : 'aspect-[4/3]'
-                      }`}
-                      onClick={() => {
-                        if (!isExpanded) {
-                          setFocusedProject(project.id);
-                          // Scroll to top when expanding
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                      }}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ 
-                        opacity: 1, 
-                        scale: isExpanded ? 1 : 1,
-                      }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                      layout
-                    >
-                      <motion.div className="group w-full h-full">
-                        <div className={`relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 border border-gray-700 overflow-hidden shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300 ${
-                          isExpanded ? 'rounded-none max-w-6xl mx-auto' : 'rounded-2xl h-full'
-                        }`}>
-                        {/* Animated gradient background */}
-                        <motion.div
-                          className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
-                          animate={{
-                            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-                          }}
-                          transition={{
-                            duration: 10,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: 'linear',
-                          }}
-                        />
+              {/* Projects Grid - Simple Modal-like Expansion */}
+              <AnimatePresence mode="wait">
+                {focusedProject ? (
+                  // Expanded View - Full Width Single Project
+                  <motion.div
+                    key="expanded-view"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full"
+                  >
+                    {sortedProjects
+                      .filter(p => p.id === focusedProject)
+                      .map((project) => (
+                        <div key={project.id} className="relative">
+                          <motion.div className="group w-full">
+                            <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 border border-gray-700 overflow-hidden shadow-xl rounded-2xl">
+                              {/* Animated gradient background */}
+                              <motion.div
+                                className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10`}
+                              />
 
-                        {/* Glow effect on hover */}
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
+                              {/* Close button */}
+                              <div className="absolute top-4 right-4 z-50">
+                                <motion.button
+                                  className="p-3 bg-gray-800/90 hover:bg-gray-700 rounded-full transition-all backdrop-blur-sm border border-gray-600"
+                                  onClick={() => setFocusedProject(null)}
+                                  initial={{ scale: 0, rotate: -180 }}
+                                  animate={{ scale: 1, rotate: 0 }}
+                                  transition={{ type: 'spring', stiffness: 200 }}
+                                  title="Close details"
+                                  aria-label="Close"
+                                >
+                                  <X className="w-5 h-5 text-white" />
+                                </motion.button>
+                              </div>
 
-                          {/* Close button for expanded projects */}
-                          {isExpanded && (
-                            <div className="fixed top-4 right-4 z-50">
-                              <motion.button
-                                className="p-3 bg-gray-800/90 hover:bg-gray-700 rounded-full transition-all backdrop-blur-sm border border-gray-600"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setFocusedProject(null);
-                                }}
-                                initial={{ scale: 0, rotate: -180 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ type: 'spring', stiffness: 200 }}
-                                title="Close details"
-                                aria-label="Close"
-                              >
-                                <X className="w-5 h-5 text-white" />
-                              </motion.button>
-                            </div>
-                          )}
-
-                          <motion.div
-                            className={`relative ${isExpanded ? 'p-8 lg:p-12' : 'p-4 h-full flex flex-col'} z-10`}
-                          >
-                            {/* Project Header */}
-                            <div className={`${isExpanded ? 'mb-6' : 'mb-3'}`}>
-                              <div className="flex items-start justify-between">
-                                <div className={`flex ${isExpanded ? 'items-start gap-6' : 'flex-col items-center text-center w-full'}`}>
-                                  <motion.div
-                                    className={`${isExpanded ? 'p-4' : 'p-3 mx-auto mb-2'} rounded-xl bg-gradient-to-br ${project.color} shadow-lg`}
-                                  >
-                                    {React.cloneElement(project.icon, {
-                                      className: isExpanded ? 'w-8 h-8 text-white' : 'w-6 h-6 text-white',
-                                    })}
-                                  </motion.div>
-                                  <div className={isExpanded ? 'flex-1' : 'w-full'}>
-                                    <h3
-                                      className={`font-bold text-white ${isExpanded ? 'text-3xl lg:text-4xl mb-2' : 'text-lg mb-1'}`}
+                              <motion.div className="relative p-8 lg:p-12 z-10">
+                                {/* Project Header */}
+                                <div className="mb-6">
+                                  <div className="flex items-start gap-6">
+                                    <motion.div
+                                      className="p-4 rounded-xl bg-gradient-to-br ${project.color} shadow-lg"
                                     >
-                                      {project.title}
-                                    </h3>
-                                    <p className={`text-gray-400 ${isExpanded ? 'text-lg' : 'text-xs line-clamp-1'}`}>
-                                      {project.tagline}
-                                    </p>
-                                    {isExpanded && (
+                                      {React.cloneElement(project.icon, {
+                                        className: 'w-8 h-8 text-white',
+                                      })}
+                                    </motion.div>
+                                    <div className="flex-1">
+                                      <h3 className="font-bold text-white text-3xl lg:text-4xl mb-2">
+                                        {project.title}
+                                      </h3>
+                                      <p className="text-gray-400 text-lg">{project.tagline}</p>
                                       <div className="flex items-center gap-3 mt-3">
                                         <Badge
                                           variant={
@@ -3221,86 +3134,26 @@ export function InteractivePortfolio() {
                                             </div>
                                           </Badge>
                                         )}
+                                        {project.isStealthMode && (
+                                          <Badge
+                                            variant="secondary"
+                                            size="sm"
+                                            className="bg-gradient-to-r from-gray-600/20 to-gray-700/20 border-gray-600/30"
+                                          >
+                                            <div className="flex items-center gap-1">
+                                              <Lock className="w-3 h-3" />
+                                              <span>Stealth Mode</span>
+                                            </div>
+                                          </Badge>
+                                        )}
                                       </div>
-                                    )}
+                                    </div>
                                   </div>
                                 </div>
-                                {!isExpanded && (
-                                  <div className="absolute top-2 right-2">
-                                    <Badge
-                                      variant={
-                                        project.status === 'Production'
-                                          ? 'success'
-                                          : project.status === 'Beta'
-                                            ? 'info'
-                                            : 'default'
-                                      }
-                                      size="sm"
-                                      className="text-[10px] px-1.5 py-0.5"
-                                    >
-                                      {project.status}
-                                    </Badge>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
 
-                            {/* Compact view for grid tiles */}
-                            {!isExpanded && (
-                              <div className="flex-1 flex flex-col justify-between">
-                                <div className="space-y-2">
-                                  <p className="text-[11px] text-gray-400 line-clamp-2 px-1">
-                                    {project.description}
-                                  </p>
-                                  <div className="flex flex-wrap gap-1 px-1">
-                                    {project.tech.slice(0, 3).map((tech, i) => (
-                                      <span
-                                        key={`${tech}-tile-${i}`}
-                                        className="px-1.5 py-0.5 bg-gray-800/60 text-[9px] text-gray-400 rounded"
-                                      >
-                                        {tech}
-                                      </span>
-                                    ))}
-                                    {project.tech.length > 3 && (
-                                      <span className="text-[9px] text-gray-500">+{project.tech.length - 3}</span>
-                                    )}
-                                  </div>
-                                </div>
-                                
-                                {/* Quick action buttons at bottom */}
-                                <div className="flex items-center justify-between mt-auto pt-2 px-1">
-                                  <div className="flex gap-1">
-                                    {project.github && (
-                                      <motion.a
-                                        href={project.github}
-                                        target="_blank"
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="p-1 bg-gray-800/50 rounded hover:bg-gray-700 transition-all"
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                      >
-                                        <Github className="w-3 h-3 text-gray-400" />
-                                      </motion.a>
-                                    )}
-                                  </div>
-                                  <span className="text-[9px] text-gray-500">Click to expand</span>
-                                </div>
-                              </div>
-                            )}
-
-
-                            {/* Expanded view content */}
-                            <AnimatePresence>
-                              {isExpanded && (
-                                <motion.div
-                                  initial={{ opacity: 0, y: 20 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  exit={{ opacity: 0, y: -20 }}
-                                  transition={{ duration: 0.3 }}
-                                >
-                                  <p className="text-gray-300 mb-8 text-lg leading-relaxed">
-                                    {project.description}
-                                  </p>
+                                <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+                                  {project.description}
+                                </p>
 
                                 {/* Horizontal content layout */}
                                 <div className="grid lg:grid-cols-3 gap-6 mb-6">
@@ -3708,16 +3561,139 @@ export function InteractivePortfolio() {
                                     </Button>
                                   )}
                                 </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
+                              </motion.div>
+                            </div>
                           </motion.div>
                         </div>
+                      ))}
+                  </motion.div>
+                ) : (
+                  // Grid View - All Projects
+                  <motion.div
+                    key="grid-view"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                  >
+                    {sortedProjects.map((project, idx) => (
+                      <motion.div
+                        key={project.id}
+                        className="relative aspect-[4/3] cursor-pointer"
+                        onClick={() => setFocusedProject(project.id)}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: idx * 0.05 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <motion.div className="group w-full h-full">
+                          <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 border border-gray-700 overflow-hidden shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300 rounded-2xl h-full">
+                            {/* Animated gradient background */}
+                            <motion.div
+                              className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
+                            />
+
+                            {/* Glow effect on hover */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
+
+                            {/* Status Badge */}
+                            <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-10">
+                              <Badge
+                                variant={
+                                  project.status === 'Production'
+                                    ? 'success'
+                                    : project.status === 'Beta'
+                                      ? 'info'
+                                      : 'default'
+                                }
+                                size="sm"
+                                className="text-[10px] px-1.5 py-0.5"
+                              >
+                                {project.status}
+                              </Badge>
+                              {project.isStealthMode && (
+                                <Badge
+                                  variant="secondary"
+                                  size="sm"
+                                  className="text-[9px] px-1 py-0.5 bg-gray-800/80 border-gray-700"
+                                >
+                                  <Lock className="w-2.5 h-2.5 inline mr-0.5" />
+                                  Stealth
+                                </Badge>
+                              )}
+                            </div>
+
+                            <div className="relative p-4 h-full flex flex-col z-10">
+                              {/* Project Icon and Title */}
+                              <div className="flex flex-col items-center text-center mb-3">
+                                <motion.div
+                                  className={`p-3 mb-2 rounded-xl bg-gradient-to-br ${project.color} shadow-lg`}
+                                >
+                                  {React.cloneElement(project.icon, {
+                                    className: 'w-6 h-6 text-white',
+                                  })}
+                                </motion.div>
+                                <h3 className="font-bold text-white text-lg mb-1">
+                                  {project.title}
+                                </h3>
+                                <p className="text-gray-400 text-xs line-clamp-1">
+                                  {project.tagline}
+                                </p>
+                              </div>
+
+                              {/* Description and Tech Stack */}
+                              <div className="flex-1 flex flex-col justify-between">
+                                <p className="text-[11px] text-gray-400 line-clamp-2 px-1 mb-2">
+                                  {project.description}
+                                </p>
+                                
+                                <div>
+                                  <div className="flex flex-wrap gap-1 px-1 mb-2">
+                                    {project.tech.slice(0, 3).map((tech, i) => (
+                                      <span
+                                        key={`${tech}-tile-${i}`}
+                                        className="px-1.5 py-0.5 bg-gray-800/60 text-[9px] text-gray-400 rounded"
+                                      >
+                                        {tech}
+                                      </span>
+                                    ))}
+                                    {project.tech.length > 3 && (
+                                      <span className="text-[9px] text-gray-500">
+                                        +{project.tech.length - 3}
+                                      </span>
+                                    )}
+                                  </div>
+                                  
+                                  {/* Quick action buttons */}
+                                  <div className="flex items-center justify-between mt-auto pt-2 px-1">
+                                    <div className="flex gap-1">
+                                      {project.github && project.github !== '#' && (
+                                        <motion.a
+                                          href={project.github}
+                                          target="_blank"
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="p-1 bg-gray-800/50 rounded hover:bg-gray-700 transition-all"
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                        >
+                                          <Github className="w-3 h-3 text-gray-400" />
+                                        </motion.a>
+                                      )}
+                                    </div>
+                                    <span className="text-[9px] text-gray-500">Click to expand</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.section>
         )}
@@ -4073,13 +4049,13 @@ export function InteractivePortfolio() {
                             tech: ['React Native', 'Supabase', 'AI/ML'],
                           },
                           {
-                            name: 'DevMentor',
+                            name: 'Platform',
                             description: 'Developing AI pair programming assistant',
                             status: 'Beta - VS Code extension live',
                             tech: ['TypeScript', 'LangChain', 'Qdrant'],
                           },
                           {
-                            name: 'Chameleon',
+                            name: 'AI Assistant',
                             description: 'Smart MCQ generator (heuristics + dedupe)',
                             status: 'Beta - heuristics + dedupe',
                             tech: ['Python', 'scikit-learn', 'SQLite'],

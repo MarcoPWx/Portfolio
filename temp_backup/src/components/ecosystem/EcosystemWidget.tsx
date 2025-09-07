@@ -1,7 +1,7 @@
 /**
  * Unified Product Ecosystem Widget
  * A reusable component to cross-promote your product suite
- * Can be embedded in any of your products (QuizMentor, DevMentor, Harvest, Omni)
+ * Can be embedded in any of your products (QuizMentor, Platform, Harvest, Omni)
  */
 
 import React, { useState, useEffect } from 'react';
@@ -20,12 +20,12 @@ export interface Product {
 
 const products: Product[] = [
   {
-    id: 'devmentor',
-    name: 'DevMentor',
+    id: 'platform',
+    name: 'Platform',
     tagline: 'AI Development Assistant',
     icon: '🧠',
     color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    url: 'https://devmentor.ai',
+    url: 'https://platform.ai',
     status: 'beta',
     description: 'AI assistant that learns your coding patterns'
   },

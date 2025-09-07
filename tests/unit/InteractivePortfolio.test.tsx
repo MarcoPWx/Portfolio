@@ -52,8 +52,8 @@ describe('InteractivePortfolio', () => {
 
     await waitFor(() => {
       expect(screen.getAllByText('QuizMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('DevMentor').length).toBeGreaterThan(0);
-      expect(screen.getAllByText('Chameleon').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Platform').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('AI Assistant').length).toBeGreaterThan(0);
     });
   });
 
