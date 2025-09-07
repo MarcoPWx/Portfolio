@@ -906,6 +906,7 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[400px]"
             collapsible
+            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[0].description}</p>
@@ -944,6 +945,7 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[280px] md:h-[400px]"
             collapsible
+            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[1].description}</p>
@@ -982,6 +984,7 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[200px]"
             collapsible
+            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[2].description}</p>
@@ -1020,6 +1023,7 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[200px]"
             collapsible
+            defaultCollapsed
             glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[3].description}</p>
@@ -1058,6 +1062,7 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[200px]"
             collapsible
+            defaultCollapsed
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[4].description}</p>
         </motion.div>
@@ -1095,6 +1100,7 @@ function WorkflowsShowcase() {
             loopPauseMs={5000}
             heightClass="h-[180px] md:h-[200px]"
             collapsible
+            defaultCollapsed
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[5].description}</p>
         </motion.div>
@@ -1662,7 +1668,6 @@ export function InteractivePortfolio() {
   }>({ isOpen: false, url: null, project: null });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [focusedProject, setFocusedProject] = useState<string | null>(null);
-  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   // Initialize component
@@ -1682,27 +1687,6 @@ export function InteractivePortfolio() {
     };
   }, [mounted]);
 
-  // Track scroll position to show/hide scroll indicator
-  useEffect(() => {
-    if (!mounted || typeof window === 'undefined') return;
-    
-    const handleScroll = () => {
-      const scrolledToBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
-      const hasScrollableContent = document.documentElement.scrollHeight > window.innerHeight + 100;
-      setShowScrollIndicator(hasScrollableContent && !scrolledToBottom);
-    };
-    
-    // Check on mount
-    handleScroll();
-    
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, [mounted, activeSection]);
 
   // Cross-section navigation via custom event
   useEffect(() => {
@@ -2329,6 +2313,384 @@ export function InteractivePortfolio() {
         'Enterprise features: team workspaces, audit logs, SSO',
       ],
     },
+    'code-analyzer': {
+      coreOffering:
+        '🔍 Advanced repository intelligence tool that provides deep insights into any codebase. Understand architecture, patterns, dependencies, and best practices instantly—perfect for onboarding, audits, and refactoring.',
+      howItWorks: [
+        'Repository scan: Clone → Parse files → Build dependency graph → Extract patterns → Generate insights',
+        'Multi-language support: JavaScript/TypeScript → Python → Java → Go → Rust → More',
+        'Pattern detection: Design patterns → Anti-patterns → Code smells → Security issues → Performance bottlenecks',
+        'Architecture mapping: Service boundaries → API contracts → Database schemas → Event flows → Dependencies',
+        'Documentation generation: Auto-generate docs → Architecture diagrams → API specs → Dependency trees',
+      ],
+      keyEndpoints: [
+        'analyzer scan <repo> — Deep scan of repository structure',
+        'analyzer patterns <repo> — Detect design patterns and anti-patterns',
+        'analyzer dependencies — Generate dependency graph',
+        'analyzer security — Security vulnerability scan',
+        'analyzer report — Generate comprehensive analysis report',
+      ],
+      userStories: [
+        'As a new developer, I understand a legacy codebase in hours instead of weeks',
+        'As a tech lead, I identify architectural problems and technical debt instantly',
+        'As a consultant, I provide comprehensive codebase audits to clients quickly',
+        'As an architect, I visualize system dependencies and service boundaries clearly',
+        'As a team lead, I onboard new developers faster with auto-generated documentation',
+        'As a security engineer, I find vulnerabilities and security anti-patterns automatically',
+        'As a performance engineer, I identify bottlenecks and optimization opportunities',
+      ],
+      s2sStories: [
+        'Git clone → File walker → Language detector → Parser selection → AST generation → Pattern matching',
+        'Code parser → Symbol extractor → Dependency resolver → Graph builder → Visualization generator',
+        'Pattern matcher → Rule engine → Issue detector → Severity scorer → Report generator',
+        'API scanner → Endpoint extractor → Contract builder → OpenAPI generator → Documentation builder',
+        'Security scanner → Vulnerability database → CVE matcher → Risk assessment → Remediation suggestions',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Multi-language AST parsing',
+          'Incremental analysis for large repos',
+          'Plugin architecture for custom rules',
+          'REST API for CI/CD integration',
+          'Real-time analysis updates',
+        ],
+        'AI & Learning': [
+          'ML-powered pattern recognition',
+          'Code similarity detection',
+          'Auto-categorization of code',
+          'Intelligent refactoring suggestions',
+          'Learning from team patterns',
+        ],
+        'Reliability & Performance': [
+          'Parallel file processing',
+          'Incremental cache updates',
+          'Memory-efficient parsing',
+          'Streaming results for large repos',
+        ],
+        'Security & Privacy': [
+          'Local-only analysis option',
+          'Encrypted report storage',
+          'No source code transmission',
+          'Audit trail for all scans',
+        ],
+        'Dev Workflow & QA': [
+          'IDE integrations',
+          'Pre-commit hooks',
+          'CI/CD pipeline integration',
+          'Custom rule creation',
+        ],
+      },
+      practices: [
+        'Privacy-first analysis',
+        'Incremental scanning',
+        'Language-agnostic approach',
+        'Extensible rule system',
+        'Performance optimization',
+      ],
+      who: [
+        'Development teams doing code reviews',
+        'Architects planning refactoring',
+        'Consultants auditing codebases',
+        'Security teams finding vulnerabilities',
+        'New developers learning codebases',
+      ],
+      next: [
+        'AI-powered refactoring suggestions',
+        'Real-time collaboration features',
+        'Cloud-based analysis engine',
+        'Advanced visualization tools',
+      ],
+    },
+    'content-tools': {
+      coreOffering:
+        '📚 Intelligent content management suite that transforms, analyzes, and optimizes content at scale. From raw data to polished, structured content with built-in quality assurance and ethical handling.',
+      howItWorks: [
+        'Content ingestion: Multiple formats → Parse → Normalize → Structure → Store',
+        'Smart processing: Clean → Transform → Enhance → Validate → Optimize',
+        'Quality analysis: Readability scoring → SEO optimization → Fact checking → Plagiarism detection',
+        'Ethical handling: PII detection → Bias checking → Content moderation → Compliance validation',
+        'Export pipeline: Format conversion → Metadata enrichment → Versioning → Distribution',
+      ],
+      keyEndpoints: [
+        'content import <source> — Import content from various sources',
+        'content analyze — Deep content analysis and scoring',
+        'content transform --format <type> — Transform to different formats',
+        'content optimize --target <audience> — Optimize for specific audiences',
+        'content export --format <type> — Export in multiple formats',
+      ],
+      userStories: [
+        'As a content manager, I process thousands of documents in minutes not days',
+        'As an editor, I automatically detect and fix quality issues across all content',
+        'As a compliance officer, I ensure all content meets regulatory requirements automatically',
+        'As a marketer, I optimize content for different channels and audiences instantly',
+        'As a publisher, I transform content into multiple formats with one click',
+        'As a data analyst, I extract insights and patterns from large content libraries',
+        'As a localization manager, I prepare content for translation efficiently',
+      ],
+      s2sStories: [
+        'File upload → Format detector → Parser selection → Content extraction → Database storage',
+        'Content → Quality analyzer → Score calculator → Issue detector → Improvement suggester',
+        'Raw text → NLP processor → Entity extraction → Sentiment analysis → Insight generation',
+        'Content → Compliance checker → PII scanner → Bias detector → Moderation flags → Report',
+        'Source content → Transformer → Format converter → Metadata injector → Export package',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Multi-format content parsers',
+          'Scalable processing pipeline',
+          'RESTful API with GraphQL',
+          'Webhook notifications',
+          'Batch processing support',
+        ],
+        'AI & Learning': [
+          'NLP-powered analysis',
+          'Auto-tagging and categorization',
+          'Content recommendation engine',
+          'Smart content enrichment',
+          'Trend detection algorithms',
+        ],
+        'Reliability & Performance': [
+          'Distributed processing',
+          'Auto-scaling workers',
+          'Content deduplication',
+          'Caching strategies',
+          'CDN integration',
+        ],
+        'Security & Privacy': [
+          'End-to-end encryption',
+          'PII detection and masking',
+          'Access control policies',
+          'Audit logging',
+          'GDPR compliance tools',
+        ],
+        'Dev Workflow & QA': [
+          'API testing suite',
+          'Content validation rules',
+          'Custom processors',
+          'Integration templates',
+          'Performance monitoring',
+        ],
+      },
+      practices: [
+        'Ethical content handling',
+        'Quality-first approach',
+        'Privacy by design',
+        'Scalable architecture',
+        'Compliance automation',
+      ],
+      who: [
+        'Content teams managing large libraries',
+        'Publishers needing multi-channel distribution',
+        'Enterprises ensuring compliance',
+        'Marketing teams optimizing content',
+        'Educational institutions managing resources',
+      ],
+      next: [
+        'Real-time collaborative editing',
+        'Advanced AI content generation',
+        'Blockchain content verification',
+        'Multi-language support expansion',
+      ],
+    },
+    'integration-hub': {
+      coreOffering:
+        '🔌 Universal service connector that eliminates integration complexity. Connect any tool, API, or service through a unified interface with zero-config adapters and intelligent routing.',
+      howItWorks: [
+        'Service discovery: Auto-detect APIs → Extract schemas → Generate adapters → Test connections',
+        'Unified interface: Standard API → Protocol translation → Format conversion → Error handling',
+        'Smart routing: Request analysis → Service selection → Load balancing → Failover handling',
+        'Adapter system: Plug-and-play modules → Hot reload → Version management → Dependency resolution',
+        'Monitoring: Real-time metrics → Health checks → Alert management → Performance tracking',
+      ],
+      keyEndpoints: [
+        'hub connect <service> — Connect new service to hub',
+        'hub list — Show all connected services',
+        'hub test <service> — Test service connectivity',
+        'hub route <request> — Route request to appropriate service',
+        'hub monitor — Real-time monitoring dashboard',
+      ],
+      userStories: [
+        'As a developer, I connect any service without reading documentation',
+        'As a DevOps engineer, I manage all integrations from a single dashboard',
+        'As an architect, I switch service providers without changing application code',
+        'As a team lead, I monitor all external service dependencies in one place',
+        'As a product manager, I add new integrations without developer involvement',
+        'As a startup founder, I prototype with multiple services quickly',
+        'As an enterprise architect, I enforce integration standards across teams',
+      ],
+      s2sStories: [
+        'Service URL → Discovery agent → Schema extractor → Adapter generator → Hub registration',
+        'API request → Hub router → Protocol converter → Service adapter → Response transformer',
+        'Health check → Service ping → Status aggregator → Alert manager → Dashboard update',
+        'New adapter → Dependency check → Compatibility test → Hot deployment → Registry update',
+        'Request → Load balancer → Service selector → Retry logic → Fallback handler',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Protocol-agnostic design',
+          'Multi-protocol support (REST, GraphQL, gRPC, WebSocket)',
+          'Service mesh integration',
+          'API gateway features',
+          'Event-driven architecture',
+        ],
+        'AI & Learning': [
+          'Smart request routing',
+          'Auto-adapter generation',
+          'Pattern learning from usage',
+          'Predictive scaling',
+          'Anomaly detection',
+        ],
+        'Reliability & Performance': [
+          'Circuit breaker patterns',
+          'Automatic retries with backoff',
+          'Connection pooling',
+          'Response caching',
+          'Rate limiting per service',
+        ],
+        'Security & Privacy': [
+          'Credential vault integration',
+          'OAuth/JWT handling',
+          'Request sanitization',
+          'Encryption in transit',
+          'Compliance reporting',
+        ],
+        'Dev Workflow & QA': [
+          'Local development mode',
+          'Service mocking',
+          'Integration testing framework',
+          'Performance profiling',
+          'Debug tracing',
+        ],
+      },
+      practices: [
+        'Zero-configuration philosophy',
+        'Protocol transparency',
+        'Fail-safe design',
+        'Performance first',
+        'Developer experience focus',
+      ],
+      who: [
+        'Teams with multiple service dependencies',
+        'Companies switching service providers',
+        'Developers building microservices',
+        'Enterprises needing service governance',
+        'Startups iterating quickly',
+      ],
+      next: [
+        'AI-powered service discovery',
+        'Blockchain-based service registry',
+        'Advanced service composition',
+        'Global service marketplace',
+      ],
+    },
+    'enterprise-platform': {
+      coreOffering:
+        '🏢 Your past self becomes your best teammate. AI that learns YOUR patterns, not everyone\'s. Never forget your own solutions again. Enterprise-grade platform that preserves and leverages institutional knowledge.',
+      howItWorks: [
+        'Git Mining: Extracts patterns from YOUR commit history → Analyzes code evolution → Tracks decision making',
+        'AST Analysis: Understands YOUR coding style → Maps refactoring patterns → Identifies best practices',
+        'Personal RAG: Retrieves YOUR solutions first → Then team knowledge → Then global patterns',
+        'Temporal Tracking: Shows how YOUR code evolved → Why decisions were made → What worked and didn\'t',
+        'Team Synthesis: Layers collective intelligence → Preserves departing knowledge → Accelerates onboarding',
+      ],
+      keyEndpoints: [
+        'platform analyze --personal — Analyze personal coding patterns',
+        'platform learn --team — Learn from team\'s collective knowledge',
+        'platform suggest — Get personalized code suggestions',
+        'platform history <pattern> — Show evolution of specific patterns',
+        'platform onboard <developer> — Generate personalized onboarding',
+      ],
+      userStories: [
+        'As a developer, I never forget my own code again - the AI remembers why I made every decision',
+        'As a team lead, new developers become productive in days because they learn from our actual codebase',
+        'As a senior dev, I see how my patterns evolved over time and get suggestions based on MY trajectory',
+        'As a junior dev, I learn from the team\'s collective intelligence preserved in the codebase',
+        'As a manager, knowledge persists when people leave and best practices emerge naturally',
+        'As a CTO, I preserve institutional knowledge and reduce onboarding time by 70%',
+        'As an architect, I track how architectural decisions played out over time',
+      ],
+      s2sStories: [
+        'Git history → Commit analyzer → Pattern extractor → Personal model builder → Suggestion engine',
+        'Code change → Context builder → Team knowledge query → RAG retrieval → Personalized recommendation',
+        'New developer → Codebase scanner → Learning path generator → Mentor matching → Progress tracking',
+        'Pattern query → Historical search → Evolution tracker → Impact analyzer → Learning extractor',
+        'Team activity → Knowledge aggregator → Best practice detector → Documentation generator → Distribution',
+      ],
+      features: {
+        'Personal Intelligence': [
+          'Learns from YOUR commit history',
+          'Tracks YOUR coding evolution',
+          'Remembers YOUR decisions and context',
+          'Suggests based on YOUR patterns',
+          'Shows YOUR learning trajectory',
+        ],
+        'Team Knowledge': [
+          'Collective intelligence preservation',
+          'Knowledge persists across team changes',
+          'Best practices emerge organically',
+          'New members onboard faster',
+          'Team pattern recognition',
+        ],
+        'Enterprise Features': [
+          'Multi-repository support',
+          'Cross-team knowledge sharing',
+          'Compliance and governance',
+          'Advanced analytics dashboard',
+          'SSO and access control',
+        ],
+        'Unique Data Moat': [
+          'Your coding history is unique to you',
+          'Gets better the more you use it',
+          'Compound value over time',
+          'Natural upgrade from individual to team',
+          'Impossible to replicate externally',
+        ],
+        'Security & Privacy': [
+          'On-premise deployment option',
+          'End-to-end encryption',
+          'Code never leaves your infrastructure',
+          'Audit trails for all access',
+          'GDPR/SOC2 compliant',
+        ],
+      },
+      successMetrics: {
+        'Value Indicators': [
+          'Personal patterns recognized',
+          'Past solutions retrieved',
+          'Evolution tracked over time',
+          'Team knowledge preserved',
+          'Onboarding time reduced',
+        ],
+        'Differentiation': [
+          'Personal vs Generic AI',
+          'YOUR patterns vs everyone\'s',
+          'Temporal evolution tracking',
+          'Team knowledge synthesis',
+          'Compound value growth',
+        ],
+      },
+      practices: [
+        'Privacy-first architecture',
+        'Personal learning models',
+        'Continuous knowledge capture',
+        'Pattern evolution tracking',
+        'Team intelligence building',
+      ],
+      who: [
+        'Developers who forget their own solutions and want personalized AI',
+        'Teams losing knowledge when people leave',
+        'Organizations wanting to preserve and leverage collective intelligence',
+        'Anyone tired of generic AI suggestions that don\'t match their style',
+        'Enterprises needing knowledge management',
+      ],
+      next: [
+        'Advanced pattern evolution analytics',
+        'Cross-repository knowledge synthesis',
+        'Team intelligence marketplace',
+        'AI pair programming integration',
+        'Knowledge graph visualization',
+      ],
+    },
     'dev-toolkit': {
       coreOffering:
         '🛠️ Comprehensive developer productivity toolkit with project management, documentation generation, and workflow automation. Built for modern development teams.',
@@ -2883,38 +3245,7 @@ export function InteractivePortfolio() {
         />
       )}
 
-      {/* Scroll Indicator - Small Arrow Bottom Right */}
-      <AnimatePresence>
-        {showScrollIndicator && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed bottom-4 right-4 z-40 pointer-events-none"
-          >
-            <motion.div
-              animate={{
-                y: [0, 4, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: 'easeInOut',
-              }}
-              className="relative"
-            >
-              {/* Subtle glow */}
-              <div className="absolute inset-0 bg-green-400 rounded-full blur-md opacity-30" />
-              
-              {/* Small arrow icon */}
-              <div className="relative bg-gradient-to-br from-green-400 to-teal-400 p-1.5 rounded-full shadow-lg">
-                <ArrowDown className="w-3 h-3 text-gray-900" />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
 
       <AnimatePresence mode="wait">
         {/* Hero Section */}
@@ -2925,7 +3256,7 @@ export function InteractivePortfolio() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="min-h-screen flex items-center justify-center px-4 pt-24 md:pt-16"
-            style={{ marginTop: '10%' }}
+            style={{ marginTop: '5%' }}
           >
             <div className="w-full max-w-[90%] md:max-w-[85%] xl:max-w-[80%] 2xl:max-w-[75%] mx-auto">
               <div className="text-center space-y-6 mt-8 md:mt-0">
@@ -2981,7 +3312,6 @@ export function InteractivePortfolio() {
                   Developer tools that prioritize developer experience. From gamified learning to
                   intelligent content transformation.
                 </motion.p>
-
 
                 {/* Terminal Demo - Development Workflow */}
                 <motion.div
