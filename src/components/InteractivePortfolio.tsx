@@ -1417,38 +1417,68 @@ function ProjectRoadmap({ project }: { project: string }) {
         completion: 20,
       },
     ],
-    devmentor: [
+    'ai-os-ce': [
       {
         phase: 'Foundation',
         status: 'completed',
         items: [
-          'Design patterns & architecture',
-          'Auth service',
-          'AI Gateway',
-          'Epic Management v1',
-          'System Status baseline',
+          'Agent Boot CLI',
+          'DEVLOG management',
+          'EPIC tracking',
+          'Security checks',
+          'Performance monitoring',
         ],
         completion: 100,
       },
       {
-        phase: 'Self-Learning',
+        phase: 'Integration',
         status: 'in-progress',
         items: [
-          'PBML engine',
-          'Observability integration',
-          'Repo Analyzer MVP',
-          'Quality gates in CI',
+          'GitHub issue sync',
+          'Multi-repo support',
+          'Custom agent templates',
+          'Workflow automation',
         ],
         completion: 70,
       },
       {
-        phase: 'Extension Integration',
+        phase: 'Enterprise',
         status: 'planned',
-        items: ['VS Code extension beta', 'Workspace memory', 'Quick-fix library'],
+        items: ['Team collaboration', 'Policy management', 'Audit trails'],
         completion: 20,
       },
     ],
-    voice: [
+    'ai-os-pro': [
+      {
+        phase: 'Foundation',
+        status: 'completed',
+        items: [
+          'Trust & transparency framework',
+          'Interactive learning system',
+          'Proactive intelligence engine',
+          'Developer analytics dashboard',
+        ],
+        completion: 100,
+      },
+      {
+        phase: 'BETA Features',
+        status: 'in-progress',
+        items: [
+          '< 5 min onboarding experience',
+          '< 2 min repo analysis',
+          '< 200ms query response',
+          '> 85% accuracy guarantee',
+        ],
+        completion: 75,
+      },
+      {
+        phase: 'Team Collaboration',
+        status: 'planned',
+        items: ['Shared patterns', 'Team best practices', 'Collaborative sessions', 'Shared roadmaps'],
+        completion: 30,
+      },
+    ],
+    voiceapp: [
       {
         phase: 'MVP',
         status: 'completed',
@@ -1470,25 +1500,6 @@ function ProjectRoadmap({ project }: { project: string }) {
         phase: 'Ecosystem',
         status: 'planned',
         items: ['Multi-speaker diarization', 'Project memory', 'Integrations', 'Mobile support'],
-        completion: 10,
-      },
-    ],
-    'devmentor-vscode': [
-      {
-        phase: 'Alpha',
-        status: 'in-progress',
-        items: [
-          'Inline quick-fixes',
-          'Hover helpers',
-          'Command palette actions',
-          'Pattern-aware prompts',
-        ],
-        completion: 40,
-      },
-      {
-        phase: 'Beta',
-        status: 'planned',
-        items: ['Local model routing', 'Workspace memory', 'RAG across repos', 'Telemetry opt-in'],
         completion: 10,
       },
     ],
@@ -1839,48 +1850,50 @@ export function InteractivePortfolio() {
         color: 'from-emerald-600 to-green-600',
       },
       {
-        id: 'devmentor',
-        title: 'DevMentor',
-        tagline: 'AI Pair Programming Assistant',
+        id: 'ai-os-ce',
+        title: 'AI-OS CE',
+        tagline: 'Local-First AI Development Toolkit',
         description:
-          'Intelligent coding assistant that maintains repository context and helps with code generation, testing, and documentation.',
+          'Community Edition AI toolkit for developers to build and deploy AI agents with local-first approach and privacy by design.',
         differentiation: [
-          'Repository-aware code suggestions',
-          'Automated TDD workflow support',
-          'Multi-provider AI integration',
-          'Context preservation across sessions',
-          'Pattern recognition and learning',
+          'Agent Boot CLI for DEVLOG management',
+          'EPIC tracking and task management',
+          'Security and performance monitoring',
+          'Optional GitHub issue sync',
+          'Python-based agent framework',
         ],
-        status: 'Alpha',
+        status: 'Beta',
         metrics: {},
-        tech: ['Next.js', 'React', 'TypeScript', 'LangChain', 'OpenAI', 'PostgreSQL', 'Redis'],
-        github: 'https://github.com/MarcoPWx/DevMentor.ai',
+        tech: ['Python', 'TypeScript', 'Next.js', 'GitHub Actions', 'Markdown'],
+        github: 'https://github.com/MarcoPWx/AI-OS-CE',
         icon: <Bot className="w-6 h-6" />,
         color: 'from-blue-600 to-cyan-600',
       },
       {
-        id: 'devmentor-vscode',
-        title: 'DevMentor VS Code Extension',
-        tagline: 'AI Assistant for VS Code',
+        id: 'ai-os-pro',
+        title: 'AI-OS Pro',
+        tagline: 'Your Intelligent Development Companion',
         description:
-          'VS Code extension that brings AI-powered code assistance directly to your editor with context-aware suggestions.',
+          'Transform your development workflow with an AI companion that learns with you. Understand your project better, get proactive insights, and feel confident with every decision.',
         differentiation: [
-          'Inline code suggestions and fixes',
-          'Command palette integration',
-          'Workspace-aware intelligence',
-          'Privacy-focused local processing',
+          'All AI decisions explained with full transparency',
+          'Error prevention before it happens',
+          'Interactive learning with step-by-step guidance',
+          'Developer analytics showing time saved & productivity',
+          'Trust controls: rollback any suggestion instantly',
+          'Team features for shared patterns & best practices',
         ],
         status: 'Alpha',
         metrics: {},
-        tech: ['TypeScript', 'VS Code API', 'LangChain', 'Node.js'],
-        github: 'https://github.com/MarcoPWx/DevMentor.ai',
+        tech: ['Tauri', 'React', 'Rust', 'Python', 'Ollama', 'LangChain'],
+        github: 'https://github.com/MarcoPWx/AI-OS-Pro',
         icon: <Code className="w-6 h-6" />,
         color: 'from-indigo-600 to-purple-600',
       },
       {
-        id: 'voice',
-        title: 'Voice AI Assistant',
-        tagline: 'Real-time Voice Interactions',
+        id: 'voiceapp',
+        title: 'VoiceApp',
+        tagline: 'Real-time Voice AI Platform',
         description:
           'Voice-enabled AI platform for natural conversations with low latency and privacy-focused architecture.',
         differentiation: [
@@ -1911,10 +1924,10 @@ export function InteractivePortfolio() {
   // Approximate roadmap completion per project for on-card summary
   const roadmapProgress: Record<string, number> = {
     quizmentor: 61,
-    devmentor: 63,
+    'ai-os-ce': 63,
+    'ai-os-pro': 68,
     chameleon: 67,
-    voice: 57,
-    'devmentor-vscode': 25,
+    voiceapp: 57,
     'command-center': 60,
   };
 
@@ -2258,19 +2271,92 @@ export function InteractivePortfolio() {
         'Enterprise features: team workspaces, audit logs, SSO',
       ],
     },
-    'devmentor-vscode': {
+    'ai-os-ce': {
       coreOffering:
-        'DevMentor in VS Code: inline quick-fixes and repo-aware prompts while you code.',
+        'Local-first AI development toolkit with Agent Boot CLI for managing development workflows, EPIC tracking, and task automation.',
       howItWorks: [
-        'Reads diagnostics/selection; queries gateway + pattern memory',
-        'Offers code actions, hovers, and command workflows',
-        'API integration with secure token management',
+        'Agent Boot CLI manages DEVLOG and EPIC tracking',
+        'Security and performance checks integrated',
+        'Optional GitHub issue synchronization',
+        'Python-based extensible agent framework',
       ],
       who: [
-        'VS Code users who want repo-aware assistance',
-        'Teams enforcing patterns via the editor',
+        'Developers building AI agents locally',
+        'Teams needing development workflow automation',
+        'Privacy-conscious organizations',
       ],
-      next: ['Local model routing and workspace memory', 'RAG across repos and opt-in telemetry'],
+      next: ['Multi-repo support', 'Custom agent templates', 'Team collaboration features'],
+    },
+    'ai-os-pro': {
+      coreOffering:
+        '🚀 Within 5 minutes of installing AI-OS Pro, any developer will understand their project better, have clear next steps, and feel confident with an intelligent companion that learns and improves with them.',
+      howItWorks: [
+        'Install and onboard in under 5 minutes',
+        'Automatic project analysis in under 2 minutes',
+        'Get proactive insights: errors prevented, performance optimized, security enhanced',
+        'Track your progress: time saved, productivity gains, learning milestones',
+        'Build together: interactive guidance with rollback controls',
+      ],
+      userStories: [
+        'As a developer, I feel like I have a senior architect mentoring me through complex decisions',
+        'As a team lead, I see measurable productivity improvements and consistent best practices',
+        'As a junior dev, I learn faster with patient, step-by-step guidance',
+        'As a senior dev, I save hours with proactive error prevention and intelligent suggestions',
+        'As a manager, I trust the system with full transparency and rollback controls',
+      ],
+      features: {
+        'Trust & Transparency': [
+          'All AI decisions explained',
+          'User controls everything',
+          'Rollback any suggestion',
+          'Privacy indicators visible',
+        ],
+        'Interactive Learning': [
+          'Build features together with AI',
+          'Step-by-step guidance',
+          'Learning checkpoints',
+          'Progress tracking',
+        ],
+        'Proactive Intelligence': [
+          'Error prevention before it happens',
+          'Performance bottleneck detection',
+          'Security vulnerability scanning',
+          'Code quality suggestions',
+        ],
+        'Developer Analytics': [
+          'Time saved metrics',
+          'Productivity improvements',
+          'Learning progress',
+          'Pattern recognition',
+        ],
+      },
+      successMetrics: {
+        'Quantitative': [
+          'Onboarding: < 5 minutes',
+          'Repo analysis: < 2 minutes',
+          'Query response: < 200ms',
+          'Accuracy: > 85%',
+          'Coverage: > 75%',
+        ],
+        'Qualitative': [
+          'Users trust the system',
+          'Measurable learning',
+          'Demonstrable productivity',
+          'Delightful experience',
+          'Reliable behavior',
+        ],
+      },
+      who: [
+        'Developers who want a senior architect mentoring them',
+        'Teams seeking consistent best practices and shared learning',
+        'Organizations prioritizing developer productivity and satisfaction',
+        'Anyone who values transparency and control in AI assistance',
+      ],
+      next: [
+        'Team features: shared patterns and collaborative sessions',
+        'Advanced analytics and insights',
+        'Extended platform integrations',
+      ],
     },
     'command-center': {
       coreOffering:
@@ -2311,8 +2397,8 @@ export function InteractivePortfolio() {
       who: ['Developers using AI assistants who need working patterns and fast validation'],
       next: ['Templates, plugin examples, deployment guides, and Vue/Angular variants'],
     },
-    voice: {
-      coreOffering: 'Push-to-talk assistant today; realtime WebRTC voice on the roadmap.',
+    voiceapp: {
+      coreOffering: 'Push-to-talk voice AI platform with real-time transcription and natural conversation capabilities.',
       howItWorks: [
         'Expo records audio → server /asr → Whisper transcription',
         'Client posts /chat and speaks replies with on-device TTS',

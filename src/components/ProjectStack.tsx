@@ -27,8 +27,8 @@ export function ProjectStack() {
     | 'quizmentor'
     | 'ai-os-ce'
     | 'ai-os-pro'
-    | 'harvest'
-    | 'voice'
+    | 'chameleon'
+    | 'voiceapp'
     | 'opensource';
   const [filter, setFilter] = useState<ProjectId>('all');
 
@@ -42,7 +42,7 @@ export function ProjectStack() {
           {
             tech: 'Next.js + React + TypeScript',
             usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'harvest'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon'],
             examples: [
               'App Router + RSC where useful (AI-OS-Pro)',
               'Next.js 15.5 streaming API routes (Chameleon)',
@@ -60,8 +60,8 @@ export function ProjectStack() {
           },
           {
             tech: 'Expo (React Native, managed)',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: [
               'Push-to-talk UI with realtime audio capture',
               'Speech-to-Text and Text-to-Speech integration',
@@ -90,7 +90,7 @@ export function ProjectStack() {
           {
             tech: 'React Query (TanStack)',
             usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
+            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
             examples: [
               'Client caching for multi-agent state (AI-OS-Pro)',
               'SSR-safe caching and SWR patterns (Chameleon)',
@@ -99,8 +99,8 @@ export function ProjectStack() {
           },
           {
             tech: 'Tailwind CSS / NativeWind',
-            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'harvest', 'quizmentor'],
+            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon', 'QuizMentor', 'VoiceApp'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon', 'quizmentor', 'voiceapp'],
             examples: [
               'Utility-first styling; PostCSS/Autoprefixer',
               'NativeWind for RN components (QuizMentor)',
@@ -128,7 +128,7 @@ export function ProjectStack() {
           {
             tech: 'React Markdown + remark-gfm + Mermaid',
             usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'harvest'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon'],
             examples: [
               'Docs rendering and diagrams in UI/Storybook',
               'Architecture diagrams and S2S journey visualizations (AI-OS-CE)',
@@ -137,7 +137,7 @@ export function ProjectStack() {
           {
             tech: 'Swagger UI React',
             usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
+            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
             examples: [
               'Embed OpenAPI specs in stories/panels',
               'Multi-agent API documentation (AI-OS-Pro)',
@@ -163,8 +163,8 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Express (Node.js)',
-            usedIn: ['AI-OS-Pro', 'QuizMentor', 'Voice'],
-            usedIds: ['ai-os-pro', 'quizmentor', 'voice'],
+            usedIn: ['AI-OS-Pro', 'QuizMentor', 'VoiceApp'],
+            usedIds: ['ai-os-pro', 'quizmentor', 'voiceapp'],
             examples: [
               'Multi-agent orchestration API (AI-OS-Pro)',
               'API with helmet/cors/rate-limit (QuizMentor)',
@@ -175,13 +175,13 @@ export function ProjectStack() {
           {
             tech: 'Next.js API Routes (Node runtime)',
             usedIn: ['Chameleon'],
-            usedIds: ['harvest'],
+            usedIds: ['chameleon'],
             examples: ['SSE streaming generate/chat routes'],
           },
           {
             tech: 'Swagger/OpenAPI',
             usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
+            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
             examples: [
               'Multi-agent API documentation (AI-OS-Pro)',
               'OpenAPI YAML embedded in Storybook (QuizMentor)',
@@ -207,8 +207,8 @@ export function ProjectStack() {
           },
           {
             tech: 'dotenv (.env config)',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: ['Load OPENAI_API_KEY and config at server startup'],
           },
         ],
@@ -221,7 +221,7 @@ export function ProjectStack() {
           {
             tech: 'WebSocket (ws)',
             usedIn: ['AI-OS-Pro', 'VoiceApp'],
-            usedIds: ['ai-os-pro', 'voice'],
+            usedIds: ['ai-os-pro', 'voiceapp'],
             examples: [
               'Multi-agent real-time communication (AI-OS-Pro)',
               'Real-time voice streaming and dialogue state (VoiceApp)',
@@ -236,7 +236,7 @@ export function ProjectStack() {
           {
             tech: 'SSE (Server-Sent Events)',
             usedIn: ['Chameleon', 'QuizMentor'],
-            usedIds: ['harvest', 'quizmentor'],
+            usedIds: ['chameleon', 'quizmentor'],
             examples: ['Streaming responses/tokens in UI; SSE demo flows'],
           },
         ],
@@ -258,13 +258,13 @@ export function ProjectStack() {
           {
             tech: 'AI SDKs: OpenAI / Anthropic / Google',
             usedIn: ['Chameleon'],
-            usedIds: ['harvest'],
+            usedIds: ['chameleon'],
             examples: ['Provider routing + fallback; embeddings; cost/latency surfacing'],
           },
           {
             tech: 'OpenAI (Whisper/Chat/Embeddings)',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: ['ASR via Whisper; concise replies; text-embedding-3-small for RAG lab'],
           },
           {
@@ -286,7 +286,7 @@ export function ProjectStack() {
           {
             tech: 'Redis',
             usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
+            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
             examples: [
               'Agent state caching and coordination (AI-OS-Pro)',
               'Metrics counters and caches (Chameleon)',
@@ -311,7 +311,7 @@ export function ProjectStack() {
           {
             tech: 'Qdrant (Vector store)',
             usedIn: ['AI-OS-Pro', 'VoiceApp'],
-            usedIds: ['ai-os-pro', 'voice'],
+            usedIds: ['ai-os-pro', 'voiceapp'],
             examples: [
               'Semantic search for enterprise RAG (AI-OS-Pro)',
               'Voice command semantic matching (VoiceApp)',
@@ -336,7 +336,7 @@ export function ProjectStack() {
           {
             tech: 'Docker & Compose',
             usedIn: ['AI-OS-Pro', 'Chameleon', 'QuizMentor'],
-            usedIds: ['ai-os-pro', 'harvest', 'quizmentor'],
+            usedIds: ['ai-os-pro', 'chameleon', 'quizmentor'],
             examples: [
               'Multi-agent container orchestration (AI-OS-Pro)',
               'Local dev environment setup',
@@ -389,7 +389,7 @@ export function ProjectStack() {
           {
             tech: 'End-to-End Encryption',
             usedIn: ['VoiceApp'],
-            usedIds: ['voice'],
+            usedIds: ['voiceapp'],
             examples: [
               'Voice data encryption in transit and at rest',
               'Secure voice biometric storage',
@@ -398,7 +398,7 @@ export function ProjectStack() {
           {
             tech: 'CSP, HSTS, COOP/COEP',
             usedIn: ['Chameleon'],
-            usedIds: ['harvest'],
+            usedIds: ['chameleon'],
             examples: ['connect-src to OpenAI/Anthropic; cross-origin isolation'],
           },
           {
@@ -412,8 +412,8 @@ export function ProjectStack() {
           },
           {
             tech: 'Server-only secrets; no client keys',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: ['OPENAI_API_KEY only in server/.env; client has none'],
           },
         ],
@@ -480,14 +480,14 @@ export function ProjectStack() {
           },
           {
             tech: 'Manual E2E (iOS Simulator)',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: ['End-to-end manual flows for push-to-talk MVP'],
           },
           {
             tech: 'Health checks & cURL/Postman',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: ['/health endpoint; cURL/Postman flows for /asr and /chat'],
           },
         ],
@@ -521,8 +521,8 @@ export function ProjectStack() {
         items: [
           {
             tech: 'expo-av / expo-speech / file-system',
-            usedIn: ['Voice'],
-            usedIds: ['voice'],
+            usedIn: ['VoiceApp'],
+            usedIds: ['voiceapp'],
             examples: ['High-quality M4A recording; Speech.speak(reply); file upload'],
           },
         ],
@@ -538,8 +538,8 @@ export function ProjectStack() {
           { id: 'quizmentor', label: 'QuizMentor' },
           { id: 'ai-os-ce', label: 'AI-OS CE' },
           { id: 'ai-os-pro', label: 'AI-OS Pro' },
-          { id: 'harvest', label: 'Chameleon' },
-          { id: 'voice', label: 'VoiceApp' },
+          { id: 'chameleon', label: 'Chameleon' },
+          { id: 'voiceapp', label: 'VoiceApp' },
           { id: 'opensource', label: 'OpenSource SB' },
         ].map((f) => (
           <button
