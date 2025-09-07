@@ -1124,7 +1124,6 @@ function Navigation({
     { id: 'skills', label: 'Stack', icon: <Layers className="w-4 h-4" /> },
     { id: 'projects', label: 'Projects', icon: <Code className="w-4 h-4" /> },
     { href: '/book', label: 'Book', icon: <BookOpen className="w-4 h-4" /> },
-    { href: '/tools', label: 'Tools', icon: <Terminal className="w-4 h-4" /> },
     { id: 'principles', label: 'Principles', icon: <Lightbulb className="w-4 h-4" /> },
     { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
   ];
@@ -2305,19 +2304,86 @@ export function InteractivePortfolio() {
     },
     'ai-os-ce': {
       coreOffering:
-        'Local-first AI development toolkit with Agent Boot CLI for managing development workflows, EPIC tracking, and task automation.',
+        '🛠️ Local-first Python CLI that transforms markdown files into living documentation. Track development progress, manage EPICs, run security labs, and sync with GitHub—all while keeping your data private and context-rich for AI assistants.',
       howItWorks: [
-        'Agent Boot CLI manages DEVLOG and EPIC tracking',
-        'Security and performance checks integrated',
-        'Optional GitHub issue synchronization',
-        'Python-based extensible agent framework',
+        'Agent Boot CLI: agent-boot command manages structured markdown files (DEVLOG.md, EPICS.md, SYSTEM_STATUS.md)',
+        'Living Documentation: Every command updates timestamped logs that become perfect AI context',
+        'EPIC Tracking: Visual progress bars, task management, and automatic status updates',
+        'Security Labs: Test vulnerabilities in sandboxed environment for learning',
+        'GitHub Integration: Optional two-way sync with issues and project boards',
+      ],
+      keyEndpoints: [
+        'agent-boot init — Initialize project with documentation structure',
+        'agent-boot epic create "Epic Name" --tasks 5 — Create new EPIC with tasks',
+        'agent-boot progress — Visual progress report across all EPICs',
+        'agent-boot report — Comprehensive project health dashboard',
+        'agent-boot security-lab create XSS — Create sandboxed security learning lab',
+      ],
+      userStories: [
+        'As a developer, I track my daily progress in DEVLOG.md that automatically timestamps everything',
+        'As a team lead, I visualize project progress across multiple EPICs with progress bars',
+        'As a security engineer, I create safe learning labs to teach vulnerability patterns',
+        'As an AI user, my documentation becomes perfect context for Claude/ChatGPT',
+        'As a project manager, I sync EPIC progress with GitHub issues automatically',
+      ],
+      s2sStories: [
+        'CLI → Markdown Parser → DEVLOG.md update → Git commit → AI context ready',
+        'agent-boot command → EPIC processor → Progress calculator → Visual bars → EPICS.md update',
+        'GitHub webhook → Issue parser → EPIC sync → Bidirectional updates → Status alignment',
+        'Security lab creator → Sandboxed environment → Vulnerable code → Safe learning → Auto-disable in prod',
+        'Documentation watcher → File changes → AI context builder → Structured output → Enhanced prompts',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Pure Python CLI with minimal dependencies',
+          'Structured markdown as database',
+          'Git-friendly plain text storage',
+          'GitHub API integration (optional)',
+        ],
+        'AI & Learning': [
+          'Living documentation optimized for LLM context',
+          'Structured prompts from markdown files',
+          'AI-readable project state',
+          'Context windows optimization',
+        ],
+        'Reliability & Performance': [
+          'Local-first, works offline',
+          'Instant operations on text files',
+          'No external dependencies required',
+          'Graceful GitHub API failures',
+        ],
+        'Security & Privacy': [
+          'All data stays local',
+          'No telemetry or tracking',
+          'Optional GitHub sync only',
+          'Sandboxed security labs',
+        ],
+        'Dev Workflow & QA': [
+          'Integrates with existing Git workflow',
+          'Pre-commit hooks support',
+          'CI/CD friendly commands',
+          'Extensible plugin architecture',
+        ],
+      },
+      practices: [
+        'Documentation as code',
+        'Local-first development',
+        'Privacy by default',
+        'Git-native workflow',
+        'AI context optimization',
       ],
       who: [
-        'Developers building AI agents locally',
-        'Teams needing development workflow automation',
+        'Developers who want structured progress tracking',
+        'Teams needing living documentation',
+        'AI users wanting better context',
         'Privacy-conscious organizations',
       ],
-      next: ['Multi-repo support', 'Custom agent templates', 'Team collaboration features'],
+      next: [
+        'Multi-repo support',
+        'Custom agent templates',
+        'Team collaboration features',
+        'VS Code extension',
+      ],
     },
   'ai-os-pro': {
     coreOffering:
@@ -2429,18 +2495,332 @@ export function InteractivePortfolio() {
       who: ['Developers using AI assistants who need working patterns and fast validation'],
       next: ['Templates, plugin examples, deployment guides, and Vue/Angular variants'],
     },
-    voiceapp: {
-      coreOffering: 'Push-to-talk voice AI platform with real-time transcription and natural conversation capabilities.',
+    'learnforge': {
+      coreOffering:
+        '🎓 Open-source collection of production-ready AI implementations. Learn advanced AI/ML techniques through working code—from RAG pipelines to multi-agent orchestration, all documented with Jupyter notebooks.',
       howItWorks: [
-        'Expo records audio → server /asr → Whisper transcription',
-        'Client posts /chat and speaks replies with on-device TTS',
-        'Server keeps provider keys; simple JSON/CORS endpoints',
+        'Modular examples: Each technique in its own directory with README, requirements, and notebooks',
+        'RAG Pipeline: Ingest → Chunk → Embed → Store in Qdrant → Semantic search → LLM generation',
+        'Multi-Agent: LangChain agents → Task decomposition → Tool usage → Coordination → Results synthesis',
+        'MCP Implementations: Protocol examples → Tool definitions → Claude/AI integration → Production patterns',
+        'Learning Path: Start simple → Build complexity → Combine techniques → Deploy to production',
       ],
-      who: ['Hands-free apps, demos, and rapid prototyping'],
+      keyEndpoints: [
+        'notebooks/rag_basics.ipynb — Introduction to RAG with vector databases',
+        'examples/multi_agent/orchestrator.py — Multi-agent system orchestration',
+        'mcp/tools/* — Model Context Protocol implementations',
+        'pipelines/semantic_search.py — Production semantic search pipeline',
+        'deployment/docker-compose.yml — Full stack AI deployment',
+      ],
+      userStories: [
+        'As a developer, I learn RAG by running working code with real vector databases',
+        'As an AI engineer, I copy production-ready patterns directly into my projects',
+        'As a student, I understand complex AI through step-by-step Jupyter notebooks',
+        'As a team lead, I use this as training material for my team',
+        'As a researcher, I experiment with different AI techniques in one place',
+      ],
+      s2sStories: [
+        'Document loader → Chunking strategy → Embedding model → Vector store → Retrieval → LLM synthesis',
+        'Agent spawner → Task queue → Tool executor → Result aggregator → Final synthesis',
+        'MCP server → Tool registration → Request handler → AI assistant → Response formatter',
+        'Training pipeline → Model fine-tuning → Evaluation metrics → Deployment → Monitoring',
+        'Notebook kernel → Code execution → Visualization → Documentation → Export to production',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Modular, reusable components',
+          'Docker-compose for full stack setup',
+          'REST APIs for all services',
+          'Production deployment configs',
+        ],
+        'AI & Learning': [
+          'RAG with multiple vector databases',
+          'Multi-agent orchestration patterns',
+          'Semantic search implementations',
+          'Fine-tuning examples',
+          'Prompt engineering templates',
+        ],
+        'Reliability & Performance': [
+          'Caching strategies for embeddings',
+          'Batch processing pipelines',
+          'Async/await patterns throughout',
+          'Resource optimization techniques',
+        ],
+        'Dev Workflow & QA': [
+          'Comprehensive Jupyter notebooks',
+          'Unit tests for all components',
+          'Docker development environment',
+          'Pre-commit hooks and linting',
+        ],
+      },
+      practices: [
+        'Learn by doing',
+        'Production-first examples',
+        'Comprehensive documentation',
+        'Test-driven development',
+        'Open source collaboration',
+      ],
+      who: [
+        'Developers learning AI/ML',
+        'Teams building AI products',
+        'Students studying advanced AI',
+        'Researchers experimenting with techniques',
+      ],
       next: [
-        'Realtime WebRTC with barge-in',
-        'Diarization and project memory',
-        'Integrations and mobile support',
+        'Graph RAG implementations',
+        'Advanced agent communication',
+        'More MCP tool examples',
+        'Video tutorials',
+      ],
+    },
+    'octopus': {
+      coreOffering:
+        '🐙 Intelligent web scraper with ML-powered deduplication. Ethically harvest content while detecting near-duplicates using TF-IDF, SimHash, and fuzzy matching—all while respecting robots.txt and rate limits.',
+      howItWorks: [
+        'Ethical crawling: Check robots.txt → Respect crawl-delay → User-Agent identification → Rate limiting',
+        'Content extraction: BeautifulSoup parsing → Clean text → Structure preservation → Metadata extraction',
+        'ML deduplication: TF-IDF vectors → SimHash fingerprints → Levenshtein distance → Similarity scoring',
+        'Smart filtering: Configurable thresholds → Near-duplicate detection → Semantic clustering → Quality scoring',
+        'Export pipeline: JSON/CSV/Parquet formats → Structured data → Preserves attribution → Import ready',
+      ],
+      keyEndpoints: [
+        'python octopus.py crawl --url https://example.com --depth 3 — Crawl website to depth 3',
+        'python octopus.py dedupe --threshold 0.8 — Remove duplicates with 80% similarity',
+        'python octopus.py export --format parquet — Export to Parquet format',
+        'python octopus.py check-robots https://example.com — Verify robots.txt compliance',
+        'python octopus.py cluster --method tfidf — Cluster similar content',
+      ],
+      userStories: [
+        'As a data scientist, I harvest unique content without manual duplicate removal',
+        'As a researcher, I collect data ethically with full robots.txt compliance',
+        'As a content curator, I identify near-duplicate articles across sources',
+        'As a developer, I export structured data ready for ML pipelines',
+        'As a compliance officer, I verify all scraping respects rate limits',
+      ],
+      s2sStories: [
+        'URL queue → robots.txt checker → Rate limiter → Scraper → Content extractor → Database',
+        'Raw content → TF-IDF vectorizer → SimHash generator → Similarity matrix → Duplicate filter',
+        'Text processor → Tokenizer → Feature extractor → ML model → Similarity scorer → Threshold filter',
+        'Scraper → Metadata enricher → Quality scorer → Format converter → Export pipeline',
+        'Compliance engine → User-Agent setter → Crawl delay → Request throttle → Audit logger',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Async scraping with aiohttp',
+          'SQLite for URL queue management',
+          'Configurable export formats',
+          'Plugin architecture for processors',
+        ],
+        'AI & Learning': [
+          'TF-IDF similarity detection',
+          'SimHash for near-duplicates',
+          'Levenshtein string matching',
+          'Semantic clustering algorithms',
+          'Content quality scoring',
+        ],
+        'Reliability & Performance': [
+          'Connection pooling',
+          'Automatic retry with backoff',
+          'Incremental crawling support',
+          'Resume from interruption',
+        ],
+        'Security & Privacy': [
+          'robots.txt compliance',
+          'Rate limiting enforcement',
+          'User-Agent identification',
+          'No PII collection',
+        ],
+        'Legal Compliance': [
+          'Respects robots.txt',
+          'Crawl-delay honoring',
+          'Terms of service checking',
+          'Attribution preservation',
+        ],
+      },
+      practices: [
+        'Ethical scraping first',
+        'Respect rate limits',
+        'Preserve attribution',
+        'Quality over quantity',
+        'Transparent crawling',
+      ],
+      who: [
+        'Data scientists needing unique datasets',
+        'Researchers collecting web data',
+        'Content platforms removing duplicates',
+        'ML engineers preparing training data',
+      ],
+      next: [
+        'Deep learning deduplication',
+        'Real-time streaming mode',
+        'Distributed crawling',
+        'Advanced NLP extraction',
+      ],
+    },
+    'generic-mcp': {
+      coreOffering:
+        '🔌 Universal MCP hub that connects Claude/AI assistants to ANY tool. Acts as a central router managing multiple MCP adapters—add any tool to your AI workflow with zero configuration.',
+      howItWorks: [
+        'Hub Architecture: Central router → Multiple adapters → Tool connections → Unified interface',
+        'Auto-discovery: Scan repository → Detect APIs/CLIs → Generate adapter → Register with hub',
+        'Request routing: AI request → Hub router → Adapter selection → Tool execution → Response',
+        'Adapter system: Modular TypeScript adapters → Plug-and-play → Hot reload → Version management',
+        'Zero config: Drop in adapter → Auto-register → Available to AI → No manual setup',
+      ],
+      keyEndpoints: [
+        'npm run hub:start — Start the MCP hub server',
+        'npm run adapter:generate <repo-url> — Auto-generate adapter from repository',
+        'npm run adapter:install <adapter-name> — Install adapter from registry',
+        'npm run hub:list — List all registered adapters and tools',
+        'npm run hub:test <tool-name> — Test tool connectivity',
+      ],
+      userStories: [
+        'As a developer, I connect any tool to Claude without writing MCP code',
+        'As a team lead, I manage all our MCP tools from one central hub',
+        'As an AI user, I access any tool through natural language',
+        'As a DevOps engineer, I monitor all MCP connections from one dashboard',
+        'As a plugin developer, I publish adapters for others to use',
+      ],
+      s2sStories: [
+        'Claude request → MCP hub → Router logic → Adapter selection → Tool invocation → Response formatting',
+        'Repository URL → RepoMan analysis → Adapter generation → Hub registration → Tool availability',
+        'Tool request → Authentication → Rate limiting → Execution → Error handling → Response',
+        'Adapter plugin → Version check → Dependency resolution → Installation → Hub integration',
+        'Monitoring → Metrics collection → Performance tracking → Error aggregation → Dashboard update',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Central hub architecture',
+          'RESTful adapter management',
+          'WebSocket for real-time',
+          'Plugin system for adapters',
+        ],
+        'AI & Learning': [
+          'Natural language tool selection',
+          'Context-aware routing',
+          'Tool chaining support',
+          'Fallback strategies',
+        ],
+        'Reliability & Performance': [
+          'Adapter hot reloading',
+          'Connection pooling',
+          'Request queuing',
+          'Circuit breaker pattern',
+        ],
+        'Security & Privacy': [
+          'Secure credential storage',
+          'Request sanitization',
+          'Rate limiting per tool',
+          'Audit logging',
+        ],
+        'Dev Workflow & QA': [
+          'TypeScript throughout',
+          'Automated adapter testing',
+          'Mock mode for development',
+          'Comprehensive logging',
+        ],
+      },
+      practices: [
+        'Zero-configuration setup',
+        'Modular architecture',
+        'Type-safe development',
+        'Extensive testing',
+        'Community-driven adapters',
+      ],
+      who: [
+        'AI developers needing tool integration',
+        'Teams using Claude/ChatGPT',
+        'Organizations with multiple tools',
+        'MCP adapter developers',
+      ],
+      next: [
+        'Adapter marketplace',
+        'Visual tool designer',
+        'Advanced routing rules',
+        'Multi-LLM support',
+      ],
+    },
+    'repoman': {
+      coreOffering:
+        '🔍 AI-powered repository analyzer that deeply understands any codebase. Generates comprehensive intelligence reports and auto-creates MCP adapters—turning any repository into an AI-ready tool.',
+      howItWorks: [
+        'Repository analysis: Clone → AST parsing → Dependency graph → Pattern detection → API discovery',
+        'AI understanding: Code → LLM analysis → Feature extraction → Capability mapping → Documentation parsing',
+        'Intelligence generation: Structure analysis → Tech stack detection → API endpoints → CLI commands → Best practices',
+        'MCP adapter creation: Capabilities → Tool definitions → Handler generation → TypeScript output → Ready to use',
+        'Integration: Standalone CLI → JSON output → GenericMCP compatible → Direct Claude integration',
+      ],
+      keyEndpoints: [
+        'repoman analyze <repo-url> — Deep analysis of repository',
+        'repoman generate-adapter <repo-url> — Create MCP adapter',
+        'repoman report <repo-url> --format json — Generate intelligence report',
+        'repoman discover-apis <repo-url> — Find all API endpoints',
+        'repoman tech-stack <repo-url> — Detect technologies used',
+      ],
+      userStories: [
+        'As a developer, I understand any codebase in minutes, not hours',
+        'As a team lead, I get instant documentation for inherited projects',
+        'As an AI user, I turn any repo into a Claude-compatible tool',
+        'As a consultant, I analyze client codebases comprehensively',
+        'As an architect, I understand system patterns and dependencies',
+      ],
+      s2sStories: [
+        'Git clone → File traversal → AST parser → Pattern matcher → Intelligence compiler → JSON output',
+        'Source code → LLM prompt → Analysis → Capability extraction → MCP schema → Adapter code',
+        'Repository → Language detector → Framework identifier → API scanner → Endpoint mapper',
+        'Code analysis → Dependency graph → Architecture patterns → Best practices → Report generation',
+        'Intelligence data → Template engine → TypeScript generator → Validation → Working adapter',
+      ],
+      features: {
+        'Architecture & APIs': [
+          'Multi-language AST parsing',
+          'Dependency graph analysis',
+          'API endpoint discovery',
+          'CLI command detection',
+        ],
+        'AI & Learning': [
+          'LLM-powered code understanding',
+          'Pattern recognition',
+          'Semantic analysis',
+          'Documentation extraction',
+        ],
+        'Reliability & Performance': [
+          'Incremental analysis',
+          'Caching of results',
+          'Parallel processing',
+          'Memory-efficient parsing',
+        ],
+        'Security & Privacy': [
+          'Local analysis only',
+          'No code upload',
+          'Secure credential handling',
+          'Audit trail',
+        ],
+        'Dev Workflow & QA': [
+          'CLI and library modes',
+          'Multiple output formats',
+          'Integration with CI/CD',
+          'Extensive test coverage',
+        ],
+      },
+      practices: [
+        'Privacy-first analysis',
+        'Comprehensive scanning',
+        'Accurate detection',
+        'Clean code generation',
+        'Documentation focus',
+      ],
+      who: [
+        'Developers analyzing new codebases',
+        'Teams building MCP tools',
+        'Consultants auditing projects',
+        'AI engineers needing integrations',
+      ],
+      next: [
+        'Real-time repository monitoring',
+        'Advanced pattern learning',
+        'Custom adapter templates',
+        'IDE integrations',
       ],
     },
   };
@@ -3697,41 +4077,6 @@ export function InteractivePortfolio() {
                       Technical Skills
                     </h3>
                     <div className="space-y-4">
-                      {/* Specialization callout */}
-                      <div className="p-4 rounded-lg border border-green-600/30 bg-green-500/10">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Smartphone className="w-4 h-4 text-green-400" />
-                          <span className="text-sm font-semibold text-white">
-                            Specialization: Mobile Engineering
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {[
-                            'React Native',
-                            'Expo',
-                            'iOS (Swift, Obj-C)',
-                            'Android (Kotlin, Java)',
-                            'Native Modules',
-                            'WebRTC',
-                            'Bluetooth LE',
-                            'Push Notifications',
-                            'Fastlane / TestFlight / Play Console',
-                            'Crashlytics',
-                            'Performance (Hermes)',
-                          ].map((s, i) => (
-                            <span
-                              key={`mobile-${i}`}
-                              className="px-2 py-0.5 bg-gray-900/50 text-xs text-gray-200 rounded border border-green-700/40"
-                            >
-                              {s}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-400 mt-2">
-                          I work end-to-end across mobile, web, backend, AI, and DevOps. I love the
-                          entire picture—every part matters.
-                        </p>
-                      </div>
                       {[
                         {
                           category: 'Languages',
