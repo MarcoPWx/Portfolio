@@ -28,7 +28,8 @@ export function ProjectStack() {
     | 'ai-os-ce'
     | 'ai-os-pro'
     | 'chameleon'
-    | 'voiceapp'
+    | 'learnforge'
+    | 'octopus'
     | 'opensource';
   const [filter, setFilter] = useState<ProjectId>('all');
 
@@ -56,17 +57,6 @@ export function ProjectStack() {
             examples: [
               'Native + web UI via Expo and React Native Web',
               'Animations (Lottie) and UX haptics for gameplay',
-            ],
-          },
-          {
-            tech: 'Expo (React Native, managed)',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: [
-              'Push-to-talk UI with realtime audio capture',
-              'Speech-to-Text and Text-to-Speech integration',
-              'Wake word detection and voice biometrics',
-              'WebRTC for realtime voice streaming',
             ],
           },
           {
@@ -99,12 +89,13 @@ export function ProjectStack() {
           },
           {
             tech: 'Tailwind CSS / NativeWind',
-            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon', 'QuizMentor', 'VoiceApp'],
-            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon', 'quizmentor', 'voiceapp'],
+            usedIn: ['AI-OS-CE', 'AI-OS-Pro', 'Chameleon', 'QuizMentor', 'LearnForge'],
+            usedIds: ['ai-os-ce', 'ai-os-pro', 'chameleon', 'quizmentor', 'learnforge'],
             examples: [
               'Utility-first styling; PostCSS/Autoprefixer',
               'NativeWind for RN components (QuizMentor)',
               'Custom design systems (AI-OS-Pro)',
+              'Documentation sites (LearnForge)',
             ],
           },
           {
@@ -163,13 +154,11 @@ export function ProjectStack() {
         items: [
           {
             tech: 'Express (Node.js)',
-            usedIn: ['AI-OS-Pro', 'QuizMentor', 'VoiceApp'],
-            usedIds: ['ai-os-pro', 'quizmentor', 'voiceapp'],
+            usedIn: ['AI-OS-Pro', 'QuizMentor'],
+            usedIds: ['ai-os-pro', 'quizmentor'],
             examples: [
               'Multi-agent orchestration API (AI-OS-Pro)',
               'API with helmet/cors/rate-limit (QuizMentor)',
-              'Voice: /health, /asr, /chat; multipart & OpenAI calls',
-              'Dialogue management and NLP processing (Voice)',
             ],
           },
           {
@@ -205,12 +194,6 @@ export function ProjectStack() {
             usedIds: ['quizmentor'],
             examples: ['Error tracking and feature flags/analytics in API'],
           },
-          {
-            tech: 'dotenv (.env config)',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: ['Load OPENAI_API_KEY and config at server startup'],
-          },
         ],
       },
       {
@@ -220,11 +203,10 @@ export function ProjectStack() {
         items: [
           {
             tech: 'WebSocket (ws)',
-            usedIn: ['AI-OS-Pro', 'VoiceApp'],
-            usedIds: ['ai-os-pro', 'voiceapp'],
+            usedIn: ['AI-OS-Pro'],
+            usedIds: ['ai-os-pro'],
             examples: [
               'Multi-agent real-time communication (AI-OS-Pro)',
-              'Real-time voice streaming and dialogue state (VoiceApp)',
             ],
           },
           {
@@ -260,12 +242,6 @@ export function ProjectStack() {
             usedIn: ['Chameleon'],
             usedIds: ['chameleon'],
             examples: ['Provider routing + fallback; embeddings; cost/latency surfacing'],
-          },
-          {
-            tech: 'OpenAI (Whisper/Chat/Embeddings)',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: ['ASR via Whisper; concise replies; text-embedding-3-small for RAG lab'],
           },
           {
             tech: 'RAG / Vector (Qdrant)',
@@ -310,11 +286,11 @@ export function ProjectStack() {
           },
           {
             tech: 'Qdrant (Vector store)',
-            usedIn: ['AI-OS-Pro', 'VoiceApp'],
-            usedIds: ['ai-os-pro', 'voiceapp'],
+            usedIn: ['AI-OS-Pro', 'LearnForge'],
+            usedIds: ['ai-os-pro', 'learnforge'],
             examples: [
               'Semantic search for enterprise RAG (AI-OS-Pro)',
-              'Voice command semantic matching (VoiceApp)',
+              'Advanced RAG implementations (LearnForge)',
             ],
           },
           {
@@ -387,15 +363,6 @@ export function ProjectStack() {
             examples: ['Verify bearer tokens for protected endpoints'],
           },
           {
-            tech: 'End-to-End Encryption',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: [
-              'Voice data encryption in transit and at rest',
-              'Secure voice biometric storage',
-            ],
-          },
-          {
             tech: 'CSP, HSTS, COOP/COEP',
             usedIn: ['Chameleon'],
             usedIds: ['chameleon'],
@@ -409,12 +376,6 @@ export function ProjectStack() {
               'Multi-agent request tracing',
               'Correlation ID propagation across services',
             ],
-          },
-          {
-            tech: 'Server-only secrets; no client keys',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: ['OPENAI_API_KEY only in server/.env; client has none'],
           },
         ],
       },
@@ -478,18 +439,6 @@ export function ProjectStack() {
             usedIds: ['opensource'],
             examples: ['Unit tests with DOM assertions and user interactions'],
           },
-          {
-            tech: 'Manual E2E (iOS Simulator)',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: ['End-to-end manual flows for push-to-talk MVP'],
-          },
-          {
-            tech: 'Health checks & cURL/Postman',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: ['/health endpoint; cURL/Postman flows for /asr and /chat'],
-          },
         ],
       },
       {
@@ -514,19 +463,6 @@ export function ProjectStack() {
           },
         ],
       },
-      {
-        id: 'voice-aiml',
-        icon: <Brain className="w-5 h-5 text-pink-400" />,
-        title: 'Voice AI (MVP)',
-        items: [
-          {
-            tech: 'expo-av / expo-speech / file-system',
-            usedIn: ['VoiceApp'],
-            usedIds: ['voiceapp'],
-            examples: ['High-quality M4A recording; Speech.speak(reply); file upload'],
-          },
-        ],
-      },
     ],
     [],
   );
@@ -539,8 +475,9 @@ export function ProjectStack() {
           { id: 'ai-os-ce', label: 'AI-OS CE' },
           { id: 'ai-os-pro', label: 'AI-OS Pro' },
           { id: 'chameleon', label: 'Chameleon' },
-          { id: 'voiceapp', label: 'VoiceApp' },
-          { id: 'opensource', label: 'OpenSource SB' },
+          { id: 'learnforge', label: 'LearnForge' },
+          { id: 'octopus', label: 'Octopus' },
+          { id: 'opensource', label: 'Open Source' },
         ].map((f) => (
           <button
             key={f.id}

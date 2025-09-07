@@ -57,6 +57,7 @@ import {
   PenTool,
   MessageSquare,
   FileSearch,
+  Search,
   Bot,
   Puzzle,
   BarChart,
@@ -282,48 +283,12 @@ function ParticlesBackground() {
   );
 }
 
-// Subtle 3D Card with toned down hover effects
+// Card3D without hover effects for cleaner experience
 function Card3D({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, { stiffness: 300, damping: 30 });
-  const springRotateY = useSpring(rotateY, { stiffness: 300, damping: 30 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    // Reduced rotation from 20 to 5 degrees
-    rotateX.set((y - 0.5) * 5);
-    rotateY.set((x - 0.5) * -5);
-  };
-
-  const handleMouseLeave = () => {
-    rotateX.set(0);
-    rotateY.set(0);
-  };
-
-  const transform = useTransform(
-    [springRotateX, springRotateY],
-    ([x, y]) => `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg)`,
-  );
-
   return (
-    <motion.div
-      ref={ref}
-      className={`relative ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transformStyle: 'preserve-3d',
-        WebkitTransformStyle: 'preserve-3d',
-        transform,
-      }}
-    >
+    <div className={`relative ${className}`}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -910,8 +875,8 @@ function WorkflowsShowcase() {
 
   return (
     <div className="w-full">
-      {/* Terminal Grid - 3 columns for 6 terminals */}
-      <div className="grid lg:grid-cols-3 gap-4 w-full">
+      {/* Terminal Grid - responsive columns */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
         {/* AI Agent Terminal */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -980,7 +945,7 @@ function WorkflowsShowcase() {
             outputLineDelayMs={1600}
             loop
             loopPauseMs={5000}
-            heightClass="h-[400px]"
+            heightClass="h-[280px] md:h-[400px]"
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[1].description}</p>
         </motion.div>
@@ -1124,7 +1089,7 @@ function WorkflowsShowcase() {
             outputLineDelayMs={1400}
             loop
             loopPauseMs={5000}
-            heightClass="h-[200px]"
+            heightClass="h-[180px] md:h-[200px]"
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[5].description}</p>
         </motion.div>
@@ -1791,6 +1756,7 @@ export function InteractivePortfolio() {
     icon: React.ReactElement;
     color: string;
     live?: string;
+    isOpenSource?: boolean;
   };
   const projects = useMemo<ProjectInfo[]>(
     () => [
@@ -1799,14 +1765,14 @@ export function InteractivePortfolio() {
         title: 'QuizMentor',
         tagline: 'Gamified Learning Platform',
         description:
-          'Interactive quiz application with gamification elements. Features adaptive learning, instant feedback, and progress tracking. Includes powerful Harvest Scraper system.',
+          'Transform how people learn with an engaging quiz platform that makes education addictive. Built for retention, designed for delight.',
         differentiation: [
-          'Quick quiz sessions with instant feedback',
-          'Gamification: XP, streaks, achievements',
-          'Adaptive difficulty adjustment',
-          'Offline mode with sync capabilities',
-          'Performance optimized batch processing',
-          'AI-powered Chameleon generating 50K+ questions/day',
+          'Learn in 5-minute daily sessions that stick',
+          'Adaptive difficulty that keeps you in flow state',
+          'Instant feedback that explains why, not just what',
+          'Compete with friends or practice solo',
+          'Track your mastery across 50+ topics',
+          'Works offline, syncs when connected',
         ],
         status: 'Alpha',
         metrics: {},
@@ -1818,96 +1784,162 @@ export function InteractivePortfolio() {
       {
         id: 'chameleon',
         title: 'Chameleon',
-        tagline: 'Smart MCQ Generator',
+        tagline: 'Smart Content Transformation',
         description:
-          'Reads trusted technical sources and turns them into exam‑grade multiple‑choice questions with believable distractors and strong duplicate guards. Exports to CSV for review and integrates with QuizMentor.',
+          'Automatically transform any technical documentation into high-quality educational content. From docs to questions in minutes.',
         differentiation: [
-          'Collects from docs, Stack Overflow, GitHub READMEs, and tutorials',
-          'Grounded question + short explanation per key concept',
-          'Believable distractors (misconceptions, meaning flips, related terms from context)',
-          'Duplicate checks: semantic similarity, string similarity, near‑duplicate hashing',
-          'Balanced correct answer letters (A/B/C/D)',
-          'SQLite persistence + CSV exports + Rich TUI statistics',
+          'Generate exam-grade questions from any source',
+          'Intelligent distractor creation that tests understanding',
+          'Advanced duplicate detection prevents redundancy',
+          'Confidence scoring ensures quality',
+          'Balanced difficulty distribution',
+          'Export to multiple formats for any platform',
         ],
         status: 'Beta',
-        metrics: {
-          Questions: '10k+',
-          Confidence: '~0.7–0.85',
-          Dedup: 'TF‑IDF + Levenshtein + SimHash',
-        },
+        metrics: {},
         tech: [
           'Python',
-          'scikit-learn (TF‑IDF)',
-          'fuzzywuzzy (Levenshtein)',
+          'scikit-learn',
+          'Natural Language Processing',
           'BeautifulSoup',
-          'Requests',
           'Pandas',
           'SQLite',
-          'Rich',
         ],
-        github: 'https://github.com/MarcoPWx/QuizMentor.ai',
+        github: 'https://github.com/MarcoPWx/Chameleon.ai',
         icon: <Brain className="w-6 h-6" />,
         color: 'from-emerald-600 to-green-600',
+        isOpenSource: true,
       },
       {
         id: 'ai-os-ce',
         title: 'AI-OS CE',
-        tagline: 'Local-First AI Development Toolkit',
+        tagline: 'Developer Documentation Toolkit',
         description:
-          'Community Edition AI toolkit for developers to build and deploy AI agents with local-first approach and privacy by design.',
+          'Python CLI tool that helps developers maintain living documentation and track project progress through structured markdown files. All locally, all private.',
         differentiation: [
-          'Agent Boot CLI for DEVLOG management',
-          'EPIC tracking and task management',
-          'Security and performance monitoring',
-          'Optional GitHub issue sync',
-          'Python-based agent framework',
+          'Track development progress with timestamped DEVLOG',
+          'Manage project EPICs with visual progress bars',
+          'Monitor system status and project health',
+          'Optional GitHub integration for issue sync',
+          'Test security patterns in safe environment',
+          'Living documentation that feeds AI context',
         ],
         status: 'Beta',
         metrics: {},
-        tech: ['Python', 'TypeScript', 'Next.js', 'GitHub Actions', 'Markdown'],
+        tech: ['Python', 'TypeScript', 'Next.js', 'GitHub CLI', 'Markdown'],
         github: 'https://github.com/MarcoPWx/AI-OS-CE',
-        icon: <Bot className="w-6 h-6" />,
+        icon: <FileText className="w-6 h-6" />,
         color: 'from-blue-600 to-cyan-600',
+        isOpenSource: true,
       },
       {
         id: 'ai-os-pro',
         title: 'AI-OS Pro',
-        tagline: 'Your Intelligent Development Companion',
+        tagline: 'Production-grade AI Operating System',
         description:
-          'Transform your development workflow with an AI companion that learns with you. Understand your project better, get proactive insights, and feel confident with every decision.',
+          'Automate repo workflows, enforce guardrails, measure outcomes, and build resilient AI systems — locally first. Features living documentation with RAG-powered retrieval.',
         differentiation: [
-          'All AI decisions explained with full transparency',
-          'Error prevention before it happens',
-          'Interactive learning with step-by-step guidance',
-          'Developer analytics showing time saved & productivity',
-          'Trust controls: rollback any suggestion instantly',
-          'Team features for shared patterns & best practices',
+          'Living Documentation System with 10+ matrices',
+          'Local AI with Ollama (Llama 3, Mistral, CodeLlama)',
+          'Vector-Enhanced RAG for semantic search',
+          'Automation daemons and guardrails engine',
+          'Continuous evaluation metrics and dashboards',
+          'Desktop app with Tauri + React UI',
         ],
         status: 'Alpha',
         metrics: {},
-        tech: ['Tauri', 'React', 'Rust', 'Python', 'Ollama', 'LangChain'],
+        tech: ['Tauri', 'React', 'Rust', 'Python', 'Ollama', 'LangChain', 'VitePress', 'Pinecone'],
         github: 'https://github.com/MarcoPWx/AI-OS-Pro',
-        icon: <Code className="w-6 h-6" />,
+        icon: <Cpu className="w-6 h-6" />,
         color: 'from-indigo-600 to-purple-600',
       },
       {
-        id: 'voiceapp',
-        title: 'VoiceApp',
-        tagline: 'Real-time Voice AI Platform',
+        id: 'learnforge',
+        title: 'LearnForge',
+        tagline: 'Advanced AI Learning Toolkit',
         description:
-          'Voice-enabled AI platform for natural conversations with low latency and privacy-focused architecture.',
+          'Open-source collection of cutting-edge AI techniques. From RAG implementations to multi-agent systems, learn by building production-ready AI.',
         differentiation: [
-          'Sub-100ms transcription latency',
-          'Voice Activity Detection (VAD)',
-          'Local processing with cloud fallback',
-          'WebRTC streaming support',
-          'Offline functionality',
+          'Production-ready RAG pipelines with vector search',
+          'Multi-agent orchestration with LangChain & Autogen',
+          'Advanced NLP with semantic search & embeddings',
+          'MCP (Model Context Protocol) implementations',
+          'Comprehensive Jupyter notebooks for learning',
+          'Real-world AI patterns and best practices',
         ],
-        status: 'Alpha',
+        status: 'Beta',
         metrics: {},
-        tech: ['TypeScript', 'WebAudio', 'WebRTC', 'Whisper'],
-        icon: <Mic className="w-6 h-6" />,
-        color: 'from-orange-600 to-red-600',
+        tech: ['Python', 'LangChain', 'Autogen', 'Qdrant', 'OpenAI', 'Anthropic'],
+        github: 'https://github.com/MarcoPWx/LearnForge',
+        icon: <BookOpen className="w-6 h-6" />,
+        color: 'from-violet-600 to-purple-600',
+        isOpenSource: true,
+      },
+      {
+        id: 'octopus',
+        title: 'Octopus',
+        tagline: 'Intelligent Content Harvester',
+        description:
+          'Open-source, ethical content harvesting with ML-powered deduplication. Transform web content into structured data while respecting robots.txt and rate limits.',
+        differentiation: [
+          'TF-IDF semantic similarity detection',
+          'SimHash near-duplicate detection',
+          'Levenshtein string similarity scoring',
+          'Ethical harvesting with robots.txt compliance',
+          'Rate limiting and fair use principles',
+          'Export to multiple formats (JSON, CSV, Parquet)',
+        ],
+        status: 'Beta',
+        metrics: {},
+        tech: ['Python', 'scikit-learn', 'BeautifulSoup4', 'pandas', 'numpy', 'fuzzywuzzy'],
+        github: 'https://github.com/MarcoPWx/Octopus',
+        icon: <Search className="w-6 h-6" />,
+        color: 'from-teal-600 to-cyan-600',
+        isOpenSource: true,
+      },
+      {
+        id: 'generic-mcp',
+        title: 'GenericMCP',
+        tagline: 'Universal MCP Hub',
+        description:
+          'Connect Claude/AI assistants to ANY tool or service through modular adapters. Acts as a central router that manages multiple MCP adapters.',
+        differentiation: [
+          'Connect ANY tool instantly to AI assistants',
+          'Auto-generate adapters with RepoMan',
+          'Unified interface for all MCP tools',
+          'Modular architecture with plug-and-play adapters',
+          'Support for local LLMs via Ollama',
+          'Zero-config setup for any repository',
+        ],
+        status: 'Beta',
+        metrics: {},
+        tech: ['TypeScript', 'Node.js', 'MCP Protocol', 'LangChain', 'Ollama'],
+        github: 'https://github.com/MarcoPWx/GenericMCP',
+        icon: <Puzzle className="w-6 h-6" />,
+        color: 'from-purple-600 to-pink-600',
+        isOpenSource: true,
+      },
+      {
+        id: 'repoman',
+        title: 'RepoMan',
+        tagline: 'Repository Intelligence MCP Tool',
+        description:
+          'AI-powered repository analyzer that understands any codebase and auto-generates MCP adapters. Deep insights into structure, patterns, and APIs.',
+        differentiation: [
+          'Analyzes languages, frameworks, and patterns',
+          'Auto-generates complete MCP adapters',
+          'Discovers APIs and CLI commands',
+          'AI-powered project understanding',
+          'Generates structured JSON intelligence',
+          'Works standalone or with GenericMCP',
+        ],
+        status: 'Beta',
+        metrics: {},
+        tech: ['Python', 'TypeScript', 'MCP Protocol', 'OpenAI', 'AST Parsing'],
+        github: 'https://github.com/MarcoPWx/Repoman',
+        icon: <GitBranch className="w-6 h-6" />,
+        color: 'from-green-600 to-emerald-600',
+        isOpenSource: true,
       },
     ],
     [],
@@ -2287,77 +2319,77 @@ export function InteractivePortfolio() {
       ],
       next: ['Multi-repo support', 'Custom agent templates', 'Team collaboration features'],
     },
-    'ai-os-pro': {
-      coreOffering:
-        '🚀 Within 5 minutes of installing AI-OS Pro, any developer will understand their project better, have clear next steps, and feel confident with an intelligent companion that learns and improves with them.',
-      howItWorks: [
-        'Install and onboard in under 5 minutes',
-        'Automatic project analysis in under 2 minutes',
-        'Get proactive insights: errors prevented, performance optimized, security enhanced',
-        'Track your progress: time saved, productivity gains, learning milestones',
-        'Build together: interactive guidance with rollback controls',
+  'ai-os-pro': {
+    coreOffering:
+      'Your past self becomes your best teammate. AI that learns YOUR patterns, not everyone\'s. Never forget your own solutions again.',
+    howItWorks: [
+      'Git Mining: Extracts patterns from YOUR commit history',
+      'AST Analysis: Understands YOUR coding style and evolution',
+      'Personal RAG: Retrieves YOUR solutions first, then team knowledge',
+      'Temporal Tracking: Shows how YOUR code and decisions evolved',
+      'Team Synthesis: Layers collective intelligence on top of personal patterns',
+    ],
+    userStories: [
+      'As a developer, I never forget my own code again - the AI remembers why I made every decision',
+      'As a team lead, new developers become productive in days because they learn from our actual codebase',
+      'As a senior dev, I see how my patterns evolved over time and get suggestions based on MY trajectory',
+      'As a junior dev, I learn from the team\'s collective intelligence preserved in the codebase',
+      'As a manager, knowledge persists when people leave and best practices emerge naturally',
+    ],
+    features: {
+      'Personal Intelligence': [
+        'Learns from YOUR commit history',
+        'Tracks YOUR coding evolution',
+        'Remembers YOUR decisions and context',
+        'Suggests based on YOUR patterns',
       ],
-      userStories: [
-        'As a developer, I feel like I have a senior architect mentoring me through complex decisions',
-        'As a team lead, I see measurable productivity improvements and consistent best practices',
-        'As a junior dev, I learn faster with patient, step-by-step guidance',
-        'As a senior dev, I save hours with proactive error prevention and intelligent suggestions',
-        'As a manager, I trust the system with full transparency and rollback controls',
+      'Team Knowledge': [
+        'Collective intelligence preservation',
+        'Knowledge persists across team changes',
+        'Best practices emerge organically',
+        'New members onboard faster',
       ],
-      features: {
-        'Trust & Transparency': [
-          'All AI decisions explained',
-          'User controls everything',
-          'Rollback any suggestion',
-          'Privacy indicators visible',
-        ],
-        'Interactive Learning': [
-          'Build features together with AI',
-          'Step-by-step guidance',
-          'Learning checkpoints',
-          'Progress tracking',
-        ],
-        'Proactive Intelligence': [
-          'Error prevention before it happens',
-          'Performance bottleneck detection',
-          'Security vulnerability scanning',
-          'Code quality suggestions',
-        ],
-        'Developer Analytics': [
-          'Time saved metrics',
-          'Productivity improvements',
-          'Learning progress',
-          'Pattern recognition',
-        ],
-      },
-      successMetrics: {
-        'Quantitative': [
-          'Onboarding: < 5 minutes',
-          'Repo analysis: < 2 minutes',
-          'Query response: < 200ms',
-          'Accuracy: > 85%',
-          'Coverage: > 75%',
-        ],
-        'Qualitative': [
-          'Users trust the system',
-          'Measurable learning',
-          'Demonstrable productivity',
-          'Delightful experience',
-          'Reliable behavior',
-        ],
-      },
-      who: [
-        'Developers who want a senior architect mentoring them',
-        'Teams seeking consistent best practices and shared learning',
-        'Organizations prioritizing developer productivity and satisfaction',
-        'Anyone who values transparency and control in AI assistance',
+      'Unique Data Moat': [
+        'Your coding history is unique to you',
+        'Gets better the more you use it',
+        'Compound value over time',
+        'Natural upgrade from individual to team',
       ],
-      next: [
-        'Team features: shared patterns and collaborative sessions',
-        'Advanced analytics and insights',
-        'Extended platform integrations',
+      'Real Problem Solving': [
+        '"I forgot why I wrote this" - solved',
+        '"How did we solve this before?" - answered',
+        '"What would senior dev do?" - learned',
+        '"Why did they design it this way?" - explained',
       ],
     },
+    successMetrics: {
+      'Value Indicators': [
+        'Personal patterns recognized',
+        'Past solutions retrieved',
+        'Evolution tracked over time',
+        'Team knowledge preserved',
+        'Onboarding time reduced',
+      ],
+      'Differentiation': [
+        'Personal vs Generic AI',
+        'YOUR patterns vs everyone\'s',
+        'Temporal evolution tracking',
+        'Team knowledge synthesis',
+        'Compound value growth',
+      ],
+    },
+    who: [
+      'Developers who forget their own solutions and want personalized AI',
+      'Teams losing knowledge when people leave',
+      'Organizations wanting to preserve and leverage collective intelligence',
+      'Anyone tired of generic AI suggestions that don\'t match their style',
+    ],
+    next: [
+      'Advanced pattern evolution analytics',
+      'Cross-repository knowledge synthesis',
+      'Team intelligence marketplace',
+    ],
+  },
     'command-center': {
       coreOffering:
         'Agent-driven Storybook that is the main AI + TDD workflow: working patterns, mock-first API, built-in tests, and docs as the single source of truth.',
@@ -2454,25 +2486,25 @@ export function InteractivePortfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-4 pt-16"
+            className="min-h-screen flex items-center justify-center px-4 pt-24 md:pt-16"
           >
-            <div className="w-full max-w-[90%] 2xl:max-w-[85%] mx-auto">
-              <div className="text-center space-y-8">
+            <div className="w-full max-w-[90%] md:max-w-[85%] xl:max-w-[80%] 2xl:max-w-[75%] mx-auto">
+              <div className="text-center space-y-6 mt-8 md:mt-0">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ duration: 0.8, type: 'spring' }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600/20 to-teal-600/20 rounded-full border border-green-600/30"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-600/20 to-teal-600/20 rounded-full border border-green-600/30"
                 >
-                  <Sparkles className="w-4 h-4 text-green-400" />
-                  <span className="text-sm text-green-400">
+                  <Sparkles className="w-3.5 h-3.5 text-green-400" />
+                  <span className="text-xs text-green-400">
                     Exploring the future of developer tools
                   </span>
                 </motion.div>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <motion.h1
-                    className="text-5xl md:text-7xl 2xl:text-8xl font-bold"
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-bold"
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5 }}
@@ -2483,7 +2515,7 @@ export function InteractivePortfolio() {
                   </motion.h1>
 
                   <motion.div
-                    className="text-xl md:text-2xl 2xl:text-3xl text-gray-400 font-light h-8"
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl 2xl:text-2xl text-gray-400 font-light min-h-[28px]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
@@ -2502,7 +2534,7 @@ export function InteractivePortfolio() {
                 </div>
 
                 <motion.p
-                  className="text-lg 2xl:text-xl text-gray-500 max-w-4xl mx-auto leading-relaxed"
+                  className="text-base lg:text-lg 2xl:text-lg text-gray-500 max-w-3xl mx-auto leading-relaxed"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7 }}
@@ -2589,7 +2621,7 @@ export function InteractivePortfolio() {
                   transition={{ type: 'spring', duration: 0.6 }}
                 >
                   <Sparkles className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm text-purple-400">5 Active Projects</span>
+                  <span className="text-sm text-purple-400">8 Active Projects</span>
                 </motion.div>
 
                 <h2 className="text-5xl font-bold mb-4">
@@ -2622,17 +2654,14 @@ export function InteractivePortfolio() {
                 {sortedProjects.map((project, idx) => (
                   <motion.div
                     key={project.id}
-                    className={`w-full transition-all duration-500 cursor-pointer ${focusedProject && focusedProject !== project.id ? 'opacity-20 scale-[0.98] pointer-events-none' : ''}`}
+                    className={`w-full transition-all duration-300 ease-in-out cursor-pointer ${focusedProject && focusedProject !== project.id ? 'opacity-30 scale-[0.98]' : ''}`}
                     onClick={() => {
-                      if (focusedProject === project.id) {
-                        setFocusedProject(null);
-                      } else {
-                        setFocusedProject(project.id);
-                      }
+                      // Allow clicking other projects even when one is open
+                      setFocusedProject(focusedProject === project.id ? null : project.id);
                     }}
                     initial={{ opacity: 0, y: 20, rotateX: -10 }}
                     animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                    transition={{ delay: idx * 0.1, duration: 0.5, ease: 'easeOut' }}
+                    transition={{ delay: idx * 0.08, duration: 0.4, ease: 'easeOut' }}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
                     <motion.div className="group w-full h-full">
@@ -2653,44 +2682,22 @@ export function InteractivePortfolio() {
                         {/* Glow effect on hover */}
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
 
-                        {/* Top-right close button when open */}
+                        {/* Simplified close button for open projects */}
                         {focusedProject === project.id && (
                           <div className="absolute top-3 right-3 z-20">
                             <motion.button
-                              className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all group/close"
+                              className="p-1.5 bg-gray-800/80 hover:bg-gray-700 rounded-full transition-all"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setFocusedProject(null);
                               }}
-                              initial={{ scale: 1 }}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              title="Close project details"
-                              aria-label="Close project"
-                            >
-                              <X className="w-5 h-5 text-red-400 group-hover/close:text-red-300" />
-                            </motion.button>
-                          </div>
-                        )}
-
-                        {/* Bottom-center open indicator when closed */}
-                        {focusedProject !== project.id && (
-                          <div className="absolute bottom-3 inset-x-0 z-20 flex justify-center">
-                            <motion.button
-                              className="p-2 bg-green-500/20 rounded-lg"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setFocusedProject(project.id);
-                              }}
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ type: 'spring', stiffness: 200 }}
-                              title="Open project details"
-                              aria-label="Open project"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
+                              title="Close details"
+                              aria-label="Close"
                             >
-                              <ArrowDown className="w-5 h-5 text-green-400" />
+                              <X className="w-4 h-4 text-gray-400 hover:text-white" />
                             </motion.button>
                           </div>
                         )}
@@ -2737,6 +2744,18 @@ export function InteractivePortfolio() {
                               >
                                 {project.status}
                               </Badge>
+                              {project.isOpenSource && (
+                                <Badge
+                                  variant="secondary"
+                                  size="sm"
+                                  className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30"
+                                >
+                                  <div className="flex items-center gap-1">
+                                    <GitBranch className="w-3 h-3" />
+                                    <span>Open Source</span>
+                                  </div>
+                                </Badge>
+                              )}
                             </div>
                           </div>
 
