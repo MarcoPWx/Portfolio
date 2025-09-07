@@ -1114,7 +1114,7 @@ export function TechnicalStackV3() {
     },
   ];
 
-  // Filter skills based on search and category
+  // Filter and sort skills based on search, category, and current usage
   const filteredSkills = useMemo(() => {
     let filtered = allSkills;
 
@@ -1134,6 +1134,33 @@ export function TechnicalStackV3() {
           skill.projects?.some((project) => project.toLowerCase().includes(query)),
       );
     }
+
+    // Sort by current usage and trending status
+    filtered = filtered.sort((a, b) => {
+      // Priority 1: Currently using skills come first
+      const aCurrentlyUsing = a.lastUsed === 'Currently using' ? 1 : 0;
+      const bCurrentlyUsing = b.lastUsed === 'Currently using' ? 1 : 0;
+      if (aCurrentlyUsing !== bCurrentlyUsing) {
+        return bCurrentlyUsing - aCurrentlyUsing;
+      }
+
+      // Priority 2: Within same usage status, trending skills come first
+      const aTrending = a.trending ? 1 : 0;
+      const bTrending = b.trending ? 1 : 0;
+      if (aTrending !== bTrending) {
+        return bTrending - aTrending;
+      }
+
+      // Priority 3: Recent years come before older ones
+      const aYear = a.lastUsed === 'Currently using' ? 9999 : parseInt(a.lastUsed || '0');
+      const bYear = b.lastUsed === 'Currently using' ? 9999 : parseInt(b.lastUsed || '0');
+      if (aYear !== bYear) {
+        return bYear - aYear;
+      }
+
+      // Priority 4: Alphabetical order as fallback
+      return a.name.localeCompare(b.name);
+    });
 
     return filtered;
   }, [selectedCategory, searchQuery]);
@@ -1155,6 +1182,20 @@ export function TechnicalStackV3() {
           Comprehensive expertise across modern web technologies, cloud infrastructure, and AI/ML
           systems
         </p>
+        <div className="flex items-center justify-center gap-4 mt-4 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="px-2 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full">
+              <ChevronRight className="w-3 h-3 text-white" />
+            </div>
+            <span className="text-gray-400">Currently using</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="px-2 py-1 bg-gradient-to-r from-green-500 to-teal-500 rounded-full">
+              <TrendingUp className="w-3 h-3 text-white" />
+            </div>
+            <span className="text-gray-400">Trending</span>
+          </div>
+        </div>
       </motion.div>
 
       {/* Search and Filters Bar */}
@@ -1228,8 +1269,20 @@ export function TechnicalStackV3() {
                 onClick={() => setSelectedSkill(skill)}
                 className="group relative bg-gray-900/50 border border-gray-800 rounded-xl p-4 cursor-pointer hover:border-gray-600 transition-all"
               >
-                {/* Trending Badge */}
-                {skill.trending && (
+                {/* Status Badges */}
+                {skill.lastUsed === 'Currently using' && (
+                  <div className="absolute -top-2 -right-2 flex items-center gap-1">
+                    {skill.trending && (
+                      <div className="px-2 py-1 bg-gradient-to-r from-green-500 to-teal-500 rounded-full">
+                        <TrendingUp className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                    <div className="px-2 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" title="Currently using">
+                      <ChevronRight className="w-3 h-3 text-white" />
+                    </div>
+                  </div>
+                )}
+                {skill.lastUsed !== 'Currently using' && skill.trending && (
                   <div className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-green-500 to-teal-500 rounded-full">
                     <TrendingUp className="w-3 h-3 text-white" />
                   </div>
@@ -1305,6 +1358,9 @@ export function TechnicalStackV3() {
                       <div className="flex items-center gap-3">
                         <h3 className="font-semibold text-white">{skill.name}</h3>
                         <span className="text-xs text-gray-500">{skill.category}</span>
+                        {skill.lastUsed === 'Currently using' && (
+                          <ChevronRight className="w-3 h-3 text-blue-400" title="Currently using" />
+                        )}
                         {skill.trending && <TrendingUp className="w-3 h-3 text-green-400" />}
                       </div>
                       <p className="text-sm text-gray-400 mt-1">{skill.description}</p>

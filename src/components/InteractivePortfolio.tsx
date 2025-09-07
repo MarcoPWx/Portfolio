@@ -489,59 +489,51 @@ function InteractiveTerminal({
 
   return (
     <div className="relative">
-      {/* Click to expand/collapse hint with button - above the card */}
-      <AnimatePresence mode="wait">
-        {collapsible && (
-          <motion.div
-            key={collapsed ? 'expand' : 'collapse'}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="text-center mb-3 flex flex-col items-center gap-1"
-          >
-            <span className="text-xs text-green-400 font-medium animate-pulse">
-              {collapsed ? 'Click to expand' : 'Click to collapse'}
-            </span>
-            <motion.button
-              className="p-1.5 rounded-full bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-all"
-              title={collapsed ? 'Expand terminal' : 'Collapse terminal'}
-              aria-label={collapsed ? 'Expand' : 'Collapse'}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleCollapsed();
-              }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.div animate={{ rotate: collapsed ? 0 : 180 }} transition={{ duration: 0.3 }}>
-                <ChevronDown className="w-4 h-4" />
-              </motion.div>
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <Card
         className={`font-mono transition-all duration-300 ${
-          collapsed ? 'hover:shadow-lg hover:shadow-green-400/20 cursor-pointer' : ''
-        } bg-gray-900/90 border-gray-700 shadow-xl backdrop-blur-sm p-4 h-[320px] flex flex-col`}
+          collapsed ? 'hover:shadow-lg hover:shadow-green-400/20 cursor-pointer h-[120px]' : heightClass
+        } bg-gradient-to-br from-gray-900/95 via-gray-900/90 to-gray-800/80 border border-gray-700/50 shadow-2xl backdrop-blur-md rounded-xl overflow-hidden flex flex-col`}
         onClick={collapsed ? toggleCollapsed : undefined}
       >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 bg-red-500 rounded-full" />
-            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
+        {/* Modern Terminal Header */}
+        <div className="bg-gradient-to-r from-gray-800/90 to-gray-900/90 px-3 py-2 border-b border-gray-700/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 bg-red-500/80 rounded-full hover:bg-red-500 transition-colors" />
+                <div className="w-2.5 h-2.5 bg-yellow-500/80 rounded-full hover:bg-yellow-500 transition-colors" />
+                <div className="w-2.5 h-2.5 bg-green-500/80 rounded-full hover:bg-green-500 transition-colors" />
+              </div>
+              {terminalIcon && <div className="text-gray-400 ml-2">{terminalIcon}</div>}
+            </div>
+            <div className="flex-1 text-center">
+              <div className="text-gray-300 text-xs font-semibold tracking-wide">{title}</div>
+              {subtitle && <div className="text-[10px] text-gray-500 mt-0.5">{subtitle}</div>}
+            </div>
+            <div className="flex items-center gap-2">
+              {collapsible && (
+                <motion.button
+                  className="p-1 rounded hover:bg-gray-700/50 text-gray-400 hover:text-white transition-all"
+                  title={collapsed ? 'Expand terminal' : 'Collapse terminal'}
+                  aria-label={collapsed ? 'Expand' : 'Collapse'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCollapsed();
+                  }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.div animate={{ rotate: collapsed ? 0 : 180 }} transition={{ duration: 0.3 }}>
+                    <ChevronDown className="w-3 h-3" />
+                  </motion.div>
+                </motion.button>
+              )}
+            </div>
           </div>
-          <div className="flex-1 text-center px-6">
-            <div className="text-gray-300 text-sm font-medium">{title}</div>
-            {subtitle && <div className="text-xs text-gray-400 mt-1">{subtitle}</div>}
-          </div>
-          <div className="w-[60px]" />
         </div>
 
-        {/* Content / Preview */}
-        <div className="flex-1 overflow-hidden">
+        {/* Terminal Content */}
+        <div className="flex-1 overflow-hidden bg-gray-950/50 p-3">
           <AnimatePresence mode="wait">
             {collapsed ? (
               <motion.div
@@ -552,9 +544,9 @@ function InteractiveTerminal({
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="h-full"
               >
-                <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-800 flex flex-col h-full">
+                <div className="bg-gray-950/70 rounded-lg p-2.5 border border-gray-800/50 flex flex-col h-full">
                   <div className="flex-1 overflow-hidden">
-                    <div className="text-xs text-gray-400 space-y-1">
+                    <div className="text-[10px] text-gray-400 space-y-0.5 font-mono">
                       {(() => {
                         const lastLines = history.slice(-4);
                         if (lastLines.length === 0) {
@@ -577,9 +569,9 @@ function InteractiveTerminal({
                       })()}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 ml-3">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    <span className="text-xs text-gray-500 whitespace-nowrap">Running</span>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                    <span className="text-[9px] text-gray-500 font-medium uppercase tracking-wider">Active</span>
                   </div>
                 </div>
               </motion.div>
@@ -594,17 +586,17 @@ function InteractiveTerminal({
               >
                 <div
                   ref={scrollRef}
-                  className="flex-1 overflow-y-auto overflow-x-hidden space-y-0.5 pr-1"
+                  className="flex-1 overflow-y-auto overflow-x-hidden space-y-0.5 pr-1 custom-scrollbar"
                 >
                   {history.map((item, i) => (
                     <div
                       key={i}
                       className={
                         item.type === 'input'
-                          ? 'text-green-400 text-xs'
+                          ? 'text-green-400 text-[11px] font-semibold'
                           : item.type === 'error'
-                            ? 'text-red-400 text-xs'
-                            : 'text-gray-300 text-xs'
+                            ? 'text-red-400 text-[11px]'
+                            : 'text-gray-300 text-[11px] leading-relaxed'
                       }
                       style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
                     >
@@ -618,8 +610,8 @@ function InteractiveTerminal({
         </div>
 
         {!autoplay && showInput && !collapsed && (
-          <div className="flex items-center gap-2 mt-3">
-            <span className="text-green-400">{'>'}</span>
+          <div className="flex items-center gap-2 p-3 border-t border-gray-800/50 bg-gray-950/30">
+            <span className="text-green-400 text-xs font-bold">{'$'}</span>
             <input
               type="text"
               value={input}
@@ -627,8 +619,8 @@ function InteractiveTerminal({
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleCommand(input);
               }}
-              className="flex-1 bg-transparent outline-none text-gray-300"
-              placeholder="Enter command..."
+              className="flex-1 bg-transparent outline-none text-gray-300 text-xs font-mono placeholder-gray-600"
+              placeholder="Type command and press Enter..."
             />
           </div>
         )}
@@ -711,11 +703,11 @@ function WorkflowsShowcase() {
     'agent commit': `✓ docs/payment.md\n✓ tests/payment.test.ts\n✓ stories/Payment.stories\nReady to implement`,
   };
   const agentScript: Step[] = [
-    { cmd: 'agent start', delay: 600 },
-    { cmd: "agent plan 'payment feature'", delay: 900 },
-    { cmd: 'agent generate tests', delay: 800 },
-    { cmd: 'agent create stories', delay: 700 },
-    { cmd: 'agent commit', delay: 700 },
+    { cmd: 'agent start', delay: 400 },
+    { cmd: "agent plan 'payment feature'", delay: 600 },
+    { cmd: 'agent generate tests', delay: 500 },
+    { cmd: 'agent create stories', delay: 450 },
+    { cmd: 'agent commit', delay: 450 },
   ];
 
   // TDD terminal - Implementation Phase
@@ -727,11 +719,11 @@ function WorkflowsShowcase() {
     'pnpm test:e2e': `✓ Payment flow complete\n✓ 3D Secure handled\nAll scenarios passed!`,
   };
   const tddScript: Step[] = [
-    { cmd: 'pnpm test:payment', delay: 600 },
-    { cmd: 'code PaymentProcessor.ts', delay: 900 },
-    { cmd: 'pnpm test:payment --watch', delay: 800 },
-    { cmd: 'git commit -m "feat: payment service"', delay: 700 },
-    { cmd: 'pnpm test:e2e', delay: 800 },
+    { cmd: 'pnpm test:payment', delay: 400 },
+    { cmd: 'code PaymentProcessor.ts', delay: 600 },
+    { cmd: 'pnpm test:payment --watch', delay: 500 },
+    { cmd: 'git commit -m "feat: payment service"', delay: 450 },
+    { cmd: 'pnpm test:e2e', delay: 500 },
   ];
 
   // Mock-first terminal - Validation Phase
@@ -744,12 +736,12 @@ function WorkflowsShowcase() {
     'pnpm build': `✓ 12 stories built\n✓ Assets optimized\nReady to deploy`,
   };
   const mockScript: Step[] = [
-    { cmd: 'pnpm storybook', delay: 600 },
-    { cmd: 'msw add stripe', delay: 800 },
-    { cmd: 'msw simulate errors', delay: 700 },
-    { cmd: 'pnpm test:visual', delay: 900 },
-    { cmd: 'pnpm test:a11y', delay: 800 },
-    { cmd: 'pnpm build', delay: 700 },
+    { cmd: 'pnpm storybook', delay: 400 },
+    { cmd: 'msw add stripe', delay: 500 },
+    { cmd: 'msw simulate errors', delay: 450 },
+    { cmd: 'pnpm test:visual', delay: 600 },
+    { cmd: 'pnpm test:a11y', delay: 500 },
+    { cmd: 'pnpm build', delay: 450 },
   ];
 
   // Ops / Observability terminal - Deployment Phase
@@ -764,14 +756,14 @@ function WorkflowsShowcase() {
     'git tag v1.0.0': `✓ Tagged v1.0.0\n✓ Pushed to origin\n🎉 Deployed to production!`,
   };
   const opsScript: Step[] = [
-    { cmd: 'docker build', delay: 600 },
-    { cmd: 'kubectl apply -f k8s/', delay: 800 },
-    { cmd: 'kubectl rollout status', delay: 900 },
-    { cmd: 'curl /health', delay: 700 },
-    { cmd: 'kubectl logs --tail=3', delay: 800 },
-    { cmd: 'prometheus metrics', delay: 700 },
-    { cmd: 'kubectl autoscale', delay: 800 },
-    { cmd: 'git tag v1.0.0', delay: 600 },
+    { cmd: 'docker build', delay: 400 },
+    { cmd: 'kubectl apply -f k8s/', delay: 500 },
+    { cmd: 'kubectl rollout status', delay: 600 },
+    { cmd: 'curl /health', delay: 450 },
+    { cmd: 'kubectl logs --tail=3', delay: 500 },
+    { cmd: 'prometheus metrics', delay: 450 },
+    { cmd: 'kubectl autoscale', delay: 500 },
+    { cmd: 'git tag v1.0.0', delay: 400 },
   ];
 
   // API/Business Contracts terminal - Contract-First Development
@@ -784,12 +776,12 @@ function WorkflowsShowcase() {
     'publish docs': `✓ API docs generated\n✓ Interactive playground\n✓ Code examples\n📚 docs.api.dev/v1`,
   };
   const contractScript: Step[] = [
-    { cmd: 'openapi generate', delay: 700 },
-    { cmd: 'contract test', delay: 800 },
-    { cmd: 'mock from-spec', delay: 600 },
-    { cmd: 'generate client', delay: 900 },
-    { cmd: 'contract validate', delay: 700 },
-    { cmd: 'publish docs', delay: 600 },
+    { cmd: 'openapi generate', delay: 450 },
+    { cmd: 'contract test', delay: 500 },
+    { cmd: 'mock from-spec', delay: 400 },
+    { cmd: 'generate client', delay: 600 },
+    { cmd: 'contract validate', delay: 450 },
+    { cmd: 'publish docs', delay: 400 },
   ];
 
   // CI/CD Pipeline terminal - Continuous Integration & Deployment
@@ -802,12 +794,12 @@ function WorkflowsShowcase() {
     'monitor deployment': `📊 Deployment metrics:\n• Success rate: 99.9%\n• Deploy time: 3m 12s\n• Error rate: 0.01%\n• Active users: 1,234`,
   };
   const cicdScript: Step[] = [
-    { cmd: 'github actions status', delay: 700 },
-    { cmd: 'npm run test:coverage', delay: 800 },
-    { cmd: 'docker scan image', delay: 600 },
-    { cmd: 'deploy preview', delay: 900 },
-    { cmd: 'rollback production', delay: 700 },
-    { cmd: 'monitor deployment', delay: 600 },
+    { cmd: 'github actions status', delay: 450 },
+    { cmd: 'npm run test:coverage', delay: 500 },
+    { cmd: 'docker scan image', delay: 400 },
+    { cmd: 'deploy preview', delay: 600 },
+    { cmd: 'rollback production', delay: 450 },
+    { cmd: 'monitor deployment', delay: 400 },
   ];
 
   const toggleTerminal = (id: string) => {
@@ -905,11 +897,14 @@ function WorkflowsShowcase() {
             autoplay
             showInput={false}
             animateTyping
-            typingSpeedMs={180}
-            outputLineDelayMs={1500}
+            typingSpeedMs={50}
+            outputLineDelayMs={300}
             loop
             loopPauseMs={5000}
             heightClass="h-[400px]"
+            collapsible
+            defaultCollapsed
+            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[0].description}</p>
         </motion.div>
@@ -941,11 +936,14 @@ function WorkflowsShowcase() {
             autoplay
             showInput={false}
             animateTyping
-            typingSpeedMs={190}
-            outputLineDelayMs={1600}
+            typingSpeedMs={55}
+            outputLineDelayMs={320}
             loop
             loopPauseMs={5000}
             heightClass="h-[280px] md:h-[400px]"
+            collapsible
+            defaultCollapsed
+            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[1].description}</p>
         </motion.div>
@@ -977,11 +975,14 @@ function WorkflowsShowcase() {
             autoplay
             showInput={false}
             animateTyping
-            typingSpeedMs={190}
-            outputLineDelayMs={1600}
+            typingSpeedMs={55}
+            outputLineDelayMs={320}
             loop
             loopPauseMs={5000}
             heightClass="h-[200px]"
+            collapsible
+            defaultCollapsed
+            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[2].description}</p>
         </motion.div>
@@ -1013,11 +1014,14 @@ function WorkflowsShowcase() {
             autoplay
             showInput={false}
             animateTyping
-            typingSpeedMs={185}
-            outputLineDelayMs={1550}
+            typingSpeedMs={52}
+            outputLineDelayMs={310}
             loop
             loopPauseMs={5000}
             heightClass="h-[200px]"
+            collapsible
+            defaultCollapsed
+            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[3].description}</p>
         </motion.div>
@@ -1049,11 +1053,14 @@ function WorkflowsShowcase() {
             autoplay
             showInput={false}
             animateTyping
-            typingSpeedMs={175}
-            outputLineDelayMs={1450}
+            typingSpeedMs={48}
+            outputLineDelayMs={290}
             loop
             loopPauseMs={5000}
             heightClass="h-[200px]"
+            collapsible
+            defaultCollapsed
+            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[4].description}</p>
         </motion.div>
@@ -1085,11 +1092,14 @@ function WorkflowsShowcase() {
             autoplay
             showInput={false}
             animateTyping
-            typingSpeedMs={170}
-            outputLineDelayMs={1400}
+            typingSpeedMs={45}
+            outputLineDelayMs={280}
             loop
             loopPauseMs={5000}
             heightClass="h-[180px] md:h-[200px]"
+            collapsible
+            defaultCollapsed
+            glowOnActivity
           />
           <p className="text-xs text-gray-500 mt-4 px-2">{terminalConfigs[5].description}</p>
         </motion.div>
@@ -1121,10 +1131,10 @@ function Navigation({
   const sections: NavItem[] = [
     { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { id: 'about', label: 'About', icon: <User className="w-4 h-4" /> },
-    { id: 'skills', label: 'Stack', icon: <Layers className="w-4 h-4" /> },
-    { id: 'projects', label: 'Projects', icon: <Code className="w-4 h-4" /> },
-    { href: '/book', label: 'Book', icon: <BookOpen className="w-4 h-4" /> },
     { id: 'principles', label: 'Principles', icon: <Lightbulb className="w-4 h-4" /> },
+    { id: 'projects', label: 'Projects', icon: <Code className="w-4 h-4" /> },
+    { id: 'skills', label: 'Stack', icon: <Layers className="w-4 h-4" /> },
+    { href: '/book', label: 'Book', icon: <BookOpen className="w-4 h-4" /> },
     { id: 'contact', label: 'Contact', icon: <Mail className="w-4 h-4" /> },
   ];
 
@@ -1381,15 +1391,15 @@ function ProjectRoadmap({ project }: { project: string }) {
         completion: 20,
       },
     ],
-    'ai-os-ce': [
+    'dev-toolkit': [
       {
         phase: 'Foundation',
         status: 'completed',
         items: [
-          'Agent Boot CLI',
-          'DEVLOG management',
-          'EPIC tracking',
-          'Security checks',
+          'Core CLI tools',
+          'Progress tracking',
+          'Task management',
+          'Quality checks',
           'Performance monitoring',
         ],
         completion: 100,
@@ -1398,9 +1408,9 @@ function ProjectRoadmap({ project }: { project: string }) {
         phase: 'Integration',
         status: 'in-progress',
         items: [
-          'GitHub issue sync',
-          'Multi-repo support',
-          'Custom agent templates',
+          'Service integration',
+          'Multi-project support',
+          'Custom templates',
           'Workflow automation',
         ],
         completion: 70,
@@ -1412,7 +1422,7 @@ function ProjectRoadmap({ project }: { project: string }) {
         completion: 20,
       },
     ],
-    'ai-os-pro': [
+    'enterprise-platform': [
       {
         phase: 'Foundation',
         status: 'completed',
@@ -1657,6 +1667,7 @@ export function InteractivePortfolio() {
   }>({ isOpen: false, url: null, project: null });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [focusedProject, setFocusedProject] = useState<string | null>(null);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   // Initialize component
@@ -1675,6 +1686,28 @@ export function InteractivePortfolio() {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [mounted]);
+
+  // Track scroll position to show/hide scroll indicator
+  useEffect(() => {
+    if (!mounted || typeof window === 'undefined') return;
+    
+    const handleScroll = () => {
+      const scrolledToBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+      const hasScrollableContent = document.documentElement.scrollHeight > window.innerHeight + 100;
+      setShowScrollIndicator(hasScrollableContent && !scrolledToBottom);
+    };
+    
+    // Check on mount
+    handleScroll();
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [mounted, activeSection]);
 
   // Cross-section navigation via custom event
   useEffect(() => {
@@ -1810,45 +1843,45 @@ export function InteractivePortfolio() {
         isOpenSource: true,
       },
       {
-        id: 'ai-os-ce',
-        title: 'AI-OS CE',
-        tagline: 'Developer Documentation Toolkit',
+        id: 'dev-toolkit',
+        title: 'Developer Toolkit',
+        tagline: 'Productivity Tools for Modern Development',
         description:
-          'Python CLI tool that helps developers maintain living documentation and track project progress through structured markdown files. All locally, all private.',
+          'A comprehensive suite of tools designed to enhance developer productivity and streamline workflows. Currently in private beta.',
         differentiation: [
-          'Track development progress with timestamped DEVLOG',
-          'Manage project EPICs with visual progress bars',
-          'Monitor system status and project health',
-          'Optional GitHub integration for issue sync',
-          'Test security patterns in safe environment',
-          'Living documentation that feeds AI context',
+          'Workflow automation and optimization',
+          'Project management and tracking',
+          'Code quality and documentation tools',
+          'Integration with popular services',
+          'Security best practices',
+          'Collaborative features',
         ],
         status: 'Beta',
         metrics: {},
-        tech: ['Python', 'TypeScript', 'Next.js', 'GitHub CLI', 'Markdown'],
-        github: 'https://github.com/MarcoPWx/AI-OS-CE',
+        tech: ['Multiple Languages', 'Cloud Native', 'API First'],
+        github: '#',
         icon: <FileText className="w-6 h-6" />,
         color: 'from-blue-600 to-cyan-600',
-        isOpenSource: true,
+        isOpenSource: false,
       },
       {
-        id: 'ai-os-pro',
-        title: 'AI-OS Pro',
-        tagline: 'Production-grade AI Operating System',
+        id: 'enterprise-platform',
+        title: 'Enterprise Platform',
+        tagline: 'Scalable Solutions for Teams',
         description:
-          'Automate repo workflows, enforce guardrails, measure outcomes, and build resilient AI systems — locally first. Features living documentation with RAG-powered retrieval.',
+          'Advanced platform for enterprise teams. Built for scale, security, and collaboration. Contact us for early access.',
         differentiation: [
-          'Living Documentation System with 10+ matrices',
-          'Local AI with Ollama (Llama 3, Mistral, CodeLlama)',
-          'Vector-Enhanced RAG for semantic search',
-          'Automation daemons and guardrails engine',
-          'Continuous evaluation metrics and dashboards',
-          'Desktop app with Tauri + React UI',
+          'Team collaboration and management',
+          'Enterprise-grade security',
+          'Scalable architecture',
+          'Advanced automation capabilities',
+          'Comprehensive metrics and analytics',
+          'Premium support and SLA',
         ],
         status: 'Alpha',
         metrics: {},
-        tech: ['Tauri', 'React', 'Rust', 'Python', 'Ollama', 'LangChain', 'VitePress', 'Pinecone'],
-        github: 'https://github.com/MarcoPWx/AI-OS-Pro',
+        tech: ['Cloud Native', 'Enterprise Grade', 'Secure by Design'],
+        github: '#',
         icon: <Cpu className="w-6 h-6" />,
         color: 'from-indigo-600 to-purple-600',
       },
@@ -1875,70 +1908,70 @@ export function InteractivePortfolio() {
         isOpenSource: true,
       },
       {
-        id: 'octopus',
-        title: 'Octopus',
-        tagline: 'Intelligent Content Harvester',
+        id: 'content-tools',
+        title: 'Content Tools',
+        tagline: 'Intelligent Content Management',
         description:
-          'Open-source, ethical content harvesting with ML-powered deduplication. Transform web content into structured data while respecting robots.txt and rate limits.',
+          'Suite of tools for content processing, analysis, and management. Built with best practices and ethical considerations.',
         differentiation: [
-          'TF-IDF semantic similarity detection',
-          'SimHash near-duplicate detection',
-          'Levenshtein string similarity scoring',
-          'Ethical harvesting with robots.txt compliance',
-          'Rate limiting and fair use principles',
-          'Export to multiple formats (JSON, CSV, Parquet)',
+          'Advanced content analysis',
+          'Smart processing pipelines',
+          'Quality scoring and validation',
+          'Ethical data handling',
+          'Multiple export formats',
+          'Performance optimized',
         ],
         status: 'Beta',
         metrics: {},
-        tech: ['Python', 'scikit-learn', 'BeautifulSoup4', 'pandas', 'numpy', 'fuzzywuzzy'],
-        github: 'https://github.com/MarcoPWx/Octopus',
+        tech: ['Python', 'Machine Learning', 'Data Processing'],
+        github: '#',
         icon: <Search className="w-6 h-6" />,
         color: 'from-teal-600 to-cyan-600',
-        isOpenSource: true,
+        isOpenSource: false,
       },
       {
-        id: 'generic-mcp',
-        title: 'GenericMCP',
-        tagline: 'Universal MCP Hub',
+        id: 'integration-hub',
+        title: 'Integration Hub',
+        tagline: 'Universal Service Connector',
         description:
-          'Connect Claude/AI assistants to ANY tool or service through modular adapters. Acts as a central router that manages multiple MCP adapters.',
+          'Connect various tools and services through a unified interface. Simplify integrations with modular architecture.',
         differentiation: [
-          'Connect ANY tool instantly to AI assistants',
-          'Auto-generate adapters with RepoMan',
-          'Unified interface for all MCP tools',
-          'Modular architecture with plug-and-play adapters',
-          'Support for local LLMs via Ollama',
-          'Zero-config setup for any repository',
+          'Universal connectivity',
+          'Modular adapter system',
+          'Unified interface design',
+          'Plug-and-play architecture',
+          'Multiple protocol support',
+          'Easy configuration',
         ],
         status: 'Beta',
         metrics: {},
-        tech: ['TypeScript', 'Node.js', 'MCP Protocol', 'LangChain', 'Ollama'],
-        github: 'https://github.com/MarcoPWx/GenericMCP',
+        tech: ['TypeScript', 'Node.js', 'API Design'],
+        github: '#',
         icon: <Puzzle className="w-6 h-6" />,
         color: 'from-purple-600 to-pink-600',
-        isOpenSource: true,
+        isOpenSource: false,
       },
       {
-        id: 'repoman',
-        title: 'RepoMan',
-        tagline: 'Repository Intelligence MCP Tool',
+        id: 'code-analyzer',
+        title: 'Code Analyzer',
+        tagline: 'Repository Intelligence Tool',
         description:
-          'AI-powered repository analyzer that understands any codebase and auto-generates MCP adapters. Deep insights into structure, patterns, and APIs.',
+          'Advanced code analysis tool that provides deep insights into codebases. Understand structure, patterns, and best practices.',
         differentiation: [
-          'Analyzes languages, frameworks, and patterns',
-          'Auto-generates complete MCP adapters',
-          'Discovers APIs and CLI commands',
-          'AI-powered project understanding',
-          'Generates structured JSON intelligence',
-          'Works standalone or with GenericMCP',
+          'Multi-language analysis',
+          'Pattern recognition',
+          'API discovery',
+          'Project insights',
+          'Structured reporting',
+          'Extensible architecture',
         ],
         status: 'Beta',
         metrics: {},
-        tech: ['Python', 'TypeScript', 'MCP Protocol', 'OpenAI', 'AST Parsing'],
-        github: 'https://github.com/MarcoPWx/Repoman',
+        tech: ['Python', 'TypeScript', 'Static Analysis'],
+        github: '#',
         icon: <GitBranch className="w-6 h-6" />,
         color: 'from-green-600 to-emerald-600',
-        isOpenSource: true,
+        isOpenSource: false,
       },
     ],
     [],
@@ -1955,8 +1988,8 @@ export function InteractivePortfolio() {
   // Approximate roadmap completion per project for on-card summary
   const roadmapProgress: Record<string, number> = {
     quizmentor: 61,
-    'ai-os-ce': 63,
-    'ai-os-pro': 68,
+    'dev-toolkit': 63,
+    'enterprise-platform': 68,
     chameleon: 67,
     voiceapp: 57,
     'command-center': 60,
@@ -1965,20 +1998,20 @@ export function InteractivePortfolio() {
   const projectDetails: Record<string, any> = {
     chameleon: {
       coreOffering:
-        '🌾 Automated Educational Content Generation system that harvests and transforms technical content into 50K+ quiz questions daily with enterprise-grade legal compliance and ethical data collection.',
+        '🌾 Automated Educational Content Generation system that transforms technical documentation into quiz questions with legal compliance and ethical data practices.',
       howItWorks: [
-        'Multi-source harvesting from 120+ URLs: AWS docs, Stack Overflow (45+ tags), GitHub repos, tutorials, certification materials',
-        'AI pipeline: Extract → Generate 4-5 questions/piece → Create distractors → Add explanations → Assign difficulty → Score confidence (0.75+)',
-        'Smart organization: Auto-categorize into 15+ domains → Deduplicate via fingerprinting → Export to QuizMentor format',
-        'Legal compliance: robots.txt checking → 2s rate limiting → User-Agent identification → ToS compliance → GDPR/CCPA ready',
-        'Performance: ~12 questions/second throughput → 491 questions in 42 seconds → 50K+ questions/day capacity',
+        'Multi-source content extraction from technical documentation and educational resources',
+        'AI pipeline: Extract → Generate questions → Create distractors → Add explanations → Assign difficulty levels',
+        'Smart organization: Auto-categorize by domain → Deduplicate content → Export to standard formats',
+        'Legal compliance: robots.txt respect → Rate limiting → User-Agent identification → Privacy compliance',
+        'Performance: Optimized batch processing with configurable throughput',
       ],
       keyEndpoints: [
-        'python3 scripts/python/local_harvester.py --quick — Generate ~500 questions in 10 minutes',
-        'python3 scripts/python/local_harvester.py --max-content 500 — Standard 1-hour harvest (~2,500 questions)',
-        'python3 scripts/python/local_harvester.py --max-content 10000 — Full 24-hour harvest (50,000+ questions)',
-        'python3 scripts/python/integrate_harvest.py — Integrate harvested content into QuizMentor',
-        'data/quizzes/harvested/* — Auto-organized quiz files by technology domain',
+        'python3 harvester.py --quick — Quick generation mode',
+        'python3 harvester.py --standard — Standard generation mode',
+        'python3 harvester.py --full — Full generation mode',
+        'python3 integrate.py — Integrate generated content',
+        'data/output/* — Auto-organized output files',
       ],
       userStories: [
         'As a content manager, I double our quiz database in under an hour without manual creation',
@@ -2302,36 +2335,36 @@ export function InteractivePortfolio() {
         'Enterprise features: team workspaces, audit logs, SSO',
       ],
     },
-    'ai-os-ce': {
+    'dev-toolkit': {
       coreOffering:
-        '🛠️ Local-first Python CLI that transforms markdown files into living documentation. Track development progress, manage EPICs, run security labs, and sync with GitHub—all while keeping your data private and context-rich for AI assistants.',
+        '🛠️ Comprehensive developer productivity toolkit with project management, documentation generation, and workflow automation. Built for modern development teams.',
       howItWorks: [
-        'Agent Boot CLI: agent-boot command manages structured markdown files (DEVLOG.md, EPICS.md, SYSTEM_STATUS.md)',
-        'Living Documentation: Every command updates timestamped logs that become perfect AI context',
-        'EPIC Tracking: Visual progress bars, task management, and automatic status updates',
-        'Security Labs: Test vulnerabilities in sandboxed environment for learning',
-        'GitHub Integration: Optional two-way sync with issues and project boards',
+        'CLI Tools: Command-line interface for project management and automation',
+        'Documentation: Automated documentation generation and maintenance',
+        'Task Management: Visual progress tracking and status updates',
+        'Quality Assurance: Built-in testing and validation tools',
+        'Integration: Seamless integration with popular development tools',
       ],
       keyEndpoints: [
-        'agent-boot init — Initialize project with documentation structure',
-        'agent-boot epic create "Epic Name" --tasks 5 — Create new EPIC with tasks',
-        'agent-boot progress — Visual progress report across all EPICs',
-        'agent-boot report — Comprehensive project health dashboard',
-        'agent-boot security-lab create XSS — Create sandboxed security learning lab',
+        'devtool init — Initialize project with standard structure',
+        'devtool task create "Task Name" --subtasks 5 — Create new task',
+        'devtool progress — Visual progress report',
+        'devtool report — Project health dashboard',
+        'devtool test create — Create test scenarios',
       ],
       userStories: [
-        'As a developer, I track my daily progress in DEVLOG.md that automatically timestamps everything',
-        'As a team lead, I visualize project progress across multiple EPICs with progress bars',
-        'As a security engineer, I create safe learning labs to teach vulnerability patterns',
-        'As an AI user, my documentation becomes perfect context for Claude/ChatGPT',
-        'As a project manager, I sync EPIC progress with GitHub issues automatically',
+        'As a developer, I track my daily progress with automatic timestamps',
+        'As a team lead, I visualize project progress with visual indicators',
+        'As a quality engineer, I create test scenarios for validation',
+        'As a user, my documentation integrates with development tools',
+        'As a project manager, I sync progress with issue tracking',
       ],
       s2sStories: [
-        'CLI → Markdown Parser → DEVLOG.md update → Git commit → AI context ready',
-        'agent-boot command → EPIC processor → Progress calculator → Visual bars → EPICS.md update',
-        'GitHub webhook → Issue parser → EPIC sync → Bidirectional updates → Status alignment',
-        'Security lab creator → Sandboxed environment → Vulnerable code → Safe learning → Auto-disable in prod',
-        'Documentation watcher → File changes → AI context builder → Structured output → Enhanced prompts',
+        'CLI → Parser → Documentation update → Version control → Ready for use',
+        'Command → Task processor → Progress calculator → Visual output → Update',
+        'Webhook → Parser → Sync → Bidirectional updates → Status alignment',
+        'Test creator → Isolated environment → Test code → Safe execution → Auto-cleanup',
+        'File watcher → Change detection → Context builder → Structured output → Integration',
       ],
       features: {
         'Architecture & APIs': [
@@ -2385,7 +2418,7 @@ export function InteractivePortfolio() {
         'VS Code extension',
       ],
     },
-  'ai-os-pro': {
+  'enterprise-platform': {
     coreOffering:
       'Your past self becomes your best teammate. AI that learns YOUR patterns, not everyone\'s. Never forget your own solutions again.',
     howItWorks: [
@@ -2858,6 +2891,39 @@ export function InteractivePortfolio() {
         />
       )}
 
+      {/* Scroll Indicator - Small Arrow Bottom Right */}
+      <AnimatePresence>
+        {showScrollIndicator && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-4 right-4 z-40 pointer-events-none"
+          >
+            <motion.div
+              animate={{
+                y: [0, 4, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: 'easeInOut',
+              }}
+              className="relative"
+            >
+              {/* Subtle glow */}
+              <div className="absolute inset-0 bg-green-400 rounded-full blur-md opacity-30" />
+              
+              {/* Small arrow icon */}
+              <div className="relative bg-gradient-to-br from-green-400 to-teal-400 p-1.5 rounded-full shadow-lg">
+                <ArrowDown className="w-3 h-3 text-gray-900" />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {/* Hero Section */}
         {activeSection === 'home' && (
@@ -2867,6 +2933,7 @@ export function InteractivePortfolio() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="min-h-screen flex items-center justify-center px-4 pt-24 md:pt-16"
+            style={{ marginTop: '10%' }}
           >
             <div className="w-full max-w-[90%] md:max-w-[85%] xl:max-w-[80%] 2xl:max-w-[75%] mx-auto">
               <div className="text-center space-y-6 mt-8 md:mt-0">
@@ -2978,7 +3045,7 @@ export function InteractivePortfolio() {
           </motion.section>
         )}
 
-        {/* Projects Section with Differentiation */}
+        {/* Projects Section - Square Grid with Fullscreen Expansion */}
         {activeSection === 'projects' && (
           <motion.section
             key="projects"
@@ -2986,9 +3053,9 @@ export function InteractivePortfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen px-4 pt-24 pb-16"
+            className="min-h-screen px-4 md:px-6 lg:px-8 pt-20 pb-16"
           >
-            <div className="w-full max-w-[90%] 2xl:max-w-[85%] mx-auto">
+            <div className="w-full max-w-[1600px] mx-auto">
               <motion.div
                 className="text-center mb-12 px-4"
                 initial={{ y: -20, opacity: 0 }}
@@ -3029,23 +3096,37 @@ export function InteractivePortfolio() {
                 )}
               </motion.div>
 
-              {/* Project Grid/List */}
-              <div className={`${focusedProject ? 'space-y-4' : 'grid lg:grid-cols-2 gap-6'}`}>
-                {sortedProjects.map((project, idx) => (
-                  <motion.div
-                    key={project.id}
-                    className={`w-full transition-all duration-300 ease-in-out cursor-pointer ${focusedProject && focusedProject !== project.id ? 'opacity-30 scale-[0.98]' : ''}`}
-                    onClick={() => {
-                      // Allow clicking other projects even when one is open
-                      setFocusedProject(focusedProject === project.id ? null : project.id);
-                    }}
-                    initial={{ opacity: 0, y: 20, rotateX: -10 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                    transition={{ delay: idx * 0.08, duration: 0.4, ease: 'easeOut' }}
-                    style={{ transformStyle: 'preserve-3d' }}
-                  >
-                    <motion.div className="group w-full h-full">
-                      <div className="relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 rounded-2xl border border-gray-700 overflow-hidden w-full h-full shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300">
+              {/* Square Grid Layout */}
+              <div className={`${focusedProject ? 'fixed inset-0 z-50 bg-black overflow-y-auto' : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'}`}>
+                {sortedProjects.map((project, idx) => {
+                  const isExpanded = focusedProject === project.id;
+                  return (
+                    <motion.div
+                      key={project.id}
+                      className={`relative transition-all duration-500 ease-in-out cursor-pointer ${
+                        focusedProject && !isExpanded ? 'hidden' : ''
+                      } ${
+                        isExpanded ? 'fixed inset-0 z-50 p-8 overflow-y-auto bg-black' : 'aspect-[4/3]'
+                      }`}
+                      onClick={() => {
+                        if (!isExpanded) {
+                          setFocusedProject(project.id);
+                          // Scroll to top when expanding
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ 
+                        opacity: 1, 
+                        scale: isExpanded ? 1 : 1,
+                      }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      layout
+                    >
+                      <motion.div className="group w-full h-full">
+                        <div className={`relative bg-gradient-to-br from-gray-900 via-gray-900/95 to-gray-800/90 border border-gray-700 overflow-hidden shadow-xl group-hover:shadow-2xl group-hover:border-gray-600 transition-all duration-300 ${
+                          isExpanded ? 'rounded-none max-w-6xl mx-auto' : 'rounded-2xl h-full'
+                        }`}>
                         {/* Animated gradient background */}
                         <motion.div
                           className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
@@ -3062,204 +3143,158 @@ export function InteractivePortfolio() {
                         {/* Glow effect on hover */}
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500" />
 
-                        {/* Simplified close button for open projects */}
-                        {focusedProject === project.id && (
-                          <div className="absolute top-3 right-3 z-20">
-                            <motion.button
-                              className="p-1.5 bg-gray-800/80 hover:bg-gray-700 rounded-full transition-all"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setFocusedProject(null);
-                              }}
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ type: 'spring', stiffness: 200 }}
-                              title="Close details"
-                              aria-label="Close"
-                            >
-                              <X className="w-4 h-4 text-gray-400 hover:text-white" />
-                            </motion.button>
-                          </div>
-                        )}
-
-                        <motion.div
-                          className={`relative ${focusedProject === project.id ? 'p-6 lg:p-8' : 'p-5 lg:p-6 pb-12'} z-10`}
-                        >
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-center gap-4">
-                              <motion.div
-                                className={`${focusedProject === project.id ? 'p-3' : 'p-3'} rounded-xl bg-gradient-to-br ${project.color} shadow-lg transition-all duration-300`}
+                          {/* Close button for expanded projects */}
+                          {isExpanded && (
+                            <div className="fixed top-4 right-4 z-50">
+                              <motion.button
+                                className="p-3 bg-gray-800/90 hover:bg-gray-700 rounded-full transition-all backdrop-blur-sm border border-gray-600"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setFocusedProject(null);
+                                }}
+                                initial={{ scale: 0, rotate: -180 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{ type: 'spring', stiffness: 200 }}
+                                title="Close details"
+                                aria-label="Close"
                               >
-                                {React.cloneElement(project.icon, {
-                                  className:
-                                    focusedProject === project.id
-                                      ? 'w-7 h-7 text-white'
-                                      : 'w-6 h-6 text-white',
-                                })}
-                              </motion.div>
-                              <div>
-                                <h3
-                                  className={`font-bold text-white ${focusedProject === project.id ? 'text-2xl lg:text-3xl' : 'text-xl lg:text-2xl'} flex items-center gap-2`}
-                                >
-                                  {project.title}
-                                </h3>
-                                <p className="text-gray-400 text-sm lg:text-base">
-                                  {project.tagline}
-                                </p>
-                              </div>
+                                <X className="w-5 h-5 text-white" />
+                              </motion.button>
                             </div>
-                            <div className="flex items-center gap-2 pr-12">
-                              <Badge
-                                variant={
-                                  project.status === 'Production'
-                                    ? 'success'
-                                    : project.status === 'Beta'
-                                      ? 'info'
-                                      : project.status === 'Alpha'
-                                        ? 'warning'
-                                        : 'default'
-                                }
-                                size="sm"
-                                className="animate-pulse"
-                              >
-                                {project.status}
-                              </Badge>
-                              {project.isOpenSource && (
-                                <Badge
-                                  variant="secondary"
-                                  size="sm"
-                                  className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30"
-                                >
-                                  <div className="flex items-center gap-1">
-                                    <GitBranch className="w-3 h-3" />
-                                    <span>Open Source</span>
+                          )}
+
+                          <motion.div
+                            className={`relative ${isExpanded ? 'p-8 lg:p-12' : 'p-4 h-full flex flex-col'} z-10`}
+                          >
+                            {/* Project Header */}
+                            <div className={`${isExpanded ? 'mb-6' : 'mb-3'}`}>
+                              <div className="flex items-start justify-between">
+                                <div className={`flex ${isExpanded ? 'items-start gap-6' : 'flex-col items-center text-center w-full'}`}>
+                                  <motion.div
+                                    className={`${isExpanded ? 'p-4' : 'p-3 mx-auto mb-2'} rounded-xl bg-gradient-to-br ${project.color} shadow-lg`}
+                                  >
+                                    {React.cloneElement(project.icon, {
+                                      className: isExpanded ? 'w-8 h-8 text-white' : 'w-6 h-6 text-white',
+                                    })}
+                                  </motion.div>
+                                  <div className={isExpanded ? 'flex-1' : 'w-full'}>
+                                    <h3
+                                      className={`font-bold text-white ${isExpanded ? 'text-3xl lg:text-4xl mb-2' : 'text-lg mb-1'}`}
+                                    >
+                                      {project.title}
+                                    </h3>
+                                    <p className={`text-gray-400 ${isExpanded ? 'text-lg' : 'text-xs line-clamp-1'}`}>
+                                      {project.tagline}
+                                    </p>
+                                    {isExpanded && (
+                                      <div className="flex items-center gap-3 mt-3">
+                                        <Badge
+                                          variant={
+                                            project.status === 'Production'
+                                              ? 'success'
+                                              : project.status === 'Beta'
+                                                ? 'info'
+                                                : project.status === 'Alpha'
+                                                  ? 'warning'
+                                                  : 'default'
+                                          }
+                                          size="sm"
+                                        >
+                                          {project.status}
+                                        </Badge>
+                                        {project.isOpenSource && (
+                                          <Badge
+                                            variant="secondary"
+                                            size="sm"
+                                            className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30"
+                                          >
+                                            <div className="flex items-center gap-1">
+                                              <GitBranch className="w-3 h-3" />
+                                              <span>Open Source</span>
+                                            </div>
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Show description for non-focused items in grid */}
-                          {!focusedProject && (
-                            <motion.p
-                              className="text-gray-400 text-sm mb-4 line-clamp-2"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                            >
-                              {project.description}
-                            </motion.p>
-                          )}
-
-                          {/* Quick stats for non-focused */}
-                          {!focusedProject && (
-                            <motion.div
-                              className="flex items-center gap-4 mb-4"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.3 }}
-                            >
-                              <div className="flex items-center gap-1 text-xs text-gray-500">
-                                <Code className="w-3 h-3" />
-                                <span>{project.tech.length} tech</span>
-                              </div>
-                              {project.differentiation && (
-                                <div className="flex items-center gap-1 text-xs text-gray-500">
-                                  <Sparkles className="w-3 h-3" />
-                                  <span>{project.differentiation.length} features</span>
                                 </div>
-                              )}
-                              {project.github && (
-                                <div className="flex items-center gap-1 text-xs text-gray-500">
-                                  <Github className="w-3 h-3" />
-                                  <span>GitHub</span>
-                                </div>
-                              )}
-                            </motion.div>
-                          )}
-
-                          {/* Show mini tech stack for non-focused */}
-                          {!focusedProject && (
-                            <div className="flex flex-wrap gap-1 mb-4">
-                              {project.tech.slice(0, 4).map((tech, i) => (
-                                <motion.span
-                                  key={`${tech}-mini-${i}`}
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: 0.3 + i * 0.05 }}
-                                  className="px-2 py-0.5 bg-gray-800/60 text-[10px] text-gray-400 rounded border border-gray-700/50"
-                                >
-                                  {tech}
-                                </motion.span>
-                              ))}
-                              {project.tech.length > 4 && (
-                                <span className="px-2 py-0.5 text-[10px] text-gray-500">
-                                  +{project.tech.length - 4} more
-                                </span>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Action buttons for non-focused */}
-                          {!focusedProject && (
-                            <motion.div
-                              className="flex items-center justify-between"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.4 }}
-                            >
-                              <div className="flex gap-2">
-                                {project.github && (
-                                  <motion.a
-                                    href={project.github}
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="p-1.5 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                  >
-                                    <Github className="w-4 h-4 text-gray-400" />
-                                  </motion.a>
-                                )}
-                                {project.live && (
-                                  <motion.a
-                                    href={project.live}
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="p-1.5 bg-gray-800/50 rounded-lg hover:bg-gray-700 transition-all"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                  >
-                                    <ExternalLink className="w-4 h-4 text-gray-400" />
-                                  </motion.a>
+                                {!isExpanded && (
+                                  <div className="absolute top-2 right-2">
+                                    <Badge
+                                      variant={
+                                        project.status === 'Production'
+                                          ? 'success'
+                                          : project.status === 'Beta'
+                                            ? 'info'
+                                            : 'default'
+                                      }
+                                      size="sm"
+                                      className="text-[10px] px-1.5 py-0.5"
+                                    >
+                                      {project.status}
+                                    </Badge>
+                                  </div>
                                 )}
                               </div>
-                            </motion.div>
-                          )}
+                            </div>
 
-                          <AnimatePresence>
-                            {focusedProject === project.id && (
-                              <motion.div
-                                initial={{ opacity: 0, y: 6 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -6 }}
-                                transition={{ duration: 0.2 }}
-                              >
-                                <p className="text-gray-300 mb-6 text-base lg:text-lg leading-relaxed">
-                                  {project.description}
-                                </p>
-                              </motion.div>
+                            {/* Compact view for grid tiles */}
+                            {!isExpanded && (
+                              <div className="flex-1 flex flex-col justify-between">
+                                <div className="space-y-2">
+                                  <p className="text-[11px] text-gray-400 line-clamp-2 px-1">
+                                    {project.description}
+                                  </p>
+                                  <div className="flex flex-wrap gap-1 px-1">
+                                    {project.tech.slice(0, 3).map((tech, i) => (
+                                      <span
+                                        key={`${tech}-tile-${i}`}
+                                        className="px-1.5 py-0.5 bg-gray-800/60 text-[9px] text-gray-400 rounded"
+                                      >
+                                        {tech}
+                                      </span>
+                                    ))}
+                                    {project.tech.length > 3 && (
+                                      <span className="text-[9px] text-gray-500">+{project.tech.length - 3}</span>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Quick action buttons at bottom */}
+                                <div className="flex items-center justify-between mt-auto pt-2 px-1">
+                                  <div className="flex gap-1">
+                                    {project.github && (
+                                      <motion.a
+                                        href={project.github}
+                                        target="_blank"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="p-1 bg-gray-800/50 rounded hover:bg-gray-700 transition-all"
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.95 }}
+                                      >
+                                        <Github className="w-3 h-3 text-gray-400" />
+                                      </motion.a>
+                                    )}
+                                  </div>
+                                  <span className="text-[9px] text-gray-500">Click to expand</span>
+                                </div>
+                              </div>
                             )}
-                          </AnimatePresence>
 
-                          <AnimatePresence>
-                            {focusedProject === project.id && (
-                              <motion.div
-                                initial={{ opacity: 0, y: 6 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -6 }}
-                                transition={{ duration: 0.2 }}
-                              >
+
+                            {/* Expanded view content */}
+                            <AnimatePresence>
+                              {isExpanded && (
+                                <motion.div
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -20 }}
+                                  transition={{ duration: 0.3 }}
+                                >
+                                  <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+                                    {project.description}
+                                  </p>
+
                                 {/* Horizontal content layout */}
                                 <div className="grid lg:grid-cols-3 gap-6 mb-6">
                                   {/* Key Differentiators */}
@@ -3666,14 +3701,15 @@ export function InteractivePortfolio() {
                                     </Button>
                                   )}
                                 </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </motion.div>
-                      </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                        </div>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </motion.section>
